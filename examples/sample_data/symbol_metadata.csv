@@ -1,0 +1,5 @@
+symbol,sector,industry,country,subindustry,beta,size,volatility,liquidity,core_mask,liquid_mask
+AAA,technology,software,usa,application_software,1.18,0.92,0.38,0.95,1,1
+BBB,financials,banks,usa,regional_banks,0.88,0.61,0.52,0.67,1,0
+CCC,technology,semiconductors,canada,semiconductors,1.07,0.81,0.61,0.58,1,1
+DDD,financials,insurance,canada,insurance,0.79,0.54,0.34,0.62,1,0

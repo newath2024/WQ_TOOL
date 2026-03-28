@@ -1,0 +1,8 @@
+rank(delta(close, 5))
+zscore(ts_mean(volume, 10) / close)
+-correlation(rank(close), rank(volume), 10)
+sign(delta(close, 3)) * zscore(volume)
+rank(covariance(close, volume, 5))
+group_neutralize(rank(delta(close, 5)), sector)
+group_zscore(ts_mean(volume, 10), industry)
+group_neutralize(group_neutralize(zscore(close), sector), country)
