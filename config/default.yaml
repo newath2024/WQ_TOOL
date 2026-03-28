@@ -1,0 +1,155 @@
+data:
+  path: examples/sample_data/daily_ohlcv.csv
+  format: csv
+  input_layout: canonical
+  default_timeframe: 1d
+  selected_timeframe: 1d
+  filename_pattern: "{symbol}_{timeframe}.csv"
+  column_mapping: {}
+  universe: []
+
+aux_data:
+  group_path: examples/sample_data/symbol_metadata.csv
+  factor_path: examples/sample_data/symbol_metadata.csv
+  mask_path: examples/sample_data/symbol_metadata.csv
+  format: csv
+  timestamp_column: timestamp
+  symbol_column: symbol
+  group_columns: ["sector", "industry", "country", "subindustry"]
+  factor_columns: ["beta", "size", "volatility", "liquidity"]
+  mask_columns: ["core_mask", "liquid_mask"]
+  column_mapping: {}
+
+splits:
+  train:
+    start: "2021-01-01"
+    end: "2021-02-12"
+  validation:
+    start: "2021-02-15"
+    end: "2021-03-05"
+  test:
+    start: "2021-03-08"
+    end: "2021-03-31"
+
+generation:
+  allowed_fields: ["open", "high", "low", "close", "volume", "returns"]
+  allowed_operators:
+    [
+      "delay",
+      "delta",
+      "returns",
+      "rolling_mean",
+      "rolling_std",
+      "rolling_min",
+      "rolling_max",
+      "rank",
+      "zscore",
+      "correlation",
+      "covariance",
+      "decay_linear",
+      "ts_rank",
+      "ts_sum",
+      "ts_mean",
+      "ts_std",
+      "sign",
+      "abs",
+      "log",
+      "clip",
+      "group_rank",
+      "group_zscore",
+      "group_neutralize",
+    ]
+  lookbacks: [2, 3, 5, 10, 15, 20]
+  max_depth: 4
+  complexity_limit: 20
+  template_count: 40
+  grammar_count: 40
+  mutation_count: 20
+  normalization_wrappers: ["rank", "zscore", "sign"]
+  random_seed: 7
+
+adaptive_generation:
+  enabled: true
+  memory_scope: regime
+  success_rule: validation_first
+  strategy_mix:
+    guided_mutation: 0.40
+    memory_templates: 0.30
+    random_exploration: 0.20
+    novelty_behavior: 0.10
+  exploration_epsilon: 0.10
+  sampling_temperature: 0.75
+  family_cap_fraction: 0.25
+  parent_pool_size: 30
+  novelty_reference_top_k: 20
+  min_pattern_support: 3
+  pattern_decay: 0.98
+  critic_thresholds:
+    turnover_warning_fraction: 0.85
+    overfit_gap_threshold: 0.35
+    complexity_warning_fraction: 0.80
+    noisy_short_horizon_max_lookback: 3
+    novelty_success_threshold: 0.70
+    score_prior_weight: 3.0
+
+simulation:
+  delay_mode: d1
+  neutralization: sector
+  secondary_neutralization: null
+  pasteurize: true
+  signal_clip: 5.0
+  weight_clip: 0.35
+  factor_columns: ["beta", "size", "volatility", "liquidity"]
+  subuniverses:
+    - name: liquid
+      mask_field: liquid_mask
+    - name: large_cap
+      top_n_by: size
+      top_n: 2
+  robustness_windows: [21, 42]
+  cache_enabled: true
+
+backtest:
+  timeframe: 1d
+  mode: cross_sectional
+  portfolio_construction: long_short
+  selection_fraction: 0.34
+  signal_delay: 1
+  holding_period: 3
+  volatility_scaling: true
+  volatility_lookback: 5
+  transaction_cost_bps: 5.0
+  annualization_factor: 252
+  symbol_rank_window: 10
+  upper_quantile: 0.8
+  lower_quantile: 0.2
+  turnover_penalty: 0.10
+  drawdown_penalty: 0.50
+
+evaluation:
+  min_sharpe: -10.0
+  max_turnover: 5.0
+  min_observations: 5
+  max_drawdown: 0.95
+  min_stability: 0.10
+  signal_correlation_threshold: 0.95
+  returns_correlation_threshold: 0.95
+  top_k: 20
+
+submission_tests:
+  enable_subuniverse_test: true
+  enable_ladder_test: true
+  enable_robustness_test: true
+  ladder_buckets: 3
+  ladder_min_sharpe: -0.25
+  ladder_min_passes: 2
+  subuniverse_min_sharpe: -3.0
+  subuniverse_min_pass_fraction: 0.5
+  robustness_min_fitness_ratio: -2.0
+
+storage:
+  path: wq_tool.sqlite3
+
+runtime:
+  log_level: INFO
+  fail_fast: false
