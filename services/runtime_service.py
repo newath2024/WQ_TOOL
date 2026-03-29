@@ -23,6 +23,7 @@ RESUMABLE_COMMANDS = {
     "run-brain-sim",
     "run-closed-loop",
     "brain-login",
+    "service-status",
 }
 
 

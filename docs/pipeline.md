@@ -77,7 +77,10 @@ Neu backend la `manual` va chua import result:
 
 ```bash
 python main.py run-service --config config/dev.yaml
+python main.py service-status --config config/dev.yaml
 ```
+
+`service-status` doc truc tiep `service_runtime`, `submission_batches`, `submissions`, va `brain_results` tu SQLite de ban xem nhanh service dang poll batch nao, con bao nhieu alpha pending, va ket qua moi nhat.
 
 Moi tick:
 

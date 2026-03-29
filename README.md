@@ -121,9 +121,11 @@ Closed-loop BRAIN:
 
 ```bash
 python main.py run-service --config config/dev.yaml
+python main.py service-status --config config/dev.yaml
 ```
 
 `run-service` la foreground process de chay duoi Task Scheduler, NSSM, systemd, hoac supervisor tuong tu.
+`service-status` la lenh nhanh de xem service dang o run nao, batch nao, con bao nhieu alpha pending, va ket qua gan nhat.
 
 Moi service tick:
 
