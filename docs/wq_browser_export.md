@@ -14,6 +14,7 @@ This approach uses your existing browser session and exports the table already r
 ## Script location
 
 - [tools/wq_export_table.js](/d:/WQ_TOOL/tools/wq_export_table.js)
+- [tools/wq_export_operators_expanded.js](/d:/WQ_TOOL/tools/wq_export_operators_expanded.js)
 
 ## What it exports
 
@@ -109,6 +110,41 @@ For operator catalog pages:
 - run the exporter on the rendered table
 - the script will use DOM mode automatically for this page type
 - the script will also expand visible `Show more` panels before scraping so the exported `Description` includes the detailed explanation and examples when available
+
+If you already opened every `Show more` panel manually and want a cleaner,
+operator-specific export that preserves full detail blocks and image metadata,
+prefer the dedicated expanded exporter instead of the generic table exporter.
+
+PowerShell shortcuts:
+
+```powershell
+.\tools\copy_wq_export_operators_expanded.ps1
+```
+
+or, to save directly into a chosen folder:
+
+```powershell
+.\tools\copy_wq_export_operators_expanded_dir.ps1
+```
+
+Then:
+
+1. Open `Learn -> Operators`.
+2. Expand all visible `Show more` sections first.
+3. Paste the copied script into `DevTools -> Console`.
+4. The browser will export `worldquant_brain_operators_expanded.json`.
+
+That JSON can be fed directly into the catalog builder:
+
+```powershell
+.\.venv\Scripts\python.exe .\tools\build_brain_operator_catalog.py `
+  --export-json .\path\to\worldquant_brain_operators_expanded.json `
+  --output .\inputs\wq_snapshots\2026-03-29\operators\brain_operator_catalog.json
+```
+
+Images embedded in the operator details are exported as metadata only. They are
+useful for documentation, but the registry/generator pipeline primarily depends
+on the textual fields: `signature`, `tier`, `scope`, `summary`, and `details`.
 
 Suggested naming is automatic. For committed public metadata snapshots in this repo, move them into a dated folder such as:
 
