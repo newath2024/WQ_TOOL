@@ -24,5 +24,11 @@ def handle(
     """Execute the evaluate command."""
     del args
     init_run(repository, config, environment, status="evaluating")
-    evaluate_and_persist(repository, config, environment, status="evaluated")
+    result = evaluate_and_persist(repository, config, environment, status="evaluated")
+    evaluated_path = result.export_paths.get("evaluated_alphas_latest_csv")
+    selected_path = result.export_paths.get("selected_alphas_latest_csv")
+    if evaluated_path:
+        print(f"evaluated_alphas_csv: {evaluated_path}")
+    if selected_path:
+        print(f"selected_alphas_csv: {selected_path}")
     return 0

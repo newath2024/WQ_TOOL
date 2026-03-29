@@ -38,6 +38,7 @@ class GenerationServiceResult:
     exit_code: int = 0
     regime_key: str | None = None
     pattern_count: int = 0
+    export_paths: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(slots=True)
@@ -49,6 +50,7 @@ class EvaluationServiceResult:
     selection_records: list[SelectionRecord]
     regime_key: str
     evaluation_timestamp: str
+    export_paths: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(slots=True, frozen=True)

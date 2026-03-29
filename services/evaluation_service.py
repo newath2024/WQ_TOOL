@@ -29,6 +29,7 @@ from services.data_service import (
     slice_frame_by_period,
     slice_series_by_period,
 )
+from services.export_service import export_evaluated_alphas
 from services.models import CommandEnvironment, EvaluationServiceResult
 from storage.models import MetricRecord, SelectionRecord, SimulationCacheRecord, SubmissionTestRecord
 from storage.repository import SQLiteRepository
@@ -507,4 +508,9 @@ def evaluate_and_persist(
     """Run evaluation and persist all resulting artifacts."""
     result = evaluate_run(repository, config, environment)
     persist_evaluation_result(repository, config, environment, result, status=status, finished=finished)
+    export_paths = export_evaluated_alphas(result, environment)
+    result.export_paths.update(export_paths)
+    logger = get_logger(__name__, run_id=environment.context.run_id, stage="evaluate")
+    logger.info("Exported evaluated alpha CSV to %s", export_paths["evaluated_alphas_latest_csv"])
+    logger.info("Exported selected alpha CSV to %s", export_paths["selected_alphas_latest_csv"])
     return result

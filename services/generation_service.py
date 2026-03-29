@@ -7,6 +7,7 @@ from generator.engine import AlphaGenerationEngine
 from generator.guided_generator import GuidedGenerator
 from memory.pattern_memory import PatternMemoryService
 from services.data_service import load_research_context, persist_research_metadata
+from services.export_service import export_generated_alphas
 from services.models import CommandEnvironment, GenerationServiceResult
 from storage.repository import SQLiteRepository
 
@@ -47,11 +48,14 @@ def generate_and_persist(
         candidates = engine.generate(count=total_count, existing_normalized=existing)
 
     inserted = repository.save_alpha_candidates(environment.context.run_id, candidates)
+    export_paths = export_generated_alphas(repository, environment)
     repository.update_run_status(environment.context.run_id, "generated")
     logger.info("Generated %s candidates and inserted %s new rows.", len(candidates), inserted)
+    logger.info("Exported generated alpha CSV to %s", export_paths["generated_alphas_latest_csv"])
     return GenerationServiceResult(
         generated_count=len(candidates),
         inserted_count=inserted,
         regime_key=regime_key,
         pattern_count=pattern_count,
+        export_paths=export_paths,
     )

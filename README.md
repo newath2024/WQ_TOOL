@@ -108,6 +108,26 @@ Loader hỗ trợ:
 - schema cũ: `evaluation` phẳng + `submission_tests`
 - schema mới: `evaluation.hard_filters`, `data_requirements`, `diversity`, `ranking`, `robustness`
 
+## Quick start on Windows
+
+Use Python 3.11+ only. If `python main.py ...` fails with `ModuleNotFoundError: No module named 'yaml'` or similar, VS Code is usually pointing at the wrong interpreter.
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -U pip
+python -m pip install -e ".[dev]"
+python main.py --help
+```
+
+In VS Code:
+
+- `Ctrl+Shift+P`
+- `Python: Select Interpreter`
+- choose `${workspaceFolder}\\.venv\\Scripts\\python.exe`
+
+If you run `python main.py` without a command, the CLI will default to `run-full-pipeline`.
+
 ## CLI examples
 
 ```bash
@@ -129,6 +149,14 @@ Console script mới:
 ```bash
 wq-tool run-full-pipeline --config config/research.yaml
 ```
+
+CSV exports mặc định:
+
+- sau `generate`: `outputs/generated_alphas.csv`
+- sau `evaluate`: `outputs/evaluated_alphas.csv`
+- alpha đã được chọn: `outputs/selected_alphas.csv`
+
+Mỗi lần chạy cũng sẽ có bản theo `run_id`, ví dụ `outputs/generated_alphas_<run_id>.csv`.
 
 ## Storage schema overview
 

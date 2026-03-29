@@ -24,5 +24,8 @@ def handle(
 ) -> int:
     """Execute the generate command."""
     init_run(repository, config, environment, status="generating")
-    generate_and_persist(repository, config, environment, count=args.count)
+    result = generate_and_persist(repository, config, environment, count=args.count)
+    latest_path = result.export_paths.get("generated_alphas_latest_csv")
+    if latest_path:
+        print(f"generated_alphas_csv: {latest_path}")
     return 0

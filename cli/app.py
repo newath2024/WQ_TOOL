@@ -2,12 +2,29 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
+import sys
 from typing import Iterable
 
 from cli.commands import evaluate, generate, lineage, load_data, memory, mutate, pipeline, report
 from core.config import load_config
 from core.logging import configure_logging
 from services.runtime_service import build_command_environment, open_repository, resolve_run_context
+
+_SUBCOMMANDS = {
+    "load-data",
+    "generate",
+    "evaluate",
+    "top",
+    "report",
+    "memory-top-patterns",
+    "memory-failed-patterns",
+    "memory-top-genes",
+    "lineage",
+    "mutate",
+    "run-full-pipeline",
+}
+_GLOBAL_OPTIONS_WITH_VALUES = {"--config", "--run-id", "--seed", "--log-level"}
+_GLOBAL_FLAG_OPTIONS = {"--resume"}
 
 
 def _add_common_arguments(parser: argparse.ArgumentParser, suppress_defaults: bool) -> None:
@@ -57,10 +74,47 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _normalize_argv(argv: Iterable[str] | None) -> list[str]:
+    """Inject a default pipeline command when the user omits a subcommand."""
+    tokens = list(argv) if argv is not None else sys.argv[1:]
+    if not tokens:
+        print("No command provided. Defaulting to 'run-full-pipeline'.", file=sys.stderr)
+        return ["run-full-pipeline"]
+    if any(token in _SUBCOMMANDS for token in tokens):
+        return tokens
+    if any(token in {"-h", "--help"} for token in tokens):
+        return tokens
+
+    prefix: list[str] = []
+    remainder: list[str] = []
+    index = 0
+    while index < len(tokens):
+        token = tokens[index]
+        if token in _GLOBAL_OPTIONS_WITH_VALUES:
+            prefix.append(token)
+            if index + 1 < len(tokens):
+                prefix.append(tokens[index + 1])
+                index += 2
+                continue
+            remainder = tokens[index:]
+            break
+        if token in _GLOBAL_FLAG_OPTIONS:
+            prefix.append(token)
+            index += 1
+            continue
+        remainder = tokens[index:]
+        break
+    else:
+        remainder = []
+
+    print("No command provided. Defaulting to 'run-full-pipeline'.", file=sys.stderr)
+    return [*prefix, "run-full-pipeline", *remainder]
+
+
 def main(argv: Iterable[str] | None = None) -> int:
     """CLI entrypoint used by both `python main.py` and console scripts."""
     parser = build_parser()
-    args = parser.parse_args(list(argv) if argv is not None else None)
+    args = parser.parse_args(_normalize_argv(argv))
     config = load_config(args.config)
     log_level = args.log_level or config.runtime.log_level
     configure_logging(log_level)
