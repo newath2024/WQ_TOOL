@@ -46,13 +46,16 @@ class SQLiteRepository:
         started_at: str,
         profile_name: str = "",
         selected_timeframe: str = "",
+        global_regime_key: str = "",
+        region: str = "",
         entry_command: str = "",
     ) -> None:
         self.connection.execute(
             """
             INSERT INTO runs
-            (run_id, seed, config_path, config_snapshot, status, started_at, profile_name, selected_timeframe, entry_command)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (run_id, seed, config_path, config_snapshot, status, started_at, profile_name, selected_timeframe,
+             global_regime_key, region, entry_command)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(run_id) DO UPDATE SET
                 seed = excluded.seed,
                 config_path = excluded.config_path,
@@ -60,6 +63,14 @@ class SQLiteRepository:
                 status = excluded.status,
                 profile_name = excluded.profile_name,
                 selected_timeframe = excluded.selected_timeframe,
+                global_regime_key = CASE
+                    WHEN excluded.global_regime_key <> '' THEN excluded.global_regime_key
+                    ELSE runs.global_regime_key
+                END,
+                region = CASE
+                    WHEN excluded.region <> '' THEN excluded.region
+                    ELSE runs.region
+                END,
                 entry_command = excluded.entry_command
             """,
             (
@@ -71,6 +82,8 @@ class SQLiteRepository:
                 started_at,
                 profile_name,
                 selected_timeframe,
+                global_regime_key,
+                region,
                 entry_command,
             ),
         )
@@ -99,6 +112,8 @@ class SQLiteRepository:
         dataset_fingerprint: str | None = None,
         selected_timeframe: str | None = None,
         regime_key: str | None = None,
+        global_regime_key: str | None = None,
+        region: str | None = None,
     ) -> None:
         self.connection.execute(
             """
@@ -106,7 +121,9 @@ class SQLiteRepository:
             SET dataset_summary = ?,
                 dataset_fingerprint = COALESCE(?, dataset_fingerprint),
                 selected_timeframe = COALESCE(?, selected_timeframe),
-                regime_key = COALESCE(?, regime_key)
+                regime_key = COALESCE(?, regime_key),
+                global_regime_key = COALESCE(?, global_regime_key),
+                region = COALESCE(?, region)
             WHERE run_id = ?
             """,
             (
@@ -114,6 +131,8 @@ class SQLiteRepository:
                 dataset_fingerprint,
                 selected_timeframe,
                 regime_key,
+                global_regime_key,
+                region,
                 run_id,
             ),
         )

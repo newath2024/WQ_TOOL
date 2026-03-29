@@ -7,9 +7,16 @@ from io import StringIO
 
 import pandas as pd
 
+from core.config import RegionLearningConfig
 from evaluation.critic import AlphaDiagnosis
 from memory.case_memory import CaseMemoryService, ObjectiveVector
-from memory.pattern_memory import MemoryParent, PatternMemoryService, PatternMemorySnapshot, PatternScore, StructuralSignature
+from memory.pattern_memory import (
+    MemoryParent,
+    PatternMemoryService,
+    PatternMemorySnapshot,
+    PatternScore,
+    StructuralSignature,
+)
 from storage.models import (
     AlphaCaseRecord,
     AlphaDiagnosisRecord,
@@ -29,6 +36,9 @@ class AlphaHistoryStore:
         self,
         run_id: str,
         regime_key: str,
+        *,
+        region: str = "",
+        global_regime_key: str = "",
         evaluations: list,
         pattern_decay: float,
         prior_weight: float,
@@ -71,7 +81,9 @@ class AlphaHistoryStore:
                 AlphaHistoryRecord(
                     run_id=run_id,
                     alpha_id=evaluation.candidate.alpha_id,
+                    region=region,
                     regime_key=regime_key,
+                    global_regime_key=global_regime_key,
                     expression=evaluation.candidate.expression,
                     normalized_expression=evaluation.candidate.normalized_expression,
                     generation_mode=evaluation.candidate.generation_mode,
@@ -136,7 +148,9 @@ class AlphaHistoryStore:
                     AlphaPatternMembershipRecord(
                         run_id=run_id,
                         alpha_id=evaluation.candidate.alpha_id,
+                        region=region,
                         regime_key=regime_key,
+                        global_regime_key=global_regime_key,
                         pattern_id=observation.pattern_id,
                         pattern_kind=observation.pattern_kind,
                         pattern_value=observation.pattern_value,
@@ -148,6 +162,8 @@ class AlphaHistoryStore:
                     self._build_case_record(
                         run_id=run_id,
                         regime_key=regime_key,
+                        region=region,
+                        global_regime_key=global_regime_key,
                         candidate=evaluation.candidate,
                         structural_signature=evaluation.structural_signature,
                         metric_source="local_backtest",
@@ -179,6 +195,9 @@ class AlphaHistoryStore:
         self,
         run_id: str,
         regime_key: str,
+        *,
+        region: str = "",
+        global_regime_key: str = "",
         entries: list[dict],
         pattern_decay: float,
         prior_weight: float,
@@ -225,7 +244,9 @@ class AlphaHistoryStore:
                 AlphaHistoryRecord(
                     run_id=run_id,
                     alpha_id=candidate.alpha_id,
+                    region=region or str(result.region or ""),
                     regime_key=regime_key,
+                    global_regime_key=global_regime_key,
                     expression=candidate.expression,
                     normalized_expression=candidate.normalized_expression,
                     generation_mode=candidate.generation_mode,
@@ -284,7 +305,9 @@ class AlphaHistoryStore:
                     AlphaPatternMembershipRecord(
                         run_id=run_id,
                         alpha_id=candidate.alpha_id,
+                        region=region or str(result.region or ""),
                         regime_key=regime_key,
+                        global_regime_key=global_regime_key,
                         pattern_id=observation.pattern_id,
                         pattern_kind=observation.pattern_kind,
                         pattern_value=observation.pattern_value,
@@ -295,6 +318,8 @@ class AlphaHistoryStore:
                 self._build_case_record(
                     run_id=run_id,
                     regime_key=regime_key,
+                    region=region or str(result.region or ""),
+                    global_regime_key=global_regime_key,
                     candidate=candidate,
                     structural_signature=structural_signature,
                     metric_source=str(entry.get("metric_source") or "external_brain"),
@@ -322,7 +347,17 @@ class AlphaHistoryStore:
         self._rebuild_pattern_scores(regime_key=regime_key, pattern_decay=pattern_decay, prior_weight=prior_weight)
         self.connection.commit()
 
-    def load_snapshot(self, regime_key: str, parent_pool_size: int) -> PatternMemorySnapshot:
+    def load_snapshot(
+        self,
+        regime_key: str,
+        parent_pool_size: int,
+        *,
+        region: str = "",
+        global_regime_key: str = "",
+        region_learning_config: RegionLearningConfig | None = None,
+        pattern_decay: float = 0.98,
+        prior_weight: float = 3.0,
+    ) -> PatternMemorySnapshot:
         pattern_rows = self.connection.execute(
             "SELECT * FROM alpha_patterns WHERE regime_key = ? ORDER BY pattern_score DESC, support DESC",
             (regime_key,),
@@ -337,6 +372,17 @@ class AlphaHistoryStore:
             """,
             (regime_key, parent_pool_size),
         ).fetchall()
+        if not parent_rows and region_learning_config and region_learning_config.allow_global_parent_fallback and global_regime_key:
+            parent_rows = self.connection.execute(
+                """
+                SELECT *
+                FROM alpha_history
+                WHERE global_regime_key = ? AND regime_key <> ? AND passed_filters = 1
+                ORDER BY outcome_score DESC, created_at DESC
+                LIMIT ?
+                """,
+                (global_regime_key, regime_key, parent_pool_size),
+            ).fetchall()
         fail_tag_rows = self.connection.execute(
             """
             SELECT d.tag, COUNT(*) AS total_count
@@ -349,6 +395,60 @@ class AlphaHistoryStore:
             """,
             (regime_key,),
         ).fetchall()
+        local_sample_count = int(
+            self.connection.execute(
+                "SELECT COUNT(*) AS total FROM alpha_history WHERE regime_key = ?",
+                (regime_key,),
+            ).fetchone()["total"]
+            or 0
+        )
+        global_pattern_rows = []
+        global_fail_tag_rows = []
+        global_sample_count = 0
+        if global_regime_key:
+            global_pattern_rows = self.connection.execute(
+                """
+                SELECT
+                    m.pattern_id,
+                    m.pattern_kind,
+                    m.pattern_value,
+                    h.outcome_score,
+                    h.behavioral_novelty_score,
+                    h.passed_filters,
+                    h.selected,
+                    h.diagnosis_summary_json,
+                    h.created_at
+                FROM alpha_pattern_membership m
+                JOIN alpha_history h
+                  ON h.run_id = m.run_id AND h.alpha_id = m.alpha_id
+                WHERE h.global_regime_key = ? AND h.regime_key <> ?
+                ORDER BY m.pattern_id ASC, h.created_at ASC
+                """,
+                (global_regime_key, regime_key),
+            ).fetchall()
+            global_fail_tag_rows = self.connection.execute(
+                """
+                SELECT d.tag, COUNT(*) AS total_count
+                FROM alpha_diagnoses d
+                JOIN alpha_history h
+                  ON h.run_id = d.run_id AND h.alpha_id = d.alpha_id
+                WHERE h.global_regime_key = ? AND h.regime_key <> ? AND d.tag_type = 'fail'
+                GROUP BY d.tag
+                ORDER BY total_count DESC, d.tag ASC
+                """,
+                (global_regime_key, regime_key),
+            ).fetchall()
+            global_sample_count = int(
+                self.connection.execute(
+                    """
+                    SELECT COUNT(*) AS total
+                    FROM alpha_history
+                    WHERE global_regime_key = ? AND regime_key <> ?
+                    """,
+                    (global_regime_key, regime_key),
+                ).fetchone()["total"]
+                or 0
+            )
         patterns = {
             row["pattern_id"]: PatternScore(
                 pattern_id=row["pattern_id"],
@@ -364,16 +464,43 @@ class AlphaHistoryStore:
             )
             for row in pattern_rows
         }
+        global_patterns = self._build_pattern_scores_from_membership_rows(
+            global_pattern_rows,
+            pattern_decay=pattern_decay,
+            prior_weight=prior_weight,
+        )
         top_parents = tuple(self._memory_parent_from_row(row) for row in parent_rows)
         fail_tag_counts = {row["tag"]: int(row["total_count"]) for row in fail_tag_rows}
+        global_fail_tag_counts = {row["tag"]: int(row["total_count"]) for row in global_fail_tag_rows}
+        blend = self.memory_service.compute_blend_diagnostics(
+            scope="pattern",
+            local_samples=local_sample_count,
+            global_samples=global_sample_count,
+            config=region_learning_config or RegionLearningConfig(),
+        )
         return PatternMemorySnapshot(
             regime_key=regime_key,
+            global_regime_key=global_regime_key,
+            region=region,
             patterns=patterns,
             top_parents=top_parents,
             fail_tag_counts=fail_tag_counts,
+            sample_count=local_sample_count,
+            global_patterns=global_patterns,
+            global_fail_tag_counts=global_fail_tag_counts,
+            global_sample_count=global_sample_count,
+            blend=blend,
         )
 
-    def load_case_snapshot(self, regime_key: str, limit: int = 500):
+    def load_case_snapshot(
+        self,
+        regime_key: str,
+        *,
+        region: str = "",
+        global_regime_key: str = "",
+        region_learning_config: RegionLearningConfig | None = None,
+        limit: int = 500,
+    ):
         rows = self.connection.execute(
             """
             SELECT *
@@ -384,6 +511,34 @@ class AlphaHistoryStore:
             """,
             (regime_key, limit),
         ).fetchall()
+        global_rows = self.connection.execute(
+            """
+            SELECT *
+            FROM alpha_cases
+            WHERE global_regime_key = ? AND regime_key <> ?
+            ORDER BY created_at DESC, outcome_score DESC
+            LIMIT ?
+            """,
+            (global_regime_key, regime_key, limit),
+        ).fetchall() if global_regime_key else []
+        local_sample_count = int(
+            self.connection.execute(
+                "SELECT COUNT(*) AS total FROM alpha_cases WHERE regime_key = ?",
+                (regime_key,),
+            ).fetchone()["total"]
+            or 0
+        )
+        global_sample_count = int(
+            self.connection.execute(
+                """
+                SELECT COUNT(*) AS total
+                FROM alpha_cases
+                WHERE global_regime_key = ? AND regime_key <> ?
+                """,
+                (global_regime_key, regime_key),
+            ).fetchone()["total"]
+            or 0
+        ) if global_regime_key else 0
         records = [
             self.case_memory_service.record_from_persisted_payload(
                 row=dict(row),
@@ -391,7 +546,27 @@ class AlphaHistoryStore:
             )
             for row in rows
         ]
-        return self.case_memory_service.build_snapshot(regime_key, records)
+        global_records = [
+            self.case_memory_service.record_from_persisted_payload(
+                row=dict(row),
+                structural_signature=self._structural_signature_from_json(row["structural_signature_json"]),
+            )
+            for row in global_rows
+        ]
+        blend = self.memory_service.compute_blend_diagnostics(
+            scope="case",
+            local_samples=local_sample_count,
+            global_samples=global_sample_count,
+            config=region_learning_config or RegionLearningConfig(),
+        )
+        return self.case_memory_service.build_snapshot(
+            regime_key,
+            records,
+            region=region,
+            global_regime_key=global_regime_key,
+            global_records=global_records,
+            blend=blend,
+        )
 
     def get_novelty_references(self, regime_key: str, limit: int) -> list[dict]:
         rows = self.connection.execute(
@@ -513,13 +688,15 @@ class AlphaHistoryStore:
             self.connection.execute(
                 """
                 INSERT INTO alpha_history
-                (run_id, alpha_id, regime_key, expression, normalized_expression, generation_mode, generation_metadata_json,
+                (run_id, alpha_id, region, regime_key, global_regime_key, expression, normalized_expression, generation_mode, generation_metadata_json,
                  parent_refs_json, structural_signature_json, gene_ids_json, train_metrics_json, validation_metrics_json,
                  test_metrics_json, validation_signal_json, validation_returns_json, outcome_score, behavioral_novelty_score,
                  passed_filters, selected, submission_pass_count, diagnosis_summary_json, rejection_reasons_json, metric_source, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(run_id, alpha_id) DO UPDATE SET
+                    region = excluded.region,
                     regime_key = excluded.regime_key,
+                    global_regime_key = excluded.global_regime_key,
                     expression = excluded.expression,
                     normalized_expression = excluded.normalized_expression,
                     generation_mode = excluded.generation_mode,
@@ -545,7 +722,9 @@ class AlphaHistoryStore:
                 (
                     record.run_id,
                     record.alpha_id,
+                    record.region,
                     record.regime_key,
+                    record.global_regime_key,
                     record.expression,
                     record.normalized_expression,
                     record.generation_mode,
@@ -585,13 +764,15 @@ class AlphaHistoryStore:
             self.connection.execute(
                 """
                 INSERT OR REPLACE INTO alpha_pattern_membership
-                (run_id, alpha_id, regime_key, pattern_id, pattern_kind, pattern_value, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                (run_id, alpha_id, region, regime_key, global_regime_key, pattern_id, pattern_kind, pattern_value, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     record.run_id,
                     record.alpha_id,
+                    record.region,
                     record.regime_key,
+                    record.global_regime_key,
                     record.pattern_id,
                     record.pattern_kind,
                     record.pattern_value,
@@ -604,12 +785,14 @@ class AlphaHistoryStore:
             self.connection.execute(
                 """
                 INSERT INTO alpha_cases
-                (run_id, alpha_id, regime_key, metric_source, family_signature, structural_signature_json, genome_hash, genome_json,
+                (run_id, alpha_id, region, regime_key, global_regime_key, metric_source, family_signature, structural_signature_json, genome_hash, genome_json,
                  motif, field_families_json, operator_path_json, complexity_bucket, turnover_bucket, horizon_bucket, mutation_mode,
                  parent_family_signatures_json, fail_tags_json, success_tags_json, objective_vector_json, outcome_score, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(run_id, alpha_id, metric_source) DO UPDATE SET
+                    region = excluded.region,
                     regime_key = excluded.regime_key,
+                    global_regime_key = excluded.global_regime_key,
                     family_signature = excluded.family_signature,
                     structural_signature_json = excluded.structural_signature_json,
                     genome_hash = excluded.genome_hash,
@@ -631,7 +814,9 @@ class AlphaHistoryStore:
                 (
                     record.run_id,
                     record.alpha_id,
+                    record.region,
                     record.regime_key,
+                    record.global_regime_key,
                     record.metric_source,
                     record.family_signature,
                     record.structural_signature_json,
@@ -674,44 +859,13 @@ class AlphaHistoryStore:
             """,
             (regime_key,),
         ).fetchall()
-        grouped: dict[str, list[sqlite3.Row]] = {}
-        for row in rows:
-            grouped.setdefault(row["pattern_id"], []).append(row)
-
         self.connection.execute("DELETE FROM alpha_patterns WHERE regime_key = ?", (regime_key,))
-        for pattern_id, group_rows in grouped.items():
-            weights = [pattern_decay ** (len(group_rows) - index - 1) for index in range(len(group_rows))]
-            total_weight = sum(weights) or 1.0
-            avg_outcome = sum(weight * float(row["outcome_score"]) for weight, row in zip(weights, group_rows, strict=True)) / total_weight
-            avg_novelty = (
-                sum(weight * float(row["behavioral_novelty_score"]) for weight, row in zip(weights, group_rows, strict=True))
-                / total_weight
-            )
-            support = len(group_rows)
-            success_count = sum(int(row["passed_filters"]) or int(row["selected"]) for row in group_rows)
-            failure_count = support - success_count
-            fail_tag_counts: dict[str, int] = {}
-            for row in group_rows:
-                summary = json.loads(row["diagnosis_summary_json"])
-                for tag in summary.get("fail_tags", []):
-                    fail_tag_counts[tag] = fail_tag_counts.get(tag, 0) + 1
-            smoothed_score = (support * avg_outcome) / (support + prior_weight)
-            pattern_score = float(smoothed_score + 0.05 * math.log1p(success_count))
-            pattern_record = AlphaPatternRecord(
-                regime_key=regime_key,
-                pattern_id=pattern_id,
-                pattern_kind=group_rows[0]["pattern_kind"],
-                pattern_value=group_rows[0]["pattern_value"],
-                support=support,
-                success_count=success_count,
-                failure_count=failure_count,
-                avg_outcome=float(avg_outcome),
-                avg_behavioral_novelty=float(avg_novelty),
-                fail_tag_counts_json=json.dumps(fail_tag_counts, sort_keys=True),
-                pattern_score=pattern_score,
-                last_seen_at=max(str(row["created_at"]) for row in group_rows),
-                updated_at=max(str(row["created_at"]) for row in group_rows),
-            )
+        for pattern_record in self._build_pattern_records_from_membership_rows(
+            regime_key=regime_key,
+            rows=rows,
+            pattern_decay=pattern_decay,
+            prior_weight=prior_weight,
+        ):
             self.connection.execute(
                 """
                 INSERT INTO alpha_patterns
@@ -735,6 +889,83 @@ class AlphaHistoryStore:
                     pattern_record.updated_at,
                 ),
             )
+
+    def _build_pattern_scores_from_membership_rows(
+        self,
+        rows: list[sqlite3.Row],
+        *,
+        pattern_decay: float,
+        prior_weight: float,
+    ) -> dict[str, PatternScore]:
+        return {
+            record.pattern_id: PatternScore(
+                pattern_id=record.pattern_id,
+                pattern_kind=record.pattern_kind,
+                pattern_value=record.pattern_value,
+                support=record.support,
+                success_count=record.success_count,
+                failure_count=record.failure_count,
+                avg_outcome=record.avg_outcome,
+                avg_behavioral_novelty=record.avg_behavioral_novelty,
+                fail_tag_counts=json.loads(record.fail_tag_counts_json),
+                pattern_score=record.pattern_score,
+            )
+            for record in self._build_pattern_records_from_membership_rows(
+                regime_key="",
+                rows=rows,
+                pattern_decay=pattern_decay,
+                prior_weight=prior_weight,
+            )
+        }
+
+    def _build_pattern_records_from_membership_rows(
+        self,
+        *,
+        regime_key: str,
+        rows: list[sqlite3.Row],
+        pattern_decay: float,
+        prior_weight: float,
+    ) -> list[AlphaPatternRecord]:
+        grouped: dict[str, list[sqlite3.Row]] = {}
+        for row in rows:
+            grouped.setdefault(row["pattern_id"], []).append(row)
+        records: list[AlphaPatternRecord] = []
+        for pattern_id, group_rows in grouped.items():
+            weights = [pattern_decay ** (len(group_rows) - index - 1) for index in range(len(group_rows))]
+            total_weight = sum(weights) or 1.0
+            avg_outcome = sum(weight * float(row["outcome_score"]) for weight, row in zip(weights, group_rows, strict=True)) / total_weight
+            avg_novelty = (
+                sum(weight * float(row["behavioral_novelty_score"]) for weight, row in zip(weights, group_rows, strict=True))
+                / total_weight
+            )
+            support = len(group_rows)
+            success_count = sum(int(row["passed_filters"]) or int(row["selected"]) for row in group_rows)
+            failure_count = support - success_count
+            fail_tag_counts: dict[str, int] = {}
+            for row in group_rows:
+                summary = json.loads(row["diagnosis_summary_json"])
+                for tag in summary.get("fail_tags", []):
+                    fail_tag_counts[tag] = fail_tag_counts.get(tag, 0) + 1
+            smoothed_score = (support * avg_outcome) / (support + prior_weight)
+            pattern_score = float(smoothed_score + 0.05 * math.log1p(success_count))
+            records.append(
+                AlphaPatternRecord(
+                    regime_key=regime_key,
+                    pattern_id=pattern_id,
+                    pattern_kind=group_rows[0]["pattern_kind"],
+                    pattern_value=group_rows[0]["pattern_value"],
+                    support=support,
+                    success_count=success_count,
+                    failure_count=failure_count,
+                    avg_outcome=float(avg_outcome),
+                    avg_behavioral_novelty=float(avg_novelty),
+                    fail_tag_counts_json=json.dumps(fail_tag_counts, sort_keys=True),
+                    pattern_score=pattern_score,
+                    last_seen_at=max(str(row["created_at"]) for row in group_rows),
+                    updated_at=max(str(row["created_at"]) for row in group_rows),
+                )
+            )
+        return records
 
     def _memory_parent_from_row(self, row: sqlite3.Row) -> MemoryParent:
         summary = json.loads(row["diagnosis_summary_json"])
@@ -761,6 +992,8 @@ class AlphaHistoryStore:
         *,
         run_id: str,
         regime_key: str,
+        region: str,
+        global_regime_key: str,
         candidate,
         structural_signature,
         metric_source: str,
@@ -780,7 +1013,9 @@ class AlphaHistoryStore:
         return AlphaCaseRecord(
             run_id=run_id,
             alpha_id=candidate.alpha_id,
+            region=region,
             regime_key=regime_key,
+            global_regime_key=global_regime_key,
             metric_source=metric_source,
             family_signature=structural_signature.family_signature,
             structural_signature_json=json.dumps(structural_signature.to_dict(), sort_keys=True),

@@ -5,10 +5,12 @@ from core.config import (
     AppConfig,
     AuxDataConfig,
     BacktestConfig,
+    BrainConfig,
     DataConfig,
     EvaluationConfig,
     GenerationConfig,
     PeriodConfig,
+    RegionLearningConfig,
     RuntimeConfig,
     SimulationConfig,
     SplitConfig,
@@ -18,7 +20,7 @@ from core.config import (
 from memory.pattern_memory import FAIL_TAG_PENALTIES, PatternMemoryService, PatternMemorySnapshot, PatternScore
 
 
-def build_app_config(*, delay_mode: str = "d1", holding_period: int = 2) -> AppConfig:
+def build_app_config(*, delay_mode: str = "d1", holding_period: int = 2, region: str = "USA") -> AppConfig:
     return AppConfig(
         data=DataConfig(path="examples/sample_data/daily_ohlcv.csv"),
         aux_data=AuxDataConfig(),
@@ -70,6 +72,7 @@ def build_app_config(*, delay_mode: str = "d1", holding_period: int = 2) -> AppC
         ),
         submission_tests=SubmissionTestConfig(),
         storage=StorageConfig(path=":memory:"),
+        brain=BrainConfig(region=region),
         runtime=RuntimeConfig(log_level="WARNING"),
     )
 
@@ -100,6 +103,39 @@ def test_pattern_memory_regime_key_changes_with_simulation_profile() -> None:
     regime_b = service.build_regime_key("dataset-fingerprint", changed)
 
     assert regime_a != regime_b
+
+
+def test_region_learning_context_is_region_local_but_global_key_ignores_region() -> None:
+    service = PatternMemoryService()
+    usa = build_app_config(region="USA")
+    eur = build_app_config(region="EUR")
+
+    usa_context = service.build_learning_context("dataset-fingerprint", usa)
+    eur_context = service.build_learning_context("dataset-fingerprint", eur)
+
+    assert usa_context.regime_key != eur_context.regime_key
+    assert usa_context.global_regime_key == eur_context.global_regime_key
+
+
+def test_region_learning_blend_weights_ramp_from_global_to_local() -> None:
+    service = PatternMemoryService()
+    config = RegionLearningConfig(
+        min_local_pattern_samples=10,
+        full_local_pattern_samples=30,
+        min_local_case_samples=5,
+        full_local_case_samples=15,
+    )
+
+    cold = service.compute_blend_diagnostics(scope="pattern", local_samples=0, global_samples=12, config=config)
+    mid = service.compute_blend_diagnostics(scope="pattern", local_samples=20, global_samples=12, config=config)
+    hot = service.compute_blend_diagnostics(scope="case", local_samples=20, global_samples=8, config=config)
+
+    assert cold.local_weight == 0.0
+    assert cold.global_weight == 1.0
+    assert 0.0 < mid.local_weight < 1.0
+    assert round(mid.local_weight, 2) == 0.50
+    assert hot.local_weight == 1.0
+    assert hot.global_weight == 0.0
 
 
 def test_pattern_memory_outcome_score_and_thresholded_pattern_scoring() -> None:

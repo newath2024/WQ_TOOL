@@ -5,7 +5,7 @@ from dataclasses import asdict, dataclass, field
 from typing import Any, Iterable
 
 from generator.genome import Genome
-from memory.pattern_memory import StructuralSignature
+from memory.pattern_memory import BlendDiagnostics, StructuralSignature
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,7 +40,9 @@ class ObjectiveVector:
 class CaseMemoryRecord:
     run_id: str
     alpha_id: str
+    region: str
     regime_key: str
+    global_regime_key: str
     metric_source: str
     family_signature: str
     structural_signature: StructuralSignature
@@ -79,15 +81,80 @@ class CaseAggregate:
 @dataclass(frozen=True, slots=True)
 class CaseMemorySnapshot:
     regime_key: str
+    global_regime_key: str = ""
+    region: str = ""
     cases: tuple[CaseMemoryRecord, ...] = ()
     family_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     motif_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     mutation_mode_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    operator_path_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    horizon_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    turnover_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    complexity_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     failure_combo_counts: dict[str, int] = field(default_factory=dict)
+    sample_count: int = 0
+    global_cases: tuple[CaseMemoryRecord, ...] = ()
+    global_family_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_motif_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_mutation_mode_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_operator_path_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_horizon_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_turnover_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_complexity_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_failure_combo_counts: dict[str, int] = field(default_factory=dict)
+    global_sample_count: int = 0
+    blend: BlendDiagnostics | None = None
 
-    def repeated_failure_count(self, *parts: str) -> int:
+    def repeated_failure_count(self, *parts: str, scope: str = "blended") -> int:
         key = "|".join(part for part in parts if part)
-        return int(self.failure_combo_counts.get(key, 0))
+        normalized_scope = str(scope or "blended").strip().lower()
+        if normalized_scope == "local":
+            return int(self.failure_combo_counts.get(key, 0))
+        if normalized_scope == "global":
+            return int(self.global_failure_combo_counts.get(key, 0))
+        return int(
+            round(
+                _weighted_value(
+                    float(self.failure_combo_counts.get(key, 0)),
+                    float(self.global_failure_combo_counts.get(key, 0)),
+                    local_available=key in self.failure_combo_counts,
+                    global_available=key in self.global_failure_combo_counts,
+                    blend=self.blend,
+                )
+            )
+        )
+
+    def stats_for_scope(self, category: str, scope: str = "blended") -> dict[str, CaseAggregate]:
+        local_map = self._stats_map(category, "local")
+        global_map = self._stats_map(category, "global")
+        normalized_scope = str(scope or "blended").strip().lower()
+        if normalized_scope == "local":
+            return dict(local_map)
+        if normalized_scope == "global":
+            return dict(global_map)
+        keys = set(local_map) | set(global_map)
+        return {
+            key: _merge_case_aggregate(local_map.get(key), global_map.get(key), self.blend)
+            for key in keys
+            if _merge_case_aggregate(local_map.get(key), global_map.get(key), self.blend) is not None
+        }
+
+    def aggregate_for(self, category: str, key: str, scope: str = "blended") -> CaseAggregate | None:
+        return self.stats_for_scope(category, scope).get(key)
+
+    def _stats_map(self, category: str, scope: str) -> dict[str, CaseAggregate]:
+        normalized_scope = str(scope or "local").strip().lower()
+        prefix = "global_" if normalized_scope == "global" else ""
+        mapping = {
+            "family": f"{prefix}family_stats",
+            "motif": f"{prefix}motif_stats",
+            "mutation_mode": f"{prefix}mutation_mode_stats",
+            "operator_path": f"{prefix}operator_path_stats",
+            "horizon_bucket": f"{prefix}horizon_bucket_stats",
+            "turnover_bucket": f"{prefix}turnover_bucket_stats",
+            "complexity_bucket": f"{prefix}complexity_bucket_stats",
+        }
+        return dict(getattr(self, mapping.get(category, "family_stats")))
 
 
 class CaseMemoryService:
@@ -110,7 +177,9 @@ class CaseMemoryService:
         return CaseMemoryRecord(
             run_id=row["run_id"],
             alpha_id=row["alpha_id"],
+            region=str(row.get("region") or ""),
             regime_key=row["regime_key"],
+            global_regime_key=str(row.get("global_regime_key") or ""),
             metric_source=row["metric_source"],
             family_signature=row["family_signature"],
             structural_signature=structural_signature,
@@ -131,15 +200,43 @@ class CaseMemoryService:
             created_at=row["created_at"],
         )
 
-    def build_snapshot(self, regime_key: str, records: Iterable[CaseMemoryRecord]) -> CaseMemorySnapshot:
+    def build_snapshot(
+        self,
+        regime_key: str,
+        records: Iterable[CaseMemoryRecord],
+        *,
+        region: str = "",
+        global_regime_key: str = "",
+        global_records: Iterable[CaseMemoryRecord] | None = None,
+        blend: BlendDiagnostics | None = None,
+    ) -> CaseMemorySnapshot:
         cases = tuple(sorted(records, key=lambda item: (item.created_at, item.alpha_id)))
+        fallback_cases = tuple(sorted(global_records or (), key=lambda item: (item.created_at, item.alpha_id)))
         return CaseMemorySnapshot(
             regime_key=regime_key,
+            global_regime_key=global_regime_key,
+            region=region,
             cases=cases,
             family_stats=self._aggregate(cases, key_fn=lambda case: case.family_signature),
             motif_stats=self._aggregate(cases, key_fn=lambda case: case.motif),
             mutation_mode_stats=self._aggregate(cases, key_fn=lambda case: case.mutation_mode),
+            operator_path_stats=self._aggregate(cases, key_fn=lambda case: ">".join(case.operator_path[:4])),
+            horizon_bucket_stats=self._aggregate(cases, key_fn=lambda case: case.horizon_bucket),
+            turnover_bucket_stats=self._aggregate(cases, key_fn=lambda case: case.turnover_bucket),
+            complexity_bucket_stats=self._aggregate(cases, key_fn=lambda case: case.complexity_bucket),
             failure_combo_counts=self._failure_combo_counts(cases),
+            sample_count=len(cases),
+            global_cases=fallback_cases,
+            global_family_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.family_signature),
+            global_motif_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.motif),
+            global_mutation_mode_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.mutation_mode),
+            global_operator_path_stats=self._aggregate(fallback_cases, key_fn=lambda case: ">".join(case.operator_path[:4])),
+            global_horizon_bucket_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.horizon_bucket),
+            global_turnover_bucket_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.turnover_bucket),
+            global_complexity_bucket_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.complexity_bucket),
+            global_failure_combo_counts=self._failure_combo_counts(fallback_cases),
+            global_sample_count=len(fallback_cases),
+            blend=blend,
         )
 
     def predict_objectives(
@@ -151,7 +248,7 @@ class CaseMemoryService:
         novelty_score: float,
         diversity_score: float,
     ) -> ObjectiveVector:
-        if snapshot is None or not snapshot.cases:
+        if snapshot is None or (not snapshot.cases and not snapshot.global_cases):
             complexity_cost = min(1.0, signature.complexity / 20.0)
             turnover_cost = self._turnover_cost(signature.turnover_bucket)
             return ObjectiveVector(
@@ -167,12 +264,19 @@ class CaseMemoryService:
 
         motif = str(generation_metadata.get("motif") or signature.motif or "")
         mutation_mode = str(generation_metadata.get("mutation_mode") or "")
-        family_stats = snapshot.family_stats.get(signature.family_signature)
-        motif_stats = snapshot.motif_stats.get(motif)
-        mutation_stats = snapshot.mutation_mode_stats.get(mutation_mode)
-        aggregates = [item for item in (family_stats, motif_stats, mutation_stats) if item is not None]
+        operator_path_key = ">".join(signature.operator_path[:4])
+        aggregates = [
+            snapshot.aggregate_for("family", signature.family_signature, scope="blended"),
+            snapshot.aggregate_for("motif", motif, scope="blended"),
+            snapshot.aggregate_for("mutation_mode", mutation_mode, scope="blended"),
+            snapshot.aggregate_for("operator_path", operator_path_key, scope="blended"),
+            snapshot.aggregate_for("horizon_bucket", signature.horizon_bucket, scope="blended"),
+            snapshot.aggregate_for("turnover_bucket", signature.turnover_bucket, scope="blended"),
+            snapshot.aggregate_for("complexity_bucket", signature.complexity_bucket, scope="blended"),
+        ]
+        aggregates = [item for item in aggregates if item is not None]
         if not aggregates:
-            aggregates = list(snapshot.family_stats.values())[:1]
+            aggregates = list(snapshot.stats_for_scope("family", scope="blended").values())[:1]
         avg_fitness = sum(item.avg_fitness for item in aggregates) / len(aggregates)
         avg_sharpe = sum(item.avg_sharpe for item in aggregates) / len(aggregates)
         avg_eligibility = sum(item.avg_eligibility for item in aggregates) / len(aggregates)
@@ -204,20 +308,25 @@ class CaseMemoryService:
             "novelty": 1.0,
             "repair": 1.0,
         }
-        if snapshot is None or not snapshot.cases:
+        if snapshot is None or (not snapshot.cases and not snapshot.global_cases):
             return base
-        family_cases = [case for case in snapshot.cases if case.family_signature == family_signature]
-        for case in family_cases:
-            base[case.mutation_mode or "exploit_local"] = base.get(case.mutation_mode or "exploit_local", 1.0) + max(
-                -0.5,
-                min(1.5, case.outcome_score),
-            )
+        local_weight = float(snapshot.blend.local_weight) if snapshot.blend is not None else 1.0
+        global_weight = float(snapshot.blend.global_weight) if snapshot.blend is not None else 0.0
         fail_tag_set = set(fail_tags)
+        for case in [case for case in snapshot.cases if case.family_signature == family_signature]:
+            mode = case.mutation_mode or "exploit_local"
+            base[mode] = base.get(mode, 1.0) + local_weight * self._mutation_case_bonus(case=case, fail_tag_set=fail_tag_set)
+        for case in [case for case in snapshot.global_cases if case.family_signature == family_signature]:
+            mode = case.mutation_mode or "exploit_local"
+            base[mode] = base.get(mode, 1.0) + global_weight * self._mutation_case_bonus(case=case, fail_tag_set=fail_tag_set)
         if {"high_turnover", "excessive_complexity", "brain_rejected"} & fail_tag_set:
-            base["repair"] += 1.5
+            base["repair"] += 2.0
+            base["exploit_local"] *= 0.80
+            base["crossover"] *= 0.90
         if {"duplicate_family_no_improvement", "poor_fitness"} & fail_tag_set:
             base["novelty"] += 1.0
             base["structural"] += 0.75
+            base["exploit_local"] *= 0.85
         return base
 
     def repeated_failure_count(
@@ -230,7 +339,7 @@ class CaseMemoryService:
     ) -> int:
         if snapshot is None:
             return 0
-        return snapshot.repeated_failure_count(family_signature, motif, mutation_mode)
+        return snapshot.repeated_failure_count(family_signature, motif, mutation_mode, scope="blended")
 
     def _aggregate(
         self,
@@ -286,4 +395,127 @@ class CaseMemoryService:
             "active": 0.65,
             "very_active": 0.90,
         }.get(turnover_bucket, 0.50)
+
+    def _mutation_case_bonus(self, *, case: CaseMemoryRecord, fail_tag_set: set[str]) -> float:
+        outcome_component = max(-0.5, min(2.0, float(case.outcome_score)))
+        success_component = 0.5 if case.outcome_score > 0 else -0.25
+        fail_overlap = len(fail_tag_set & set(case.fail_tags))
+        fail_overlap_bonus = min(1.5, 0.75 * fail_overlap)
+        return max(-0.75, outcome_component + success_component + fail_overlap_bonus)
+
+
+def _merge_case_aggregate(
+    local_aggregate: CaseAggregate | None,
+    global_aggregate: CaseAggregate | None,
+    blend: BlendDiagnostics | None,
+) -> CaseAggregate | None:
+    if local_aggregate is None and global_aggregate is None:
+        return None
+    template = local_aggregate or global_aggregate
+    assert template is not None
+    return CaseAggregate(
+        support=int(
+            round(
+                _weighted_value(
+                    float(local_aggregate.support) if local_aggregate else 0.0,
+                    float(global_aggregate.support) if global_aggregate else 0.0,
+                    local_available=local_aggregate is not None,
+                    global_available=global_aggregate is not None,
+                    blend=blend,
+                )
+            )
+        ),
+        avg_outcome=_weighted_value(
+            float(local_aggregate.avg_outcome) if local_aggregate else 0.0,
+            float(global_aggregate.avg_outcome) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        avg_fitness=_weighted_value(
+            float(local_aggregate.avg_fitness) if local_aggregate else 0.0,
+            float(global_aggregate.avg_fitness) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        avg_sharpe=_weighted_value(
+            float(local_aggregate.avg_sharpe) if local_aggregate else 0.0,
+            float(global_aggregate.avg_sharpe) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        avg_eligibility=_weighted_value(
+            float(local_aggregate.avg_eligibility) if local_aggregate else 0.0,
+            float(global_aggregate.avg_eligibility) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        avg_robustness=_weighted_value(
+            float(local_aggregate.avg_robustness) if local_aggregate else 0.0,
+            float(global_aggregate.avg_robustness) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        avg_novelty=_weighted_value(
+            float(local_aggregate.avg_novelty) if local_aggregate else 0.0,
+            float(global_aggregate.avg_novelty) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        avg_turnover_cost=_weighted_value(
+            float(local_aggregate.avg_turnover_cost) if local_aggregate else 0.0,
+            float(global_aggregate.avg_turnover_cost) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        avg_complexity_cost=_weighted_value(
+            float(local_aggregate.avg_complexity_cost) if local_aggregate else 0.0,
+            float(global_aggregate.avg_complexity_cost) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        success_rate=_weighted_value(
+            float(local_aggregate.success_rate) if local_aggregate else 0.0,
+            float(global_aggregate.success_rate) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+        failure_rate=_weighted_value(
+            float(local_aggregate.failure_rate) if local_aggregate else 0.0,
+            float(global_aggregate.failure_rate) if global_aggregate else 0.0,
+            local_available=local_aggregate is not None,
+            global_available=global_aggregate is not None,
+            blend=blend,
+        ),
+    )
+
+
+def _weighted_value(
+    local_value: float,
+    global_value: float,
+    *,
+    local_available: bool,
+    global_available: bool,
+    blend: BlendDiagnostics | None,
+) -> float:
+    if local_available and not global_available:
+        return float(local_value)
+    if global_available and not local_available:
+        return float(global_value)
+    if not local_available and not global_available:
+        return 0.0
+    local_weight = float(blend.local_weight) if blend is not None else 1.0
+    global_weight = float(blend.global_weight) if blend is not None else 0.0
+    total = local_weight + global_weight
+    if total <= 0:
+        return float(local_value)
+    return float((local_weight * local_value + global_weight * global_value) / total)
 

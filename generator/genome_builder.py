@@ -18,6 +18,7 @@ from generator.genome import (
 )
 from generator.grammar import MOTIF_LIBRARY
 from memory.case_memory import CaseMemorySnapshot
+from generator.genome import bucket_horizon
 
 
 class GenomeBuilder:
@@ -117,7 +118,10 @@ class GenomeBuilder:
         auxiliary = self._pick_auxiliary_field(primary, secondary, novelty_bias=novelty_bias)
         group_field = self._pick_group_field() if motif == "group_relative_signal" or self.random.random() < 0.20 else ""
         liquidity_field = self._pick_liquidity_field(auxiliary, secondary, primary) if motif == "liquidity_conditioned_signal" else ""
-        fast_window, slow_window, context_window = self._pick_windows(novelty_bias=novelty_bias)
+        fast_window, slow_window, context_window = self._pick_windows(
+            novelty_bias=novelty_bias,
+            case_snapshot=case_snapshot,
+        )
         primitive = self._pick_primitive(motif)
         secondary_transform = self._pick_secondary_transform(motif, primitive)
         pair_operator = self.random.choice(self.pair_ops or ["ts_corr"]) if motif not in MOTIF_LIBRARY else ""
@@ -165,13 +169,13 @@ class GenomeBuilder:
     def _pick_motif(self, *, novelty_bias: bool, case_snapshot: CaseMemorySnapshot | None) -> str:
         motifs = list(MOTIF_LIBRARY)
         weights: list[float] = []
-        motif_support = case_snapshot.motif_stats if case_snapshot else {}
+        motif_support = case_snapshot.stats_for_scope("motif", scope="blended") if case_snapshot else {}
         for motif in motifs:
             support = motif_support.get(motif)
             if novelty_bias:
                 weight = 1.0 / max(1, support.support if support else 0)
             else:
-                weight = max(1.0, 1.0 + (support.avg_outcome if support else 0.0))
+                weight = self._motif_prior_weight(support)
             weights.append(max(weight, 1e-6))
         return self.random.choices(motifs, weights=weights, k=1)[0]
 
@@ -184,7 +188,7 @@ class GenomeBuilder:
     ) -> FieldSpec:
         candidates = self.allowed_numeric_fields or self.field_registry.runtime_numeric_fields()
         weights: list[float] = []
-        family_support = case_snapshot.family_stats if case_snapshot else {}
+        family_support = case_snapshot.stats_for_scope("family", scope="blended") if case_snapshot else {}
         for spec in candidates:
             weight = max(spec.field_score, 1e-6)
             if preferred_family and spec.category == preferred_family:
@@ -240,14 +244,27 @@ class GenomeBuilder:
                 return candidate.name
         return auxiliary.name if auxiliary else primary.name
 
-    def _pick_windows(self, *, novelty_bias: bool) -> tuple[int, int, int]:
+    def _pick_windows(
+        self,
+        *,
+        novelty_bias: bool,
+        case_snapshot: CaseMemorySnapshot | None,
+    ) -> tuple[int, int, int]:
         ordered = sorted(set(self.generation_config.lookbacks))
         fast = self.random.choice(ordered[: max(1, len(ordered) // 2)] or ordered)
-        if novelty_bias:
-            slow = self.random.choice(ordered)
+        slow_choices = [value for value in ordered if value >= fast] or ordered
+        if novelty_bias or case_snapshot is None:
+            slow = self.random.choice(ordered if novelty_bias else slow_choices)
         else:
-            slow_choices = [value for value in ordered if value >= fast] or ordered
-            slow = self.random.choice(slow_choices)
+            horizon_stats = case_snapshot.stats_for_scope("horizon_bucket", scope="blended")
+            weights = [
+                max(
+                    1e-6,
+                    1.0 + max(0.0, horizon_stats.get(bucket_horizon(value), None).avg_outcome if bucket_horizon(value) in horizon_stats else 0.0),
+                )
+                for value in slow_choices
+            ]
+            slow = self.random.choices(slow_choices, weights=weights, k=1)[0]
         context_choices = [value for value in ordered if value >= slow] or ordered
         context = self.random.choice(context_choices)
         return int(fast), int(slow), int(context)
@@ -345,3 +362,11 @@ class GenomeBuilder:
         for spec in fields:
             grouped[spec.category].append(spec)
         return grouped
+
+    def _motif_prior_weight(self, support) -> float:
+        if support is None:
+            return 1.0
+        positive_outcome = max(0.0, float(support.avg_outcome))
+        confidence = 1.0 + min(5.0, float(support.support) / 2.0)
+        success_multiplier = 0.5 + max(0.0, float(support.success_rate))
+        return max(1.0, 1.0 + (positive_outcome * confidence * success_multiplier))

@@ -39,9 +39,19 @@ def mutate_and_persist(
     if config.adaptive_generation.enabled:
         snapshot = repository.alpha_history.load_snapshot(
             regime_key=research_context.regime_key,
+            region=research_context.region,
+            global_regime_key=research_context.global_regime_key,
             parent_pool_size=max(config.adaptive_generation.parent_pool_size, from_top * 2),
+            region_learning_config=config.adaptive_generation.region_learning,
+            pattern_decay=config.adaptive_generation.pattern_decay,
+            prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
         )
-        case_snapshot = repository.alpha_history.load_case_snapshot(research_context.regime_key)
+        case_snapshot = repository.alpha_history.load_case_snapshot(
+            research_context.regime_key,
+            region=research_context.region,
+            global_regime_key=research_context.global_regime_key,
+            region_learning_config=config.adaptive_generation.region_learning,
+        )
         selected_parent_ids = {record.alpha_id for record in parent_records}
         parent_pool = [
             parent
@@ -56,6 +66,7 @@ def mutate_and_persist(
             registry=registry,
             memory_service=PatternMemoryService(),
             field_registry=field_registry,
+            region_learning_context=research_context.region_learning_context,
         )
         candidates = engine.generate_mutations(
             count=count,
@@ -66,12 +77,18 @@ def mutate_and_persist(
         )
         regime_key = research_context.regime_key
     else:
-        case_snapshot = repository.alpha_history.load_case_snapshot(research_context.regime_key)
+        case_snapshot = repository.alpha_history.load_case_snapshot(
+            research_context.regime_key,
+            region=research_context.region,
+            global_regime_key=research_context.global_regime_key,
+            region_learning_config=config.adaptive_generation.region_learning,
+        )
         engine = AlphaGenerationEngine(
             config=config.generation,
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
+            region_learning_context=research_context.region_learning_context,
         )
         parents = [alpha_candidate_from_record(record) for record in parent_records]
         candidates = engine.generate_mutations(
@@ -84,4 +101,10 @@ def mutate_and_persist(
     inserted = repository.save_alpha_candidates(environment.context.run_id, candidates)
     repository.update_run_status(environment.context.run_id, "mutated")
     logger.info("Mutated %s candidates and inserted %s new rows.", len(candidates), inserted)
-    return GenerationServiceResult(generated_count=len(candidates), inserted_count=inserted, regime_key=regime_key)
+    return GenerationServiceResult(
+        generated_count=len(candidates),
+        inserted_count=inserted,
+        region=research_context.region,
+        regime_key=regime_key,
+        global_regime_key=research_context.global_regime_key,
+    )

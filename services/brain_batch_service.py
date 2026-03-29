@@ -54,9 +54,19 @@ class BrainBatchService:
         )
         snapshot = self.repository.alpha_history.load_snapshot(
             regime_key=research_context.regime_key,
+            region=research_context.region,
+            global_regime_key=research_context.global_regime_key,
             parent_pool_size=config.adaptive_generation.parent_pool_size,
+            region_learning_config=config.adaptive_generation.region_learning,
+            pattern_decay=config.adaptive_generation.pattern_decay,
+            prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
         )
-        case_snapshot = self.repository.alpha_history.load_case_snapshot(research_context.regime_key)
+        case_snapshot = self.repository.alpha_history.load_case_snapshot(
+            research_context.regime_key,
+            region=research_context.region,
+            global_regime_key=research_context.global_regime_key,
+            region_learning_config=config.adaptive_generation.region_learning,
+        )
         existing_normalized = self.repository.list_existing_normalized_expressions(environment.context.run_id)
         generation_count = count or config.loop.generation_batch_size
         mutation_candidates = self._generate_mutation_candidates(
@@ -65,6 +75,7 @@ class BrainBatchService:
             field_registry=field_registry,
             snapshot=snapshot,
             case_snapshot=case_snapshot,
+            region_learning_context=research_context.region_learning_context,
             run_id=environment.context.run_id,
             mutation_parent_ids=mutation_parent_ids or set(),
             existing_normalized=existing_normalized,
@@ -80,6 +91,7 @@ class BrainBatchService:
             existing_normalized=existing_normalized
             | {candidate.normalized_expression for candidate in mutation_candidates},
             memory_service=research_context.memory_service,
+            region_learning_context=research_context.region_learning_context,
         )
         candidates = [*mutation_candidates, *fresh_candidates]
         self.repository.save_alpha_candidates(environment.context.run_id, candidates)
@@ -107,6 +119,7 @@ class BrainBatchService:
         count: int,
         existing_normalized: set[str],
         memory_service,
+        region_learning_context,
     ) -> list[AlphaCandidate]:
         if count <= 0:
             return []
@@ -117,6 +130,7 @@ class BrainBatchService:
                 registry=registry,
                 memory_service=memory_service,
                 field_registry=field_registry,
+                region_learning_context=region_learning_context,
             )
             return engine.generate(
                 count=count,
@@ -129,6 +143,7 @@ class BrainBatchService:
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
+            region_learning_context=region_learning_context,
         )
         return engine.generate(count=count, existing_normalized=existing_normalized, case_snapshot=case_snapshot)
 
@@ -140,6 +155,7 @@ class BrainBatchService:
         field_registry,
         snapshot: PatternMemorySnapshot,
         case_snapshot,
+        region_learning_context,
         run_id: str,
         mutation_parent_ids: set[str],
         existing_normalized: set[str],
@@ -163,6 +179,7 @@ class BrainBatchService:
                 registry=registry,
                 memory_service=self.selection_service.memory_service if self.selection_service else PatternMemoryService(),
                 field_registry=field_registry,
+                region_learning_context=region_learning_context,
             )
             return engine.generate_mutations(
                 count=mutation_budget,
@@ -186,6 +203,7 @@ class BrainBatchService:
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
+            region_learning_context=region_learning_context,
         )
         return engine.generate_mutations(
             parents=parents,

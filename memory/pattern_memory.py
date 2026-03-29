@@ -19,7 +19,7 @@ from alpha.ast_nodes import (
     to_expression,
 )
 from alpha.parser import parse_expression
-from core.config import AppConfig
+from core.config import AppConfig, RegionLearningConfig
 from core.signatures import build_simulation_signature
 from features.registry import WINDOWED_OPERATORS
 from features.registry import build_default_registry
@@ -80,6 +80,35 @@ class PatternScore:
 
 
 @dataclass(frozen=True, slots=True)
+class RegionLearningContext:
+    region: str
+    regime_key: str
+    global_regime_key: str
+
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "region": self.region,
+            "regime_key": self.regime_key,
+            "global_regime_key": self.global_regime_key,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class BlendDiagnostics:
+    scope: str
+    local_weight: float
+    global_weight: float
+    local_samples: int
+    global_samples: int
+    min_local_samples: int
+    full_local_samples: int
+    blend_mode: str = "linear_ramp"
+
+    def to_dict(self) -> dict[str, float | int | str]:
+        return asdict(self)
+
+
+@dataclass(frozen=True, slots=True)
 class MemoryParent:
     run_id: str
     alpha_id: str
@@ -100,12 +129,66 @@ class MemoryParent:
 @dataclass(frozen=True, slots=True)
 class PatternMemorySnapshot:
     regime_key: str
+    global_regime_key: str = ""
+    region: str = ""
     patterns: dict[str, PatternScore] = field(default_factory=dict)
     top_parents: tuple[MemoryParent, ...] = ()
     fail_tag_counts: dict[str, int] = field(default_factory=dict)
+    sample_count: int = 0
+    global_patterns: dict[str, PatternScore] = field(default_factory=dict)
+    global_fail_tag_counts: dict[str, int] = field(default_factory=dict)
+    global_sample_count: int = 0
+    blend: BlendDiagnostics | None = None
 
     def by_kind(self, pattern_kind: str) -> list[PatternScore]:
         return [pattern for pattern in self.patterns.values() if pattern.pattern_kind == pattern_kind]
+
+    def patterns_for_scope(self, scope: str = "blended") -> dict[str, PatternScore]:
+        normalized_scope = str(scope or "blended").strip().lower()
+        if normalized_scope == "local":
+            return dict(self.patterns)
+        if normalized_scope == "global":
+            return dict(self.global_patterns)
+        return self._blended_patterns()
+
+    def fail_tags_for_scope(self, scope: str = "blended") -> dict[str, int]:
+        normalized_scope = str(scope or "blended").strip().lower()
+        if normalized_scope == "local":
+            return dict(self.fail_tag_counts)
+        if normalized_scope == "global":
+            return dict(self.global_fail_tag_counts)
+        return _merge_count_maps(
+            self.fail_tag_counts,
+            self.global_fail_tag_counts,
+            self.blend,
+        )
+
+    def get_pattern(self, pattern_id: str, scope: str = "blended") -> PatternScore | None:
+        return self.patterns_for_scope(scope).get(pattern_id)
+
+    def ordered_patterns(self, *, scope: str = "blended", kind: str | None = None, limit: int | None = None) -> list[PatternScore]:
+        rows = list(self.patterns_for_scope(scope).values())
+        if kind:
+            rows = [row for row in rows if row.pattern_kind == kind]
+        ordered = sorted(rows, key=lambda item: (-item.pattern_score, -item.support, item.pattern_kind, item.pattern_value))
+        return ordered[:limit] if limit is not None else ordered
+
+    def _blended_patterns(self) -> dict[str, PatternScore]:
+        pattern_ids = set(self.patterns) | set(self.global_patterns)
+        return {
+            pattern_id: _merge_pattern_scores(
+                self.patterns.get(pattern_id),
+                self.global_patterns.get(pattern_id),
+                self.blend,
+            )
+            for pattern_id in pattern_ids
+            if _merge_pattern_scores(
+                self.patterns.get(pattern_id),
+                self.global_patterns.get(pattern_id),
+                self.blend,
+            )
+            is not None
+        }
 
 
 class PatternMemoryService:
@@ -113,15 +196,83 @@ class PatternMemoryService:
         self.registry = build_default_registry()
 
     def build_regime_key(self, dataset_fingerprint: str, config: AppConfig) -> str:
-        return build_simulation_signature(
-            {
-                "dataset_fingerprint": dataset_fingerprint,
-                "timeframe": config.backtest.timeframe,
-                "simulation": asdict(config.simulation),
-                "backtest": asdict(config.backtest),
-                "allowed_fields": config.generation.allowed_fields,
-                "allowed_operators": config.generation.allowed_operators,
-            }
+        return self.build_learning_context(dataset_fingerprint, config).regime_key
+
+    def build_learning_context(self, dataset_fingerprint: str, config: AppConfig) -> RegionLearningContext:
+        return self.build_learning_context_from_payload(dataset_fingerprint, config.to_dict())
+
+    def build_learning_context_from_payload(
+        self,
+        dataset_fingerprint: str,
+        payload: dict,
+    ) -> RegionLearningContext:
+        brain_payload = dict(payload.get("brain") or {})
+        region = str(brain_payload.get("region") or "").strip().upper()
+        local_payload = self._learning_signature_payload(
+            dataset_fingerprint=dataset_fingerprint,
+            payload=payload,
+            include_region=True,
+        )
+        global_payload = self._learning_signature_payload(
+            dataset_fingerprint=dataset_fingerprint,
+            payload=payload,
+            include_region=False,
+        )
+        return RegionLearningContext(
+            region=region,
+            regime_key=build_simulation_signature(local_payload),
+            global_regime_key=build_simulation_signature(global_payload),
+        )
+
+    def compute_blend_diagnostics(
+        self,
+        *,
+        scope: str,
+        local_samples: int,
+        global_samples: int,
+        config: RegionLearningConfig,
+    ) -> BlendDiagnostics:
+        if not config.enabled:
+            return BlendDiagnostics(
+                scope=scope,
+                local_weight=1.0,
+                global_weight=0.0,
+                local_samples=int(local_samples),
+                global_samples=int(global_samples),
+                min_local_samples=0,
+                full_local_samples=0,
+                blend_mode="disabled",
+            )
+        if scope == "pattern":
+            min_local = int(config.min_local_pattern_samples)
+            full_local = int(config.full_local_pattern_samples)
+        else:
+            min_local = int(config.min_local_case_samples)
+            full_local = int(config.full_local_case_samples)
+        local_weight = self._blend_weight(
+            local_samples=local_samples,
+            min_local=min_local,
+            full_local=full_local,
+            blend_mode=config.blend_mode,
+        )
+        if global_samples <= 0:
+            local_weight = 1.0 if local_samples > 0 else local_weight
+        global_weight = 0.0 if global_samples <= 0 else max(0.0, 1.0 - local_weight)
+        if local_samples <= 0 and global_samples > 0:
+            local_weight = 0.0
+            global_weight = 1.0
+        if local_samples <= 0 and global_samples <= 0:
+            local_weight = 1.0
+            global_weight = 0.0
+        return BlendDiagnostics(
+            scope=scope,
+            local_weight=float(local_weight),
+            global_weight=float(global_weight),
+            local_samples=int(local_samples),
+            global_samples=int(global_samples),
+            min_local_samples=min_local,
+            full_local_samples=full_local,
+            blend_mode=config.blend_mode,
         )
 
     def extract_signature(
@@ -297,6 +448,7 @@ class PatternMemoryService:
         *,
         generation_metadata: dict | None = None,
         field_categories: dict[str, str] | None = None,
+        scope: str = "blended",
     ) -> tuple[float, float, StructuralSignature, list[GeneObservation]]:
         signature = self.extract_signature(
             expression,
@@ -307,7 +459,7 @@ class PatternMemoryService:
         scores: list[float] = []
         novelty_scores: list[float] = []
         for observation in observations:
-            pattern = snapshot.patterns.get(observation.pattern_id)
+            pattern = snapshot.get_pattern(observation.pattern_id, scope=scope)
             if pattern is None or pattern.support < min_pattern_support:
                 continue
             scores.append(pattern.pattern_score)
@@ -331,6 +483,52 @@ class PatternMemoryService:
             pattern_kind=pattern_kind,
             pattern_value=pattern_value,
         )
+
+    def _learning_signature_payload(
+        self,
+        *,
+        dataset_fingerprint: str,
+        payload: dict,
+        include_region: bool,
+    ) -> dict:
+        generation_payload = dict(payload.get("generation") or {})
+        brain_payload = dict(payload.get("brain") or {})
+        profile_payload = {
+            "universe": str(brain_payload.get("universe") or "").strip().upper(),
+            "delay": int(brain_payload.get("delay") or 1),
+            "neutralization": str(brain_payload.get("neutralization") or "").strip().upper(),
+            "decay": int(brain_payload.get("decay") or 0),
+        }
+        if include_region:
+            profile_payload["region"] = str(brain_payload.get("region") or "").strip().upper()
+        return {
+            "dataset_fingerprint": dataset_fingerprint,
+            "timeframe": str(((payload.get("backtest") or {}).get("timeframe")) or ""),
+            "simulation": dict(payload.get("simulation") or {}),
+            "backtest": dict(payload.get("backtest") or {}),
+            "allowed_fields": list(generation_payload.get("allowed_fields") or []),
+            "allowed_operators": list(generation_payload.get("allowed_operators") or []),
+            "brain_profile": profile_payload,
+        }
+
+    def _blend_weight(
+        self,
+        *,
+        local_samples: int,
+        min_local: int,
+        full_local: int,
+        blend_mode: str,
+    ) -> float:
+        normalized_mode = str(blend_mode or "linear_ramp").strip().lower()
+        if normalized_mode == "hard_threshold":
+            return 1.0 if int(local_samples) >= int(full_local) else 0.0
+        if int(full_local) <= int(min_local):
+            return 1.0 if int(local_samples) >= int(full_local) else 0.0
+        if int(local_samples) <= int(min_local):
+            return 0.0
+        if int(local_samples) >= int(full_local):
+            return 1.0
+        return float((float(local_samples) - float(min_local)) / (float(full_local) - float(min_local)))
 
     def _collect_operators(self, node: ExprNode) -> list[str]:
         operators: list[str] = []
@@ -470,3 +668,121 @@ class PatternMemoryService:
         if average_hint <= 0.50:
             return "active"
         return "very_active"
+
+
+def _merge_count_maps(
+    local_counts: dict[str, int],
+    global_counts: dict[str, int],
+    blend: BlendDiagnostics | None,
+) -> dict[str, int]:
+    keys = set(local_counts) | set(global_counts)
+    merged: dict[str, int] = {}
+    for key in keys:
+        value = _weighted_value(
+            float(local_counts.get(key, 0)),
+            float(global_counts.get(key, 0)),
+            local_available=key in local_counts,
+            global_available=key in global_counts,
+            blend=blend,
+        )
+        if value <= 0:
+            continue
+        merged[key] = int(round(value))
+    return merged
+
+
+def _merge_pattern_scores(
+    local_pattern: PatternScore | None,
+    global_pattern: PatternScore | None,
+    blend: BlendDiagnostics | None,
+) -> PatternScore | None:
+    if local_pattern is None and global_pattern is None:
+        return None
+    template = local_pattern or global_pattern
+    assert template is not None
+    return PatternScore(
+        pattern_id=template.pattern_id,
+        pattern_kind=template.pattern_kind,
+        pattern_value=template.pattern_value,
+        support=int(
+            round(
+                _weighted_value(
+                    float(local_pattern.support) if local_pattern else 0.0,
+                    float(global_pattern.support) if global_pattern else 0.0,
+                    local_available=local_pattern is not None,
+                    global_available=global_pattern is not None,
+                    blend=blend,
+                )
+            )
+        ),
+        success_count=int(
+            round(
+                _weighted_value(
+                    float(local_pattern.success_count) if local_pattern else 0.0,
+                    float(global_pattern.success_count) if global_pattern else 0.0,
+                    local_available=local_pattern is not None,
+                    global_available=global_pattern is not None,
+                    blend=blend,
+                )
+            )
+        ),
+        failure_count=int(
+            round(
+                _weighted_value(
+                    float(local_pattern.failure_count) if local_pattern else 0.0,
+                    float(global_pattern.failure_count) if global_pattern else 0.0,
+                    local_available=local_pattern is not None,
+                    global_available=global_pattern is not None,
+                    blend=blend,
+                )
+            )
+        ),
+        avg_outcome=_weighted_value(
+            float(local_pattern.avg_outcome) if local_pattern else 0.0,
+            float(global_pattern.avg_outcome) if global_pattern else 0.0,
+            local_available=local_pattern is not None,
+            global_available=global_pattern is not None,
+            blend=blend,
+        ),
+        avg_behavioral_novelty=_weighted_value(
+            float(local_pattern.avg_behavioral_novelty) if local_pattern else 0.0,
+            float(global_pattern.avg_behavioral_novelty) if global_pattern else 0.0,
+            local_available=local_pattern is not None,
+            global_available=global_pattern is not None,
+            blend=blend,
+        ),
+        fail_tag_counts=_merge_count_maps(
+            local_pattern.fail_tag_counts if local_pattern else {},
+            global_pattern.fail_tag_counts if global_pattern else {},
+            blend,
+        ),
+        pattern_score=_weighted_value(
+            float(local_pattern.pattern_score) if local_pattern else 0.0,
+            float(global_pattern.pattern_score) if global_pattern else 0.0,
+            local_available=local_pattern is not None,
+            global_available=global_pattern is not None,
+            blend=blend,
+        ),
+    )
+
+
+def _weighted_value(
+    local_value: float,
+    global_value: float,
+    *,
+    local_available: bool,
+    global_available: bool,
+    blend: BlendDiagnostics | None,
+) -> float:
+    if local_available and not global_available:
+        return float(local_value)
+    if global_available and not local_available:
+        return float(global_value)
+    if not local_available and not global_available:
+        return 0.0
+    local_weight = float(blend.local_weight) if blend is not None else 1.0
+    global_weight = float(blend.global_weight) if blend is not None else 0.0
+    total = local_weight + global_weight
+    if total <= 0:
+        return float(local_value)
+    return float((local_weight * local_value + global_weight * global_value) / total)

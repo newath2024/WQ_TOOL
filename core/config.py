@@ -131,6 +131,36 @@ class CriticThresholdConfig:
 
 
 @dataclass(slots=True)
+class RegionLearningConfig:
+    enabled: bool = True
+    local_scope: str = "region_regime"
+    global_prior_scope: str = "match_non_region_regime"
+    blend_mode: str = "linear_ramp"
+    min_local_pattern_samples: int = 20
+    full_local_pattern_samples: int = 100
+    min_local_case_samples: int = 10
+    full_local_case_samples: int = 50
+    allow_global_parent_fallback: bool = False
+
+    def __post_init__(self) -> None:
+        self.local_scope = str(self.local_scope or "region_regime").strip().lower()
+        self.global_prior_scope = str(self.global_prior_scope or "match_non_region_regime").strip().lower()
+        self.blend_mode = str(self.blend_mode or "linear_ramp").strip().lower()
+        if self.min_local_pattern_samples < 0:
+            raise ValueError("adaptive_generation.region_learning.min_local_pattern_samples must be >= 0")
+        if self.full_local_pattern_samples < self.min_local_pattern_samples:
+            raise ValueError(
+                "adaptive_generation.region_learning.full_local_pattern_samples must be >= min_local_pattern_samples"
+            )
+        if self.min_local_case_samples < 0:
+            raise ValueError("adaptive_generation.region_learning.min_local_case_samples must be >= 0")
+        if self.full_local_case_samples < self.min_local_case_samples:
+            raise ValueError(
+                "adaptive_generation.region_learning.full_local_case_samples must be >= min_local_case_samples"
+            )
+
+
+@dataclass(slots=True)
 class AdaptiveGenerationConfig:
     enabled: bool = True
     memory_scope: str = "regime"
@@ -150,6 +180,7 @@ class AdaptiveGenerationConfig:
     min_pattern_support: int = 3
     pattern_decay: float = 0.98
     critic_thresholds: CriticThresholdConfig = field(default_factory=CriticThresholdConfig)
+    region_learning: RegionLearningConfig = field(default_factory=RegionLearningConfig)
 
 
 @dataclass(slots=True)
@@ -530,6 +561,7 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     adaptive_payload["diversity"] = DiversityThresholdConfig(**adaptive_payload.get("diversity", {}))
     adaptive_payload["repair_policy"] = RepairPolicyConfig(**adaptive_payload.get("repair_policy", {}))
     adaptive_payload["critic_thresholds"] = CriticThresholdConfig(**adaptive_payload.get("critic_thresholds", {}))
+    adaptive_payload["region_learning"] = RegionLearningConfig(**adaptive_payload.get("region_learning", {}))
     return AdaptiveGenerationConfig(**adaptive_payload)
 
 

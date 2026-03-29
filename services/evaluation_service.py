@@ -243,7 +243,9 @@ def evaluate_run(
             evaluations=[],
             metric_records=[],
             selection_records=[],
+            region=research_context.region,
             regime_key=regime_key,
+            global_regime_key=research_context.global_regime_key,
             evaluation_timestamp=datetime.now(timezone.utc).isoformat(),
         )
 
@@ -508,7 +510,9 @@ def evaluate_run(
         evaluations=evaluations,
         metric_records=metrics,
         selection_records=selection_records,
+        region=research_context.region,
         regime_key=regime_key,
+        global_regime_key=research_context.global_regime_key,
         evaluation_timestamp=timestamp,
     )
 
@@ -528,6 +532,8 @@ def persist_evaluation_result(
         repository.alpha_history.persist_evaluations(
             run_id=environment.context.run_id,
             regime_key=result.regime_key,
+            region=result.region,
+            global_regime_key=result.global_regime_key,
             evaluations=result.evaluations,
             pattern_decay=config.adaptive_generation.pattern_decay,
             prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,

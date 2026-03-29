@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+import json
 import sqlite3
 from pathlib import Path
+
+import yaml
+
+from core.signatures import build_simulation_signature
 
 
 DDL = """
@@ -18,6 +23,8 @@ CREATE TABLE IF NOT EXISTS runs (
     dataset_fingerprint TEXT NOT NULL DEFAULT '',
     selected_timeframe TEXT NOT NULL DEFAULT '',
     regime_key TEXT NOT NULL DEFAULT '',
+    global_regime_key TEXT NOT NULL DEFAULT '',
+    region TEXT NOT NULL DEFAULT '',
     entry_command TEXT NOT NULL DEFAULT ''
 );
 
@@ -114,7 +121,9 @@ CREATE TABLE IF NOT EXISTS simulation_cache (
 CREATE TABLE IF NOT EXISTS alpha_history (
     run_id TEXT NOT NULL,
     alpha_id TEXT NOT NULL,
+    region TEXT NOT NULL DEFAULT '',
     regime_key TEXT NOT NULL,
+    global_regime_key TEXT NOT NULL DEFAULT '',
     expression TEXT NOT NULL,
     normalized_expression TEXT NOT NULL,
     generation_mode TEXT NOT NULL,
@@ -141,6 +150,9 @@ CREATE TABLE IF NOT EXISTS alpha_history (
 
 CREATE INDEX IF NOT EXISTS idx_alpha_history_regime_outcome
     ON alpha_history(regime_key, outcome_score DESC);
+
+CREATE INDEX IF NOT EXISTS idx_alpha_history_global_regime_outcome
+    ON alpha_history(global_regime_key, outcome_score DESC);
 
 CREATE TABLE IF NOT EXISTS alpha_diagnoses (
     run_id TEXT NOT NULL,
@@ -174,7 +186,9 @@ CREATE INDEX IF NOT EXISTS idx_alpha_patterns_regime_score
 CREATE TABLE IF NOT EXISTS alpha_pattern_membership (
     run_id TEXT NOT NULL,
     alpha_id TEXT NOT NULL,
+    region TEXT NOT NULL DEFAULT '',
     regime_key TEXT NOT NULL,
+    global_regime_key TEXT NOT NULL DEFAULT '',
     pattern_id TEXT NOT NULL,
     pattern_kind TEXT NOT NULL,
     pattern_value TEXT NOT NULL,
@@ -185,10 +199,15 @@ CREATE TABLE IF NOT EXISTS alpha_pattern_membership (
 CREATE INDEX IF NOT EXISTS idx_alpha_pattern_membership_regime
     ON alpha_pattern_membership(regime_key, pattern_kind, pattern_id);
 
+CREATE INDEX IF NOT EXISTS idx_alpha_pattern_membership_global_regime
+    ON alpha_pattern_membership(global_regime_key, pattern_kind, pattern_id);
+
 CREATE TABLE IF NOT EXISTS alpha_cases (
     run_id TEXT NOT NULL,
     alpha_id TEXT NOT NULL,
+    region TEXT NOT NULL DEFAULT '',
     regime_key TEXT NOT NULL,
+    global_regime_key TEXT NOT NULL DEFAULT '',
     metric_source TEXT NOT NULL DEFAULT 'local_backtest',
     family_signature TEXT NOT NULL DEFAULT '',
     structural_signature_json TEXT NOT NULL DEFAULT '{}',
@@ -212,6 +231,9 @@ CREATE TABLE IF NOT EXISTS alpha_cases (
 
 CREATE INDEX IF NOT EXISTS idx_alpha_cases_regime_outcome
     ON alpha_cases(regime_key, metric_source, outcome_score DESC);
+
+CREATE INDEX IF NOT EXISTS idx_alpha_cases_global_regime_outcome
+    ON alpha_cases(global_regime_key, metric_source, outcome_score DESC);
 
 CREATE TABLE IF NOT EXISTS field_catalog (
     field_name TEXT PRIMARY KEY,
@@ -391,12 +413,29 @@ CREATE TABLE IF NOT EXISTS service_runtime (
 """
 
 
+def _filter_ddl_statements(*prefixes: str) -> str:
+    statements: list[str] = []
+    for raw_statement in DDL.split(";"):
+        statement = raw_statement.strip()
+        if not statement:
+            continue
+        if statement.startswith(prefixes):
+            statements.append(f"{statement};")
+    return "\n\n".join(statements)
+
+
+TABLE_DDL = _filter_ddl_statements("CREATE TABLE")
+INDEX_DDL = _filter_ddl_statements("CREATE INDEX", "CREATE UNIQUE INDEX")
+
+
 REQUIRED_COLUMNS = {
     "runs": {
         "profile_name": "TEXT NOT NULL DEFAULT ''",
         "dataset_fingerprint": "TEXT NOT NULL DEFAULT ''",
         "selected_timeframe": "TEXT NOT NULL DEFAULT ''",
         "regime_key": "TEXT NOT NULL DEFAULT ''",
+        "global_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "region": "TEXT NOT NULL DEFAULT ''",
         "entry_command": "TEXT NOT NULL DEFAULT ''",
     },
     "alphas": {
@@ -422,10 +461,18 @@ REQUIRED_COLUMNS = {
         "ranking_rationale_json": "TEXT NOT NULL DEFAULT ''",
     },
     "alpha_history": {
+        "region": "TEXT NOT NULL DEFAULT ''",
+        "global_regime_key": "TEXT NOT NULL DEFAULT ''",
         "rejection_reasons_json": "TEXT NOT NULL DEFAULT '[]'",
         "metric_source": "TEXT NOT NULL DEFAULT 'local_backtest'",
     },
+    "alpha_pattern_membership": {
+        "region": "TEXT NOT NULL DEFAULT ''",
+        "global_regime_key": "TEXT NOT NULL DEFAULT ''",
+    },
     "alpha_cases": {
+        "region": "TEXT NOT NULL DEFAULT ''",
+        "global_regime_key": "TEXT NOT NULL DEFAULT ''",
         "metric_source": "TEXT NOT NULL DEFAULT 'local_backtest'",
         "family_signature": "TEXT NOT NULL DEFAULT ''",
         "structural_signature_json": "TEXT NOT NULL DEFAULT '{}'",
@@ -510,8 +557,10 @@ def connect_sqlite(path: str) -> sqlite3.Connection:
         connection = sqlite3.connect(str(db_path))
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON;")
-    connection.executescript(DDL)
+    connection.executescript(TABLE_DDL)
     _ensure_required_columns(connection)
+    _backfill_region_learning_columns(connection)
+    connection.executescript(INDEX_DDL)
     connection.commit()
     return connection
 
@@ -525,3 +574,161 @@ def _ensure_required_columns(connection: sqlite3.Connection) -> None:
         for column_name, column_definition in columns.items():
             if column_name not in existing:
                 connection.execute(f"ALTER TABLE {table_name} ADD COLUMN {column_name} {column_definition}")
+
+
+def _backfill_region_learning_columns(connection: sqlite3.Connection) -> None:
+    run_rows = connection.execute(
+        """
+        SELECT run_id, config_snapshot, dataset_fingerprint, regime_key, global_regime_key, region
+        FROM runs
+        """
+    ).fetchall()
+    for row in run_rows:
+        region = str(row["region"] or "").strip().upper()
+        regime_key = str(row["regime_key"] or "")
+        global_regime_key = str(row["global_regime_key"] or "")
+        payload = _parse_config_snapshot(row["config_snapshot"])
+        dataset_fingerprint = str(row["dataset_fingerprint"] or "")
+        if payload is not None and dataset_fingerprint:
+            resolved_region, local_key, global_key = _build_learning_keys_from_payload(
+                dataset_fingerprint=dataset_fingerprint,
+                payload=payload,
+            )
+            if resolved_region:
+                region = resolved_region
+            if resolved_region or not regime_key:
+                regime_key = local_key
+            if global_key:
+                global_regime_key = global_key
+        elif regime_key and not global_regime_key:
+            global_regime_key = regime_key
+        connection.execute(
+            """
+            UPDATE runs
+            SET regime_key = COALESCE(NULLIF(?, ''), regime_key),
+                global_regime_key = COALESCE(NULLIF(?, ''), global_regime_key),
+                region = COALESCE(NULLIF(?, ''), region)
+            WHERE run_id = ?
+            """,
+            (
+                regime_key,
+                global_regime_key,
+                region,
+                row["run_id"],
+            ),
+        )
+
+    connection.execute(
+        """
+        UPDATE runs
+        SET region = COALESCE(
+                NULLIF(
+                    (
+                        SELECT brain_results.region
+                        FROM brain_results
+                        WHERE brain_results.run_id = runs.run_id
+                          AND brain_results.region <> ''
+                        ORDER BY brain_results.created_at DESC
+                        LIMIT 1
+                    ),
+                    ''
+                ),
+                region
+            ),
+            global_regime_key = CASE
+                WHEN global_regime_key = '' THEN regime_key
+                ELSE global_regime_key
+            END
+        """
+    )
+
+    for table_name, candidate_column in (
+        ("alpha_history", "alpha_id"),
+        ("alpha_cases", "alpha_id"),
+        ("alpha_pattern_membership", "alpha_id"),
+    ):
+        connection.execute(
+            f"""
+            UPDATE {table_name}
+            SET region = COALESCE(
+                    NULLIF((SELECT runs.region FROM runs WHERE runs.run_id = {table_name}.run_id), ''),
+                    region
+                ),
+                regime_key = COALESCE(
+                    NULLIF((SELECT runs.regime_key FROM runs WHERE runs.run_id = {table_name}.run_id), ''),
+                    regime_key
+                ),
+                global_regime_key = COALESCE(
+                    NULLIF((SELECT runs.global_regime_key FROM runs WHERE runs.run_id = {table_name}.run_id), ''),
+                    global_regime_key
+                )
+            WHERE EXISTS (SELECT 1 FROM runs WHERE runs.run_id = {table_name}.run_id)
+            """
+        )
+        connection.execute(
+            f"""
+            UPDATE {table_name}
+            SET region = COALESCE(
+                    NULLIF(
+                        (
+                            SELECT brain_results.region
+                            FROM brain_results
+                            WHERE brain_results.run_id = {table_name}.run_id
+                              AND brain_results.candidate_id = {table_name}.{candidate_column}
+                              AND brain_results.region <> ''
+                            ORDER BY brain_results.created_at DESC
+                            LIMIT 1
+                        ),
+                        ''
+                    ),
+                    region
+                ),
+                global_regime_key = CASE
+                    WHEN global_regime_key = '' THEN regime_key
+                    ELSE global_regime_key
+                END
+            WHERE COALESCE(region, '') = '' OR COALESCE(global_regime_key, '') = ''
+            """
+        )
+
+
+def _parse_config_snapshot(payload: str) -> dict | None:
+    if not payload:
+        return None
+    try:
+        parsed = yaml.safe_load(payload)
+    except yaml.YAMLError:
+        try:
+            parsed = json.loads(payload)
+        except json.JSONDecodeError:
+            return None
+    return parsed if isinstance(parsed, dict) else None
+
+
+def _build_learning_keys_from_payload(*, dataset_fingerprint: str, payload: dict) -> tuple[str, str, str]:
+    generation_payload = dict(payload.get("generation") or {})
+    brain_payload = dict(payload.get("brain") or {})
+    region = str(brain_payload.get("region") or "").strip().upper()
+    base = {
+        "dataset_fingerprint": dataset_fingerprint,
+        "timeframe": str(((payload.get("backtest") or {}).get("timeframe")) or ""),
+        "simulation": dict(payload.get("simulation") or {}),
+        "backtest": dict(payload.get("backtest") or {}),
+        "allowed_fields": list(generation_payload.get("allowed_fields") or []),
+        "allowed_operators": list(generation_payload.get("allowed_operators") or []),
+    }
+    brain_profile = {
+        "universe": str(brain_payload.get("universe") or "").strip().upper(),
+        "delay": int(brain_payload.get("delay") or 1),
+        "neutralization": str(brain_payload.get("neutralization") or "").strip().upper(),
+        "decay": int(brain_payload.get("decay") or 0),
+    }
+    local_payload = dict(base)
+    local_payload["brain_profile"] = dict(brain_profile, region=region)
+    global_payload = dict(base)
+    global_payload["brain_profile"] = dict(brain_profile)
+    return (
+        region,
+        build_simulation_signature(local_payload),
+        build_simulation_signature(global_payload),
+    )

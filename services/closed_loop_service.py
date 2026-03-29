@@ -80,9 +80,19 @@ class ClosedLoopService:
         for round_index in range(1, config.loop.rounds + 1):
             snapshot = self.repository.alpha_history.load_snapshot(
                 regime_key=research_context.regime_key,
+                region=research_context.region,
+                global_regime_key=research_context.global_regime_key,
                 parent_pool_size=max(config.adaptive_generation.parent_pool_size, config.loop.mutate_top_k * 2),
+                region_learning_config=config.adaptive_generation.region_learning,
+                pattern_decay=config.adaptive_generation.pattern_decay,
+                prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
             )
-            case_snapshot = self.repository.alpha_history.load_case_snapshot(research_context.regime_key)
+            case_snapshot = self.repository.alpha_history.load_case_snapshot(
+                research_context.regime_key,
+                region=research_context.region,
+                global_regime_key=research_context.global_regime_key,
+                region_learning_config=config.adaptive_generation.region_learning,
+            )
             existing_normalized = self.repository.list_existing_normalized_expressions(environment.context.run_id)
             fresh_budget = max(0, config.loop.generation_batch_size - len(staged_mutations))
             fresh_candidates = self._generate_fresh_candidates(
@@ -91,6 +101,7 @@ class ClosedLoopService:
                 field_registry=field_registry,
                 snapshot=snapshot,
                 case_snapshot=case_snapshot,
+                region_learning_context=research_context.region_learning_context,
                 count=fresh_budget,
                 existing_normalized=existing_normalized | {candidate.normalized_expression for candidate in staged_mutations},
             )
@@ -145,6 +156,8 @@ class ClosedLoopService:
                 self.learning_service.persist_results(
                     config=config,
                     regime_key=research_context.regime_key,
+                    region=research_context.region,
+                    global_regime_key=research_context.global_regime_key,
                     snapshot=snapshot,
                     candidates_by_id=candidates_by_id,
                     results=results,
@@ -157,6 +170,9 @@ class ClosedLoopService:
                     selected_parent_ids=selected_parent_ids,
                     candidates_by_id=candidates_by_id,
                     regime_key=research_context.regime_key,
+                    region=research_context.region,
+                    global_regime_key=research_context.global_regime_key,
+                    region_learning_context=research_context.region_learning_context,
                     case_snapshot=case_snapshot,
                     count=max(1, min(config.generation.mutation_count, len(selected_parent_ids) * config.loop.max_children_per_parent)),
                     existing_normalized=self.repository.list_existing_normalized_expressions(environment.context.run_id),
@@ -233,6 +249,7 @@ class ClosedLoopService:
         field_registry,
         snapshot: PatternMemorySnapshot,
         case_snapshot,
+        region_learning_context,
         count: int,
         existing_normalized: set[str],
     ) -> list[AlphaCandidate]:
@@ -245,6 +262,7 @@ class ClosedLoopService:
                 registry=registry,
                 memory_service=self.memory_service,
                 field_registry=field_registry,
+                region_learning_context=region_learning_context,
             )
             return engine.generate(
                 count=count,
@@ -257,6 +275,7 @@ class ClosedLoopService:
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
+            region_learning_context=region_learning_context,
         )
         return engine.generate(count=count, existing_normalized=existing_normalized, case_snapshot=case_snapshot)
 
@@ -269,6 +288,9 @@ class ClosedLoopService:
         selected_parent_ids: set[str],
         candidates_by_id: dict[str, AlphaCandidate],
         regime_key: str,
+        region: str,
+        global_regime_key: str,
+        region_learning_context,
         case_snapshot,
         count: int,
         existing_normalized: set[str],
@@ -278,7 +300,12 @@ class ClosedLoopService:
         if config.adaptive_generation.enabled:
             snapshot = self.repository.alpha_history.load_snapshot(
                 regime_key=regime_key,
+                region=region,
+                global_regime_key=global_regime_key,
                 parent_pool_size=max(config.adaptive_generation.parent_pool_size, len(selected_parent_ids) * 2),
+                region_learning_config=config.adaptive_generation.region_learning,
+                pattern_decay=config.adaptive_generation.pattern_decay,
+                prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
             )
             parent_pool = [parent for parent in snapshot.top_parents if parent.alpha_id in selected_parent_ids]
             if not parent_pool:
@@ -289,6 +316,7 @@ class ClosedLoopService:
                 registry=registry,
                 memory_service=self.memory_service,
                 field_registry=field_registry,
+                region_learning_context=region_learning_context,
             )
             return engine.generate_mutations(
                 count=count,
@@ -306,6 +334,7 @@ class ClosedLoopService:
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
+            region_learning_context=region_learning_context,
         )
         return engine.generate_mutations(
             parents=parents,

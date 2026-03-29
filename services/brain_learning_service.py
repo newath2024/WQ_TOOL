@@ -24,6 +24,8 @@ class BrainLearningService:
         *,
         config,
         regime_key: str,
+        region: str = "",
+        global_regime_key: str = "",
         snapshot: PatternMemorySnapshot,
         candidates_by_id: dict[str, AlphaCandidate],
         results: list[SimulationResult],
@@ -81,6 +83,8 @@ class BrainLearningService:
             self.repository.alpha_history.persist_brain_outcomes(
                 run_id=entries[0]["result"].run_id,
                 regime_key=regime_key,
+                region=region,
+                global_regime_key=global_regime_key,
                 entries=entries,
                 pattern_decay=config.adaptive_generation.pattern_decay,
                 prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
@@ -104,7 +108,7 @@ class BrainLearningService:
             generation_metadata=candidate.generation_metadata,
         )
         family_observation = self.memory_service.build_observations(signature)[0]
-        prior_pattern = snapshot.patterns.get(family_observation.pattern_id)
+        prior_pattern = snapshot.get_pattern(family_observation.pattern_id, scope="blended")
 
         if result.status == "rejected" or result.rejection_reason:
             diagnosis.fail_tags.append("brain_rejected")

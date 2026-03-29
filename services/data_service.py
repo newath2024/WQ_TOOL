@@ -14,7 +14,7 @@ from data.field_registry import (
 )
 from data.loader import load_market_data
 from features.transforms import build_research_matrices
-from memory.pattern_memory import PatternMemoryService
+from memory.pattern_memory import PatternMemoryService, RegionLearningContext
 from services.models import CommandEnvironment, ResearchContext
 from storage.models import FieldCatalogRecord, RunFieldScoreRecord
 from storage.repository import SQLiteRepository
@@ -51,7 +51,7 @@ def load_research_context(
         group_fields=aligned_group_fields,
     )
     memory_service = PatternMemoryService()
-    regime_key = memory_service.build_regime_key(bundle.fingerprint, config)
+    region_learning_context = memory_service.build_learning_context(bundle.fingerprint, config)
     score_weights = FieldScoreWeights(
         coverage=float(config.generation.field_score_weights.get("coverage", 0.50)),
         usage=float(config.generation.field_score_weights.get("usage", 0.30)),
@@ -67,7 +67,10 @@ def load_research_context(
     return ResearchContext(
         bundle=bundle,
         matrices=matrices,
-        regime_key=regime_key,
+        region=region_learning_context.region,
+        regime_key=region_learning_context.regime_key,
+        global_regime_key=region_learning_context.global_regime_key,
+        region_learning_context=region_learning_context,
         memory_service=memory_service,
         field_registry=field_registry,
     )
@@ -86,6 +89,8 @@ def persist_research_metadata(
         dataset_fingerprint=research_context.bundle.fingerprint,
         selected_timeframe=config.backtest.timeframe,
         regime_key=research_context.regime_key,
+        global_regime_key=research_context.global_regime_key,
+        region=research_context.region,
     )
     timestamp = datetime.now(UTC).isoformat()
     repository.save_field_catalog(
@@ -138,11 +143,15 @@ def load_and_persist_dataset(
 ):
     """Load the configured dataset and persist its summary."""
     bundle = load_dataset(config, environment, stage=stage)
+    learning_context = PatternMemoryService().build_learning_context(bundle.fingerprint, config)
     repository.save_dataset_summary(
         environment.context.run_id,
         bundle.summary(),
         dataset_fingerprint=bundle.fingerprint,
         selected_timeframe=config.backtest.timeframe,
+        regime_key=learning_context.regime_key,
+        global_regime_key=learning_context.global_regime_key,
+        region=learning_context.region,
     )
     return bundle
 
@@ -160,6 +169,24 @@ def resolve_regime_key(
     research_context = load_research_context(config, environment, stage=stage)
     persist_research_metadata(repository, config, environment, research_context)
     return research_context.regime_key
+
+
+def resolve_region_learning_context(
+    repository: SQLiteRepository,
+    config: AppConfig,
+    environment: CommandEnvironment,
+    stage: str,
+) -> RegionLearningContext:
+    run = repository.get_run(environment.context.run_id)
+    if run and run.regime_key and run.global_regime_key:
+        return RegionLearningContext(
+            region=str(run.region or ""),
+            regime_key=str(run.regime_key),
+            global_regime_key=str(run.global_regime_key),
+        )
+    research_context = load_research_context(config, environment, stage=stage)
+    persist_research_metadata(repository, config, environment, research_context)
+    return research_context.region_learning_context
 
 
 def slice_frame_by_period(frame: pd.DataFrame, period: PeriodConfig) -> pd.DataFrame:
