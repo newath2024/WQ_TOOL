@@ -311,9 +311,12 @@ class BrainConfig:
     api_auth_env: str = "BRAIN_API_TOKEN"
     email_env: str = "BRAIN_API_EMAIL"
     password_env: str = "BRAIN_API_PASSWORD"
+    credentials_file: str = "secrets/brain_credentials.json"
     session_path: str = "outputs/brain_api_session.json"
     auth_expiry_seconds: int = 14400
     open_browser_for_persona: bool = True
+    persona_poll_interval_seconds: int = 15
+    persona_timeout_seconds: int = 1800
     rate_limit_per_minute: int = 60
 
     def __post_init__(self) -> None:
@@ -332,6 +335,10 @@ class BrainConfig:
             raise ValueError("brain.batch_size must be > 0")
         if not 1 <= self.auth_expiry_seconds <= 14400:
             raise ValueError("brain.auth_expiry_seconds must be between 1 and 14400")
+        if self.persona_poll_interval_seconds <= 0:
+            raise ValueError("brain.persona_poll_interval_seconds must be > 0")
+        if self.persona_timeout_seconds <= 0:
+            raise ValueError("brain.persona_timeout_seconds must be > 0")
         if self.rate_limit_per_minute <= 0:
             raise ValueError("brain.rate_limit_per_minute must be > 0")
 

@@ -10,5 +10,6 @@ htmlcov/
 *.egg-info/
 *.sqlite3
 outputs/
+secrets/brain_credentials.json
 tools/*/*.csv
 tools/*/*.json

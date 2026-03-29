@@ -183,9 +183,12 @@ brain:
   api_auth_env: BRAIN_API_TOKEN
   email_env: BRAIN_API_EMAIL
   password_env: BRAIN_API_PASSWORD
+  credentials_file: secrets/brain_credentials.json
   session_path: outputs/brain_api_session.json
   auth_expiry_seconds: 14400
   open_browser_for_persona: true
+  persona_poll_interval_seconds: 15
+  persona_timeout_seconds: 1800
   rate_limit_per_minute: 60
 
 loop:

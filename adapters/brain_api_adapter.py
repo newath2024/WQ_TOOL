@@ -13,6 +13,7 @@ from urllib.parse import urljoin
 import requests
 
 from adapters.simulation_adapter import SimulationAdapter
+from services.email_service import EmailService, SmtpNotificationConfig
 
 
 class SessionProtocol(Protocol):
@@ -54,11 +55,15 @@ class BrainApiAdapter(SimulationAdapter):
         auth_token: str | None = None,
         email_env: str = "BRAIN_API_EMAIL",
         password_env: str = "BRAIN_API_PASSWORD",
+        credentials_file: str = "secrets/brain_credentials.json",
         session_path: str = "outputs/brain_api_session.json",
         auth_expiry_seconds: int = 14400,
         open_browser_for_persona: bool = True,
+        persona_poll_interval_seconds: int = 15,
+        persona_timeout_seconds: int = 1800,
         endpoints: ApiEndpointConfig | None = None,
         session: SessionProtocol | None = None,
+        email_service: EmailService | None = None,
         max_retries: int = 3,
         rate_limit_per_minute: int = 60,
         verify_ssl: bool = True,
@@ -68,17 +73,22 @@ class BrainApiAdapter(SimulationAdapter):
         self.auth_token = auth_token
         self.email_env = email_env
         self.password_env = password_env
+        self.credentials_file = Path(credentials_file).expanduser().resolve()
         self.session_path = Path(session_path).expanduser().resolve()
         self.auth_expiry_seconds = auth_expiry_seconds
         self.open_browser_for_persona = open_browser_for_persona
+        self.persona_poll_interval_seconds = persona_poll_interval_seconds
+        self.persona_timeout_seconds = persona_timeout_seconds
         self.endpoints = endpoints or ApiEndpointConfig()
         self.session = session or requests.Session()
+        self.email_service = email_service or EmailService()
         self.max_retries = max_retries
         self.rate_limit_per_minute = rate_limit_per_minute
         self.verify_ssl = verify_ssl
         self._min_request_gap_seconds = 60.0 / float(rate_limit_per_minute)
         self._last_request_at = 0.0
         self._loaded_session = False
+        self._credentials_payload: dict | None = None
 
     def submit_simulation(self, expression: str, sim_config: dict) -> dict:
         self.ensure_authenticated()
@@ -157,13 +167,13 @@ class BrainApiAdapter(SimulationAdapter):
         if not force and self._authentication_state().get("authenticated"):
             return {"mode": "session_cookie", "status": "ready", "session_path": str(self.session_path)}
 
-        email = os.getenv(self.email_env)
+        email = os.getenv(self.email_env) or self._credential_value("brain", "email")
         if not email:
             email = input("BRAIN email: ").strip()
         if not email:
             raise ValueError("BRAIN email is required for interactive authentication.")
 
-        password = os.getenv(self.password_env)
+        password = os.getenv(self.password_env) or self._credential_value("brain", "password")
         if not password:
             password = self._prompt_password_interactive(show_password=show_password)
         if not password:
@@ -197,13 +207,8 @@ class BrainApiAdapter(SimulationAdapter):
                     webbrowser.open(persona_url)
                 except Exception:  # noqa: BLE001
                     pass
-            input("Complete the face scan in the browser, then press Enter here to continue...")
-            persona_response = self._request(
-                "POST",
-                persona_url,
-                json_payload=None,
-                allow_retry=False,
-            )
+            self._notify_persona_required(persona_url)
+            persona_response = self._wait_for_persona_completion(persona_url)
             if persona_response.status_code not in {200, 201, 204}:
                 raise RuntimeError(
                     f"Persona authentication failed with status {persona_response.status_code}: {persona_response.text}"
@@ -426,6 +431,97 @@ class BrainApiAdapter(SimulationAdapter):
         if self.session_path.exists():
             self.session_path.unlink()
         self.session.cookies.clear()
+
+    def _notify_persona_required(self, persona_url: str) -> None:
+        smtp_config = self._smtp_notification_config()
+        if smtp_config is None:
+            print("Persona email notification is not configured; skipping email alert.")
+            return
+        try:
+            self.email_service.send_persona_link(persona_url=persona_url, smtp_config=smtp_config)
+        except Exception as exc:  # noqa: BLE001
+            print(f"Failed to send Persona notification email: {exc}")
+            return
+        print(f"Sent Persona verification link to {smtp_config.to_email}.")
+
+    def _wait_for_persona_completion(self, persona_url: str):
+        print(
+            f"Waiting for Persona verification to complete "
+            f"(timeout={self.persona_timeout_seconds}s, poll={self.persona_poll_interval_seconds}s)..."
+        )
+        deadline = time.monotonic() + float(self.persona_timeout_seconds)
+        last_response = None
+        while time.monotonic() < deadline:
+            response = self._request(
+                "POST",
+                persona_url,
+                json_payload=None,
+                allow_retry=False,
+            )
+            if response.status_code in {200, 201, 204}:
+                return response
+            last_response = response
+            time.sleep(float(self.persona_poll_interval_seconds))
+        last_status = getattr(last_response, "status_code", "unknown")
+        last_text = getattr(last_response, "text", "")
+        raise RuntimeError(
+            f"Timed out waiting for Persona verification after {self.persona_timeout_seconds}s "
+            f"(last status {last_status}: {last_text})"
+        )
+
+    def _load_credentials_payload(self) -> dict:
+        if self._credentials_payload is not None:
+            return self._credentials_payload
+        if not self.credentials_file.exists():
+            self._credentials_payload = {}
+            return self._credentials_payload
+        try:
+            payload = json.loads(self.credentials_file.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise ValueError(f"Invalid JSON in credentials file: {self.credentials_file}") from exc
+        if not isinstance(payload, dict):
+            raise ValueError(f"Credentials file must contain a JSON object: {self.credentials_file}")
+        self._credentials_payload = payload
+        return self._credentials_payload
+
+    def _credential_value(self, section: str, key: str) -> str:
+        payload = self._load_credentials_payload()
+        section_payload = payload.get(section)
+        if not isinstance(section_payload, dict):
+            return ""
+        value = section_payload.get(key)
+        return str(value).strip() if value not in (None, "") else ""
+
+    def _smtp_notification_config(self) -> SmtpNotificationConfig | None:
+        payload = self._load_credentials_payload()
+        section_payload = payload.get("persona_notification")
+        if not isinstance(section_payload, dict):
+            return None
+        from_email = str(
+            section_payload.get("from_email")
+            or section_payload.get("smtp_username")
+            or self._credential_value("brain", "email")
+            or ""
+        ).strip()
+        to_email = str(
+            section_payload.get("to_email")
+            or self._credential_value("brain", "email")
+            or ""
+        ).strip()
+        try:
+            port = int(section_payload.get("smtp_port") or 587)
+        except (TypeError, ValueError):
+            port = 587
+        smtp_config = SmtpNotificationConfig(
+            host=str(section_payload.get("smtp_host") or "").strip(),
+            port=port,
+            username=str(section_payload.get("smtp_username") or "").strip(),
+            password=str(section_payload.get("smtp_password") or "").strip(),
+            from_email=from_email,
+            to_email=to_email,
+            use_tls=bool(section_payload.get("use_tls", True)),
+        )
+        return smtp_config if smtp_config.is_configured() else None
 
     def _resolve_authentication_url(self) -> str:
         return f"{self.base_url}{self.endpoints.authentication_path}"

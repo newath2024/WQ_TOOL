@@ -88,4 +88,7 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     )
     assert default_config.brain.backend == "manual"
     assert default_config.loop.simulation_batch_size == default_config.brain.batch_size
+    assert default_config.brain.credentials_file == "secrets/brain_credentials.json"
     assert default_config.brain.session_path == "outputs/brain_api_session.json"
+    assert default_config.brain.persona_poll_interval_seconds == 15
+    assert default_config.brain.persona_timeout_seconds == 1800
