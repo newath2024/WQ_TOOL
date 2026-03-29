@@ -2,9 +2,12 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.venv/
 .coverage
 htmlcov/
 *.pyc
 *.pyo
+*.egg-info/
 *.sqlite3
+outputs/
 Document/
