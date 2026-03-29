@@ -38,26 +38,22 @@ generation:
   allowed_fields: ["open", "high", "low", "close", "volume", "returns"]
   allowed_operators:
     [
-      "delay",
-      "delta",
-      "returns",
-      "rolling_mean",
-      "rolling_std",
-      "rolling_min",
-      "rolling_max",
+      "ts_delay",
+      "ts_delta",
       "rank",
       "zscore",
-      "correlation",
-      "covariance",
-      "decay_linear",
+      "ts_corr",
+      "ts_covariance",
+      "ts_decay_linear",
       "ts_rank",
       "ts_sum",
       "ts_mean",
-      "ts_std",
+      "ts_std_dev",
+      "ts_min",
+      "ts_max",
       "sign",
       "abs",
       "log",
-      "clip",
       "group_rank",
       "group_zscore",
       "group_neutralize",
@@ -195,6 +191,23 @@ loop:
   max_children_per_parent: 5
   rejection_filters: []
   archive_thresholds: {}
+
+service:
+  enabled: false
+  tick_interval_seconds: 5
+  idle_sleep_seconds: 30
+  poll_interval_seconds: 10
+  max_pending_jobs: 20
+  max_consecutive_failures: 5
+  cooldown_seconds: 300
+  heartbeat_interval_seconds: 30
+  lock_name: brain-service
+  lock_lease_seconds: 60
+  resume_incomplete_jobs: true
+  shutdown_grace_period_seconds: 30
+  stuck_job_after_seconds: 1800
+  persona_retry_interval_seconds: 300
+  persona_email_cooldown_seconds: 900
 
 runtime:
   log_level: INFO

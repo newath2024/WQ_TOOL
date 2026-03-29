@@ -17,20 +17,17 @@ class GrammarExpressionGenerator:
         self.random = random.Random(seed)
         self.unary_wrappers = ["rank", "zscore", "sign", "abs"]
         self.window_operators = [
-            "delay",
-            "delta",
-            "returns",
-            "rolling_mean",
-            "rolling_std",
-            "rolling_min",
-            "rolling_max",
-            "decay_linear",
+            "ts_delay",
+            "ts_delta",
+            "ts_mean",
+            "ts_std_dev",
+            "ts_min",
+            "ts_max",
+            "ts_decay_linear",
             "ts_rank",
             "ts_sum",
-            "ts_mean",
-            "ts_std",
         ]
-        self.binary_window_operators = ["correlation", "covariance"]
+        self.binary_window_operators = ["ts_corr", "ts_covariance"]
         self.arithmetic_operators = ["+", "-", "*", "/"]
 
     def generate(self, count: int) -> list[str]:

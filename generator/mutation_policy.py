@@ -24,12 +24,17 @@ class MutationPolicy:
         self.randomizer = randomizer
         self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
         self.operator_swaps = {
-            "ts_mean": ["ts_std", "rolling_mean", "decay_linear"],
-            "ts_std": ["ts_mean", "rolling_std"],
-            "delta": ["delay", "ts_mean"],
-            "returns": ["delay", "ts_mean"],
-            "correlation": ["covariance"],
-            "covariance": ["correlation"],
+            "ts_mean": ["ts_std_dev", "rolling_mean", "ts_decay_linear"],
+            "ts_std_dev": ["ts_mean", "rolling_std"],
+            "ts_delta": ["ts_delay", "ts_mean"],
+            "ts_returns": ["ts_delay", "ts_mean"],
+            "ts_corr": ["ts_covariance"],
+            "ts_covariance": ["ts_corr"],
+            "delta": ["ts_delay", "ts_mean"],
+            "returns": ["ts_delay", "ts_mean"],
+            "correlation": ["ts_covariance"],
+            "covariance": ["ts_corr"],
+            "decay_linear": ["ts_mean", "ts_std_dev"],
             "rank": ["zscore", "sign"],
             "zscore": ["rank", "sign"],
             "group_rank": ["group_zscore", "group_neutralize"],
@@ -92,7 +97,7 @@ class MutationPolicy:
 
     def _smoothen_expression(self, expression: str, _: PatternMemorySnapshot) -> str:
         window = max(self.config.lookbacks)
-        wrapper = self.randomizer.choice(["ts_mean", "decay_linear"])
+        wrapper = self.randomizer.choice(["ts_mean", "ts_decay_linear"])
         return f"{wrapper}(({expression}), {window})"
 
     def _simplify_expression(self, expression: str, _: PatternMemorySnapshot) -> str | None:

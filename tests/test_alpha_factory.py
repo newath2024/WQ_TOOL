@@ -96,7 +96,16 @@ def test_alpha_factory_generates_structured_candidates_with_metadata() -> None:
     )
     config = GenerationConfig(
         allowed_fields=["close", "volume", "pe_ratio"],
-        allowed_operators=["rank", "delta", "ts_mean", "ts_std", "group_neutralize", "decay_linear", "correlation", "covariance"],
+        allowed_operators=[
+            "rank",
+            "ts_delta",
+            "ts_mean",
+            "ts_std_dev",
+            "group_neutralize",
+            "ts_decay_linear",
+            "ts_corr",
+            "ts_covariance",
+        ],
         lookbacks=[2, 5, 10],
         max_depth=5,
         complexity_limit=20,
@@ -120,6 +129,7 @@ def test_alpha_factory_generates_structured_candidates_with_metadata() -> None:
     assert all(candidate.fields_used for candidate in candidates)
     assert all(candidate.operators_used for candidate in candidates)
     assert all(candidate.depth > 0 for candidate in candidates)
+    assert all({"delta", "correlation", "covariance", "decay_linear", "ts_std"} & set(candidate.operators_used) == set() for candidate in candidates)
 
 
 def test_typed_validator_rejects_redundant_wrapper_chain() -> None:

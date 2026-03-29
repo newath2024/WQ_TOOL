@@ -87,8 +87,21 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
         == research_config.submission_tests.robustness_min_fitness_ratio
     )
     assert default_config.brain.backend == "manual"
+    assert default_config.brain.nan_handling == "OFF"
+    assert default_config.brain.unit_handling == "VERIFY"
+    assert default_config.brain.neutralization == "SECTOR"
     assert default_config.loop.simulation_batch_size == default_config.brain.batch_size
+    assert default_config.service.poll_interval_seconds == default_config.brain.poll_interval_seconds
+    assert default_config.service.max_pending_jobs == default_config.brain.batch_size
+    assert default_config.service.lock_name == "brain-service"
     assert default_config.brain.credentials_file == "secrets/brain_credentials.json"
     assert default_config.brain.session_path == "outputs/brain_api_session.json"
     assert default_config.brain.persona_poll_interval_seconds == 15
     assert default_config.brain.persona_timeout_seconds == 1800
+    assert "ts_delta" in default_config.generation.allowed_operators
+    assert "ts_corr" in default_config.generation.allowed_operators
+    assert "ts_covariance" in default_config.generation.allowed_operators
+    assert "ts_decay_linear" in default_config.generation.allowed_operators
+    assert "ts_std_dev" in default_config.generation.allowed_operators
+    assert "delta" not in default_config.generation.allowed_operators
+    assert "correlation" not in default_config.generation.allowed_operators

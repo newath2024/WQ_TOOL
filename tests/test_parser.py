@@ -50,3 +50,18 @@ def test_validator_handles_group_operator_field_types() -> None:
     assert valid.is_valid
     assert not invalid.is_valid
     assert any("can only be used as the grouping argument" in error for error in invalid.errors)
+
+
+def test_registry_keeps_legacy_aliases_but_exposes_brain_canonical_names() -> None:
+    registry = build_registry(["delta", "correlation", "covariance", "decay_linear", "ts_mean", "ts_std"])
+
+    assert registry.contains("delta")
+    assert registry.contains("ts_delta")
+    assert registry.contains("correlation")
+    assert registry.contains("ts_corr")
+    assert registry.contains("covariance")
+    assert registry.contains("ts_covariance")
+    assert registry.contains("decay_linear")
+    assert registry.contains("ts_decay_linear")
+    assert registry.contains("ts_std")
+    assert registry.contains("ts_std_dev")

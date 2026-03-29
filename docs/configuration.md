@@ -8,6 +8,7 @@ Config hien tai tach thanh 4 nhom ro rang:
 - `simulation`: local evaluation/backtest cu
 - `brain`: external BRAIN simulation settings
 - `loop`: closed-loop orchestration settings
+- `service`: foreground 24/7 service mode settings
 
 Workflow local cu van doc config cu binh thuong.
 Workflow BRAIN moi doc them `brain` va `loop`.
@@ -17,7 +18,7 @@ Workflow BRAIN moi doc them `brain` va `loop`.
 ```yaml
 generation:
   allowed_fields: ["open", "high", "low", "close", "volume", "returns"]
-  allowed_operators: ["rank", "delta", "ts_mean", "ts_std", "group_rank"]
+  allowed_operators: ["rank", "ts_delta", "ts_mean", "ts_std_dev", "group_rank"]
   lookbacks: [2, 3, 5, 10]
   max_depth: 4
   complexity_limit: 20
@@ -52,6 +53,8 @@ Ghi chu:
 
 - `grammar_count` van duoc chap nhan de backward compatibility
 - generator mac dinh hien tai la template-driven, khong grammar-random-first
+- config/sample moi uu tien ten operator chuan cua BRAIN nhu `ts_delta`, `ts_corr`, `ts_covariance`, `ts_decay_linear`, `ts_std_dev`
+- alias local cu nhu `delta`, `correlation`, `covariance`, `decay_linear`, `ts_std` van duoc registry chap nhan de backward compatibility, nhung khong con la mac dinh de submit BRAIN
 
 ## Brain config
 
@@ -182,6 +185,44 @@ Y nghia:
 - `mutate_top_k`: so parent lay tu BRAIN result
 - `max_children_per_parent`: budget mutation cho round sau
 
+## Service config
+
+```yaml
+service:
+  enabled: false
+  tick_interval_seconds: 5
+  idle_sleep_seconds: 30
+  poll_interval_seconds: 10
+  max_pending_jobs: 20
+  max_consecutive_failures: 5
+  cooldown_seconds: 300
+  heartbeat_interval_seconds: 30
+  lock_name: brain-service
+  lock_lease_seconds: 60
+  resume_incomplete_jobs: true
+  shutdown_grace_period_seconds: 30
+  stuck_job_after_seconds: 1800
+  persona_retry_interval_seconds: 300
+  persona_email_cooldown_seconds: 900
+```
+
+Y nghia:
+
+- `tick_interval_seconds`: nhac scheduler khi khong co state dac biet
+- `idle_sleep_seconds`: sleep khi khong co pending jobs va khong tao duoc batch moi
+- `poll_interval_seconds`: tan suat poll pending jobs trong service mode
+- `max_pending_jobs`: gioi han pending jobs cho moi service instance
+- `max_consecutive_failures`: qua nguong nay service vao cooldown
+- `cooldown_seconds`: thoi gian tam dung sau khi loi lap lai
+- `heartbeat_interval_seconds`: tan suat toi da de cap nhat heartbeat khi dang pause/cooldown
+- `lock_name`: ten DB lease lock; moi DB/profile chi nen co 1 service dung ten nay
+- `lock_lease_seconds`: thoi gian lease song truoc khi instance khac duoc takeover
+- `resume_incomplete_jobs`: boot lai se resume `service_run_id` cu neu co
+- `shutdown_grace_period_seconds`: cua so de service dung an toan duoi supervisor
+- `stuck_job_after_seconds`: danh dau job bi treo de surface trong state/log
+- `persona_retry_interval_seconds`: nhan lai auth sau khi cho Persona
+- `persona_email_cooldown_seconds`: throttle email Persona
+
 ## Field catalog va runtime field values
 
 ### Catalog metadata
@@ -234,6 +275,7 @@ Loader hien tai se validate:
 
 - `brain.backend` phai la `manual` hoac `api`
 - cac timeout/poll/batch size/round count phai > 0
+- cac tham so `service.*_seconds`, lease lock, cooldown, va pending cap phai > 0
 - `brain.delay` va `brain.max_retries` phai hop le
 
 Neu `brain` hoac `loop` khong co trong YAML:

@@ -51,7 +51,7 @@ def build_default_template_library(
         return {"fast_window": fast, "slow_window": randomizer.choice(slower_pool)}
 
     def pair_window_parameters(choices: list[int], randomizer: random.Random) -> dict[str, Any]:
-        return {"window": randomizer.choice(choices), "pair_operator": randomizer.choice(["correlation", "covariance"])}
+        return {"window": randomizer.choice(choices), "pair_operator": randomizer.choice(["ts_corr", "ts_covariance"])}
 
     def no_params(_: list[int], __: random.Random) -> dict[str, Any]:
         return {}
@@ -79,7 +79,7 @@ def build_default_template_library(
         TemplateSpec(
             name="volatility",
             field_slots=(FieldSlot("x", preferred_categories=("price", "volume", "risk", "model")),),
-            build_expression=lambda fields, params: f"rank(ts_std({fields['x']}, {params['window']}))",
+            build_expression=lambda fields, params: f"rank(ts_std_dev({fields['x']}, {params['window']}))",
             parameter_builder=unary_window_parameters,
             base_weight=weight_for("volatility", 0.85),
             turnover_bias=-0.05,
@@ -95,7 +95,7 @@ def build_default_template_library(
         TemplateSpec(
             name="delta",
             field_slots=(FieldSlot("x", preferred_categories=("price", "volume", "fundamental", "analyst")),),
-            build_expression=lambda fields, params: f"rank(delta({fields['x']}, {params['window']}))",
+            build_expression=lambda fields, params: f"rank(ts_delta({fields['x']}, {params['window']}))",
             parameter_builder=unary_window_parameters,
             base_weight=weight_for("delta", 1.00),
             turnover_bias=0.20,
@@ -137,7 +137,7 @@ def build_default_template_library(
             name="smoothed_momentum",
             field_slots=(FieldSlot("x", preferred_categories=("price", "volume", "fundamental", "analyst")),),
             build_expression=lambda fields, params: (
-                f"rank(decay_linear(delta({fields['x']}, {params['fast_window']}), {params['slow_window']}))"
+                f"rank(ts_decay_linear(ts_delta({fields['x']}, {params['fast_window']}), {params['slow_window']}))"
             ),
             parameter_builder=fast_slow_parameters,
             base_weight=weight_for("smoothed_momentum", 0.95),
@@ -150,7 +150,7 @@ def build_default_template_library(
                 FieldSlot("y", preferred_categories=("price", "volume"), distinct_from=("x",)),
             ),
             build_expression=lambda fields, params: (
-                f"rank((ts_mean({fields['x']}, {params['slow_window']})-delta({fields['y']}, {params['fast_window']})))"
+                f"rank((ts_mean({fields['x']}, {params['slow_window']})-ts_delta({fields['y']}, {params['fast_window']})))"
             ),
             parameter_builder=fast_slow_parameters,
             base_weight=weight_for("fundamental_vs_price_confirmation", 0.85),
