@@ -12,6 +12,7 @@ dependencies = [
   "numpy>=1.26",
   "pandas>=2.1",
   "PyYAML>=6.0",
+  "requests>=2.32",
 ]
 
 [project.optional-dependencies]
@@ -28,6 +29,7 @@ wq-tool = "cli.app:main"
 
 [tool.setuptools.packages.find]
 include = [
+  "adapters*",
   "alpha*",
   "backtest*",
   "cli*",
@@ -37,8 +39,10 @@ include = [
   "features*",
   "generator*",
   "memory*",
+  "registry*",
   "services*",
   "storage*",
+  "workflows*",
 ]
 
 [tool.black]
@@ -65,7 +69,7 @@ warn_unused_ignores = true
 exclude = ["Document/", "examples/"]
 
 [tool.coverage.run]
-source = ["alpha", "backtest", "cli", "core", "data", "evaluation", "features", "generator", "memory", "services", "storage"]
+source = ["adapters", "alpha", "backtest", "cli", "core", "data", "evaluation", "features", "generator", "memory", "registry", "services", "storage", "workflows"]
 
 [tool.coverage.report]
 show_missing = true

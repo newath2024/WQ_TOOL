@@ -7,7 +7,6 @@ from core.run_context import RunContext
 from services.models import CommandEnvironment
 from storage.repository import SQLiteRepository
 
-
 RESUMABLE_COMMANDS = {
     "generate",
     "evaluate",
@@ -18,6 +17,12 @@ RESUMABLE_COMMANDS = {
     "memory-failed-patterns",
     "memory-top-genes",
     "lineage",
+    "sync-field-catalog",
+    "export-brain-candidates",
+    "import-brain-results",
+    "run-brain-sim",
+    "run-closed-loop",
+    "brain-login",
 }
 
 

@@ -1,202 +1,210 @@
 # WQ Tool
 
-`WQ Tool` là một alpha research framework theo phong cách WorldQuant/BRAIN, chạy local trên dữ liệu OHLCV và metadata phụ trợ. Mục tiêu của repo là cung cấp một codebase đủ sạch để nghiên cứu alpha lặp lại, đánh giá có traceability, và mở rộng dần sang universe lớn hơn, operator nhiều hơn, và workflow tối ưu hóa theo memory.
+`WQ Tool` la mot alpha research framework theo huong WorldQuant/BRAIN.
+He thong nay hien co 2 lop ro rang:
 
-## Dự án này dành cho ai
+- local research layer: field registry, operator registry, structured generation, validation, mutation, memory, storage
+- BRAIN integration layer: submit alpha vao BRAIN, lay ket qua that, hoc tu outcome that, va chay closed-loop
 
-- quantitative researcher cần pipeline generate -> evaluate -> rank -> mutate
-- engineer muốn một khung local, minh bạch, dễ debug
-- contributor cần một repo có service boundaries đủ rõ để tiếp tục mở rộng
+Quan trong:
 
-## Tính năng chính
+- local logic KHONG phai la backtest thay the BRAIN
+- BRAIN simulation la source of truth cho closed-loop workflow
+- manual backend ton tai de workflow van dung duoc truoc khi API that san sang
+- API backend la scaffold san sang tich hop, nhung khong bịa endpoint
 
-- nạp dữ liệu CSV local theo schema chuẩn hóa `timestamp,symbol,open,high,low,close,volume`
-- nạp metadata phụ trợ cho group/factor/mask
-- alpha DSL an toàn, không dùng raw `eval`
-- template, grammar, mutation, và guided generation
-- simulation local kiểu BRAIN với `d0`, `d1`, `fast_d1`, neutralization, submission-style tests
-- ranking, dedup, stability checks, behavioral novelty, adaptive memory
-- SQLite persistence cho runs, lineage, metrics, cache, diagnoses, pattern memory
-- CLI đầy đủ cho load/generate/evaluate/report/memory/lineage/mutate/pipeline
+## Kha nang hien tai
 
-## Kiến trúc mức cao
+- nap OHLCV local + metadata group/factor/mask
+- nap field catalog tu snapshot BRAIN va field values tu long CSV
+- sinh alpha theo template co cau truc, type-safe, co memory
+- validate expression truoc khi evaluate/simulate
+- persist lineage, pattern memory, field scores, va metadata traceability
+- submit candidate vao BRAIN qua `manual` hoac `api` adapter
+- normalize ket qua BRAIN, luu rejection reason, submission eligibility, raw payload
+- chay `generate -> simulate -> learn -> mutate -> repeat`
+
+## Cau truc muc cao
 
 ```text
-main.py            Thin compatibility wrapper
-cli/               Argparse wiring và output formatting
-services/          Workflow orchestration và typed service results
-alpha/             Parser / AST / evaluator
-backtest/          Portfolio simulation và metrics
-data/              Ingestion / validation / splitting
-evaluation/        Filtering / critic / ranking / submission tests
-features/          Operators và transforms
-generator/         Template / grammar / mutation / guided generation
-memory/            Pattern memory và adaptive scoring
-storage/           SQLite schema, repository, history persistence
-config/            Dev / research / strict profiles
-docs/              Kiến trúc, pipeline, config, development notes
-tests/             Unit + integration smoke tests
+adapters/    SimulationAdapter + BRAIN manual/api backends
+alpha/       Parser / AST / validator / evaluator
+cli/         Argparse wiring
+data/        Data loader + field registry
+features/    Operator registry + transforms
+generator/   Template generator + mutation + guided generation
+memory/      Pattern memory + structural signatures
+services/    Brain service / closed loop / candidate selection / local services
+storage/     SQLite schema + repository + result stores
+workflows/   Thin workflow wrappers cho CLI
+docs/        Architecture / pipeline / config / development notes
 ```
 
-## Vòng đời pipeline
+## Workflow local va workflow BRAIN
 
-1. `load-data`: nạp và validate dataset + metadata
-2. `generate`: sinh alpha candidates mới
-3. `evaluate`: parse -> evaluate -> backtest -> filter -> dedup -> select
-4. `report` / `top`: xem kết quả và lý do ranking
-5. `memory-*` / `lineage`: xem pattern memory và ancestry
-6. `mutate`: sinh thế hệ tiếp theo từ alpha tốt hơn
-7. `run-full-pipeline`: chạy end-to-end
+### Local workflow cu
 
-## Luồng alpha expression
+Van duoc giu nguyen:
 
-1. Chuỗi expression được parse thành custom AST
-2. Validator kiểm tra operator, field, depth, group-field usage
-3. Evaluator áp AST lên field matrices theo symbol/date
-4. Signal đi qua simulation pipeline
-5. Metrics validation là driver chính cho filtering và adaptive memory
-6. Test split chỉ để audit, không lái generator
-
-## Workflow generation / evaluation / ranking
-
-- generation có 4 nhánh: guided mutation, memory templates, random exploration, novelty search
-- critic gắn fail tags như `high_turnover`, `weak_validation`, `low_stability`
-- memory tách expression thành family/operator/field/lookback/wrapper/subexpression genes
-- filtering áp hard filters, data sufficiency, submission-style robustness
-- ranking ưu tiên:
-  - validation fitness
-  - submission pass count
-  - validation sharpe
-  - behavioral novelty
-  - lower complexity
-
-## Memory và mutation
-
-- mỗi alpha sau evaluate được lưu history, diagnosis, rejection reasons, lineage, và pattern membership
-- generator vòng sau giảm sampling của pattern fail lặp lại và tăng sampling cho building blocks hiệu quả
-- mutation policy phản ứng theo critic hints, ví dụ:
-  - turnover cao -> smooth/slow signals
-  - overfit -> đơn giản hóa
-  - correlation cao -> đổi feature/operator family
-
-## Input data format
-
-OHLCV canonical:
-
-```csv
-timestamp,symbol,open,high,low,close,volume
-2021-01-01,AAA,100.0,101.0,99.5,100.5,120000
+```bash
+python main.py generate --config config/dev.yaml
+python main.py evaluate --config config/dev.yaml
+python main.py run-full-pipeline --config config/dev.yaml
 ```
 
-Metadata phụ trợ có thể là:
+Workflow nay dung local evaluation/backtest de screening va debug.
 
-- group fields: `sector, industry, country, subindustry`
-- factor fields: `beta, size, volatility, liquidity`
-- mask fields: `core_mask, liquid_mask`
+### BRAIN-first workflow moi
 
-Sample dataset trong `examples/` chỉ là smoke fixture để chạy demo và test. Nó không đại diện cho universe nghiên cứu thật.
+```bash
+python main.py sync-field-catalog --config config/dev.yaml
+python main.py brain-login --config config/dev.yaml
+python main.py export-brain-candidates --config config/dev.yaml
+python main.py import-brain-results --config config/dev.yaml --path outputs/brain_manual/manual_results.csv
+python main.py run-brain-sim --config config/dev.yaml
+python main.py run-closed-loop --config config/dev.yaml
+```
 
-## Config profiles
+Closed-loop BRAIN:
 
-- `config/dev.yaml`: demo/dev profile, thresholds lỏng hơn, sample universe nhỏ
-- `config/research.yaml`: default research profile, thực tế hơn cho local screening
-- `config/strict.yaml`: audit profile, filters chặt hơn
-- `config/default.yaml`: mirror của `research.yaml` để giữ workflow mặc định
+1. generate candidate co cau truc
+2. validate/prefilter local
+3. submit top-N vao BRAIN
+4. thu ket qua that tu BRAIN
+5. luu metrics + rejection reasons + lineage
+6. cap nhat memory
+7. mutate candidate manh
+8. lap lai theo so round
 
-Loader hỗ trợ:
+## Manual backend
 
-- schema cũ: `evaluation` phẳng + `submission_tests`
-- schema mới: `evaluation.hard_filters`, `data_requirements`, `diversity`, `ranking`, `robustness`
+Mac dinh `brain.backend = manual`.
 
-## Quick start on Windows
+Luong manual:
 
-Use Python 3.11+ only. If `python main.py ...` fails with `ModuleNotFoundError: No module named 'yaml'` or similar, VS Code is usually pointing at the wrong interpreter.
+1. `export-brain-candidates` tao CSV trong `outputs/brain_manual/`
+2. submit thu cong len BRAIN
+3. luu ket qua thu cong vao CSV
+4. `import-brain-results --path <file.csv>`
+5. chay tiep `run-closed-loop` hoac xem traceability trong DB
+
+Export CSV co:
+
+- `candidate_id`
+- `job_id`
+- `expression`
+- `template_name`
+- `fields_used`
+- `operators_used`
+- `generation_metadata_json`
+- `sim_config_json`
+
+## API backend
+
+`BrainApiAdapter` da co:
+
+- auth/session wrapper
+- payload builder
+- response parser
+- retry hook
+- rate-limit hook
+- status/result polling hooks
+- interactive login bang email/password
+- support Persona/face-scan khi BRAIN yeu cau
+- local session-cookie cache de tai su dung giua cac command
+
+Khuyen nghi:
+
+1. dat `brain.backend: api`
+2. chay `python main.py brain-login --config <config>.yaml`
+3. nhap email/password trong terminal
+4. neu BRAIN yeu cau Persona, mo URL va quet mat
+5. session cookie se duoc luu vao `brain.session_path`
+
+Luu y bao mat:
+
+- tool khong luu password
+- tool co the luu session cookie cuc bo de tai su dung
+- mac dinh file session nam trong `outputs/`, da duoc `.gitignore`
+
+## Storage va traceability
+
+Ngoai cac bang local cu, repo da co them:
+
+- `submission_batches`
+- `submissions`
+- `brain_results`
+- `manual_imports`
+- `closed_loop_runs`
+- `closed_loop_rounds`
+
+Moi candidate co the truy vet duoc:
+
+- run nao tao ra
+- round nao submit len BRAIN
+- batch/job nao tuong ung
+- config simulation nao da dung
+- ket qua metrics nao tra ve
+- co rejection khong
+- ly do reject la gi
+- co duoc chon de mutate tiep khong
+
+## Config moi
+
+`brain` block tach rieng khoi `generation`, `simulation`, `loop`.
+
+Vi du:
+
+```yaml
+brain:
+  backend: api
+  region: USA
+  universe: TOP3000
+  delay: 1
+  neutralization: sector
+  decay: 0
+  truncation: 0.08
+  pasteurization: true
+  unit_handling: verify
+  nan_handling: off
+  session_path: outputs/brain_api_session.json
+
+loop:
+  rounds: 5
+  generation_batch_size: 100
+  simulation_batch_size: 20
+  poll_interval_seconds: 10
+  timeout_seconds: 600
+  mutate_top_k: 10
+  max_children_per_parent: 5
+```
+
+Config cu van load duoc. Command local cu khong doi nghia.
+
+## Setup
 
 ```powershell
 py -3.12 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -U pip
 python -m pip install -e ".[dev]"
-python main.py --help
 ```
 
-In VS Code:
-
-- `Ctrl+Shift+P`
-- `Python: Select Interpreter`
-- choose `${workspaceFolder}\\.venv\\Scripts\\python.exe`
-
-If you run `python main.py` without a command, the CLI will default to `run-full-pipeline`.
-
-## CLI examples
+## Test
 
 ```bash
-python -m pip install -e .[dev]
-
-python main.py load-data --config config/dev.yaml
-python main.py generate --config config/dev.yaml --count 100
-python main.py evaluate --config config/dev.yaml
-python main.py top --config config/dev.yaml --limit 10
-python main.py report --config config/dev.yaml --limit 5
-python main.py memory-top-patterns --config config/dev.yaml --limit 10
-python main.py lineage --config config/dev.yaml --alpha-id <alpha_id>
-python main.py mutate --config config/dev.yaml --from-top 20 --count 50
-python main.py run-full-pipeline --config config/dev.yaml
-```
-
-Console script mới:
-
-```bash
-wq-tool run-full-pipeline --config config/research.yaml
-```
-
-CSV exports mặc định:
-
-- sau `generate`: `outputs/generated_alphas.csv`
-- sau `evaluate`: `outputs/evaluated_alphas.csv`
-- alpha đã được chọn: `outputs/selected_alphas.csv`
-
-Mỗi lần chạy cũng sẽ có bản theo `run_id`, ví dụ `outputs/generated_alphas_<run_id>.csv`.
-
-## Storage schema overview
-
-Các bảng chính:
-
-- `runs`: run metadata, config snapshot, profile, dataset fingerprint, regime key
-- `alphas`: alpha candidates và generation metadata
-- `alpha_parents`: lineage edge table
-- `metrics`: train/validation/test metrics
-- `selections`: alpha đã chọn + ranking rationale
-- `submission_tests`: từng test robustness/subuniverse/ladder
-- `simulation_cache`: cache theo simulation signature
-- `alpha_history`: evaluation history cho adaptive learning
-- `alpha_diagnoses`: fail/success tags và hints
-- `alpha_patterns`, `alpha_pattern_membership`: pattern memory/gene scoring
-
-## Development và testing
-
-```bash
-python -m pip install -e .[dev]
 pytest -q
-ruff check .
-black --check .
-mypy .
 ```
 
-Pytest đã có smoke/integration tests cho parser, operators, metrics, filtering, critic, memory, guided generation, và pipeline end-to-end.
+## Gioi han hien tai
 
-## Roadmap gần
+- manual backend can buoc import ket qua thu cong truoc khi closed-loop tiep tuc hoc day du
+- API backend moi la scaffold va chua duoc bind vao endpoint BRAIN that
+- local evaluation van ton tai cho workflow cu, nhung khong duoc xem la truth trong BRAIN closed-loop
 
-- tách evaluation/generation logic sâu hơn khỏi repository helpers
-- mở rộng loader cho parquet và universe lớn hơn
-- factor packs và operator families nhiều hơn
-- richer experiment comparison UI / notebook helpers
-- distributed evaluation và worker-based generation
-- adapters sang external execution/research environments
-
-## Tài liệu chi tiết hơn
+## Tai lieu
 
 - [Architecture](docs/architecture.md)
-- [Pipeline](docs/pipeline.md)
 - [Configuration](docs/configuration.md)
+- [Pipeline](docs/pipeline.md)
 - [Development](docs/development.md)

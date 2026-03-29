@@ -6,7 +6,7 @@
 python -m pip install -e .[dev]
 ```
 
-## Core commands
+## Core checks
 
 ```bash
 pytest -q
@@ -15,23 +15,43 @@ black --check .
 mypy .
 ```
 
-## Refactor guidelines
+## Refactor rules
 
-- giữ CLI surface backward-compatible
-- ưu tiên additive migrations cho SQLite
-- không đẩy orchestration xuống repository hoặc utility modules
-- validation metrics là driver chính cho adaptive logic
-- test split chỉ để audit
+- giu command local cu backward-compatible
+- BRAIN integration phai di sau `SimulationAdapter`
+- khong day business logic xuong CLI hoac repository thuan SQL
+- khong fake external simulation
+- comment/doc phai trung thuc ve local proxy logic vs BRAIN result that
+- uu tien additive SQLite migrations
 
-## Khi thêm feature mới
+## Khi them feature moi
 
-1. chọn layer đúng: CLI / service / core / storage
-2. thêm config explicit, tránh magic number
-3. persist đủ metadata để debug run sau này
-4. thêm smoke test hoặc integration test nếu feature chạm workflow
+1. quyet dinh dung layer nao:
+   - adapter
+   - service
+   - workflow
+   - storage
+   - docs
+2. them config explicit, tranh magic number
+3. persist du metadata de audit lai run sau nay
+4. them test voi mock/fake adapter thay vi phu thuoc BRAIN that
 
-## Định hướng mở rộng
+## Goi y cho BRAIN API work sau nay
 
-- data readers mới nên đi qua `data/` + `services/data_service.py`
-- generation strategies mới nên cắm vào `generator/` rồi được gọi từ generation/mutation service
-- report/UI layer nên đọc từ service/query layer, không query thẳng SQLite trong presentation
+- khong hard-code endpoint neu chua verify
+- inject transport vao `BrainApiAdapter`
+- test parser/payload/retry/status mapping bang mock transport
+- giu payload builder va response parser tach rieng de de review
+
+## Quy uoc test cho BRAIN workflow
+
+Nen cover cac nhom sau:
+
+- adapter contract
+- manual export/import flow
+- result normalization
+- submission/result store persistence
+- retry/timeout behavior
+- closed-loop round orchestration
+- memory update tu external outcomes
+- regression: local `evaluate` va `run-full-pipeline` van chay

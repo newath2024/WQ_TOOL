@@ -157,6 +157,42 @@ evaluation:
 storage:
   path: wq_tool.sqlite3
 
+brain:
+  backend: manual
+  region: USA
+  universe: TOP3000
+  delay: 1
+  neutralization: sector
+  decay: 0
+  truncation: 0.08
+  pasteurization: true
+  unit_handling: verify
+  nan_handling: off
+  poll_interval_seconds: 10
+  timeout_seconds: 600
+  max_retries: 3
+  batch_size: 20
+  manual_export_dir: outputs/brain_manual
+  api_base_url: ""
+  api_auth_env: BRAIN_API_TOKEN
+  email_env: BRAIN_API_EMAIL
+  password_env: BRAIN_API_PASSWORD
+  session_path: outputs/brain_api_session.json
+  auth_expiry_seconds: 14400
+  open_browser_for_persona: true
+  rate_limit_per_minute: 60
+
+loop:
+  rounds: 5
+  generation_batch_size: 100
+  simulation_batch_size: 20
+  poll_interval_seconds: 10
+  timeout_seconds: 600
+  mutate_top_k: 10
+  max_children_per_parent: 5
+  rejection_filters: []
+  archive_thresholds: {}
+
 runtime:
   log_level: INFO
   fail_fast: false

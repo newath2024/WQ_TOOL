@@ -1,11 +1,26 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 import sys
-from typing import Iterable
+from collections.abc import Iterable
+from pathlib import Path
 
-from cli.commands import evaluate, generate, lineage, load_data, memory, mutate, pipeline, report
+from cli.commands import (
+    brain_login,
+    evaluate,
+    export_brain_candidates,
+    generate,
+    import_brain_results,
+    lineage,
+    load_data,
+    memory,
+    mutate,
+    pipeline,
+    report,
+    run_brain_sim,
+    run_closed_loop,
+    sync_field_catalog,
+)
 from core.config import load_config
 from core.logging import configure_logging
 from services.runtime_service import build_command_environment, open_repository, resolve_run_context
@@ -22,6 +37,12 @@ _SUBCOMMANDS = {
     "lineage",
     "mutate",
     "run-full-pipeline",
+    "sync-field-catalog",
+    "export-brain-candidates",
+    "import-brain-results",
+    "run-brain-sim",
+    "run-closed-loop",
+    "brain-login",
 }
 _GLOBAL_OPTIONS_WITH_VALUES = {"--config", "--run-id", "--seed", "--log-level"}
 _GLOBAL_FLAG_OPTIONS = {"--resume"}
@@ -71,6 +92,12 @@ def build_parser() -> argparse.ArgumentParser:
     lineage.register(subparsers, common)
     mutate.register(subparsers, common)
     pipeline.register(subparsers, common)
+    sync_field_catalog.register(subparsers, common)
+    export_brain_candidates.register(subparsers, common)
+    import_brain_results.register(subparsers, common)
+    run_brain_sim.register(subparsers, common)
+    run_closed_loop.register(subparsers, common)
+    brain_login.register(subparsers, common)
     return parser
 
 

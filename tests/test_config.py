@@ -86,3 +86,6 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
         default_config.submission_tests.robustness_min_fitness_ratio
         == research_config.submission_tests.robustness_min_fitness_ratio
     )
+    assert default_config.brain.backend == "manual"
+    assert default_config.loop.simulation_batch_size == default_config.brain.batch_size
+    assert default_config.brain.session_path == "outputs/brain_api_session.json"

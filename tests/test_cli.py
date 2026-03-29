@@ -17,6 +17,20 @@ def test_parser_dispatches_to_command_modules() -> None:
     assert args.command_handler.__module__ == "cli.commands.report"
 
 
+def test_parser_registers_new_brain_commands() -> None:
+    parser = build_parser()
+    args = parser.parse_args(["run-closed-loop"])
+
+    assert args.command == "run-closed-loop"
+    assert args.command_handler.__module__ == "cli.commands.run_closed_loop"
+    login_args = parser.parse_args(["brain-login"])
+    assert login_args.command == "brain-login"
+    login_visible_args = parser.parse_args(["brain-login", "--show-password"])
+    assert login_visible_args.command == "brain-login"
+    assert login_visible_args.show_password is True
+    assert login_args.command_handler.__module__ == "cli.commands.brain_login"
+
+
 def test_missing_command_defaults_to_pipeline() -> None:
     assert _normalize_argv([]) == ["run-full-pipeline"]
     assert _normalize_argv(["--config", "config/dev.yaml"]) == [
