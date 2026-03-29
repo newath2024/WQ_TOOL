@@ -371,6 +371,35 @@ def test_brain_api_adapter_reloads_session_file_when_updated_externally(tmp_path
     assert fake_session.cookies.get("t") == "fresh-cookie-v2"
 
 
+def test_brain_api_adapter_retries_transient_auth_probe_disconnect(tmp_path: Path, monkeypatch) -> None:
+    session_path = tmp_path / "brain_session.json"
+    _write_session_file(session_path, cookie_value="fresh-cookie")
+
+    fake_session = FakeSession(
+        get_queue=[
+            lambda session, url, kwargs: (_ for _ in ()).throw(
+                requests.ConnectionError("Remote end closed connection without response")
+            ),
+            FakeResponse(200, json_data={"user": {"id": "user-7"}, "token": {"expiry": 1000}}),
+        ],
+        post_queue=[],
+    )
+    adapter = BrainApiAdapter(
+        base_url="https://api.worldquantbrain.com",
+        session=fake_session,
+        session_path=str(session_path),
+        credentials_file=str(tmp_path / "missing.json"),
+        open_browser_for_persona=False,
+        max_retries=1,
+    )
+    monkeypatch.setattr("time.sleep", lambda seconds: None)
+
+    result = adapter.ensure_authenticated(interactive=False)
+
+    assert result["mode"] == "session_cookie"
+    assert fake_session.cookies.get("t") == "fresh-cookie"
+
+
 def test_brain_api_adapter_surfaces_biometrics_throttle(tmp_path: Path) -> None:
     session_path = tmp_path / "brain_session.json"
     fake_session = FakeSession(

@@ -433,10 +433,12 @@ class BrainApiAdapter(SimulationAdapter):
         return payload
 
     def _authentication_state(self) -> dict:
-        response = self.session.get(
-            self._resolve_authentication_url(),
-            headers=self._build_headers(),
-            verify=self.verify_ssl,
+        response = self.with_retry(
+            lambda: self._request(
+                "GET",
+                self._resolve_authentication_url(),
+                json_payload=None,
+            )
         )
         if response.status_code == 200:
             payload_raw = self._response_json(response)
