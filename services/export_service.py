@@ -17,6 +17,10 @@ _GENERATED_COLUMNS = [
     "expression",
     "normalized_expression",
     "generation_mode",
+    "template",
+    "fields_used",
+    "operators_used",
+    "depth",
     "complexity",
     "status",
     "created_at",
@@ -32,6 +36,10 @@ _EVALUATED_COLUMNS = [
     "expression",
     "normalized_expression",
     "generation_mode",
+    "template",
+    "fields_used",
+    "operators_used",
+    "depth",
     "complexity",
     "passed_filters",
     "selected",
@@ -67,6 +75,10 @@ _SELECTED_COLUMNS = [
     "alpha_id",
     "expression",
     "generation_mode",
+    "template",
+    "fields_used",
+    "operators_used",
+    "depth",
     "complexity",
     "validation_fitness",
     "validation_sharpe",
@@ -98,6 +110,10 @@ def export_generated_alphas(
                 "expression": record.expression,
                 "normalized_expression": record.normalized_expression,
                 "generation_mode": record.generation_mode,
+                "template": record.template_name,
+                "fields_used": _json_or_pipe(record.fields_used_json),
+                "operators_used": _json_or_pipe(record.operators_used_json),
+                "depth": record.depth,
                 "complexity": record.complexity,
                 "status": record.status,
                 "created_at": record.created_at,
@@ -142,6 +158,10 @@ def export_evaluated_alphas(
                 "expression": evaluation.candidate.expression,
                 "normalized_expression": evaluation.candidate.normalized_expression,
                 "generation_mode": evaluation.candidate.generation_mode,
+                "template": evaluation.candidate.template_name,
+                "fields_used": _pipe_join(evaluation.candidate.fields_used),
+                "operators_used": _pipe_join(evaluation.candidate.operators_used),
+                "depth": evaluation.candidate.depth,
                 "complexity": evaluation.candidate.complexity,
                 "passed_filters": evaluation.passed_filters,
                 "selected": selection is not None,
@@ -180,6 +200,10 @@ def export_evaluated_alphas(
                     "alpha_id": evaluation.candidate.alpha_id,
                     "expression": evaluation.candidate.expression,
                     "generation_mode": evaluation.candidate.generation_mode,
+                    "template": evaluation.candidate.template_name,
+                    "fields_used": _pipe_join(evaluation.candidate.fields_used),
+                    "operators_used": _pipe_join(evaluation.candidate.operators_used),
+                    "depth": evaluation.candidate.depth,
                     "complexity": evaluation.candidate.complexity,
                     "validation_fitness": validation.fitness,
                     "validation_sharpe": validation.sharpe,
@@ -250,3 +274,19 @@ def _stable_json(value: Any) -> str:
             return value
         return json.dumps(parsed, sort_keys=True)
     return json.dumps(value, sort_keys=True)
+
+
+def _json_or_pipe(value: Any) -> str:
+    if not value:
+        return ""
+    if isinstance(value, str):
+        try:
+            parsed = json.loads(value)
+        except json.JSONDecodeError:
+            return value
+        if isinstance(parsed, list):
+            return _pipe_join(parsed)
+        return json.dumps(parsed, sort_keys=True)
+    if isinstance(value, list):
+        return _pipe_join(value)
+    return str(value)

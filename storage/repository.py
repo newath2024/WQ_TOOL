@@ -1,29 +1,35 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from io import StringIO
-from datetime import datetime, timezone
 
 import pandas as pd
 
 from generator.engine import AlphaCandidate
 from memory.pattern_memory import PatternMemoryService
 from storage.alpha_history import AlphaHistoryStore
+from storage.brain_result_store import BrainResultStore
 from storage.models import (
     AlphaRecord,
+    FieldCatalogRecord,
     MetricRecord,
+    RunFieldScoreRecord,
     RunRecord,
     SelectionRecord,
     SimulationCacheRecord,
     SubmissionTestRecord,
 )
 from storage.sqlite import connect_sqlite
+from storage.submission_store import SubmissionStore
 
 
 class SQLiteRepository:
     def __init__(self, path: str) -> None:
         self.connection = connect_sqlite(path)
         self.alpha_history = AlphaHistoryStore(self.connection, PatternMemoryService())
+        self.submissions = SubmissionStore(self.connection)
+        self.brain_results = BrainResultStore(self.connection)
 
     def close(self) -> None:
         self.connection.close()
@@ -77,7 +83,7 @@ class SQLiteRepository:
         return RunRecord(**dict(row)) if row else None
 
     def update_run_status(self, run_id: str, status: str, finished: bool = False) -> None:
-        finished_at = datetime.now(timezone.utc).isoformat() if finished else None
+        finished_at = datetime.now(UTC).isoformat() if finished else None
         self.connection.execute(
             "UPDATE runs SET status = ?, finished_at = COALESCE(?, finished_at) WHERE run_id = ?",
             (status, finished_at, run_id),
@@ -117,8 +123,9 @@ class SQLiteRepository:
             cursor = self.connection.execute(
                 """
                 INSERT OR IGNORE INTO alphas
-                (run_id, alpha_id, expression, normalized_expression, generation_mode, generation_metadata, complexity, created_at, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (run_id, alpha_id, expression, normalized_expression, generation_mode, template_name, fields_used_json,
+                 operators_used_json, depth, generation_metadata, complexity, created_at, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     run_id,
@@ -126,6 +133,10 @@ class SQLiteRepository:
                     candidate.expression,
                     candidate.normalized_expression,
                     candidate.generation_mode,
+                    candidate.template_name,
+                    json.dumps(list(candidate.fields_used), sort_keys=True),
+                    json.dumps(list(candidate.operators_used), sort_keys=True),
+                    candidate.depth,
                     json.dumps(candidate.generation_metadata, sort_keys=True),
                     candidate.complexity,
                     candidate.created_at,
@@ -163,6 +174,75 @@ class SQLiteRepository:
             (run_id,),
         ).fetchall()
         return [AlphaRecord(**dict(row)) for row in rows]
+
+    def save_field_catalog(self, records: list[FieldCatalogRecord]) -> None:
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO field_catalog
+                (field_name, dataset, field_type, coverage, alpha_usage_count, category, delay, region, universe,
+                 runtime_available, description, subcategory, user_count, category_weight, field_score, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(field_name) DO UPDATE SET
+                    dataset = excluded.dataset,
+                    field_type = excluded.field_type,
+                    coverage = excluded.coverage,
+                    alpha_usage_count = excluded.alpha_usage_count,
+                    category = excluded.category,
+                    delay = excluded.delay,
+                    region = excluded.region,
+                    universe = excluded.universe,
+                    runtime_available = excluded.runtime_available,
+                    description = excluded.description,
+                    subcategory = excluded.subcategory,
+                    user_count = excluded.user_count,
+                    category_weight = excluded.category_weight,
+                    field_score = excluded.field_score,
+                    updated_at = excluded.updated_at
+                """,
+                (
+                    record.field_name,
+                    record.dataset,
+                    record.field_type,
+                    record.coverage,
+                    record.alpha_usage_count,
+                    record.category,
+                    record.delay,
+                    record.region,
+                    record.universe,
+                    int(record.runtime_available),
+                    record.description,
+                    record.subcategory,
+                    record.user_count,
+                    record.category_weight,
+                    record.field_score,
+                    record.updated_at,
+                ),
+            )
+        self.connection.commit()
+
+    def replace_run_field_scores(self, run_id: str, records: list[RunFieldScoreRecord]) -> None:
+        self.connection.execute("DELETE FROM run_field_scores WHERE run_id = ?", (run_id,))
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO run_field_scores
+                (run_id, field_name, runtime_available, field_type, category, field_score, coverage, alpha_usage_count, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    record.run_id,
+                    record.field_name,
+                    int(record.runtime_available),
+                    record.field_type,
+                    record.category,
+                    record.field_score,
+                    record.coverage,
+                    record.alpha_usage_count,
+                    record.created_at,
+                ),
+            )
+        self.connection.commit()
 
     def list_existing_normalized_expressions(self, run_id: str) -> set[str]:
         rows = self.connection.execute(

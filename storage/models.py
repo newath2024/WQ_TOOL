@@ -27,6 +27,10 @@ class AlphaRecord:
     expression: str
     normalized_expression: str
     generation_mode: str
+    template_name: str
+    fields_used_json: str
+    operators_used_json: str
+    depth: int
     generation_metadata: str
     complexity: int
     created_at: str
@@ -119,6 +123,7 @@ class AlphaHistoryRecord:
     submission_pass_count: int
     diagnosis_summary_json: str
     rejection_reasons_json: str
+    metric_source: str
     created_at: str
 
 
@@ -157,3 +162,136 @@ class AlphaPatternMembershipRecord:
     pattern_kind: str
     pattern_value: str
     created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class FieldCatalogRecord:
+    field_name: str
+    dataset: str
+    field_type: str
+    coverage: float
+    alpha_usage_count: int
+    category: str
+    delay: int
+    region: str
+    universe: str
+    runtime_available: bool
+    description: str
+    subcategory: str
+    user_count: int
+    category_weight: float
+    field_score: float
+    updated_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class RunFieldScoreRecord:
+    run_id: str
+    field_name: str
+    runtime_available: bool
+    field_type: str
+    category: str
+    field_score: float
+    coverage: float
+    alpha_usage_count: int
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class SubmissionBatchRecord:
+    batch_id: str
+    run_id: str
+    round_index: int
+    backend: str
+    status: str
+    candidate_count: int
+    sim_config_snapshot: str
+    export_path: str | None
+    notes_json: str
+    created_at: str
+    updated_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class SubmissionRecord:
+    job_id: str
+    batch_id: str
+    run_id: str
+    round_index: int
+    candidate_id: str
+    expression: str
+    backend: str
+    status: str
+    sim_config_snapshot: str
+    submitted_at: str
+    updated_at: str
+    completed_at: str | None
+    export_path: str | None
+    raw_submission_json: str
+    error_message: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class BrainResultRecord:
+    job_id: str
+    run_id: str
+    round_index: int
+    batch_id: str
+    candidate_id: str
+    expression: str
+    status: str
+    region: str
+    universe: str
+    delay: int
+    neutralization: str
+    decay: int
+    sharpe: float | None
+    fitness: float | None
+    turnover: float | None
+    drawdown: float | None
+    returns: float | None
+    margin: float | None
+    submission_eligible: bool | None
+    rejection_reason: str | None
+    raw_result_json: str
+    metric_source: str
+    simulated_at: str
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class ManualImportRecord:
+    import_id: str
+    run_id: str
+    batch_id: str
+    source_path: str
+    imported_count: int
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class ClosedLoopRunRecord:
+    run_id: str
+    backend: str
+    status: str
+    requested_rounds: int
+    completed_rounds: int
+    config_snapshot: str
+    started_at: str
+    finished_at: str | None
+
+
+@dataclass(frozen=True, slots=True)
+class ClosedLoopRoundRecord:
+    run_id: str
+    round_index: int
+    status: str
+    generated_count: int
+    validated_count: int
+    submitted_count: int
+    completed_count: int
+    selected_for_mutation_count: int
+    mutated_children_count: int
+    summary_json: str
+    created_at: str
+    updated_at: str

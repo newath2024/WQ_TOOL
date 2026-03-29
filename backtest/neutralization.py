@@ -23,7 +23,14 @@ def apply_neutralization(
         columns = factor_columns or list(matrices.factor_fields)
         if not columns:
             raise ValueError("Factor model neutralization requested but no factor columns are available.")
-        return factor_neutralize(signal, {name: matrices.factor_fields[name] for name in columns})
+        exposures = {
+            name: matrices.factor_fields.get(name) or matrices.numeric_fields.get(name)
+            for name in columns
+        }
+        missing = [name for name, frame in exposures.items() if frame is None]
+        if missing:
+            raise KeyError(f"Unknown factor neutralization fields: {missing}")
+        return factor_neutralize(signal, {name: frame for name, frame in exposures.items() if frame is not None})
     if mode == "sector_then_country":
         sector_neutral = group_neutralize(signal, matrices.group_fields["sector"])
         return group_neutralize(sector_neutral, matrices.group_fields["country"])

@@ -22,6 +22,7 @@ from alpha.parser import parse_expression
 from core.config import AppConfig
 from core.signatures import build_simulation_signature
 from features.registry import WINDOWED_OPERATORS
+from features.registry import build_default_registry
 
 
 FAIL_TAG_PENALTIES: dict[str, float] = {
@@ -45,6 +46,7 @@ class GeneObservation:
 @dataclass(frozen=True, slots=True)
 class StructuralSignature:
     operators: tuple[str, ...]
+    operator_families: tuple[str, ...]
     fields: tuple[str, ...]
     lookbacks: tuple[int, ...]
     wrappers: tuple[str, ...]
@@ -100,6 +102,9 @@ class PatternMemorySnapshot:
 
 
 class PatternMemoryService:
+    def __init__(self) -> None:
+        self.registry = build_default_registry()
+
     def build_regime_key(self, dataset_fingerprint: str, config: AppConfig) -> str:
         return build_simulation_signature(
             {
@@ -115,6 +120,7 @@ class PatternMemoryService:
     def extract_signature(self, expression: str) -> StructuralSignature:
         node = parse_expression(expression)
         operators = tuple(sorted(set(self._collect_operators(node))))
+        operator_families = tuple(sorted({self._operator_family(operator) for operator in operators}))
         fields = tuple(sorted(set(self._collect_fields(node))))
         lookbacks = tuple(sorted(set(self._collect_lookbacks(node))))
         wrappers = tuple(self._collect_wrappers(node))
@@ -124,6 +130,7 @@ class PatternMemoryService:
         family_signature = self._build_family_signature(operators, fields, lookbacks, wrappers, depth)
         return StructuralSignature(
             operators=operators,
+            operator_families=operator_families,
             fields=fields,
             lookbacks=lookbacks,
             wrappers=wrappers,
@@ -133,11 +140,19 @@ class PatternMemoryService:
             subexpressions=subexpressions,
         )
 
-    def build_observations(self, signature: StructuralSignature) -> list[GeneObservation]:
+    def build_observations(
+        self,
+        signature: StructuralSignature,
+        *,
+        template_name: str | None = None,
+        rejection_reasons: Iterable[str] | None = None,
+    ) -> list[GeneObservation]:
         observations: list[GeneObservation] = []
         observations.append(self._make_observation("family", signature.family_signature))
         for operator in signature.operators:
             observations.append(self._make_observation("operator", operator))
+        for operator_family in signature.operator_families:
+            observations.append(self._make_observation("operator_family", operator_family))
         for field in signature.fields:
             observations.append(self._make_observation("field", field))
         for lookback in signature.lookbacks:
@@ -146,6 +161,10 @@ class PatternMemoryService:
             observations.append(self._make_observation("wrapper", wrapper))
         for subexpression in signature.subexpressions:
             observations.append(self._make_observation("subexpression", subexpression))
+        if template_name:
+            observations.append(self._make_observation("template", template_name))
+        for reason in rejection_reasons or []:
+            observations.append(self._make_observation("rejection_reason", reason))
         deduped = {(item.pattern_kind, item.pattern_value): item for item in observations}
         return list(deduped.values())
 
@@ -163,6 +182,44 @@ class PatternMemoryService:
         if selected_top_alpha:
             score += 0.25
         score += 0.10 * behavioral_novelty_score
+        for tag in fail_tags:
+            score -= FAIL_TAG_PENALTIES.get(tag, 0.0)
+        return float(score)
+
+    def compute_brain_outcome_score(
+        self,
+        *,
+        metrics: dict[str, float | None],
+        submission_eligible: bool | None,
+        rejection_reason: str | None,
+        fail_tags: Iterable[str],
+    ) -> float:
+        score = 0.0
+        sharpe = metrics.get("sharpe")
+        fitness = metrics.get("fitness")
+        turnover = metrics.get("turnover")
+        margin = metrics.get("margin")
+        returns = metrics.get("returns")
+
+        if sharpe is not None:
+            score += 0.35 * math.tanh(sharpe / 3.0)
+        if fitness is not None:
+            score += 0.35 * math.tanh(fitness / 3.0)
+        if returns is not None:
+            score += 0.15 * math.tanh(returns / 0.15)
+        if margin is not None:
+            score += 0.10 * math.tanh(margin / 0.10)
+        if turnover is not None:
+            if turnover <= 0.7:
+                score += 0.10
+            elif turnover >= 1.2:
+                score -= 0.10
+        if submission_eligible is True:
+            score += 0.20
+        elif submission_eligible is False:
+            score -= 0.05
+        if rejection_reason:
+            score -= 0.25
         for tag in fail_tags:
             score -= FAIL_TAG_PENALTIES.get(tag, 0.0)
         return float(score)
@@ -267,3 +324,10 @@ class PatternMemoryService:
             "depth_bucket": min(depth, 6),
         }
         return json.dumps(payload, sort_keys=True, separators=(",", ":"))
+
+    def _operator_family(self, operator_name: str) -> str:
+        if operator_name.startswith("binary:") or operator_name.startswith("unary:"):
+            return operator_name.split(":", 1)[0]
+        if self.registry.contains(operator_name):
+            return self.registry.family_for(operator_name)
+        return "other"

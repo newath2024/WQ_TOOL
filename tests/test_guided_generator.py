@@ -5,6 +5,7 @@ import random
 from alpha.ast_nodes import node_complexity
 from alpha.parser import parse_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig
+from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import build_registry
 from generator.guided_generator import GuidedGenerator
 from generator.mutation_policy import MutationPolicy
@@ -68,12 +69,32 @@ def build_parent(
     )
 
 
+def build_field_registry() -> FieldRegistry:
+    return FieldRegistry(
+        fields={
+            name: FieldSpec(
+                name=name,
+                dataset="test",
+                field_type="matrix",
+                coverage=1.0,
+                alpha_usage_count=10,
+                category="price" if name != "volume" else "volume",
+                runtime_available=True,
+                field_score=0.8,
+                category_weight=0.8,
+            )
+            for name in ["open", "high", "low", "close", "volume", "returns"]
+        }
+    )
+
+
 def test_guided_generator_allocates_strategy_mix_exactly() -> None:
     generator = GuidedGenerator(
         generation_config=build_generation_config(),
         adaptive_config=AdaptiveGenerationConfig(),
         registry=build_registry(build_generation_config().allowed_operators),
         memory_service=PatternMemoryService(),
+        field_registry=build_field_registry(),
     )
 
     assert generator._allocate_counts(20) == {
@@ -91,6 +112,7 @@ def test_guided_generator_cold_start_falls_back_to_base_generation() -> None:
         adaptive_config=AdaptiveGenerationConfig(),
         registry=build_registry(config.allowed_operators),
         memory_service=PatternMemoryService(),
+        field_registry=build_field_registry(),
     )
 
     candidates = generator.generate(
@@ -99,13 +121,18 @@ def test_guided_generator_cold_start_falls_back_to_base_generation() -> None:
     )
 
     assert len(candidates) == 10
-    assert {candidate.generation_mode for candidate in candidates} <= {"template", "grammar"}
+    assert {candidate.generation_mode for candidate in candidates} <= {"template"}
 
 
 def test_mutation_policy_responds_to_critic_hints() -> None:
     config = build_generation_config()
     service = PatternMemoryService()
-    policy = MutationPolicy(config=config, memory_service=service, randomizer=random.Random(7))
+    policy = MutationPolicy(
+        config=config,
+        memory_service=service,
+        randomizer=random.Random(7),
+        field_registry=build_field_registry(),
+    )
 
     turnover_parent = build_parent(
         alpha_id="parent-turnover",

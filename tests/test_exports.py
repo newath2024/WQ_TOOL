@@ -32,6 +32,10 @@ def _make_candidate() -> AlphaCandidate:
         parent_ids=(),
         complexity=4,
         created_at=datetime.now(timezone.utc).isoformat(),
+        template_name="delta",
+        fields_used=("close",),
+        operators_used=("rank", "delta"),
+        depth=3,
         generation_metadata={"source": "test"},
     )
 
@@ -69,6 +73,10 @@ def test_export_generated_alphas_writes_readable_csv(tmp_path) -> None:
     assert generated_frame.shape[0] == 1
     assert generated_frame.loc[0, "alpha_id"] == "alpha123"
     assert generated_frame.loc[0, "expression"] == "rank(delta(close, 5))"
+    assert generated_frame.loc[0, "template"] == "delta"
+    assert generated_frame.loc[0, "fields_used"] == "close"
+    assert generated_frame.loc[0, "operators_used"] == "rank|delta"
+    assert generated_frame.loc[0, "depth"] == 3
     assert generated_frame.loc[0, "generation_metadata_json"] == '{"source": "test"}'
     assert pd.notna(generated_frame.loc[0, "parent_count"])
 
@@ -124,6 +132,8 @@ def test_export_evaluated_alphas_writes_detailed_and_selected_csv(tmp_path) -> N
     assert evaluated_frame.shape[0] == 1
     assert evaluated_frame.loc[0, "alpha_id"] == "alpha123"
     assert evaluated_frame.loc[0, "selected"] == True
+    assert evaluated_frame.loc[0, "template"] == "delta"
+    assert evaluated_frame.loc[0, "fields_used"] == "close"
     assert evaluated_frame.loc[0, "delay_mode"] == "fast_d1"
     assert evaluated_frame.loc[0, "neutralization"] == "sector"
     assert evaluated_frame.loc[0, "fail_tags"] == "high_turnover"
@@ -132,3 +142,4 @@ def test_export_evaluated_alphas_writes_detailed_and_selected_csv(tmp_path) -> N
     assert selected_frame.shape[0] == 1
     assert selected_frame.loc[0, "rank"] == 1
     assert selected_frame.loc[0, "alpha_id"] == "alpha123"
+    assert selected_frame.loc[0, "template"] == "delta"

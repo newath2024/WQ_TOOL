@@ -6,7 +6,7 @@ from features.registry import build_registry
 from generator.engine import AlphaGenerationEngine
 from generator.guided_generator import GuidedGenerator
 from memory.pattern_memory import PatternMemoryService
-from services.data_service import load_research_context, persist_research_metadata
+from services.data_service import load_research_context, persist_research_metadata, resolve_field_registry
 from services.evaluation_service import alpha_candidate_from_record
 from services.models import CommandEnvironment, GenerationServiceResult
 from storage.repository import SQLiteRepository
@@ -28,10 +28,12 @@ def mutate_and_persist(
 
     existing = repository.list_existing_normalized_expressions(environment.context.run_id)
     registry = build_registry(config.generation.allowed_operators)
+    research_context = load_research_context(config, environment, stage="mutate-data")
+    field_registry = resolve_field_registry(config, research_context)
+    persist_research_metadata(repository, config, environment, research_context)
 
     regime_key: str | None = None
     if config.adaptive_generation.enabled:
-        research_context = load_research_context(config, environment, stage="mutate-data")
         snapshot = repository.alpha_history.load_snapshot(
             regime_key=research_context.regime_key,
             parent_pool_size=max(config.adaptive_generation.parent_pool_size, from_top * 2),
@@ -49,6 +51,7 @@ def mutate_and_persist(
             adaptive_config=config.adaptive_generation,
             registry=registry,
             memory_service=PatternMemoryService(),
+            field_registry=field_registry,
         )
         candidates = engine.generate_mutations(
             count=count,
@@ -56,10 +59,9 @@ def mutate_and_persist(
             parent_pool=parent_pool,
             existing_normalized=existing,
         )
-        persist_research_metadata(repository, config, environment, research_context)
         regime_key = research_context.regime_key
     else:
-        engine = AlphaGenerationEngine(config=config.generation, registry=registry)
+        engine = AlphaGenerationEngine(config=config.generation, registry=registry, field_registry=field_registry)
         parents = [alpha_candidate_from_record(record) for record in parent_records]
         candidates = engine.generate_mutations(parents=parents, count=count, existing_normalized=existing)
 

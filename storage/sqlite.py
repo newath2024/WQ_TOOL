@@ -27,6 +27,10 @@ CREATE TABLE IF NOT EXISTS alphas (
     expression TEXT NOT NULL,
     normalized_expression TEXT NOT NULL,
     generation_mode TEXT NOT NULL,
+    template_name TEXT NOT NULL DEFAULT '',
+    fields_used_json TEXT NOT NULL DEFAULT '[]',
+    operators_used_json TEXT NOT NULL DEFAULT '[]',
+    depth INTEGER NOT NULL DEFAULT 0,
     generation_metadata TEXT NOT NULL DEFAULT '{}',
     complexity INTEGER NOT NULL,
     created_at TEXT NOT NULL,
@@ -130,6 +134,7 @@ CREATE TABLE IF NOT EXISTS alpha_history (
     submission_pass_count INTEGER NOT NULL,
     diagnosis_summary_json TEXT NOT NULL,
     rejection_reasons_json TEXT NOT NULL DEFAULT '[]',
+    metric_source TEXT NOT NULL DEFAULT 'local_backtest',
     created_at TEXT NOT NULL,
     PRIMARY KEY (run_id, alpha_id)
 );
@@ -179,6 +184,150 @@ CREATE TABLE IF NOT EXISTS alpha_pattern_membership (
 
 CREATE INDEX IF NOT EXISTS idx_alpha_pattern_membership_regime
     ON alpha_pattern_membership(regime_key, pattern_kind, pattern_id);
+
+CREATE TABLE IF NOT EXISTS field_catalog (
+    field_name TEXT PRIMARY KEY,
+    dataset TEXT NOT NULL DEFAULT '',
+    field_type TEXT NOT NULL DEFAULT 'matrix',
+    coverage REAL NOT NULL DEFAULT 0.0,
+    alpha_usage_count INTEGER NOT NULL DEFAULT 0,
+    category TEXT NOT NULL DEFAULT 'other',
+    delay INTEGER NOT NULL DEFAULT 1,
+    region TEXT NOT NULL DEFAULT '',
+    universe TEXT NOT NULL DEFAULT '',
+    runtime_available INTEGER NOT NULL DEFAULT 0,
+    description TEXT NOT NULL DEFAULT '',
+    subcategory TEXT NOT NULL DEFAULT '',
+    user_count INTEGER NOT NULL DEFAULT 0,
+    category_weight REAL NOT NULL DEFAULT 0.5,
+    field_score REAL NOT NULL DEFAULT 0.0,
+    updated_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS run_field_scores (
+    run_id TEXT NOT NULL,
+    field_name TEXT NOT NULL,
+    runtime_available INTEGER NOT NULL DEFAULT 0,
+    field_type TEXT NOT NULL DEFAULT 'matrix',
+    category TEXT NOT NULL DEFAULT 'other',
+    field_score REAL NOT NULL DEFAULT 0.0,
+    coverage REAL NOT NULL DEFAULT 0.0,
+    alpha_usage_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, field_name),
+    FOREIGN KEY (run_id) REFERENCES runs(run_id)
+);
+
+CREATE TABLE IF NOT EXISTS submission_batches (
+    batch_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL DEFAULT 0,
+    backend TEXT NOT NULL,
+    status TEXT NOT NULL,
+    candidate_count INTEGER NOT NULL DEFAULT 0,
+    sim_config_snapshot TEXT NOT NULL DEFAULT '{}',
+    export_path TEXT,
+    notes_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES runs(run_id)
+);
+
+CREATE TABLE IF NOT EXISTS submissions (
+    job_id TEXT PRIMARY KEY,
+    batch_id TEXT NOT NULL,
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL DEFAULT 0,
+    candidate_id TEXT NOT NULL,
+    expression TEXT NOT NULL,
+    backend TEXT NOT NULL,
+    status TEXT NOT NULL,
+    sim_config_snapshot TEXT NOT NULL DEFAULT '{}',
+    submitted_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    completed_at TEXT,
+    export_path TEXT,
+    raw_submission_json TEXT NOT NULL DEFAULT '{}',
+    error_message TEXT,
+    FOREIGN KEY (run_id) REFERENCES runs(run_id),
+    FOREIGN KEY (batch_id) REFERENCES submission_batches(batch_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_submissions_run_status
+    ON submissions(run_id, status, round_index);
+
+CREATE TABLE IF NOT EXISTS brain_results (
+    job_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL DEFAULT 0,
+    batch_id TEXT NOT NULL,
+    candidate_id TEXT NOT NULL,
+    expression TEXT NOT NULL,
+    status TEXT NOT NULL,
+    region TEXT NOT NULL DEFAULT '',
+    universe TEXT NOT NULL DEFAULT '',
+    delay INTEGER NOT NULL DEFAULT 1,
+    neutralization TEXT NOT NULL DEFAULT '',
+    decay INTEGER NOT NULL DEFAULT 0,
+    sharpe REAL,
+    fitness REAL,
+    turnover REAL,
+    drawdown REAL,
+    returns REAL,
+    margin REAL,
+    submission_eligible INTEGER,
+    rejection_reason TEXT,
+    raw_result_json TEXT NOT NULL DEFAULT '{}',
+    metric_source TEXT NOT NULL DEFAULT 'external_brain',
+    simulated_at TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES runs(run_id),
+    FOREIGN KEY (batch_id) REFERENCES submission_batches(batch_id),
+    FOREIGN KEY (job_id) REFERENCES submissions(job_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_brain_results_run_round
+    ON brain_results(run_id, round_index, status);
+
+CREATE TABLE IF NOT EXISTS manual_imports (
+    import_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    batch_id TEXT NOT NULL,
+    source_path TEXT NOT NULL,
+    imported_count INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES runs(run_id),
+    FOREIGN KEY (batch_id) REFERENCES submission_batches(batch_id)
+);
+
+CREATE TABLE IF NOT EXISTS closed_loop_runs (
+    run_id TEXT PRIMARY KEY,
+    backend TEXT NOT NULL,
+    status TEXT NOT NULL,
+    requested_rounds INTEGER NOT NULL,
+    completed_rounds INTEGER NOT NULL DEFAULT 0,
+    config_snapshot TEXT NOT NULL,
+    started_at TEXT NOT NULL,
+    finished_at TEXT,
+    FOREIGN KEY (run_id) REFERENCES runs(run_id)
+);
+
+CREATE TABLE IF NOT EXISTS closed_loop_rounds (
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL,
+    status TEXT NOT NULL,
+    generated_count INTEGER NOT NULL DEFAULT 0,
+    validated_count INTEGER NOT NULL DEFAULT 0,
+    submitted_count INTEGER NOT NULL DEFAULT 0,
+    completed_count INTEGER NOT NULL DEFAULT 0,
+    selected_for_mutation_count INTEGER NOT NULL DEFAULT 0,
+    mutated_children_count INTEGER NOT NULL DEFAULT 0,
+    summary_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, round_index),
+    FOREIGN KEY (run_id) REFERENCES runs(run_id)
+);
 """
 
 
@@ -192,6 +341,10 @@ REQUIRED_COLUMNS = {
     },
     "alphas": {
         "generation_metadata": "TEXT NOT NULL DEFAULT '{}'",
+        "template_name": "TEXT NOT NULL DEFAULT ''",
+        "fields_used_json": "TEXT NOT NULL DEFAULT '[]'",
+        "operators_used_json": "TEXT NOT NULL DEFAULT '[]'",
+        "depth": "INTEGER NOT NULL DEFAULT 0",
     },
     "alpha_parents": {
         "parent_run_id": "TEXT NOT NULL DEFAULT ''",
@@ -210,6 +363,32 @@ REQUIRED_COLUMNS = {
     },
     "alpha_history": {
         "rejection_reasons_json": "TEXT NOT NULL DEFAULT '[]'",
+        "metric_source": "TEXT NOT NULL DEFAULT 'local_backtest'",
+    },
+    "submission_batches": {
+        "round_index": "INTEGER NOT NULL DEFAULT 0",
+        "export_path": "TEXT",
+        "notes_json": "TEXT NOT NULL DEFAULT '{}'",
+    },
+    "submissions": {
+        "round_index": "INTEGER NOT NULL DEFAULT 0",
+        "completed_at": "TEXT",
+        "export_path": "TEXT",
+        "raw_submission_json": "TEXT NOT NULL DEFAULT '{}'",
+        "error_message": "TEXT",
+    },
+    "brain_results": {
+        "round_index": "INTEGER NOT NULL DEFAULT 0",
+        "submission_eligible": "INTEGER",
+        "metric_source": "TEXT NOT NULL DEFAULT 'external_brain'",
+    },
+    "closed_loop_runs": {
+        "completed_rounds": "INTEGER NOT NULL DEFAULT 0",
+        "finished_at": "TEXT",
+    },
+    "closed_loop_rounds": {
+        "summary_json": "TEXT NOT NULL DEFAULT '{}'",
+        "updated_at": "TEXT NOT NULL DEFAULT ''",
     },
 }
 

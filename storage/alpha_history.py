@@ -51,7 +51,15 @@ class AlphaHistoryStore:
                 {"alpha_id": parent_id, "run_id": run_id}
                 for parent_id in evaluation.candidate.parent_ids
             ]
-            observations = self.memory_service.build_observations(evaluation.structural_signature) if evaluation.structural_signature else []
+            observations = (
+                self.memory_service.build_observations(
+                    evaluation.structural_signature,
+                    template_name=evaluation.candidate.template_name,
+                    rejection_reasons=evaluation.rejection_reasons,
+                )
+                if evaluation.structural_signature
+                else []
+            )
             history_records.append(
                 AlphaHistoryRecord(
                     run_id=run_id,
@@ -82,6 +90,7 @@ class AlphaHistoryStore:
                     submission_pass_count=int(evaluation.submission_passes),
                     diagnosis_summary_json=json.dumps(diagnosis.to_dict(), sort_keys=True),
                     rejection_reasons_json=json.dumps(evaluation.rejection_reasons, sort_keys=True),
+                    metric_source="local_backtest",
                     created_at=created_at,
                 )
             )
@@ -120,6 +129,125 @@ class AlphaHistoryStore:
                     AlphaPatternMembershipRecord(
                         run_id=run_id,
                         alpha_id=evaluation.candidate.alpha_id,
+                        regime_key=regime_key,
+                        pattern_id=observation.pattern_id,
+                        pattern_kind=observation.pattern_kind,
+                        pattern_value=observation.pattern_value,
+                        created_at=created_at,
+                    )
+                )
+
+        self._upsert_history(history_records)
+        self._replace_diagnoses(diagnosis_records)
+        self._replace_memberships(membership_records)
+        self._rebuild_pattern_scores(regime_key=regime_key, pattern_decay=pattern_decay, prior_weight=prior_weight)
+        self.connection.commit()
+
+    def persist_brain_outcomes(
+        self,
+        run_id: str,
+        regime_key: str,
+        entries: list[dict],
+        pattern_decay: float,
+        prior_weight: float,
+        created_at: str,
+    ) -> None:
+        history_records: list[AlphaHistoryRecord] = []
+        diagnosis_records: list[AlphaDiagnosisRecord] = []
+        membership_records: list[AlphaPatternMembershipRecord] = []
+        empty_signal_json = pd.DataFrame().to_json(orient="split", date_format="iso")
+        empty_returns_json = pd.Series(dtype=float).to_json(orient="split", date_format="iso")
+
+        for entry in entries:
+            candidate = entry["candidate"]
+            result = entry["result"]
+            diagnosis = entry["diagnosis"]
+            structural_signature = entry["structural_signature"]
+            parent_refs = candidate.generation_metadata.get("parent_refs") or [
+                {"alpha_id": parent_id, "run_id": run_id}
+                for parent_id in candidate.parent_ids
+            ]
+            rejection_reasons = []
+            if result.rejection_reason:
+                rejection_reasons.append(result.rejection_reason)
+            observations = self.memory_service.build_observations(
+                structural_signature,
+                template_name=candidate.template_name,
+                rejection_reasons=rejection_reasons,
+            )
+            metrics_payload = {
+                "sharpe": result.metrics.get("sharpe"),
+                "max_drawdown": result.metrics.get("drawdown"),
+                "win_rate": None,
+                "average_return": result.metrics.get("returns"),
+                "turnover": result.metrics.get("turnover"),
+                "observation_count": 0,
+                "cumulative_return": result.metrics.get("returns"),
+                "fitness": result.metrics.get("fitness"),
+            }
+            history_records.append(
+                AlphaHistoryRecord(
+                    run_id=run_id,
+                    alpha_id=candidate.alpha_id,
+                    regime_key=regime_key,
+                    expression=candidate.expression,
+                    normalized_expression=candidate.normalized_expression,
+                    generation_mode=candidate.generation_mode,
+                    generation_metadata_json=json.dumps(candidate.generation_metadata, sort_keys=True),
+                    parent_refs_json=json.dumps(parent_refs, sort_keys=True),
+                    structural_signature_json=json.dumps(structural_signature.to_dict(), sort_keys=True),
+                    gene_ids_json=json.dumps(entry["gene_ids"], sort_keys=True),
+                    train_metrics_json=json.dumps(metrics_payload, sort_keys=True),
+                    validation_metrics_json=json.dumps(metrics_payload, sort_keys=True),
+                    test_metrics_json=json.dumps(metrics_payload, sort_keys=True),
+                    validation_signal_json=empty_signal_json,
+                    validation_returns_json=empty_returns_json,
+                    outcome_score=float(entry["outcome_score"]),
+                    behavioral_novelty_score=float(entry.get("behavioral_novelty_score", 0.5)),
+                    passed_filters=bool(entry["passed_filters"]),
+                    selected=bool(entry["selected"]),
+                    submission_pass_count=1 if result.submission_eligible else 0,
+                    diagnosis_summary_json=json.dumps(diagnosis.to_dict(), sort_keys=True),
+                    rejection_reasons_json=json.dumps(rejection_reasons, sort_keys=True),
+                    metric_source=str(entry.get("metric_source") or "external_brain"),
+                    created_at=created_at,
+                )
+            )
+            for tag in diagnosis.fail_tags:
+                diagnosis_records.append(
+                    AlphaDiagnosisRecord(
+                        run_id=run_id,
+                        alpha_id=candidate.alpha_id,
+                        tag_type="fail",
+                        tag=tag,
+                        created_at=created_at,
+                    )
+                )
+            for tag in diagnosis.success_tags:
+                diagnosis_records.append(
+                    AlphaDiagnosisRecord(
+                        run_id=run_id,
+                        alpha_id=candidate.alpha_id,
+                        tag_type="success",
+                        tag=tag,
+                        created_at=created_at,
+                    )
+                )
+            for hint in diagnosis.mutation_hints:
+                diagnosis_records.append(
+                    AlphaDiagnosisRecord(
+                        run_id=run_id,
+                        alpha_id=candidate.alpha_id,
+                        tag_type="hint",
+                        tag=hint.hint,
+                        created_at=created_at,
+                    )
+                )
+            for observation in observations:
+                membership_records.append(
+                    AlphaPatternMembershipRecord(
+                        run_id=run_id,
+                        alpha_id=candidate.alpha_id,
                         regime_key=regime_key,
                         pattern_id=observation.pattern_id,
                         pattern_kind=observation.pattern_kind,
@@ -308,8 +436,8 @@ class AlphaHistoryStore:
                 (run_id, alpha_id, regime_key, expression, normalized_expression, generation_mode, generation_metadata_json,
                  parent_refs_json, structural_signature_json, gene_ids_json, train_metrics_json, validation_metrics_json,
                  test_metrics_json, validation_signal_json, validation_returns_json, outcome_score, behavioral_novelty_score,
-                 passed_filters, selected, submission_pass_count, diagnosis_summary_json, rejection_reasons_json, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 passed_filters, selected, submission_pass_count, diagnosis_summary_json, rejection_reasons_json, metric_source, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(run_id, alpha_id) DO UPDATE SET
                     regime_key = excluded.regime_key,
                     expression = excluded.expression,
@@ -331,6 +459,7 @@ class AlphaHistoryStore:
                     submission_pass_count = excluded.submission_pass_count,
                     diagnosis_summary_json = excluded.diagnosis_summary_json,
                     rejection_reasons_json = excluded.rejection_reasons_json,
+                    metric_source = excluded.metric_source,
                     created_at = excluded.created_at
                 """,
                 (
@@ -356,6 +485,7 @@ class AlphaHistoryStore:
                     record.submission_pass_count,
                     record.diagnosis_summary_json,
                     record.rejection_reasons_json,
+                    record.metric_source,
                     record.created_at,
                 ),
             )

@@ -23,12 +23,7 @@ from evaluation.ranking import rank_evaluations
 from evaluation.submission import TestResult, build_submission_tests
 from features.registry import build_registry
 from generator.engine import AlphaCandidate
-from services.data_service import (
-    combine_series_for_periods,
-    load_research_context,
-    slice_frame_by_period,
-    slice_series_by_period,
-)
+from services.data_service import combine_series_for_periods, load_research_context, resolve_field_registry, slice_frame_by_period, slice_series_by_period
 from services.export_service import export_evaluated_alphas
 from services.models import CommandEnvironment, EvaluationServiceResult
 from storage.models import MetricRecord, SelectionRecord, SimulationCacheRecord, SubmissionTestRecord
@@ -40,6 +35,18 @@ def alpha_candidate_from_record(record, parent_refs: list[dict[str, str]] | None
     generation_metadata = json.loads(record.generation_metadata) if getattr(record, "generation_metadata", None) else {}
     if parent_refs:
         generation_metadata["parent_refs"] = parent_refs
+    fields_used = []
+    operators_used = []
+    if getattr(record, "fields_used_json", ""):
+        try:
+            fields_used = json.loads(record.fields_used_json)
+        except json.JSONDecodeError:
+            fields_used = []
+    if getattr(record, "operators_used_json", ""):
+        try:
+            operators_used = json.loads(record.operators_used_json)
+        except json.JSONDecodeError:
+            operators_used = []
     return AlphaCandidate(
         alpha_id=record.alpha_id,
         expression=record.expression,
@@ -48,6 +55,10 @@ def alpha_candidate_from_record(record, parent_refs: list[dict[str, str]] | None
         parent_ids=tuple(parent["alpha_id"] for parent in parent_refs or []),
         complexity=record.complexity,
         created_at=record.created_at,
+        template_name=getattr(record, "template_name", ""),
+        fields_used=tuple(fields_used),
+        operators_used=tuple(operators_used),
+        depth=int(getattr(record, "depth", 0) or 0),
         generation_metadata=generation_metadata,
     )
 
@@ -221,6 +232,7 @@ def evaluate_run(
     matrices = research_context.matrices
     regime_key = research_context.regime_key
     memory_service = research_context.memory_service
+    field_registry = resolve_field_registry(config, research_context)
     alpha_records = repository.list_alpha_records(environment.context.run_id)
     if not alpha_records:
         logger.warning("No alpha candidates found for run %s.", environment.context.run_id)
@@ -234,8 +246,11 @@ def evaluate_run(
 
     evaluations: list[EvaluatedAlpha] = []
     metrics: list[MetricRecord] = []
-    allowed_fields = set(config.generation.allowed_fields)
-    group_fields = set(matrices.group_fields)
+    allowed_fields = field_registry.allowed_runtime_fields(config.generation.allowed_fields) | {
+        spec.name for spec in field_registry.runtime_group_fields()
+    }
+    group_fields = {spec.name for spec in field_registry.runtime_group_fields()}
+    field_types = field_registry.field_types(allowed=allowed_fields)
     fail_fast = config.runtime.fail_fast
     timestamp = datetime.now(timezone.utc).isoformat()
     parent_refs_map = repository.get_parent_refs(environment.context.run_id)
@@ -274,6 +289,8 @@ def evaluate_run(
                     allowed_fields=allowed_fields,
                     max_depth=config.generation.max_depth,
                     group_fields=group_fields,
+                    field_types=field_types,
+                    complexity_limit=config.generation.complexity_limit,
                 )
                 if not validation.is_valid:
                     raise ValueError("; ".join(validation.errors))

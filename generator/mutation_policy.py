@@ -6,7 +6,8 @@ from typing import Iterable
 from alpha.ast_nodes import BinaryOpNode, FunctionCallNode, UnaryOpNode, to_expression
 from alpha.parser import parse_expression
 from core.config import GenerationConfig
-from generator.mutator import _swap_field, _swap_lookback, _swap_operator
+from data.field_registry import FieldRegistry, FieldSpec
+from generator.mutator import _swap_field, _swap_lookback, _swap_operator, _swap_wrapper
 from memory.pattern_memory import MemoryParent, PatternMemoryService, PatternMemorySnapshot
 
 
@@ -16,10 +17,12 @@ class MutationPolicy:
         config: GenerationConfig,
         memory_service: PatternMemoryService,
         randomizer: random.Random,
+        field_registry: FieldRegistry | None = None,
     ) -> None:
         self.config = config
         self.memory_service = memory_service
         self.randomizer = randomizer
+        self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
         self.operator_swaps = {
             "ts_mean": ["ts_std", "rolling_mean", "decay_linear"],
             "ts_std": ["ts_mean", "rolling_std"],
@@ -29,6 +32,8 @@ class MutationPolicy:
             "covariance": ["correlation"],
             "rank": ["zscore", "sign"],
             "zscore": ["rank", "sign"],
+            "group_rank": ["group_zscore", "group_neutralize"],
+            "group_zscore": ["group_rank", "group_neutralize"],
         }
 
     def generate(
@@ -55,6 +60,8 @@ class MutationPolicy:
                     (
                         expression,
                         {
+                            "template_name": parent.generation_metadata.get("template_name", ""),
+                            "fields_used": parent.generation_metadata.get("fields_used", []),
                             "parent_refs": [{"run_id": parent.run_id, "alpha_id": parent.alpha_id}],
                             "source_pattern_ids": [],
                             "source_gene_ids": [],
@@ -78,7 +85,7 @@ class MutationPolicy:
         return strategies
 
     def _lengthen_lookbacks(self, expression: str, _: PatternMemorySnapshot) -> str | None:
-        larger = sorted(self.config.lookbacks)[-max(1, min(2, len(self.config.lookbacks))):]
+        larger = sorted(self.config.lookbacks)[-max(1, min(2, len(self.config.lookbacks))) :]
         if not larger:
             return None
         return _swap_lookback(expression, larger, self.randomizer)
@@ -102,29 +109,24 @@ class MutationPolicy:
         return None
 
     def _swap_field_family(self, expression: str, snapshot: PatternMemorySnapshot) -> str | None:
-        fields = self._preferred_fields(snapshot, mode="novel")
-        if not fields:
-            fields = [field for field in self.config.allowed_fields if field]
-        return _swap_field(expression, fields, self.randomizer)
+        registry = self._preferred_field_registry(snapshot, mode="novel")
+        return _swap_field(expression, registry, self.randomizer)
 
     def _swap_operator_family(self, expression: str, _: PatternMemorySnapshot) -> str | None:
         return _swap_operator(expression, self.operator_swaps, self.randomizer)
 
     def _swap_wrapper(self, expression: str, _: PatternMemorySnapshot) -> str:
-        wrapper = self.randomizer.choice(self.config.normalization_wrappers)
-        return f"{wrapper}({expression})"
+        return _swap_wrapper(expression, self.config.normalization_wrappers, self.randomizer)
 
     def _stable_wrapper(self, expression: str, snapshot: PatternMemorySnapshot) -> str:
         wrappers = self._preferred_wrappers(snapshot, mode="stable")
-        wrapper = self.randomizer.choice(wrappers or self.config.normalization_wrappers)
-        return f"{wrapper}({expression})"
+        return _swap_wrapper(expression, wrappers or self.config.normalization_wrappers, self.randomizer)
 
     def _novel_wrapper(self, expression: str, snapshot: PatternMemorySnapshot) -> str:
         wrappers = self._preferred_wrappers(snapshot, mode="novel")
-        wrapper = self.randomizer.choice(wrappers or self.config.normalization_wrappers)
-        return f"{wrapper}({expression})"
+        return _swap_wrapper(expression, wrappers or self.config.normalization_wrappers, self.randomizer)
 
-    def _preferred_fields(self, snapshot: PatternMemorySnapshot, mode: str) -> list[str]:
+    def _preferred_field_registry(self, snapshot: PatternMemorySnapshot, mode: str) -> FieldRegistry:
         field_patterns = snapshot.by_kind("field")
         if mode == "novel":
             ranked = sorted(
@@ -134,7 +136,10 @@ class MutationPolicy:
             )
         else:
             ranked = sorted(field_patterns, key=lambda item: (item.pattern_score, item.support), reverse=True)
-        return [item.pattern_value for item in ranked[: max(3, len(self.config.allowed_fields))]]
+        preferred = {item.pattern_value for item in ranked[: max(3, len(self.config.allowed_fields))]}
+        if not preferred:
+            return self.field_registry
+        return FieldRegistry(fields={name: spec for name, spec in self.field_registry.fields.items() if name in preferred})
 
     def _preferred_wrappers(self, snapshot: PatternMemorySnapshot, mode: str) -> list[str]:
         wrapper_patterns = snapshot.by_kind("wrapper")
@@ -147,3 +152,21 @@ class MutationPolicy:
         else:
             ranked = sorted(wrapper_patterns, key=lambda item: (item.pattern_score, item.support), reverse=True)
         return [item.pattern_value for item in ranked[: max(3, len(self.config.normalization_wrappers))]]
+
+    def _fallback_field_registry(self, allowed_fields: list[str]) -> FieldRegistry:
+        return FieldRegistry(
+            fields={
+                name: FieldSpec(
+                    name=name,
+                    dataset="fallback",
+                    field_type="vector" if name in {"sector", "industry", "country", "subindustry"} else "matrix",
+                    coverage=1.0,
+                    alpha_usage_count=0,
+                    category="group" if name in {"sector", "industry", "country", "subindustry"} else "other",
+                    runtime_available=True,
+                    category_weight=0.5,
+                    field_score=1.0,
+                )
+                for name in allowed_fields
+            }
+        )

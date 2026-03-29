@@ -5,14 +5,15 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Iterable, Sequence
 
-from alpha.ast_nodes import ExprNode, IdentifierNode, NumberNode, UnaryOpNode, node_complexity, to_expression
+from alpha.ast_nodes import to_expression
 from alpha.parser import parse_expression
 from alpha.validator import validate_expression
 from core.config import GenerationConfig
+from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import OperatorRegistry
-from generator.grammar import GrammarExpressionGenerator
 from generator.mutator import mutate_expressions
-from generator.templates import generate_template_expressions
+from generator.templates import TemplateInstance, generate_template_expressions
+from memory.pattern_memory import PatternMemoryService
 
 
 @dataclass(frozen=True, slots=True)
@@ -24,40 +25,57 @@ class AlphaCandidate:
     parent_ids: tuple[str, ...]
     complexity: int
     created_at: str
+    template_name: str = ""
+    fields_used: tuple[str, ...] = ()
+    operators_used: tuple[str, ...] = ()
+    depth: int = 0
     generation_metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class AlphaGenerationEngine:
-    def __init__(self, config: GenerationConfig, registry: OperatorRegistry) -> None:
+    def __init__(
+        self,
+        config: GenerationConfig,
+        registry: OperatorRegistry,
+        field_registry: FieldRegistry | None = None,
+    ) -> None:
         self.config = config
         self.registry = registry
+        self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
+        self.memory_service = PatternMemoryService()
 
     def generate(
         self,
         count: int | None = None,
         existing_normalized: set[str] | None = None,
     ) -> list[AlphaCandidate]:
-        target = count or (self.config.template_count + self.config.grammar_count)
-        template_target = min(self.config.template_count, target)
-        grammar_target = max(0, target - template_target)
-
-        payload: list[tuple[str, str, tuple[str, ...], dict[str, Any]]] = []
-        for expression in generate_template_expressions(
-            fields=self.config.allowed_fields,
+        target = count or max(self.config.template_count, self.config.template_pool_size)
+        allowed_runtime_fields = self.field_registry.allowed_runtime_fields(self.config.allowed_fields) | {
+            spec.name for spec in self.field_registry.runtime_group_fields()
+        }
+        instances = generate_template_expressions(
+            field_registry=self.field_registry,
+            allowed_fields=allowed_runtime_fields,
             lookbacks=self.config.lookbacks,
-            normalization_wrappers=self.config.normalization_wrappers,
-        )[:template_target]:
-            payload.append((expression, "template", (), {}))
-
-        grammar_generator = GrammarExpressionGenerator(
-            fields=self.config.allowed_fields,
-            lookbacks=self.config.lookbacks,
-            max_depth=self.config.max_depth,
+            template_weights=self.config.template_weights,
+            template_pool_size=max(target * 3, self.config.template_pool_size),
+            max_turnover_bias=self.config.max_turnover_bias,
             seed=self.config.random_seed,
+            registry=self.registry,
         )
-        for expression in grammar_generator.generate(grammar_target):
-            payload.append((expression, "grammar", (), {}))
-
+        payload = [
+            (
+                instance.expression,
+                "template",
+                (),
+                {
+                    "template_name": instance.template_name,
+                    "fields_used": list(instance.fields_used),
+                    "template_params": instance.parameters,
+                },
+            )
+            for instance in instances[:target]
+        ]
         return self._build_candidates(payload, existing_normalized=existing_normalized)
 
     def generate_mutations(
@@ -72,12 +90,12 @@ class AlphaGenerationEngine:
                 expression,
                 "mutation",
                 parent_ids,
-                {"parent_refs": [{"alpha_id": parent_id} for parent_id in parent_ids]},
+                metadata,
             )
-            for expression, parent_ids in mutate_expressions(
-                parents=[(parent.alpha_id, parent.expression) for parent in parents],
+            for expression, parent_ids, metadata in mutate_expressions(
+                parents=parents,
                 count=target,
-                fields=self.config.allowed_fields,
+                field_registry=self.field_registry,
                 lookbacks=self.config.lookbacks,
                 normalization_wrappers=self.config.normalization_wrappers,
                 seed=self.config.random_seed + len(parents),
@@ -112,26 +130,37 @@ class AlphaGenerationEngine:
         parent_ids: tuple[str, ...],
         generation_metadata: dict[str, Any] | None = None,
     ) -> AlphaCandidate | None:
+        metadata = dict(generation_metadata or {})
         try:
             node = parse_expression(expression)
         except ValueError:
             return None
 
+        allowed_runtime_fields = self.field_registry.allowed_runtime_fields(self.config.allowed_fields) | {
+            spec.name for spec in self.field_registry.runtime_group_fields()
+        }
         validation = validate_expression(
             node=node,
             registry=self.registry,
-            allowed_fields=set(self.config.allowed_fields),
+            allowed_fields=allowed_runtime_fields,
             max_depth=self.config.max_depth,
+            group_fields={spec.name for spec in self.field_registry.runtime_group_fields()},
+            field_types=self.field_registry.field_types(allowed=allowed_runtime_fields),
+            complexity_limit=self.config.complexity_limit,
         )
         if not validation.is_valid:
             return None
 
+        signature = self.memory_service.extract_signature(expression)
         normalized_expression = to_expression(node)
-        complexity = node_complexity(node)
-        if complexity > self.config.complexity_limit or self._is_redundant(node):
+        complexity = signature.complexity
+        if complexity > self.config.complexity_limit or self._is_redundant(signature.fields):
             return None
 
         alpha_id = hashlib.sha1(normalized_expression.encode("utf-8")).hexdigest()[:16]
+        fields_used = tuple(metadata.get("fields_used") or signature.fields)
+        operators_used = tuple(metadata.get("operators_used") or signature.operators)
+        template_name = str(metadata.get("template_name") or "")
         return AlphaCandidate(
             alpha_id=alpha_id,
             expression=expression.strip(),
@@ -140,12 +169,47 @@ class AlphaGenerationEngine:
             parent_ids=parent_ids,
             complexity=complexity,
             created_at=datetime.now(timezone.utc).isoformat(),
-            generation_metadata=generation_metadata or {},
+            template_name=template_name,
+            fields_used=fields_used,
+            operators_used=operators_used,
+            depth=signature.depth,
+            generation_metadata=metadata,
         )
 
-    def _is_redundant(self, node: ExprNode) -> bool:
-        if isinstance(node, (IdentifierNode, NumberNode)):
-            return True
-        if isinstance(node, UnaryOpNode) and isinstance(node.operand, NumberNode):
-            return True
-        return False
+    def build_candidate_from_template(
+        self,
+        instance: TemplateInstance,
+        mode: str,
+        parent_ids: tuple[str, ...] = (),
+        generation_metadata: dict[str, Any] | None = None,
+    ) -> AlphaCandidate | None:
+        metadata = dict(generation_metadata or {})
+        metadata.setdefault("template_name", instance.template_name)
+        metadata.setdefault("fields_used", list(instance.fields_used))
+        metadata.setdefault("template_params", instance.parameters)
+        return self.build_candidate(
+            expression=instance.expression,
+            mode=mode,
+            parent_ids=parent_ids,
+            generation_metadata=metadata,
+        )
+
+    def _is_redundant(self, fields: tuple[str, ...]) -> bool:
+        return len(fields) == 0
+
+    def _fallback_field_registry(self, allowed_fields: list[str]) -> FieldRegistry:
+        fields = {
+            name: FieldSpec(
+                name=name,
+                dataset="fallback",
+                field_type="vector" if name in {"sector", "industry", "country", "subindustry"} else "matrix",
+                coverage=1.0,
+                alpha_usage_count=0,
+                category="group" if name in {"sector", "industry", "country", "subindustry"} else "other",
+                runtime_available=True,
+                field_score=1.0,
+                category_weight=0.5,
+            )
+            for name in allowed_fields
+        }
+        return FieldRegistry(fields=fields)

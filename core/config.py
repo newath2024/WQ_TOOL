@@ -58,6 +58,28 @@ class GenerationConfig:
     mutation_count: int
     normalization_wrappers: list[str]
     random_seed: int = 7
+    field_catalog_paths: list[str] = field(default_factory=list)
+    field_value_paths: list[str] = field(default_factory=list)
+    field_score_weights: dict[str, float] = field(
+        default_factory=lambda: {"coverage": 0.50, "usage": 0.30, "category": 0.20}
+    )
+    category_weights: dict[str, float] = field(
+        default_factory=lambda: {
+            "price": 1.00,
+            "volume": 0.85,
+            "fundamental": 0.95,
+            "analyst": 0.90,
+            "model": 0.85,
+            "sentiment": 0.75,
+            "risk": 0.70,
+            "macro": 0.65,
+            "group": 0.60,
+            "other": 0.50,
+        }
+    )
+    template_weights: dict[str, float] = field(default_factory=dict)
+    template_pool_size: int = 200
+    max_turnover_bias: float = 0.35
 
 
 @dataclass(slots=True)
@@ -269,6 +291,81 @@ class StorageConfig:
 
 
 @dataclass(slots=True)
+class BrainConfig:
+    backend: str = "manual"
+    region: str = "USA"
+    universe: str = "TOP3000"
+    delay: int = 1
+    neutralization: str = "sector"
+    decay: int = 0
+    truncation: float = 0.08
+    pasteurization: bool = True
+    unit_handling: str = "verify"
+    nan_handling: str = "off"
+    poll_interval_seconds: int = 10
+    timeout_seconds: int = 600
+    max_retries: int = 3
+    batch_size: int = 20
+    manual_export_dir: str = "outputs/brain_manual"
+    api_base_url: str = ""
+    api_auth_env: str = "BRAIN_API_TOKEN"
+    email_env: str = "BRAIN_API_EMAIL"
+    password_env: str = "BRAIN_API_PASSWORD"
+    session_path: str = "outputs/brain_api_session.json"
+    auth_expiry_seconds: int = 14400
+    open_browser_for_persona: bool = True
+    rate_limit_per_minute: int = 60
+
+    def __post_init__(self) -> None:
+        allowed_backends = {"manual", "api"}
+        if self.backend not in allowed_backends:
+            raise ValueError(f"brain.backend must be one of {sorted(allowed_backends)}")
+        if self.delay < 0:
+            raise ValueError("brain.delay must be >= 0")
+        if self.poll_interval_seconds <= 0:
+            raise ValueError("brain.poll_interval_seconds must be > 0")
+        if self.timeout_seconds <= 0:
+            raise ValueError("brain.timeout_seconds must be > 0")
+        if self.max_retries < 0:
+            raise ValueError("brain.max_retries must be >= 0")
+        if self.batch_size <= 0:
+            raise ValueError("brain.batch_size must be > 0")
+        if not 1 <= self.auth_expiry_seconds <= 14400:
+            raise ValueError("brain.auth_expiry_seconds must be between 1 and 14400")
+        if self.rate_limit_per_minute <= 0:
+            raise ValueError("brain.rate_limit_per_minute must be > 0")
+
+
+@dataclass(slots=True)
+class LoopConfig:
+    rounds: int = 5
+    generation_batch_size: int = 100
+    simulation_batch_size: int = 20
+    poll_interval_seconds: int = 10
+    timeout_seconds: int = 600
+    mutate_top_k: int = 10
+    max_children_per_parent: int = 5
+    rejection_filters: list[str] = field(default_factory=list)
+    archive_thresholds: dict[str, float] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if self.rounds <= 0:
+            raise ValueError("loop.rounds must be > 0")
+        if self.generation_batch_size <= 0:
+            raise ValueError("loop.generation_batch_size must be > 0")
+        if self.simulation_batch_size <= 0:
+            raise ValueError("loop.simulation_batch_size must be > 0")
+        if self.poll_interval_seconds <= 0:
+            raise ValueError("loop.poll_interval_seconds must be > 0")
+        if self.timeout_seconds <= 0:
+            raise ValueError("loop.timeout_seconds must be > 0")
+        if self.mutate_top_k <= 0:
+            raise ValueError("loop.mutate_top_k must be > 0")
+        if self.max_children_per_parent <= 0:
+            raise ValueError("loop.max_children_per_parent must be > 0")
+
+
+@dataclass(slots=True)
 class RuntimeConfig:
     log_level: str = "INFO"
     fail_fast: bool = False
@@ -288,6 +385,8 @@ class AppConfig:
     submission_tests: SubmissionTestConfig
     storage: StorageConfig
     runtime: RuntimeConfig
+    brain: BrainConfig = field(default_factory=BrainConfig)
+    loop: LoopConfig = field(default_factory=LoopConfig)
 
     def to_dict(self) -> dict[str, Any]:
         """Return the config as a plain nested mapping."""
@@ -375,6 +474,21 @@ def _build_runtime_config(payload: dict[str, Any] | None, config_path: Path) -> 
     return RuntimeConfig(**runtime_payload)
 
 
+def _build_brain_config(payload: dict[str, Any] | None) -> BrainConfig:
+    return BrainConfig(**(payload or {}))
+
+
+def _build_loop_config(payload: dict[str, Any] | None, brain: BrainConfig) -> LoopConfig:
+    defaults = {
+        "poll_interval_seconds": brain.poll_interval_seconds,
+        "timeout_seconds": brain.timeout_seconds,
+        "simulation_batch_size": brain.batch_size,
+    }
+    merged = dict(defaults)
+    merged.update(payload or {})
+    return LoopConfig(**merged)
+
+
 def load_config(path: str | Path) -> AppConfig:
     """Load and normalize YAML config, accepting both legacy and grouped evaluation schemas."""
     config_path = Path(path)
@@ -382,6 +496,7 @@ def load_config(path: str | Path) -> AppConfig:
     try:
         backtest = BacktestConfig(**payload["backtest"])
         evaluation = _build_evaluation_config(payload["evaluation"])
+        brain = _build_brain_config(payload.get("brain"))
         return AppConfig(
             data=DataConfig(**payload["data"]),
             aux_data=AuxDataConfig(**payload.get("aux_data", {})),
@@ -397,6 +512,8 @@ def load_config(path: str | Path) -> AppConfig:
             evaluation=evaluation,
             submission_tests=_build_submission_test_config(payload.get("submission_tests"), evaluation),
             storage=StorageConfig(**payload["storage"]),
+            brain=brain,
+            loop=_build_loop_config(payload.get("loop"), brain),
             runtime=_build_runtime_config(payload.get("runtime"), config_path),
         )
     except KeyError as exc:

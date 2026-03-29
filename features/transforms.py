@@ -21,6 +21,22 @@ class ResearchMatrices:
     def __getitem__(self, field: str) -> pd.DataFrame:
         return self.numeric_fields[field]
 
+    def with_additional_fields(
+        self,
+        numeric_fields: dict[str, pd.DataFrame] | None = None,
+        group_fields: dict[str, pd.DataFrame] | None = None,
+    ) -> "ResearchMatrices":
+        merged_numeric = dict(self.numeric_fields)
+        merged_groups = dict(self.group_fields)
+        merged_numeric.update(numeric_fields or {})
+        merged_groups.update(group_fields or {})
+        return ResearchMatrices(
+            numeric_fields=merged_numeric,
+            group_fields=merged_groups,
+            factor_fields=dict(self.factor_fields),
+            mask_fields=dict(self.mask_fields),
+        )
+
 
 def pivot_ohlcv_fields(
     frame: pd.DataFrame,
@@ -33,10 +49,12 @@ def pivot_ohlcv_fields(
         for column in ("open", "high", "low", "close", "volume")
     }
     matrices["returns"] = matrices["close"].pct_change()
+    factor_fields = _pivot_auxiliary_fields(factors)
+    matrices.update(factor_fields)
     return ResearchMatrices(
         numeric_fields=matrices,
         group_fields=_pivot_auxiliary_fields(groups),
-        factor_fields=_pivot_auxiliary_fields(factors),
+        factor_fields=factor_fields,
         mask_fields=_pivot_auxiliary_fields(masks),
     )
 
