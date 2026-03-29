@@ -81,6 +81,7 @@ class AlphaHistoryStore:
                     selected=bool("selected_top_alpha" in diagnosis.success_tags),
                     submission_pass_count=int(evaluation.submission_passes),
                     diagnosis_summary_json=json.dumps(diagnosis.to_dict(), sort_keys=True),
+                    rejection_reasons_json=json.dumps(evaluation.rejection_reasons, sort_keys=True),
                     created_at=created_at,
                 )
             )
@@ -283,6 +284,22 @@ class AlphaHistoryStore:
         ).fetchall()
         return [dict(row) for row in rows]
 
+    def get_run_rejection_reason_summary(self, run_id: str, limit: int) -> list[dict]:
+        rows = self.connection.execute(
+            """
+            SELECT rejection_reasons_json
+            FROM alpha_history
+            WHERE run_id = ?
+            """,
+            (run_id,),
+        ).fetchall()
+        counts: dict[str, int] = {}
+        for row in rows:
+            for reason in json.loads(row["rejection_reasons_json"] or "[]"):
+                counts[reason] = counts.get(reason, 0) + 1
+        ordered = sorted(counts.items(), key=lambda item: (-item[1], item[0]))
+        return [{"reason": reason, "total_count": total} for reason, total in ordered[:limit]]
+
     def _upsert_history(self, records: list[AlphaHistoryRecord]) -> None:
         for record in records:
             self.connection.execute(
@@ -291,8 +308,8 @@ class AlphaHistoryStore:
                 (run_id, alpha_id, regime_key, expression, normalized_expression, generation_mode, generation_metadata_json,
                  parent_refs_json, structural_signature_json, gene_ids_json, train_metrics_json, validation_metrics_json,
                  test_metrics_json, validation_signal_json, validation_returns_json, outcome_score, behavioral_novelty_score,
-                 passed_filters, selected, submission_pass_count, diagnosis_summary_json, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 passed_filters, selected, submission_pass_count, diagnosis_summary_json, rejection_reasons_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(run_id, alpha_id) DO UPDATE SET
                     regime_key = excluded.regime_key,
                     expression = excluded.expression,
@@ -313,6 +330,7 @@ class AlphaHistoryStore:
                     selected = excluded.selected,
                     submission_pass_count = excluded.submission_pass_count,
                     diagnosis_summary_json = excluded.diagnosis_summary_json,
+                    rejection_reasons_json = excluded.rejection_reasons_json,
                     created_at = excluded.created_at
                 """,
                 (
@@ -337,6 +355,7 @@ class AlphaHistoryStore:
                     int(record.selected),
                     record.submission_pass_count,
                     record.diagnosis_summary_json,
+                    record.rejection_reasons_json,
                     record.created_at,
                 ),
             )

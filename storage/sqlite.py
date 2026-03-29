@@ -13,7 +13,12 @@ CREATE TABLE IF NOT EXISTS runs (
     status TEXT NOT NULL,
     started_at TEXT NOT NULL,
     finished_at TEXT,
-    dataset_summary TEXT
+    dataset_summary TEXT,
+    profile_name TEXT NOT NULL DEFAULT '',
+    dataset_fingerprint TEXT NOT NULL DEFAULT '',
+    selected_timeframe TEXT NOT NULL DEFAULT '',
+    regime_key TEXT NOT NULL DEFAULT '',
+    entry_command TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS alphas (
@@ -73,6 +78,7 @@ CREATE TABLE IF NOT EXISTS selections (
     selected_at TEXT NOT NULL,
     validation_fitness REAL NOT NULL,
     reason TEXT NOT NULL,
+    ranking_rationale_json TEXT NOT NULL DEFAULT '',
     PRIMARY KEY (run_id, alpha_id)
 );
 
@@ -123,6 +129,7 @@ CREATE TABLE IF NOT EXISTS alpha_history (
     selected INTEGER NOT NULL,
     submission_pass_count INTEGER NOT NULL,
     diagnosis_summary_json TEXT NOT NULL,
+    rejection_reasons_json TEXT NOT NULL DEFAULT '[]',
     created_at TEXT NOT NULL,
     PRIMARY KEY (run_id, alpha_id)
 );
@@ -176,6 +183,13 @@ CREATE INDEX IF NOT EXISTS idx_alpha_pattern_membership_regime
 
 
 REQUIRED_COLUMNS = {
+    "runs": {
+        "profile_name": "TEXT NOT NULL DEFAULT ''",
+        "dataset_fingerprint": "TEXT NOT NULL DEFAULT ''",
+        "selected_timeframe": "TEXT NOT NULL DEFAULT ''",
+        "regime_key": "TEXT NOT NULL DEFAULT ''",
+        "entry_command": "TEXT NOT NULL DEFAULT ''",
+    },
     "alphas": {
         "generation_metadata": "TEXT NOT NULL DEFAULT '{}'",
     },
@@ -191,12 +205,21 @@ REQUIRED_COLUMNS = {
         "submission_pass_count": "INTEGER NOT NULL DEFAULT 0",
         "cache_hit": "INTEGER NOT NULL DEFAULT 0",
     },
+    "selections": {
+        "ranking_rationale_json": "TEXT NOT NULL DEFAULT ''",
+    },
+    "alpha_history": {
+        "rejection_reasons_json": "TEXT NOT NULL DEFAULT '[]'",
+    },
 }
 
 
 def connect_sqlite(path: str) -> sqlite3.Connection:
-    db_path = Path(path).expanduser().resolve()
-    connection = sqlite3.connect(str(db_path))
+    if path == ":memory:":
+        connection = sqlite3.connect(path)
+    else:
+        db_path = Path(path).expanduser().resolve()
+        connection = sqlite3.connect(str(db_path))
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON;")
     connection.executescript(DDL)

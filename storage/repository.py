@@ -36,18 +36,35 @@ class SQLiteRepository:
         config_snapshot: str,
         status: str,
         started_at: str,
+        profile_name: str = "",
+        selected_timeframe: str = "",
+        entry_command: str = "",
     ) -> None:
         self.connection.execute(
             """
-            INSERT INTO runs (run_id, seed, config_path, config_snapshot, status, started_at)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO runs
+            (run_id, seed, config_path, config_snapshot, status, started_at, profile_name, selected_timeframe, entry_command)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(run_id) DO UPDATE SET
                 seed = excluded.seed,
                 config_path = excluded.config_path,
                 config_snapshot = excluded.config_snapshot,
-                status = excluded.status
+                status = excluded.status,
+                profile_name = excluded.profile_name,
+                selected_timeframe = excluded.selected_timeframe,
+                entry_command = excluded.entry_command
             """,
-            (run_id, seed, config_path, config_snapshot, status, started_at),
+            (
+                run_id,
+                seed,
+                config_path,
+                config_snapshot,
+                status,
+                started_at,
+                profile_name,
+                selected_timeframe,
+                entry_command,
+            ),
         )
         self.connection.commit()
 
@@ -67,10 +84,30 @@ class SQLiteRepository:
         )
         self.connection.commit()
 
-    def save_dataset_summary(self, run_id: str, summary: dict) -> None:
+    def save_dataset_summary(
+        self,
+        run_id: str,
+        summary: dict,
+        dataset_fingerprint: str | None = None,
+        selected_timeframe: str | None = None,
+        regime_key: str | None = None,
+    ) -> None:
         self.connection.execute(
-            "UPDATE runs SET dataset_summary = ? WHERE run_id = ?",
-            (json.dumps(summary, sort_keys=True), run_id),
+            """
+            UPDATE runs
+            SET dataset_summary = ?,
+                dataset_fingerprint = COALESCE(?, dataset_fingerprint),
+                selected_timeframe = COALESCE(?, selected_timeframe),
+                regime_key = COALESCE(?, regime_key)
+            WHERE run_id = ?
+            """,
+            (
+                json.dumps(summary, sort_keys=True),
+                dataset_fingerprint,
+                selected_timeframe,
+                regime_key,
+                run_id,
+            ),
         )
         self.connection.commit()
 
@@ -223,8 +260,9 @@ class SQLiteRepository:
         for record in records:
             self.connection.execute(
                 """
-                INSERT INTO selections (run_id, alpha_id, rank, selected_at, validation_fitness, reason)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO selections
+                (run_id, alpha_id, rank, selected_at, validation_fitness, reason, ranking_rationale_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     record.run_id,
@@ -233,6 +271,7 @@ class SQLiteRepository:
                     record.selected_at,
                     record.validation_fitness,
                     record.reason,
+                    record.ranking_rationale_json,
                 ),
             )
         self.connection.commit()
@@ -333,7 +372,8 @@ class SQLiteRepository:
     def get_top_selections(self, run_id: str, limit: int) -> list[dict]:
         rows = self.connection.execute(
             """
-            SELECT s.rank, s.alpha_id, s.validation_fitness, s.reason, a.expression, a.generation_mode, a.complexity,
+            SELECT s.rank, s.alpha_id, s.validation_fitness, s.reason, s.ranking_rationale_json,
+                   a.expression, a.generation_mode, a.complexity,
                    m.delay_mode, m.neutralization, m.submission_pass_count, m.cache_hit
             FROM selections s
             JOIN alphas a

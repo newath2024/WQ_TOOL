@@ -1,5 +1,5 @@
-# Dev profile keeps the sample universe, loose thresholds, and smaller generation counts
-# so contributors can iterate quickly on the bundled demo dataset.
+# Strict profile is intended for audit-style local screening before manually
+# reviewing shortlisted alphas.
 
 data:
   path: examples/sample_data/daily_ohlcv.csv
@@ -9,7 +9,7 @@ data:
   selected_timeframe: 1d
   filename_pattern: "{symbol}_{timeframe}.csv"
   column_mapping: {}
-  universe: ["AAA", "BBB", "CCC", "DDD"]
+  universe: []
 
 aux_data:
   group_path: examples/sample_data/symbol_metadata.csv
@@ -62,14 +62,14 @@ generation:
       "group_zscore",
       "group_neutralize",
     ]
-  lookbacks: [2, 3, 5, 10]
+  lookbacks: [3, 5, 10, 15, 20]
   max_depth: 4
-  complexity_limit: 20
+  complexity_limit: 18
   template_count: 30
   grammar_count: 30
   mutation_count: 15
   normalization_wrappers: ["rank", "zscore", "sign"]
-  random_seed: 42
+  random_seed: 19
 
 adaptive_generation:
   enabled: true
@@ -82,7 +82,7 @@ adaptive_generation:
     novelty_behavior: 0.10
   exploration_epsilon: 0.10
   sampling_temperature: 0.75
-  family_cap_fraction: 0.25
+  family_cap_fraction: 0.20
   parent_pool_size: 30
   novelty_reference_top_k: 20
   min_pattern_support: 3
@@ -96,12 +96,12 @@ adaptive_generation:
     score_prior_weight: 3.0
 
 simulation:
-  delay_mode: fast_d1
+  delay_mode: d1
   neutralization: sector
   secondary_neutralization: country
   pasteurize: true
-  signal_clip: 5.0
-  weight_clip: 0.35
+  signal_clip: 4.0
+  weight_clip: 0.25
   factor_columns: ["beta", "size", "volatility", "liquidity"]
   subuniverses:
     - name: liquid
@@ -126,20 +126,20 @@ backtest:
   symbol_rank_window: 10
   upper_quantile: 0.8
   lower_quantile: 0.2
-  turnover_penalty: 0.10
-  drawdown_penalty: 0.50
+  turnover_penalty: 0.15
+  drawdown_penalty: 0.60
 
 evaluation:
   hard_filters:
-    min_validation_sharpe: -0.25
-    max_validation_turnover: 5.0
-    max_validation_drawdown: 0.95
+    min_validation_sharpe: 0.75
+    max_validation_turnover: 2.0
+    max_validation_drawdown: 0.35
   data_requirements:
-    min_validation_observations: 5
-    min_stability: 0.05
+    min_validation_observations: 20
+    min_stability: 0.35
   diversity:
-    signal_correlation_threshold: 0.95
-    returns_correlation_threshold: 0.95
+    signal_correlation_threshold: 0.85
+    returns_correlation_threshold: 0.85
   ranking:
     top_k: 10
     use_behavioral_novelty_tiebreak: true
@@ -148,16 +148,16 @@ evaluation:
     enable_ladder_test: true
     enable_robustness_test: true
     ladder_buckets: 3
-    ladder_min_sharpe: -0.25
-    ladder_min_passes: 2
-    subuniverse_min_sharpe: -3.0
-    subuniverse_min_pass_fraction: 0.5
-    robustness_min_fitness_ratio: -2.0
+    ladder_min_sharpe: 0.10
+    ladder_min_passes: 3
+    subuniverse_min_sharpe: 0.0
+    subuniverse_min_pass_fraction: 0.75
+    robustness_min_fitness_ratio: 0.25
 
 storage:
-  path: dev_wq_tool.sqlite3
+  path: strict_wq_tool.sqlite3
 
 runtime:
   log_level: INFO
   fail_fast: false
-  profile_name: dev
+  profile_name: strict

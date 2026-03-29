@@ -1,3 +1,6 @@
+# Default profile mirrors the research profile so `python main.py ...` starts with
+# realistic-but-local thresholds while still using the bundled sample dataset.
+
 data:
   path: examples/sample_data/daily_ohlcv.csv
   format: csv
@@ -127,25 +130,35 @@ backtest:
   drawdown_penalty: 0.50
 
 evaluation:
-  min_sharpe: -10.0
-  max_turnover: 5.0
-  min_observations: 5
-  max_drawdown: 0.95
-  min_stability: 0.10
-  signal_correlation_threshold: 0.95
-  returns_correlation_threshold: 0.95
-  top_k: 20
-
-submission_tests:
-  enable_subuniverse_test: true
-  enable_ladder_test: true
-  enable_robustness_test: true
-  ladder_buckets: 3
-  ladder_min_sharpe: -0.25
-  ladder_min_passes: 2
-  subuniverse_min_sharpe: -3.0
-  subuniverse_min_pass_fraction: 0.5
-  robustness_min_fitness_ratio: -2.0
+  hard_filters:
+    # Require mild positive validation Sharpe in the default research profile.
+    min_validation_sharpe: 0.25
+    # Keep turnover moderate for local cross-sectional strategies.
+    max_validation_turnover: 3.0
+    # Reject strategies with deep validation drawdowns.
+    max_validation_drawdown: 0.50
+  data_requirements:
+    # Avoid selecting alphas on very short validation histories.
+    min_validation_observations: 15
+    # Require at least modest train/validation agreement.
+    min_stability: 0.20
+  diversity:
+    # Deduplicate near-identical signals more aggressively than the dev profile.
+    signal_correlation_threshold: 0.90
+    returns_correlation_threshold: 0.90
+  ranking:
+    top_k: 20
+    use_behavioral_novelty_tiebreak: true
+  robustness:
+    enable_subuniverse_test: true
+    enable_ladder_test: true
+    enable_robustness_test: true
+    ladder_buckets: 3
+    ladder_min_sharpe: 0.0
+    ladder_min_passes: 2
+    subuniverse_min_sharpe: -0.10
+    subuniverse_min_pass_fraction: 0.60
+    robustness_min_fitness_ratio: 0.10
 
 storage:
   path: wq_tool.sqlite3
@@ -153,3 +166,4 @@ storage:
 runtime:
   log_level: INFO
   fail_fast: false
+  profile_name: research

@@ -136,15 +136,118 @@ class BacktestConfig:
 
 
 @dataclass(slots=True)
+class EvaluationHardFiltersConfig:
+    min_validation_sharpe: float = -10.0
+    max_validation_turnover: float = 5.0
+    max_validation_drawdown: float = 0.95
+
+
+@dataclass(slots=True)
+class EvaluationDataRequirementsConfig:
+    min_validation_observations: int = 5
+    min_stability: float = 0.10
+
+
+@dataclass(slots=True)
+class EvaluationDiversityConfig:
+    signal_correlation_threshold: float = 0.95
+    returns_correlation_threshold: float = 0.95
+
+
+@dataclass(slots=True)
+class EvaluationRankingConfig:
+    top_k: int = 20
+    use_behavioral_novelty_tiebreak: bool = True
+
+
+@dataclass(slots=True)
+class EvaluationRobustnessConfig:
+    enable_subuniverse_test: bool = True
+    enable_ladder_test: bool = True
+    enable_robustness_test: bool = True
+    ladder_buckets: int = 3
+    ladder_min_sharpe: float = 0.0
+    ladder_min_passes: int = 2
+    subuniverse_min_sharpe: float = -0.25
+    subuniverse_min_pass_fraction: float = 0.5
+    robustness_min_fitness_ratio: float = 0.35
+
+
+@dataclass(slots=True, init=False)
 class EvaluationConfig:
-    min_sharpe: float
-    max_turnover: float
-    min_observations: int
-    max_drawdown: float
-    min_stability: float
-    signal_correlation_threshold: float
-    returns_correlation_threshold: float
-    top_k: int
+    hard_filters: EvaluationHardFiltersConfig = field(default_factory=EvaluationHardFiltersConfig)
+    data_requirements: EvaluationDataRequirementsConfig = field(default_factory=EvaluationDataRequirementsConfig)
+    diversity: EvaluationDiversityConfig = field(default_factory=EvaluationDiversityConfig)
+    ranking: EvaluationRankingConfig = field(default_factory=EvaluationRankingConfig)
+    robustness: EvaluationRobustnessConfig = field(default_factory=EvaluationRobustnessConfig)
+
+    def __init__(
+        self,
+        hard_filters: EvaluationHardFiltersConfig | None = None,
+        data_requirements: EvaluationDataRequirementsConfig | None = None,
+        diversity: EvaluationDiversityConfig | None = None,
+        ranking: EvaluationRankingConfig | None = None,
+        robustness: EvaluationRobustnessConfig | None = None,
+        min_sharpe: float | None = None,
+        max_turnover: float | None = None,
+        min_observations: int | None = None,
+        max_drawdown: float | None = None,
+        min_stability: float | None = None,
+        signal_correlation_threshold: float | None = None,
+        returns_correlation_threshold: float | None = None,
+        top_k: int | None = None,
+    ) -> None:
+        self.hard_filters = hard_filters or EvaluationHardFiltersConfig(
+            min_validation_sharpe=-10.0 if min_sharpe is None else float(min_sharpe),
+            max_validation_turnover=5.0 if max_turnover is None else float(max_turnover),
+            max_validation_drawdown=0.95 if max_drawdown is None else float(max_drawdown),
+        )
+        self.data_requirements = data_requirements or EvaluationDataRequirementsConfig(
+            min_validation_observations=5 if min_observations is None else int(min_observations),
+            min_stability=0.10 if min_stability is None else float(min_stability),
+        )
+        self.diversity = diversity or EvaluationDiversityConfig(
+            signal_correlation_threshold=0.95
+            if signal_correlation_threshold is None
+            else float(signal_correlation_threshold),
+            returns_correlation_threshold=0.95
+            if returns_correlation_threshold is None
+            else float(returns_correlation_threshold),
+        )
+        self.ranking = ranking or EvaluationRankingConfig(top_k=20 if top_k is None else int(top_k))
+        self.robustness = robustness or EvaluationRobustnessConfig()
+
+    @property
+    def min_sharpe(self) -> float:
+        return self.hard_filters.min_validation_sharpe
+
+    @property
+    def max_turnover(self) -> float:
+        return self.hard_filters.max_validation_turnover
+
+    @property
+    def max_drawdown(self) -> float:
+        return self.hard_filters.max_validation_drawdown
+
+    @property
+    def min_observations(self) -> int:
+        return self.data_requirements.min_validation_observations
+
+    @property
+    def min_stability(self) -> float:
+        return self.data_requirements.min_stability
+
+    @property
+    def signal_correlation_threshold(self) -> float:
+        return self.diversity.signal_correlation_threshold
+
+    @property
+    def returns_correlation_threshold(self) -> float:
+        return self.diversity.returns_correlation_threshold
+
+    @property
+    def top_k(self) -> int:
+        return self.ranking.top_k
 
 
 @dataclass(slots=True)
@@ -169,6 +272,7 @@ class StorageConfig:
 class RuntimeConfig:
     log_level: str = "INFO"
     fail_fast: bool = False
+    profile_name: str = ""
 
 
 @dataclass(slots=True)
@@ -186,6 +290,7 @@ class AppConfig:
     runtime: RuntimeConfig
 
     def to_dict(self) -> dict[str, Any]:
+        """Return the config as a plain nested mapping."""
         return asdict(self)
 
 
@@ -227,11 +332,56 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     return AdaptiveGenerationConfig(**adaptive_payload)
 
 
+def _build_evaluation_config(payload: dict[str, Any]) -> EvaluationConfig:
+    if any(key in payload for key in ("hard_filters", "data_requirements", "diversity", "ranking", "robustness")):
+        return EvaluationConfig(
+            hard_filters=EvaluationHardFiltersConfig(**payload.get("hard_filters", {})),
+            data_requirements=EvaluationDataRequirementsConfig(**payload.get("data_requirements", {})),
+            diversity=EvaluationDiversityConfig(**payload.get("diversity", {})),
+            ranking=EvaluationRankingConfig(**payload.get("ranking", {})),
+            robustness=EvaluationRobustnessConfig(**payload.get("robustness", {})),
+        )
+
+    return EvaluationConfig(
+        hard_filters=EvaluationHardFiltersConfig(
+            min_validation_sharpe=float(payload["min_sharpe"]),
+            max_validation_turnover=float(payload["max_turnover"]),
+            max_validation_drawdown=float(payload["max_drawdown"]),
+        ),
+        data_requirements=EvaluationDataRequirementsConfig(
+            min_validation_observations=int(payload["min_observations"]),
+            min_stability=float(payload["min_stability"]),
+        ),
+        diversity=EvaluationDiversityConfig(
+            signal_correlation_threshold=float(payload["signal_correlation_threshold"]),
+            returns_correlation_threshold=float(payload["returns_correlation_threshold"]),
+        ),
+        ranking=EvaluationRankingConfig(top_k=int(payload["top_k"])),
+    )
+
+
+def _build_submission_test_config(
+    payload: dict[str, Any] | None,
+    evaluation: EvaluationConfig,
+) -> SubmissionTestConfig:
+    if payload is not None:
+        return SubmissionTestConfig(**payload)
+    return SubmissionTestConfig(**asdict(evaluation.robustness))
+
+
+def _build_runtime_config(payload: dict[str, Any] | None, config_path: Path) -> RuntimeConfig:
+    runtime_payload = dict(payload or {})
+    runtime_payload.setdefault("profile_name", config_path.stem)
+    return RuntimeConfig(**runtime_payload)
+
+
 def load_config(path: str | Path) -> AppConfig:
+    """Load and normalize YAML config, accepting both legacy and grouped evaluation schemas."""
     config_path = Path(path)
     payload = _read_yaml(config_path)
     try:
         backtest = BacktestConfig(**payload["backtest"])
+        evaluation = _build_evaluation_config(payload["evaluation"])
         return AppConfig(
             data=DataConfig(**payload["data"]),
             aux_data=AuxDataConfig(**payload.get("aux_data", {})),
@@ -244,10 +394,10 @@ def load_config(path: str | Path) -> AppConfig:
             adaptive_generation=_build_adaptive_generation_config(payload.get("adaptive_generation")),
             simulation=_build_simulation_config(payload.get("simulation"), backtest),
             backtest=backtest,
-            evaluation=EvaluationConfig(**payload["evaluation"]),
-            submission_tests=SubmissionTestConfig(**payload.get("submission_tests", {})),
+            evaluation=evaluation,
+            submission_tests=_build_submission_test_config(payload.get("submission_tests"), evaluation),
             storage=StorageConfig(**payload["storage"]),
-            runtime=RuntimeConfig(**payload.get("runtime", {})),
+            runtime=_build_runtime_config(payload.get("runtime"), config_path),
         )
     except KeyError as exc:
         raise ValueError(f"Missing required config section: {exc.args[0]}") from exc

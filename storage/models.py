@@ -13,6 +13,11 @@ class RunRecord:
     started_at: str
     finished_at: str | None
     dataset_summary: str | None
+    profile_name: str | None = None
+    dataset_fingerprint: str | None = None
+    selected_timeframe: str | None = None
+    regime_key: str | None = None
+    entry_command: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -61,6 +66,7 @@ class SelectionRecord:
     selected_at: str
     validation_fitness: float
     reason: str
+    ranking_rationale_json: str = ""
 
 
 @dataclass(frozen=True, slots=True)
@@ -112,6 +118,7 @@ class AlphaHistoryRecord:
     selected: bool
     submission_pass_count: int
     diagnosis_summary_json: str
+    rejection_reasons_json: str
     created_at: str
 
 
