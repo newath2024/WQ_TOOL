@@ -1,0 +1,5 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+mdl68_mktcap,Market Cap,model68,Risk-Alleviated Momentum Scores,model,Model,model-sentiment,Sentiment,EUR,1,TOP2500,VECTOR,1,0.5515,16,21,1.4,[]
+mdl68_ram,Risk Adjusted Momentum Score,model68,Risk-Alleviated Momentum Scores,model,Model,model-sentiment,Sentiment,EUR,1,TOP2500,VECTOR,1,0.5515,12,12,1.4,[]
+mdl68_raw,Raw Score,model68,Risk-Alleviated Momentum Scores,model,Model,model-sentiment,Sentiment,EUR,1,TOP2500,VECTOR,1,0.5515,5,5,1.4,[]
+mdl68_score,Final DREAM SCORE,model68,Risk-Alleviated Momentum Scores,model,Model,model-sentiment,Sentiment,EUR,1,TOP2500,VECTOR,1,0.5515,23,26,1.4,[]

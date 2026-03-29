@@ -1,0 +1,2 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+mcr63_membership,Indicates the membership status of stocks in the WisdomTree WTIDJH Index,macro63,Index Reconstitution Data,macro,Macro,macro-macroeconomic-activities,Macroeconomic Activities,ASI,1,MINVOL1M,MATRIX,1,1,236,568,1,[]

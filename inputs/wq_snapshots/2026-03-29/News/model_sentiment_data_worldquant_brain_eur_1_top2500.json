@@ -1,0 +1,46 @@
+{
+  "exported_at": "2026-03-29T04:58:51.577Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news81?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 1,
+  "row_count": 1,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 1,
+      "new_item_count": 1,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news81"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mws81_sentiment",
+      "description": "model sentiment score",
+      "dataset": {
+        "id": "news81",
+        "name": "Model sentiment data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9509,
+      "userCount": 24,
+      "alphaCount": 41,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

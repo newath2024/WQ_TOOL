@@ -1,0 +1,574 @@
+{
+  "exported_at": "2026-03-29T04:29:47.366Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/fundamental21?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 21,
+  "row_count": 21,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=fundamental21"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 1,
+      "new_item_count": 1,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=ASI&universe=MINVOL1M&dataset.id=fundamental21"
+    }
+  ],
+  "rows": [
+    {
+      "id": "fnd21_allcategories_articlevolumettm",
+      "description": "Trailing 12 Months Volume of news articles relevant to all the ESG categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3581,
+      "userCount": 21,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_categoryvolumettm",
+      "description": "Trailing 12 Months Volume of news articles relevant to all the ESG categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3581,
+      "userCount": 16,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_insight_allcategories_insight",
+      "description": "Insight score derived from news articles relevant to all the ESG categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4019,
+      "userCount": 16,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_insight_allcategoriesindustrypercentile_insight",
+      "description": "Percentile within SICS industry for a company derived from insight scores calculated from news articles relevant to all the ESG categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4016,
+      "userCount": 19,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_insight_materiality_insight",
+      "description": "Insight score derived from news articles relevant to all material categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3607,
+      "userCount": 10,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_insight_materialityindustrypercentile_insight",
+      "description": "%ile within SICS industry for a company derived from insight scores calculated from news articles relevant to all material categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3604,
+      "userCount": 19,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_insight_supplychainmanagement_insight",
+      "description": "Insight score derived from news articles relevant to Supply Chain Management category of any company. This topic addresses the management of environmental, social, and governance risks within a company's supply chain. The supply chain is defined broadly and includes multiple tiers of suppliers from raw material suppliers to manufacturers of end products. It includes how companies screen, select, monitor, and engage with suppliers on environmental and social topics including environmental responsibility, human rights and labor practices, and ethics and corruption. The scope of the topic excludes issues related to impacts of climate change and other environmental and social factors on the availability and pricing of key resources.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2527,
+      "userCount": 10,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_insight_supplychainmanagementindustrypercentile_insight",
+      "description": "Percentile within SICS industry for a company derived from insight scores calculated from news articles relevant to Supply Chain Management category of any company. This topic addresses the management of environmental, social, and governance risks within a company's supply chain. The supply chain is defined broadly and includes multiple tiers of suppliers from raw material suppliers to manufacturers of end products. It includes how companies screen, select, monitor, and engage with suppliers on environmental and social topics including environmental responsibility, human rights and labor practices, and ethics and corruption. The scope of the topic excludes issues related to impacts of climate change and other environmental and social factors on availability and pricing of key resources.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2524,
+      "userCount": 7,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_momentum",
+      "description": "Trend measure derived from news articles relevant to all the ESG categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4205,
+      "userCount": 11,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategories_pulse",
+      "description": "Short-term, real-time performance pulse score derived from news articles relevant to all the ESG categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.403,
+      "userCount": 12,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_allcategoriesindustrypercentile_momentum",
+      "description": "%ile within SICS industry for a company derived from momentum scores calculated from news articles relevant to all the ESG categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4204,
+      "userCount": 10,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_ghgemissions_momentum",
+      "description": "Trend measure derived from news articles relevant to GHG Emissions category of any company. This topic describes the management of direct (Scope 1) greenhouse gas emissions, including that from fuel consumption at stationary and non-stationary sources, exposure to regulation associated with carbon emissions, and relates to measures to mitigate emissions.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2595,
+      "userCount": 8,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_ghgemissionsindustrypercentile_momentum",
+      "description": "%ile within SICS industry for a company derived from momentum scores calculated from news articles relevant to GHG Emissions category of any company. This topic describes the management of direct (Scope 1) greenhouse gas emissions, including that from fuel consumption at stationary and non-stationary sources, exposure to regulation associated with carbon emissions, and relates to measures to mitigate emissions.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2593,
+      "userCount": 8,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_materiality_articlevolumettm",
+      "description": "Trailing 12 Months Volume of news articles relevant to all material categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3049,
+      "userCount": 9,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_materiality_categoryvolumettm",
+      "description": "Trailing 12 Months Volume of news articles relevant to all material categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3049,
+      "userCount": 9,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_materiality_momentum",
+      "description": "Trend measure derived from news articles relevant to all material categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3798,
+      "userCount": 13,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_materiality_pulse",
+      "description": "Short-term, real-time performance pulse score derived from news articles relevant to all material categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3619,
+      "userCount": 11,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_materialityindustrypercentile_momentum",
+      "description": "%ile within SICS industry for a company derived from momentum scores calculated from news articles relevant to all material categories of any company.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3797,
+      "userCount": 11,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_supplychainmanagement_momentum",
+      "description": "Trend measure derived from news articles relevant to Supply Chain Management category of any company. This topic addresses the management of environmental, social, and governance risks within a company's supply chain. The supply chain is defined broadly and includes multiple tiers of suppliers from raw material suppliers to manufacturers of end products. It includes how companies screen, select, monitor, and engage with suppliers on environmental and social topics including environmental responsibility, human rights and labor practices, and ethics and corruption. The scope of the topic excludes issues related to impacts of climate change and other environmental and social factors on availability and pricing of key resources.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2683,
+      "userCount": 9,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_supplychainmanagement_pulse",
+      "description": "Short-term, real-time performance pulse score derived from news articles relevant to Supply Chain Management category of any company. This topic addresses the management of environmental, social, and governance risks within a company's supply chain. The supply chain is defined broadly and includes multiple tiers of suppliers from raw material suppliers to manufacturers of end products. It includes how companies screen, select, monitor, and engage with suppliers on environmental and social topics including environmental responsibility, human rights and labor practices, and ethics and corruption. The scope of the topic excludes issues related to impacts of climate change and other environmental and social factors on availability and pricing of key resources.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2537,
+      "userCount": 8,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd21_supplychainmanagementindustrypercentile_momentum",
+      "description": "%ile within SICS industry for a company derived from momentum scores calculated from news articles relevant to the Supply Chain Management category of any company. This topic addresses the management of environmental, social, and governance risks within a company's supply chain. The supply chain is defined broadly and includes multiple tiers of suppliers from raw material suppliers to manufacturers of end products. It includes how companies screen, select, monitor, and engage with suppliers on environmental and social topics including environmental responsibility, human rights and labor practices, and ethics and corruption. The scope of the topic excludes issues related to the impacts of climate change and other environmental and social factors on the availability and pricing of key resources.",
+      "dataset": {
+        "id": "fundamental21",
+        "name": "ESG Scores Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2681,
+      "userCount": 9,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

@@ -1,0 +1,124 @@
+{
+  "exported_at": "2026-03-29T05:08:26.653Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/risk71?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 4,
+  "row_count": 4,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 4,
+      "new_item_count": 4,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=risk71"
+    }
+  ],
+  "rows": [
+    {
+      "id": "residualized_return_india_equity_universe",
+      "description": "Instrument-specific return for the full equity universe in India, adjusted for risk factors.",
+      "dataset": {
+        "id": "risk71",
+        "name": "Daily Specific Return Profiling Dataset"
+      },
+      "category": {
+        "id": "risk",
+        "name": "Risk"
+      },
+      "subcategory": {
+        "id": "risk-risk-factors",
+        "name": "Risk Factors"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 654,
+      "alphaCount": 1941,
+      "pyramidMultiplier": 1,
+      "themes": []
+    },
+    {
+      "id": "residualized_return_india_single_stock_futures",
+      "description": "Instrument-specific return for the single stock futures universe in India, adjusted for risk factors.",
+      "dataset": {
+        "id": "risk71",
+        "name": "Daily Specific Return Profiling Dataset"
+      },
+      "category": {
+        "id": "risk",
+        "name": "Risk"
+      },
+      "subcategory": {
+        "id": "risk-risk-factors",
+        "name": "Risk Factors"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3622,
+      "userCount": 133,
+      "alphaCount": 164,
+      "pyramidMultiplier": 1,
+      "themes": []
+    },
+    {
+      "id": "residualized_return_india_top200_equity",
+      "description": "Instrument-specific return for the top 200 equities in India, adjusted for risk factors.",
+      "dataset": {
+        "id": "risk71",
+        "name": "Daily Specific Return Profiling Dataset"
+      },
+      "category": {
+        "id": "risk",
+        "name": "Risk"
+      },
+      "subcategory": {
+        "id": "risk-risk-factors",
+        "name": "Risk Factors"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4564,
+      "userCount": 304,
+      "alphaCount": 412,
+      "pyramidMultiplier": 1,
+      "themes": []
+    },
+    {
+      "id": "residualized_return_india_top500_equity",
+      "description": "Instrument-specific return for the top 500 equities in India, adjusted for risk factors.",
+      "dataset": {
+        "id": "risk71",
+        "name": "Daily Specific Return Profiling Dataset"
+      },
+      "category": {
+        "id": "risk",
+        "name": "Risk"
+      },
+      "subcategory": {
+        "id": "risk-risk-factors",
+        "name": "Risk Factors"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1021,
+      "alphaCount": 4331,
+      "pyramidMultiplier": 1,
+      "themes": []
+    }
+  ]
+}

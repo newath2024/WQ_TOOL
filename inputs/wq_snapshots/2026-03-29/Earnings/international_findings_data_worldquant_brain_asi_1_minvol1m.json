@@ -1,0 +1,1708 @@
+{
+  "exported_at": "2026-03-29T04:25:47.240Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/earnings6?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 64,
+  "row_count": 64,
+  "page_count": 4,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=earnings6"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=ASI&universe=MINVOL1M&dataset.id=earnings6"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=ASI&universe=MINVOL1M&dataset.id=earnings6"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 4,
+      "new_item_count": 4,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=ASI&universe=MINVOL1M&dataset.id=earnings6"
+    }
+  ],
+  "rows": [
+    {
+      "id": "eps_change_absolute_value",
+      "description": "The absolute change in earnings per share compared to the previous period.",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.2851,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "eps_change_percentage_value",
+      "description": "The percentage change in earnings per share compared to the previous period.",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.2851,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_1q",
+      "description": "Earnings Date for 1st quarter - may be historical",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_1q_316",
+      "description": "Earnings Date for 1st quarter - may be historical",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.563,
+      "userCount": 35,
+      "alphaCount": 54,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_2q",
+      "description": "Earnings Date for 2nd quarter - may be historical",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_2q_317",
+      "description": "Earnings Date for 2nd quarter - may be historical",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5633,
+      "userCount": 30,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_3q",
+      "description": "Earnings Date for 3rd quarter - may be historical",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_3q_318",
+      "description": "Earnings Date for 3rd quarter - may be historical",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.563,
+      "userCount": 24,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_4q",
+      "description": "Earnings Date for 4th quarter - may be historical",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_4q_319",
+      "description": "Earnings Date for 4th quarter - may be historical",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.563,
+      "userCount": 29,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_actual_currenty_280",
+      "description": "Actual Currency",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 10,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_actual_eps",
+      "description": "The diluted (or basic if diluted not provided) non-GAAP EPS as reported in the press release or filing",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.2851,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_actual_fiscal_year",
+      "description": "The fiscal year that corresponds to the earnings release (YYYY)",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.2851,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_actual_fiscal_year_282",
+      "description": "The fiscal year that corresponds to the earnings release (YYYY)",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.4648,
+      "userCount": 30,
+      "alphaCount": 36,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_actual_period_283",
+      "description": "The actual quarter or half year as reported in the earnings announcement",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 21,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_actual_source_284",
+      "description": "Possible values are PR (press release), WEBSITE, SEC-SEDAR, OTHER or nulls",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 33,
+      "alphaCount": 41,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_actual_url_286",
+      "description": "The link to the earnings announcement press release or SEC filing",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 17,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_board_of_directors_meeting",
+      "description": "Date of Board/Shareholder Meeting",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_board_of_directors_meeting_342",
+      "description": "Date of Board/Shareholder Meeting",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.3437,
+      "userCount": 32,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_company_name_288",
+      "description": "Name of the company",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 16,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_company_names_308",
+      "description": "Name of the company",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 11,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_conferencecalltime",
+      "description": "Published time of conference call",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 3,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_confnumber_324",
+      "description": "Publicly available phone number for replay conference call",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 24,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_confpasscode_325",
+      "description": "Passcode for replay conference call",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 15,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_div_freq_327",
+      "description": "Identifies payment frequency of announced dividend. \"ANNUAL\", \"SEMI-ANNUAL\", \"QUARTERLY\", \"MONTHLY\" or \"SPECIAL\"",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 18,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_dividend_status_335",
+      "description": "P - Pays, X - Does not pay, S - Suspended, R - Resumed",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 36,
+      "alphaCount": 45,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_eps6stock_symbol_295",
+      "description": "This is the stock ticker symbol. A “CA.” prefix is used for companies WSH tracks as Canadian",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_eps6ww_status_297",
+      "description": "Denotes whether the security trades on a North American stock exchange (NA) or not (WW)",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_estimated_eps",
+      "description": "Estimize weighted EPS estimate for the last completed period",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.2851,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_estimated_etype_290",
+      "description": "This indicates the status of scheduled earnings date; \"Verified\" or \"Unconfirmed\"",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 47,
+      "alphaCount": 56,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_estimated_fiscal_year",
+      "description": "The fiscal year associated with the quarter or half-year",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.2851,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_estimated_fiscal_year_291",
+      "description": "The fiscal year associated with the quarter or half-year",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 23,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_estimated_period_292",
+      "description": "The scheduled earnings quarter or half year we have a date for",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 19,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_estimated_tod_293",
+      "description": "This indicates the scheduled time of earnings announcement; \"Unspecified\" or \"Before Market\" or \"During Market\" or \"After Market\"",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 17,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_estimated_url_294",
+      "description": "The link to the company website",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 26,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_etype_314",
+      "description": "T - Tentative date, V - Verified date I - Inferred date See Earnings Date Status Definitions section for additional information",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 29,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_goto_broadcast_326",
+      "description": "Website link for Conference Call recording",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 121,
+      "alphaCount": 175,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_isin_306",
+      "description": "This is a unique security identifier structured to include the country in which the issuing company is headquartered, the specific security identification number and a final character acting as a check digit",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 10,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_meeting_status_350",
+      "description": "Possible values are PENDING, INPROCESS, HELD, CANCEL or POSTPONED.",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 33,
+      "alphaCount": 43,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_mtg_type_343",
+      "description": "Identifies whether it’s a BoD (B) or Shareholder (S) meeting",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 24,
+      "alphaCount": 27,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_next_ed",
+      "description": "Next Earnings Date. See Etype to determine how to interpret this field",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_next_ed_311",
+      "description": "Next Earnings Date. See Etype to determine how to interpret this field",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_next_ed_fiscal_year",
+      "description": "The fiscal year associated with Next ED and Next ED Quarter",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_next_ed_fiscal_year_313",
+      "description": "The fiscal year associated with Next ED and Next ED Quarter",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_next_ed_quarter_312",
+      "description": "Corresponds to the Next ED",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 11,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_prelim_earnings_link_303",
+      "description": "The link to the preliminary earnings announcement press release",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.47,
+      "userCount": 19,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_quarter_310",
+      "description": "The letter \"Q\" followed by the quarter number the earnings information applies to",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 14,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_split_status_351",
+      "description": "Possible values are PENDINGor APPROVED",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 48,
+      "alphaCount": 72,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_stock_exchange_309",
+      "description": "This is the exchange the stock is traded on",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_stock_split_ratio_338",
+      "description": "Split parameters (typically #:#) where the first number is the amount of the new shares, the second number is original shares",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 18,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_stock_symbol_305",
+      "description": "This is the stock ticker symbol. A “CA.” prefix is used for companies WSH tracks as Canadian",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 18,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_time_of_day_315",
+      "description": "Indicates the time of the announcement: Before Market, During Market, After Market, Unspecified",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_time_zone_323",
+      "description": "Last Update time",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_transcript_fiscal_year",
+      "description": "Fiscal year in YYYY format for the earnings transcript",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_transcript_quarter_345",
+      "description": "The letter “Q” followed by the quarter number the earnings transcript applies to",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 27,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_wqreceivetimestamp",
+      "description": "This is added timestamp at the end of the file with fixed format",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_wqreceivetimestamp_347",
+      "description": "This is added timestamp at the end of the file with fixed format",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_ww_status_307",
+      "description": "Denotes whether the security trades on a North American stock exchange (NA) or not (WW)",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.5656,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_x_dividend",
+      "description": "Amount of dividend in US dollars. If converted to USD, exchange rate at time of entry is used",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_x_dividend_328",
+      "description": "Amount of dividend in US dollars. If converted to USD, exchange rate at time of entry is used",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.4241,
+      "userCount": 15,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_x_dividend_oc",
+      "description": "The amount of the dividend in the currency specified by x_dividend_currency",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.332,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ern6_x_dividend_oc_330",
+      "description": "The amount of the dividend in the currency specified by x_dividend_currency",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.6621,
+      "coverage": 0.4241,
+      "userCount": 18,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "preliminary_eps_range_lower_bound",
+      "description": "The lower value of the preliminary earnings per share range.",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.2851,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "preliminary_eps_range_upper_bound",
+      "description": "The upper value of the preliminary earnings per share range.",
+      "dataset": {
+        "id": "earnings6",
+        "name": "International Findings Data"
+      },
+      "category": {
+        "id": "earnings",
+        "name": "Earnings"
+      },
+      "subcategory": {
+        "id": "earnings-earnings-estimates",
+        "name": "Earnings Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5304,
+      "coverage": 0.2851,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    }
+  ]
+}

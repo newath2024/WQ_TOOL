@@ -1,0 +1,98 @@
+{
+  "exported_at": "2026-03-29T05:07:18.092Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/pv47?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 3,
+  "row_count": 3,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 3,
+      "new_item_count": 3,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=pv47"
+    }
+  ],
+  "rows": [
+    {
+      "id": "idiosyncratic_return_fraction",
+      "description": "The portion of asset return not explained by risk model factors, expressed as a fraction.",
+      "dataset": {
+        "id": "pv47",
+        "name": "Specific Return Dataset"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 62,
+      "alphaCount": 83,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv47_for_statssimple_only_spret",
+      "description": "specific return",
+      "dataset": {
+        "id": "pv47",
+        "name": "Specific Return Dataset"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9993,
+      "userCount": 298,
+      "alphaCount": 1445,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv47_spret",
+      "description": "specific return",
+      "dataset": {
+        "id": "pv47",
+        "name": "Specific Return Dataset"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9997,
+      "userCount": 151,
+      "alphaCount": 306,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    }
+  ]
+}

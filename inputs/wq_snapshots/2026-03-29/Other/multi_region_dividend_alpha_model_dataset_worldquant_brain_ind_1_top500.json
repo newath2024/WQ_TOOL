@@ -1,0 +1,280 @@
+{
+  "exported_at": "2026-03-29T05:01:49.756Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other335?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 10,
+  "row_count": 10,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 10,
+      "new_item_count": 10,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=other335"
+    }
+  ],
+  "rows": [
+    {
+      "id": "oth335_combined_all_region_hedge",
+      "description": "Score from the hedge model",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 1046,
+      "alphaCount": 4461,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_combined_all_region_linear",
+      "description": "Score from the linear model",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 743,
+      "alphaCount": 2613,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_combined_all_region_mind",
+      "description": "Final composite MIND score",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 829,
+      "alphaCount": 3015,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_combined_all_region_mktcap",
+      "description": "Market Cap",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 366,
+      "alphaCount": 1099,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_combined_all_region_shield",
+      "description": "Score from the SHIELD model",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 377,
+      "alphaCount": 1431,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_hc_combined_all_region_hedge",
+      "description": "Score from the hedge model",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 491,
+      "alphaCount": 1883,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_hc_combined_all_region_linear",
+      "description": "Score from the linear model",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 386,
+      "alphaCount": 1420,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_hc_combined_all_region_mind",
+      "description": "Final composite MIND score",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 381,
+      "alphaCount": 1375,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_hc_combined_all_region_mktcap",
+      "description": "Market Cap",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 307,
+      "alphaCount": 1138,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth335_hc_combined_all_region_shield",
+      "description": "Score from the SHIELD model",
+      "dataset": {
+        "id": "other335",
+        "name": "Multi-Region Dividend Alpha Model Dataset"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 302,
+      "alphaCount": 1223,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

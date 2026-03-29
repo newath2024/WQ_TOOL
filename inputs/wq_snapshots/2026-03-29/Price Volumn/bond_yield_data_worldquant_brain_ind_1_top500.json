@@ -1,0 +1,678 @@
+{
+  "exported_at": "2026-03-29T05:05:35.161Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/pv109?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 25,
+  "row_count": 25,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=pv109"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 5,
+      "new_item_count": 5,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=IND&universe=TOP500&dataset.id=pv109"
+    }
+  ],
+  "rows": [
+    {
+      "id": "ask_side_conversion_yield",
+      "description": "Yield to conversion based on the ask price.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "ask_side_yield_to_maturity",
+      "description": "Yield to maturity calculated using the ask price.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "bid_side_conversion_yield",
+      "description": "Yield to conversion based on the bid price.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "bid_side_yield_to_maturity",
+      "description": "Yield to maturity calculated using the bid price.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "bid_side_yield_to_maturity_duplicate",
+      "description": "Yield to maturity calculated using the bid price (duplicate field).",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "bond_coupon_rate",
+      "description": "Interest rate paid by the bond to its holders.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "coupon_payment_frequency",
+      "description": "Frequency at which interest payments are made to bondholders.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "current_coupon_rate",
+      "description": "Current interest rate paid by the bond.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "face_value_amount",
+      "description": "Nominal value of the bond to be repaid at maturity.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 8,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "highest_bid_price",
+      "description": "Maximum price a buyer is willing to pay for the bond.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "initial_issue_price",
+      "description": "Price at which the bond was first offered to investors.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "interest_day_count_basis",
+      "description": "Day count convention used for interest calculation on the bond.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "last_traded_price",
+      "description": "Most recent price at which the bond was traded.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "lowest_ask_price",
+      "description": "Minimum price a seller is willing to accept for the bond.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "midpoint_conversion_yield",
+      "description": "Yield to conversion calculated using the average of bid and ask prices.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "midpoint_trade_price",
+      "description": "Average of the bid and ask prices for the bond.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "midpoint_yield_to_maturity",
+      "description": "Yield to maturity calculated using the average of bid and ask prices.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "minimum_bond_denomination",
+      "description": "Smallest denomination in which the bond can be purchased.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "minimum_trade_increment",
+      "description": "Smallest amount by which the bond can be traded.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv109_amt_issued",
+      "description": "Amount Issued",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv109_amt_outstanding",
+      "description": "Amount Outstanding",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv109_announce_dt",
+      "description": "Announce Date",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv109_maturity",
+      "description": "Maturity",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "redemption_value_amount",
+      "description": "Amount received by the holder at bond maturity or redemption.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "total_traded_volume",
+      "description": "Total number of units or shares traded for the bond.",
+      "dataset": {
+        "id": "pv109",
+        "name": "Bond Yield Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3393,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    }
+  ]
+}

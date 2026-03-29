@@ -1,0 +1,72 @@
+{
+  "exported_at": "2026-03-29T04:30:02.163Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/fundamental22?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 2,
+  "row_count": 2,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 2,
+      "new_item_count": 2,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=fundamental22"
+    }
+  ],
+  "rows": [
+    {
+      "id": "fnd22_as_value",
+      "description": "Value of the field",
+      "dataset": {
+        "id": "fundamental22",
+        "name": "Environmental and Social Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3665,
+      "userCount": 12,
+      "alphaCount": 54,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd22_value",
+      "description": "Value of the field",
+      "dataset": {
+        "id": "fundamental22",
+        "name": "Environmental and Social Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3665,
+      "userCount": 13,
+      "alphaCount": 54,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

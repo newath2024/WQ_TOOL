@@ -1,0 +1,5 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+oth545_mktcap,Market Cap in USD,other545,Linked Firms Momentum Data,other,Other,other-dividend-models,Dividend Models,IND,1,TOP500,VECTOR,1,0.8158,68,127,1.4,[]
+oth545_mpd,Score base on Dynamic price momentum,other545,Linked Firms Momentum Data,other,Other,other-dividend-models,Dividend Models,IND,1,TOP500,VECTOR,1,0.8158,43,59,1.4,[]
+oth545_pln_omen,Score base on NLP Base network momentum,other545,Linked Firms Momentum Data,other,Other,other-dividend-models,Dividend Models,IND,1,TOP500,VECTOR,1,0.8158,3,3,1.4,[]
+oth545_score,Final composite model (NEMO 2.0),other545,Linked Firms Momentum Data,other,Other,other-dividend-models,Dividend Models,IND,1,TOP500,VECTOR,1,0.8158,79,126,1.4,[]

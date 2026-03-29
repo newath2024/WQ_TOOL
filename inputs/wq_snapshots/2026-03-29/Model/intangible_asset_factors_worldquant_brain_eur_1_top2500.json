@@ -1,0 +1,228 @@
+{
+  "exported_at": "2026-03-29T04:48:43.114Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model313?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 8,
+  "row_count": 8,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 8,
+      "new_item_count": 8,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model313"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mdl313_atlas_unit_name",
+      "description": "Atlas unit name",
+      "dataset": {
+        "id": "model313",
+        "name": "Intangible Asset Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7792,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl313_companyname",
+      "description": "Company Name",
+      "dataset": {
+        "id": "model313",
+        "name": "Intangible Asset Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7792,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl313_iai",
+      "description": "Intangible Asset Intensity Score",
+      "dataset": {
+        "id": "model313",
+        "name": "Intangible Asset Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4677,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl313_ico",
+      "description": "Organizational Capital Intensity Score",
+      "dataset": {
+        "id": "model313",
+        "name": "Intangible Asset Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4677,
+      "userCount": 10,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl313_mktcap_usd",
+      "description": "Market Cap in USD",
+      "dataset": {
+        "id": "model313",
+        "name": "Intangible Asset Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4677,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl313_sector",
+      "description": "Sector",
+      "dataset": {
+        "id": "model313",
+        "name": "Intangible Asset Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7792,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl313_sub_industry",
+      "description": "Sub Industry",
+      "dataset": {
+        "id": "model313",
+        "name": "Intangible Asset Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7792,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl313_ticker",
+      "description": "Exchange Ticker",
+      "dataset": {
+        "id": "model313",
+        "name": "Intangible Asset Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7792,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

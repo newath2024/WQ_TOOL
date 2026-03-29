@@ -1,0 +1,1968 @@
+{
+  "exported_at": "2026-03-29T04:48:36.704Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model31?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 74,
+  "row_count": 74,
+  "page_count": 4,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model31"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model31"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model31"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 14,
+      "new_item_count": 14,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=model31"
+    }
+  ],
+  "rows": [
+    {
+      "id": "auditor_switch_indicator_prev_year",
+      "description": "Flag indicating if the company changed its audit firm in the previous year.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9088,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_acc_chg_1_day",
+      "description": "percentile rank that reflects only the Accruals factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9045,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_acc_chg_1_fy",
+      "description": "percentile rank that reflects only the Accruals factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8573,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_acc_chg_1_qtr",
+      "description": "percentile rank that reflects only the Accruals factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4017,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_acc_prior_qtr",
+      "description": "percentile rank that reflects only the Accruals factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.527,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_acc_prior_y",
+      "description": "percentile rank that reflects only the Accruals factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8708,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_ass_tvr_last_qtr",
+      "description": "The amount of revenue generated for each unit of assets. Also known as TAT.  Asset Turnover = Net Revenue/Total Assets",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4005,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_ass_tvr_last_y",
+      "description": "The amount of revenue generated for each unit of assets. Also known as TAT.  Asset Turnover = Net Revenue/Total Assets",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9062,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_ass_tvr_prior_qtr",
+      "description": "The amount of revenue generated for each unit of assets. Also known as TAT.  Asset Turnover = Net Revenue/Total Assets",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3794,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_ass_tvr_prior_y",
+      "description": "The amount of revenue generated for each unit of assets. Also known as TAT.  Asset Turnover = Net Revenue/Total Assets",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9023,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_ass_tvr_t4q",
+      "description": "The amount of revenue generated for each unit of assets. Also known as TAT.  Asset Turnover = Net Revenue/Total Assets",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3395,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_bv_share_last_qtr",
+      "description": "The ratio of the Book Value to the total shares outstanding.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4257,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_bv_share_last_y",
+      "description": "The ratio of the Book Value to the total shares outstanding.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.908,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_bv_share_prior_qtr",
+      "description": "The ratio of the Book Value to the total shares outstanding.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4035,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_bv_share_prior_y",
+      "description": "The ratio of the Book Value to the total shares outstanding.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9059,
+      "userCount": 4,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_cf_chg_1_day",
+      "description": "A percentile rank that reflects only the Cash Flow factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8824,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_cf_chg_1_fy",
+      "description": "A percentile rank that reflects only the Cash Flow factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8324,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_cf_chg_1_qtr",
+      "description": "A percentile rank that reflects only the Cash Flow factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3918,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_cf_prior_qtr",
+      "description": "A percentile rank that reflects only the Cash Flow factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5159,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_cf_prior_y",
+      "description": "A percentile rank that reflects only the Cash Flow factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.85,
+      "userCount": 22,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dps_last_qtr",
+      "description": "\"All cash dividends declared by the company during the period, on both common and preferred stock. Dividends Per Share is often abbreviated as DPS.\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5762,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dps_last_y",
+      "description": "\"All cash dividends declared by the company during the period, on both common and preferred stock. Dividends Per Share is often abbreviated as DPS.\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8399,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dps_t4q",
+      "description": "\"All cash dividends declared by the company during the period, on both common and preferred stock. Dividends Per Share is often abbreviated as DPS.\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3164,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dse_last_qtr",
+      "description": "\"The ratio of Long-Term Debt to Total Equity. The higher this ratio, the higher the company's leverage is.\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5491,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dse_last_y",
+      "description": "\"The ratio of Long-Term Debt to Total Equity. The higher this ratio, the higher the company's leverage is.\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9081,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dse_prior_qtr",
+      "description": "\"The ratio of Long-Term Debt to Total Equity. The higher this ratio, the higher the company's leverage is.\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5375,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dse_prior_y",
+      "description": "\"The ratio of Long-Term Debt to Total Equity. The higher this ratio, the higher the company's leverage is.\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9061,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dty_mm_fcf",
+      "description": "\"Free Cash Flow. The cash generated (used) from operations after subtracting Capital Expenditures, which are investments made back into the business to support operations. FCF = CFO - Capex. Unit: million\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5397,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_dy_pct_current",
+      "description": "currunt dividends per share percentage",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8403,
+      "userCount": 14,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_erq_raw_prior_qtr",
+      "description": "The Earnings Quality Region Rank before beta neutralization. Scores of 100 indicate the highest rated stocks in the country; scores of 1 indicate the lowest rated stocks in the country.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5269,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_erq_re_rk_chg_1_day",
+      "description": "A percentile rank based on the Earnings Quality Model algorithm in which a security is compared to all other securities trading in the same region. Scores of 100 indicate the highest rated stocks in the region; scores of 1 indicate the lowest rated stocks in the region.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9045,
+      "userCount": 6,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_erq_re_rk_chg_1_fy",
+      "description": "A percentile rank based on the Earnings Quality Model algorithm in which a security is compared to all other securities trading in the same region. Scores of 100 indicate the highest rated stocks in the region; scores of 1 indicate the lowest rated stocks in the region.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8575,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_erq_re_rk_chg_1_qtr",
+      "description": "A percentile rank based on the Earnings Quality Model algorithm in which a security is compared to all other securities trading in the same region. Scores of 100 indicate the highest rated stocks in the region; scores of 1 indicate the lowest rated stocks in the region.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4015,
+      "userCount": 5,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_erq_re_rk_prior_qtr",
+      "description": "A percentile rank based on the Earnings Quality Model algorithm in which a security is compared to all other securities trading in the same region. Scores of 100 indicate the highest rated stocks in the region; scores of 1 indicate the lowest rated stocks in the region.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5269,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_erq_re_rk_prior_y",
+      "description": "A percentile rank based on the Earnings Quality Model algorithm in which a security is compared to all other securities trading in the same region. Scores of 100 indicate the highest rated stocks in the region; scores of 1 indicate the lowest rated stocks in the region.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8713,
+      "userCount": 12,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_fcf_mm_last_qtr",
+      "description": "\"Free Cash Flow. The cash generated (used) from operations after subtracting Capital Expenditures, which are investments made back into the business to support operations. FCF = CFO - Capex. Unit: million\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3847,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_fcf_mm_last_y",
+      "description": "\"Free Cash Flow. The cash generated (used) from operations after subtracting Capital Expenditures, which are investments made back into the business to support operations. FCF = CFO - Capex. Unit: million\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9074,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_gm_pct_last_qtr",
+      "description": "Last quarter gross margin",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3956,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_gm_pct_last_y",
+      "description": "Last year  gross margin",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8222,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_gm_pct_prior_qtr",
+      "description": "Prior quarter  gross margin",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3731,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_gm_pct_prior_y",
+      "description": "Prior year  gross margin",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8209,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_gm_pct_t4q",
+      "description": "Trailing 4 quarter  gross margin",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3087,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_gva",
+      "description": "average value",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.593,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_oe_chg_1_day",
+      "description": "percentile rank that reflects only the Operating Efficiency factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9025,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_oe_chg_1_fy",
+      "description": "percentile rank that reflects only the Operating Efficiency factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8539,
+      "userCount": 2,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_oe_chg_1_qtr",
+      "description": "percentile rank that reflects only the Operating Efficiency factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4007,
+      "userCount": 5,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_oe_prior_qtr",
+      "description": "percentile rank that reflects only the Operating Efficiency factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.526,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_oe_prior_y",
+      "description": "percentile rank that reflects only the Operating Efficiency factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8687,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_om_pct_last_qtr",
+      "description": "Last quarter operation efficiency percantage",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4383,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_om_pct_last_y",
+      "description": "Last year operation efficiency percantage",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9053,
+      "userCount": 20,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_om_pct_prior_qtr",
+      "description": "Prior quarter operation efficiency percantage",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4123,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_om_pct_prior_y",
+      "description": "Prior year operation efficiency percantage",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9029,
+      "userCount": 13,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_om_pct_t4q",
+      "description": "Trailing 4 quarter operation efficiency percantage",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3373,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pb_current",
+      "description": "Current price to book ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8938,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pb_last_qtr",
+      "description": "Last quarter price to book ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5442,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pb_last_y",
+      "description": "Last year price to book ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8799,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pb_prior_qtr",
+      "description": "Prior quarter price to book ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5292,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pb_prior_y",
+      "description": "Prior year  price to book ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8579,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pricesales_current",
+      "description": "Current price to sales ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9014,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pricesales_last_qtr",
+      "description": "Last quarter price to sales ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.561,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pricesales_last_y",
+      "description": "Last year price to sales ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8867,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pricesales_prior_qtr",
+      "description": "Prior quarter price to sales ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.503,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_pricesales_prior_y",
+      "description": "Prior year price to sales ratio",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8638,
+      "userCount": 15,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_q4t_mm_fcf",
+      "description": "\"Free Cash Flow. The cash generated (used) from operations after subtracting Capital Expenditures, which are investments made back into the business to support operations. FCF = CFO - Capex. Unit: million\"",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4892,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_roe_pct_last_qtr",
+      "description": "Last quarter returrn on equity",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4065,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_roe_pct_last_y",
+      "description": "Last year quarter returrn on equity",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.906,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_roe_pct_prior_qtr",
+      "description": "Prior quarter quarter returrn on equity",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3838,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_roe_pct_prior_y",
+      "description": "Prior year quarter returrn on equity",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.902,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl31_roe_pct_t4q",
+      "description": "Trailing 4 quarter quarter returrn on equity",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3375,
+      "userCount": 6,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eq_accruals_rank",
+      "description": "percentile rank that reflects only the Accruals factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9045,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eq_cashflow_rank",
+      "description": "A percentile rank that reflects only the Cash Flow factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8825,
+      "userCount": 31,
+      "alphaCount": 39,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eq_ope_rank",
+      "description": "percentile rank that reflects only the Operating Efficiency factors of the Earnings Quality Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9026,
+      "userCount": 6,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eq_rank",
+      "description": "The Earnings Quality Region Rank before beta neutralization. Scores of 100 indicate the highest rated stocks in the country; scores of 1 indicate the lowest rated stocks in the country.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9046,
+      "userCount": 17,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eq_region_rank",
+      "description": "A percentile rank based on the Earnings Quality Model algorithm in which a security is compared to all other securities trading in the same region. Scores of 100 indicate the highest rated stocks in the region; scores of 1 indicate the lowest rated stocks in the region.",
+      "dataset": {
+        "id": "model31",
+        "name": "Earnings Quality Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9046,
+      "userCount": 9,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

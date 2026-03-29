@@ -1,0 +1,626 @@
+{
+  "exported_at": "2026-03-29T05:05:23.041Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/pv106?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 23,
+  "row_count": 23,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=pv106"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 3,
+      "new_item_count": 3,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=IND&universe=TOP500&dataset.id=pv106"
+    }
+  ],
+  "rows": [
+    {
+      "id": "aggregated_slippage_metric",
+      "description": "Comprehensive measure of slippage across multiple trades or venues.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 72,
+      "alphaCount": 148,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "asia_trade_cost_buy",
+      "description": "Estimated cost incurred when buying in Asian markets.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 23,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "asia_trade_cost_sell",
+      "description": "Estimated cost incurred when selling in Asian markets.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 12,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "asian_market_slippage",
+      "description": "Slippage metric specific to Asian market trades.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "average_spread_slippage",
+      "description": "Average slippage experienced due to spread during trade execution.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 17,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "bid_ask_price_gap",
+      "description": "Difference between the best bid and ask prices for a security.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.989,
+      "userCount": 40,
+      "alphaCount": 51,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "group_buy_slippage",
+      "description": "Slippage incurred when executing grouped buy orders.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 14,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "group_order_slippage",
+      "description": "Slippage experienced when executing grouped orders.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "group_sell_slippage",
+      "description": "Slippage incurred when executing grouped sell orders.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 14,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "korean_market_slippage",
+      "description": "Slippage metric specific to Korean market trades.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 47,
+      "alphaCount": 76,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "price_difference_bid_ask",
+      "description": "Difference between the highest bid and lowest ask prices for a security.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.989,
+      "userCount": 41,
+      "alphaCount": 53,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv106_wli_lastspread",
+      "description": "Spread over last 30 minutes",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.957,
+      "userCount": 42,
+      "alphaCount": 84,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv106_wli_lastspreadbp",
+      "description": "Spread over last 30 minutes in basis points",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.957,
+      "userCount": 34,
+      "alphaCount": 47,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv106_wli_spread",
+      "description": "spread is the difference between bid and ask price",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9867,
+      "userCount": 71,
+      "alphaCount": 110,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "pv106_wli_spreadbp",
+      "description": "Spread in basis points",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9867,
+      "userCount": 49,
+      "alphaCount": 82,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "slippage_at_spread_20",
+      "description": "Slippage value calculated at a spread threshold of 20 units.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 13,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "slippage_commission_2025",
+      "description": "Estimated slippage and commission costs for the year 2025.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 11,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "slippage_commission_estimate",
+      "description": "Estimated slippage and commission costs for trades.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 20,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "transaction_cost_estimate",
+      "description": "Estimated cost incurred when executing a trade.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 3,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "transaction_cost_maximum",
+      "description": "Maximum estimated transaction cost for a trade.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 28,
+      "alphaCount": 39,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "transaction_cost_median",
+      "description": "Median estimated transaction cost for a trade.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 20,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "transaction_cost_percentile_10",
+      "description": "Estimated transaction cost at the 10th percentile for a trade.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 17,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "transaction_cost_percentile_25",
+      "description": "Estimated transaction cost at the 25th percentile for a trade.",
+      "dataset": {
+        "id": "pv106",
+        "name": "Microstructure Spread Data"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    }
+  ]
+}

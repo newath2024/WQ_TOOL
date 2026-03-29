@@ -1,0 +1,1154 @@
+{
+  "exported_at": "2026-03-29T04:28:08.811Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/fundamental109?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 43,
+  "row_count": 43,
+  "page_count": 3,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=fundamental109"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=ASI&universe=MINVOL1M&dataset.id=fundamental109"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 3,
+      "new_item_count": 3,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=ASI&universe=MINVOL1M&dataset.id=fundamental109"
+    }
+  ],
+  "rows": [
+    {
+      "id": "fnd109_atlas_unit_name",
+      "description": "Atlas unit name",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_cancellation_score",
+      "description": "Score: Equity cancellation",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_cash_holding_score",
+      "description": "Score: Policy stockholdings",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.4581,
+      "coverage": 0.4119,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_chair_board_score",
+      "description": "Score who chairs the boards of directors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_comp_com_num_independent_score",
+      "description": "Number of independent directors who are the member of compensation committee (either statutory or voluntary)",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 5,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_comp_committee_score",
+      "description": "Score: Compensation committee (either statutory or voluntary)",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_company_name",
+      "description": "Company name",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_compensation_policy_score",
+      "description": "Score: Policy for determining the amount of remuneration and its calculation method",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_disclosure_of_compensation_score",
+      "description": "Score: Disclosure of information about compensation",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_electric_voting_score",
+      "description": "Score: Offer of exercise of voting rights by electromagnetic means",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_english_convocation_score",
+      "description": "Score: Provision of the notice of convocation (summary) in English",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_english_disclosure_score",
+      "description": "Score: IR information translated in English",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_equity_issuance_score",
+      "description": "Score: Equity issuance",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_grade",
+      "description": "Grade: Grade of otal score",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 21,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_growth_policy_score",
+      "description": "Score: Growth policy",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_hp_information_score",
+      "description": "Score: Posting of IR information on the website",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_incentive_plan_score",
+      "description": "Score: Compensation incentive plan such as restricted shares, stock option, performance-linked emuneration etc.",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_ir_department_score",
+      "description": "Score: Establish a department (person in charge) related to IR",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_jp_sec",
+      "description": "Ticker",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_meeting_for_institutions_score",
+      "description": "Score: Periodic meetings for analysts and institutional investors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_mid_term_plan_score",
+      "description": "Score: Mid-Term-management plan",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_nom_com_num_of_independent_director_score",
+      "description": "Number of independent directors who are the member of nomination committee (either statutory or voluntary)",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_nom_committee_score",
+      "description": "Score: Nomination committee (either statutory or voluntary)",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_num_independent_directors",
+      "description": "Number of independent directors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_other_score",
+      "description": "Score: Other negative events such as scandals",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4119,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_overseas_ownership",
+      "description": "% owned by foreign shareholders",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_ownership_score_gt_20_pct_owner",
+      "description": "Score: Major shareholders holding  between 20% and 50%",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_ownership_score_parent",
+      "description": "Score: Major shareholders holding  50% or more",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_pct_independent_audit",
+      "description": "% of the total member of audit committee or board of corporate auditors that are independent",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.263,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_pct_independent_audit_score",
+      "description": "Score: % of the total member of audit committee or board of corporate auditors that are independent",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 5,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_pct_independent_directors",
+      "description": "% of the total number of directors that are independent directors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_pct_independent_directors_score",
+      "description": "Score: % of the total number of directors that are independent directors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_pct_woman_score",
+      "description": "％ of total board members who are female directors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_quantitative_target_score",
+      "description": "Score: Numerical targets in mid-term-management plan",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_remarks",
+      "description": "Remarks of other score",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_retired_top_management_remaining_company_score",
+      "description": "Score: ex-CEO advisors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.5419,
+      "coverage": 0.4122,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_stock_holding_score",
+      "description": "Score: Policy stockholdings",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_stock_holdings",
+      "description": "Policy stockholdings (million yen)",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.3826,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_stocks_per_sales",
+      "description": "Score: Policy stockholdings/sales",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_takeover_defense_score",
+      "description": "Score: Provision of takeover defence",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_term_year_directors_score",
+      "description": "Score of term of office for election of boards directors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_total_num_directors_score",
+      "description": "Total number of board directors",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd109_total_score",
+      "description": "Score: Total dcore",
+      "dataset": {
+        "id": "fundamental109",
+        "name": "Japanese Corporate Governance Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 0.609,
+      "coverage": 0.4122,
+      "userCount": 16,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+Field,Description,Type,Coverage,Date Coverage,Alphas,__page
+anl15_gr_12_m_1m_chg,The weighted 1-month percent change of 12-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_3m_chg,The weighted 3-month percent change of 12-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_6m_chg,The weighted 6-month percent change of 12-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_cos,The number of companies with a 12-month forward mean EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_cos_dn,The number of companies for which 12-month forward mean EPS estimation has been lowered from last month within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_cos_up,The number of companies for which 12-month forward mean EPS estimation has been raised from last month within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_ests,The 12-month forward pro-rated total number of estimates within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,1
+anl15_gr_12_m_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,1
+anl15_gr_12_m_gro,The weighted 12-month forward year-over-year growth of EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_mean,The weighted average of 12-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_mktcap,The total market capitalization for the companies aggregated within GICS group grouping with a 12-month forward mean price estimation.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_pe,The weighted average price/earnings ratio based on 12 month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_st_dev,The weighted average standard deviation of 12-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_total,The total of 12-month forward earnings estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_12_m_tr_mean,The weighted average of 12-month trailing EPS aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_18_m_1m_chg,The weighted 1-month percent change of 18-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_18_m_3m_chg,The weighted 3-month percent change of 18-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_18_m_6m_chg,The weighted 6-month percent change of 18-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_18_m_cos,The number of companies with an 18-month forward mean EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,1
+anl15_gr_18_m_cos_dn,The number of companies for which 18-month forward mean EPS estimation has been lowered from last month within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_18_m_cos_up,The number of companies for which 18-month forward mean EPS estimation has been raised from last month within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_18_m_ests,The 18-month forward pro-rated total number of estimates within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_18_m_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,2
+anl15_gr_18_m_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,2
+anl15_gr_18_m_gro,The weighted 18-month forward year-over-year growth of EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_18_m_mean,The weighted average of 18-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_18_m_mktcap,The total market capitalization for the companies aggregated within GICS group grouping with an 18-month forward mean price estimation.,Matrix,1.5,100%,100%,2
+anl15_gr_18_m_pe,The weighted average Price/Earnings ratio based on 18-month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_18_m_st_dev,The weighted average standard deviation of 18 month forward EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_18_m_total,The total of 18-month forward earnings estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy0_gro,The weighted year-over-year growth of EPS estimation for the current calendarized fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy0_pe,The weighted average price/earnings ratio based on EPS estimation for the current calendarized fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy0_total,The total of earnings estimation for the current calendarized fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy0_val,The weighted average of EPS estimation for the current calendarized fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy1_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 1 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy1_3m_chg,The weighted 3-month percent change of EPS estimation for the calendarized 1 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy1_6m_chg,The weighted six-month percent change of EPS estimation for the calendarized one fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy1_cos,The number of companies with a calendarized 1 fiscal year EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy1_ests,The total number of calendarized 1 fiscal year EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,2
+anl15_gr_cal_fy1_gro,The weighted year-over-year growth of EPS estimation for the calendarized 1 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy1_mean,The weighted average of EPS estimation for the calendarized 1 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy1_mktcap,The total market capitalization for the companies aggregated within GICS group grouping with a calendarized 1 fiscal year mean price estimation.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy1_pe,The weighted average Price/Earnings ratio based on EPS estimation for the calendarized 1 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy1_st_dev,The weighted average standard deviation of EPS estimation for the calendarized one fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy1_total,The total of earnings estimation for the calendarized 1 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 2 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_3m_chg,The weighted 3-month percent change of EPS estimation for the calendarized 2 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_6m_chg,The weighted 6-month percent change of EPS estimation for the calendarized 2 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_cos,The number of companies with a calendarized 2 fiscal year EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_ests,The total number of calendarized 2 fiscal year EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_gro,The weighted year over year growth of EPS estimation for the calendarized 2 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_mean,The weighted average of EPS estimation for the calendarized 2 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_mktcap,The total market capitalization for the companies aggregated within GICS group grouping with a calendarized 2 fiscal year mean price estimation.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_pe,The weighted average price/earnings ratio based on EPS estimation for the calendarized 2 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_st_dev,The weighted average standard deviation of EPS estimation for the calendarized two fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy2_total,The total of earnings estimation for the calendarized 2 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy3_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 3-fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy3_3m_chg,The weighted 3-month percent change of EPS estimation for the calendarized 3 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy3_6m_chg,The weighted 6-month percent change of EPS estimation for the calendarized 3 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,3
+anl15_gr_cal_fy3_cos,The number of companies with a calendarized 3 fiscal year EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_cal_fy3_ests,The total number of calendarized 3 fiscal year EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_cal_fy3_gro,The weighted year-over-year growth of EPS estimation for the calendarized 3 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_cal_fy3_mean,The weighted average of EPS estimation for the calendarized 3 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_cal_fy3_mktcap,The total market capitalization for the companies aggregated within GICS group grouping with a calendarized 3 fiscal year mean price estimation.,Matrix,1.5,100%,100%,4
+anl15_gr_cal_fy3_pe,The weighted average price/earnings ratio based on EPS estimation for the calendarized 3 fiscal years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_cal_fy3_st_dev,The weighted average standard deviation of EPS estimation for the calendarized 3 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_cal_fy3_total,The total of earnings estimation for the calendarized 3 fiscal year aggregated within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_div_cos,The number of companies for which indicated annual dividend data is available within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_divyld,The weighted average dividend yield aggregated within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_fy1_cos_dn,The number of companies for which EPS estimation for the calendarized 1 fiscal year has been lowered from last month within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_fy1_cos_up,The number of companies for which EPS estimation for the calendarized 1 fiscal year has been raised from last month within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_fy1_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,4
+anl15_gr_fy1_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,4
+anl15_gr_fy2_cos_dn,The number of companies for which EPS estimation for the calendarized 2 fiscal year has been lowered from last month within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_fy2_cos_up,The number of companies for which EPS estimation for the calendarized 2 fiscal year has been raised from last month within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_fy2_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,4
+anl15_gr_fy2_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,4
+anl15_gr_fy3_cos_dn,The number of companies for which EPS estimation for the calendarized 3 fiscal year has been lowered from last month within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_fy3_cos_up,The number of companies for which EPS estimation for the calendarized 3 fiscal years has been raised from last month within GICS group grouping.,Matrix,1.5,100%,100%,4
+anl15_gr_fy3_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,5
+anl15_gr_fy3_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,5
+anl15_gr_hist_eps_gro,The weighted annual EPS growth rate over the past 5 years aggregated within GICS group grouping.,Matrix,1.5,100%,100%,5
+anl15_gr_ltg_1m_chg,The weighted 1-month percent change of long-term growth EPS estimation aggregated within GICS group grouping.,Matrix,1.5,98%,100%,5
+anl15_gr_ltg_3m_chg,The weighted 3-month percent change of long-term growth EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,5
+anl15_gr_ltg_6m_chg,The weighted 6-month percent change of long-term growth EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,5
+anl15_gr_ltg_cos,The number of companies with a long-term growth EPS estimation within GICS group grouping.,Matrix,1.5,100%,100%,5
+anl15_gr_ltg_cos_dn,The number of companies for which long-term growth EPS estimation has been lowered from last month within GICS group grouping.,Matrix,1.5,97%,100%,5
+anl15_gr_ltg_cos_up,The number of companies for which long-term growth EPS estimation has been raised from last month within GICS group grouping.,Matrix,1.5,96%,100%,5
+anl15_gr_ltg_ests,The total number of long-term growth EPS estimations within GICS group grouping.,Matrix,1.5,100%,100%,5
+anl15_gr_ltg_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,94%,100%,5
+anl15_gr_ltg_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,93%,100%,5
+anl15_gr_ltg_mdn,The weighted average of long-term growth EPS estimation aggregated within GICS group grouping.,Matrix,1.5,100%,100%,5
+anl15_gr_ltg_mktcap,The total market capitalization for the companies aggregated within GICS group grouping with a long-term growth price estimation.,Matrix,1.5,100%,100%,5
+anl15_gr_ltg_st_dev,The weighted average standard deviation of long-term growth EPS estimation aggregated within GICS group grouping.,Matrix,1.5,99%,100%,5
+anl15_gr_prc,The weighted average price aggregated within GICS group grouping.,Matrix,1.5,100%,100%,5
+anl15_ind_12_m_1m_chg,The weighted 1-month percent change of 12-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,5
+anl15_ind_12_m_3m_chg,The weighted 3-month percent change of 12-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,5
+anl15_ind_12_m_6m_chg,The weighted 6-month percent change of 12-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,5
+anl15_ind_12_m_cos,The number of companies with a 12-month forward mean EPS estimation within GICS industry grouping.,Matrix,1.5,100%,100%,5
+anl15_ind_12_m_cos_dn,The number of companies for which 12-month forward mean EPS estimation has been lowered from last month within GICS industry grouping.,Matrix,1.5,98%,100%,6
+anl15_ind_12_m_cos_up,The number of companies for which 12-month forward mean EPS estimation has been raised from last month within GICS industry grouping.,Matrix,1.5,96%,100%,6
+anl15_ind_12_m_ests,The 12-month forward pro-rated total number of estimates within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_12_m_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,98%,100%,6
+anl15_ind_12_m_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,97%,100%,6
+anl15_ind_12_m_gro,The weighted 12-month forward year-over-year growth of EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,99%,100%,6
+anl15_ind_12_m_mean,The weighted average of 12-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_12_m_mktcap,The total market capitalization for the companies aggregated within GICS industry grouping with a 12-month forward mean price estimation.,Matrix,1.5,100%,100%,6
+anl15_ind_12_m_pe,The weighted average price/earnings ratio based on 12-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_12_m_st_dev,The weighted average standard deviation of 12-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_12_m_total,The total of 12-month forward earnings estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_12_m_tr_mean,The weighted average of 12-month trailing EPS aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_18_m_1m_chg,The weighted 1 month percent change of 18 month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_18_m_3m_chg,The weighted 3-month percent change of 18-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_18_m_6m_chg,The weighted six-month percent change of 18-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_18_m_cos,The number of companies with an 18-month forward mean EPS estimation within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_18_m_cos_dn,The number of companies for which 18-month forward mean EPS estimation has been lowered from last month within GICS industry grouping.,Matrix,1.5,98%,100%,6
+anl15_ind_18_m_cos_up,The number of companies for which 18-month forward mean EPS estimation has been raised from last month within GICS industry grouping.,Matrix,1.5,96%,100%,6
+anl15_ind_18_m_ests,The 18-month forward pro-rated total number of estimates within GICS industry grouping.,Matrix,1.5,100%,100%,6
+anl15_ind_18_m_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,98%,100%,6
+anl15_ind_18_m_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,97%,100%,7
+anl15_ind_18_m_gro,The weighted 18-month forward year-over-year growth of EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_18_m_mean,The weighted average of 18 month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_18_m_mktcap,The total market capitalization for the companies aggregated within GICS industry grouping with an 18-month forward mean price estimation.,Matrix,1.5,100%,100%,7
+anl15_ind_18_m_pe,The weighted average price/earnings ratio based on 18-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_18_m_st_dev,The weighted average standard deviation of 18-month forward EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_18_m_total,The total of 18-month forward earnings estimation aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy0_gro,The weighted year-over-year growth of EPS estimation for the current calendarized fiscal year aggregated within GICS industry grouping.,Matrix,1.5,98%,100%,7
+anl15_ind_cal_fy0_pe,The weighted average price/earnings ratio based on EPS estimation for the current calendarized fiscal year aggregated within GICS industry grouping.,Matrix,1.5,98%,100%,7
+anl15_ind_cal_fy0_total,The total of earnings estimation for the current calendarized fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy0_val,The weighted average of EPS estimation for the current calendarized fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy1_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 1 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,99%,100%,7
+anl15_ind_cal_fy1_3m_chg,The weighted 3-month percent change of EPS estimation for the calendarized 1 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy1_6m_chg,The weighted 6-month percent change of EPS estimation for the calendarized 1 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy1_cos,The number of companies with a calendarized 1 fiscal year EPS estimation within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy1_ests,The total number of calendarized 1 fiscal year EPS estimation within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy1_gro,The weighted year-over-year growth of EPS estimation for the calendarized 1 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,98%,100%,7
+anl15_ind_cal_fy1_mean,The weighted average of EPS estimation for the calendarized 1 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy1_mktcap,The total market capitalization for the companies aggregated within GICS industry grouping with a calendarized 1 fiscal year mean price estimation.,Matrix,1.5,100%,100%,7
+anl15_ind_cal_fy1_pe,The weighted average price/earnings ratio based on EPS estimation for the calendarized 1 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,99%,100%,7
+anl15_ind_cal_fy1_st_dev,The weighted average standard deviation of EPS estimation for the calendarized 1 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy1_total,The total of earnings estimation for the calendarized 1 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 2 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_3m_chg,The weighted three month percent change of EPS estimation for the calendarized 2 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_6m_chg,The weighted 6-month percent change of EPS estimation for the calendarized 2 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_cos,The number of companies with a calendarized 2 fiscal year EPS estimation within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_ests,The total number of calendarized 2 fiscal year EPS estimation within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_gro,The weighted year-over-year growth of EPS estimation for the calendarized 2 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,99%,100%,8
+anl15_ind_cal_fy2_mean,The weighted average of EPS estimation for the calendarized 2 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_mktcap,The total market capitalization for the companies aggregated within GICS industry grouping with a calendarized 2 fiscal year mean price estimation.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_pe,The weighted average price/earnings ratio based on EPS estimation for the calendarized 2 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_st_dev,The weighted average standard deviation of EPS estimation for the calendarized 2 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy2_total,The total of earnings estimation for the calendarized 2 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy3_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 3 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy3_3m_chg,The weighted 3-month percent change of EPS estimation for the calendarized 3 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy3_6m_chg,The weighted 6-month percent change of EPS estimation for the calendarized 3 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,98%,100%,8
+anl15_ind_cal_fy3_cos,The number of companies with a calendarized 3 fiscal year EPS estimation within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy3_ests,The total number of calendarized 3 fiscal year EPS estimation within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy3_gro,The weighted year-over-year growth of EPS estimation for the calendarized 3 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy3_mean,The weighted average of EPS estimation for the calendarized 3 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,8
+anl15_ind_cal_fy3_mktcap,The total market capitalization for the companies aggregated within GICS industry grouping with a calendarized 3 fiscal year mean price estimation.,Matrix,1.5,100%,100%,9
+anl15_ind_cal_fy3_pe,The weighted average price/earnings ratio based on EPS estimation for the calendarized 3 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,9
+anl15_ind_cal_fy3_st_dev,The weighted average standard deviation of EPS estimation for the calendarized 3 fiscal year aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,9
+anl15_ind_cal_fy3_total,The total of earnings estimation for the calendarized 3 fiscal years aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,9
+anl15_ind_div_cos,The number of companies for which indicated annual dividend data is available within GICS industry grouping.,Matrix,1.5,99%,100%,9
+anl15_ind_divyld,The weighted average dividend yield aggregated within GICS industry grouping.,Matrix,1.5,98%,100%,9
+anl15_ind_fy1_cos_dn,The number of companies for which EPS estimation for the calendarized 1 fiscal year has been lowered from last month within GICS industry grouping.,Matrix,1.5,98%,100%,9
+anl15_ind_fy1_cos_up,The number of companies for which EPS estimation for the calendarized 1 fiscal year has been raised from last month within GICS industry grouping.,Matrix,1.5,96%,100%,9
+anl15_ind_fy1_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,98%,100%,9
+anl15_ind_fy1_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,98%,100%,9
+anl15_ind_fy2_cos_dn,The number of companies for which EPS estimation for the calendarized 2 fiscal years has been lowered from last month within GICS industry grouping.,Matrix,1.5,98%,100%,9
+anl15_ind_fy2_cos_up,The number of companies for which EPS estimation for the calendarized 2 fiscal year has been raised from last month within GICS industry grouping.,Matrix,1.5,96%,100%,9
+anl15_ind_fy2_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,99%,100%,9
+anl15_ind_fy2_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,98%,100%,9
+anl15_ind_fy3_cos_dn,The number of companies for which EPS estimation for the calendarized 3 fiscal years has been lowered from last month within GICS industry grouping.,Matrix,1.5,97%,100%,9
+anl15_ind_fy3_cos_up,The number of companies for which EPS estimation for the calendarized 3 fiscal year has been raised from last month within GICS industry grouping.,Matrix,1.5,96%,100%,9
+anl15_ind_fy3_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,97%,100%,9
+anl15_ind_fy3_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,96%,100%,9
+anl15_ind_hist_eps_gro,The weighted annual EPS growth rate over the past 5 years aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,9
+anl15_ind_ltg_1m_chg,The weighted 1-month percent change of long-term growth EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,90%,100%,9
+anl15_ind_ltg_3m_chg,The weighted 3-month percent change of long-term growth EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,92%,100%,10
+anl15_ind_ltg_6m_chg,The weighted 6-month percent change of long-term growth EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,92%,100%,10
+anl15_ind_ltg_cos,The number of companies with a long-term growth EPS estimation within GICS industry grouping.,Matrix,1.5,98%,100%,10
+anl15_ind_ltg_cos_dn,The number of companies for which long-term growth EPS estimation has been lowered from last month within GICS industry grouping.,Matrix,1.5,87%,100%,10
+anl15_ind_ltg_cos_up,The number of companies for which long-term growth EPS estimation has been raised from last month within GICS industry grouping.,Matrix,1.5,85%,100%,10
+anl15_ind_ltg_ests,The total number of long-term growth EPS estimation within GICS industry grouping.,Matrix,1.5,98%,100%,10
+anl15_ind_ltg_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,83%,100%,10
+anl15_ind_ltg_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,81%,100%,10
+anl15_ind_ltg_mdn,The weighted average of long-term growth EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,98%,100%,10
+anl15_ind_ltg_mktcap,The total market capitalization for the companies aggregated within GICS industry grouping with a long-term growth price estimation.,Matrix,1.5,98%,100%,10
+anl15_ind_ltg_st_dev,The weighted average standard deviation of long-term growth EPS estimation aggregated within GICS industry grouping.,Matrix,1.5,89%,100%,10
+anl15_ind_prc,The weighted average price aggregated within GICS industry grouping.,Matrix,1.5,100%,100%,10
+anl15_s_12_m_1m_chg,The weighted 1-month percent change of 12-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,10
+anl15_s_12_m_3m_chg,The weighted 3-month percent change of 12-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,10
+anl15_s_12_m_6m_chg,The weighted 6-month percent change of 12-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,10
+anl15_s_12_m_cos,The number of companies with a 12-month forward mean EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,10
+anl15_s_12_m_cos_dn,The number of companies for which 12-month forward mean EPS estimation has been lowered from last month within GICS sector grouping.,Matrix,1.5,100%,100%,10
+anl15_s_12_m_cos_up,The number of companies for which 12-month forward mean EPS estimation has been raised from last month within GICS sector grouping.,Matrix,1.5,100%,100%,10
+anl15_s_12_m_ests,The 12-month forward pro-rated total number of estimates within GICS sector grouping.,Matrix,1.5,100%,100%,10
+anl15_s_12_m_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,10
+anl15_s_12_m_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,11
+anl15_s_12_m_gro,The weighted 12 month forward year-over-year growth of EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_12_m_mean,The weighted average of 12-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_12_m_mktcap,The total market capitalization for the companies aggregated within GICS sector grouping with a 12-month forward mean price estimation.,Matrix,1.5,100%,100%,11
+anl15_s_12_m_pe,The weighted average price/earnings ratio based on 12-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_12_m_st_dev,The weighted average standard deviation of 12-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_12_m_total,The total of 12-month forward earnings estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_12_m_tr_mean,The weighted average of 12-month trailing EPS aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_1m_chg,The weighted 1-month percent change of 18-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_3m_chg,The weighted 3-month percent change of 18-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_6m_chg,The weighted 6-month percent change of 18-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_cos,The number of companies with an 18-month forward mean EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_cos_dn,The number of companies for which 18-month forward mean EPS estimation has been lowered from last month within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_cos_up,The number of companies for which 18-month forward mean EPS estimation has been raised from last month within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_ests,The 18-month forward pro-rated total number of estimates within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,11
+anl15_s_18_m_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,11
+anl15_s_18_m_gro,The weighted 18-month forward year-over-year growth of EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_mean,The weighted average of 18-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_mktcap,The total market capitalization for the companies aggregated within GICS sector grouping with an 18-month forward mean price estimation.,Matrix,1.5,100%,100%,11
+anl15_s_18_m_pe,The weighted average price/earnings ratio based on 18-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_18_m_st_dev,The weighted average standard deviation of 18-month forward EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_18_m_total,The total of 18-month forward earnings estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy0_gro,The weighted year-over-year growth of EPS estimation for the current calendarized fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy0_pe,The weighted average price/earnings ratio based on EPS estimation for the current calendarized fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy0_total,The total of earnings estimation for the current calendarized fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy0_val,The weighted average of EPS estimation for the current calendarized fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 1 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_3m_chg,The weighted 3-month percent change of EPS estimation for the calendarized 1 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_6m_chg,The weighted 6-month percent change of EPS estimation for the calendarized 1 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_cos,The number of companies with a calendarized 1 fiscal year EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_ests,The total number of calendarized 1 fiscal year EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_gro,The weighted year-over-year growth of EPS estimation for the calendarized 1 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_mean,The weighted average of EPS estimation for the calendarized 1 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_mktcap,The total market capitalization for the companies aggregated within GICS sector grouping with a calendarized 1 fiscal year mean price estimation.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_pe,The weighted average price/earnings ratio based on EPS estimation for the calendarized 1 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_st_dev,The weighted average standard deviation of EPS estimation for the calendarized 1 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy1_total,The total of earnings estimation for the calendarized 1 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy2_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 2 fiscal years aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy2_3m_chg,The weighted 3-month percent change of EPS estimation for the calendarized two fiscal years aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,12
+anl15_s_cal_fy2_6m_chg,The weighted 6-month percent change of EPS estimation for the calendarized 2 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy2_cos,The number of companies with a calendarized 2 fiscal year EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy2_ests,The total number of calendarized 2 fiscal year EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy2_gro,The weighted year-over-year growth of EPS estimation for the calendarized 2 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy2_mean,The weighted average of EPS estimation for the calendarized 2 fiscal years aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy2_mktcap,The total market capitalization for the companies aggregated within GICS sector grouping with a calendarized 2 fiscal year mean price estimation.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy2_pe,The weighted average price/earnings ratio based on EPS estimation for the calendarized 2 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy2_st_dev,The weighted average standard deviation of EPS estimation for the calendarized 2 fiscal years aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy2_total,The total of earnings estimation for the calendarized 2 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_1m_chg,The weighted 1-month percent change of EPS estimation for the calendarized 3 fiscal years aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_3m_chg,The weighted 3-month percent change of EPS estimation for the calendarized 3 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_6m_chg,The weighted 6-month percent change of EPS estimation for the calendarized 3 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_cos,The number of companies with a calendarized 3 fiscal year EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_ests,The total number of calendarized 3 fiscal year EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_gro,The weighted year-over-year growth of EPS estimation for the calendarized 3 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_mean,The weighted average of EPS estimation for the calendarized 3 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_mktcap,The total market capitalization for the companies aggregated within GICS sector grouping with a calendarized 3 fiscal year mean price estimation.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_pe,The weighted average price/earnings ratio based on EPS estimation for the calendarized 3 fiscal years aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_st_dev,The weighted average standard deviation of EPS estimation for the calendarized 3 fiscal years aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_cal_fy3_total,The total of earnings estimation for the calendarized 3 fiscal year aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,13
+anl15_s_div_cos,The number of companies for which indicated annual dividend data is available within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_divyld,The weighted average dividend yield aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_fy1_cos_dn,The number of companies for which EPS estimation for the calendarized one fiscal year has been lowered from last month within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_fy1_cos_up,The number of companies for which EPS estimation for the calendarized 1 fiscal year has been raised from last month within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_fy1_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,14
+anl15_s_fy1_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,14
+anl15_s_fy2_cos_dn,The number of companies for which EPS estimation for the calendarized 2 fiscal years has been lowered from last month within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_fy2_cos_up,The number of companies for which EPS estimation for the calendarized 2 fiscal years has been raised from last month within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_fy2_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,14
+anl15_s_fy2_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,14
+anl15_s_fy3_cos_dn,The number of companies for which EPS estimation for the calendarized 3 fiscal years has been lowered from last month within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_fy3_cos_up,The number of companies for which EPS estimation for the calendarized 3 fiscal years has been raised from last month within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_fy3_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,14
+anl15_s_fy3_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,14
+anl15_s_hist_eps_gro,The weighted annual EPS growth rate over the past 5 years aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_ltg_1m_chg,The weighted one-month percent change of long-term growth EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_ltg_3m_chg,The weighted 3-month percent change of long-term growth EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_ltg_6m_chg,The weighted 6-month percent change of long-term growth EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_ltg_cos,The number of companies with a long-term growth EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_ltg_cos_dn,The number of companies for which long-term growth EPS estimation has been lowered from last month within GICS sector grouping.,Matrix,1.5,100%,100%,14
+anl15_s_ltg_cos_up,The number of companies for which long-term growth EPS estimation has been raised from last month within GICS sector grouping.,Matrix,1.5,100%,100%,15
+anl15_s_ltg_ests,The total number of long term growth EPS estimation within GICS sector grouping.,Matrix,1.5,100%,100%,15
+anl15_s_ltg_ests_dn,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,15
+anl15_s_ltg_ests_up,"Count of unique IDs of industry participants. Industry stands for an aggregate view of all equity clearance activity for the date, symbol, and transaction type in question.",Matrix,1.5,100%,100%,15
+anl15_s_ltg_mdn,The weighted average of long-term growth EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,15
+anl15_s_ltg_mktcap,The total market capitalization for the companies aggregated within GICS sector grouping with a long-term growth price estimation.,Matrix,1.5,100%,100%,15
+anl15_s_ltg_st_dev,The weighted average standard deviation of long-term growth EPS estimation aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,15
+anl15_s_prc,The weighted average price aggregated within GICS sector grouping.,Matrix,1.5,100%,100%,15

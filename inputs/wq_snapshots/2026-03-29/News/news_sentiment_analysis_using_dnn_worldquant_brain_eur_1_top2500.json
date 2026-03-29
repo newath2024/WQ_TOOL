@@ -1,0 +1,626 @@
+{
+  "exported_at": "2026-03-29T04:59:14.339Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news85?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 23,
+  "row_count": 23,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news85"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 3,
+      "new_item_count": 3,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=news85"
+    }
+  ],
+  "rows": [
+    {
+      "id": "aggregate_sentiment_total",
+      "description": "Sum of all sentiment values for the entity over the period.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 8,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "headline_item_count",
+      "description": "Number of news headlines associated with the entity in the period.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 6,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws85_sentiment",
+      "description": "Sentiment based on news",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7182,
+      "userCount": 28,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "normalized_headline_count",
+      "description": "News headline count normalized by a reference or average value.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 4,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "peak_sentiment_value",
+      "description": "Highest sentiment score observed for the entity in the period.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment1_aggregate_total",
+      "description": "Sum of all first sentiment values for the entity over the period.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment1_average_value",
+      "description": "Mean value of the first sentiment metric for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment1_distribution_skewness",
+      "description": "Skewness of the first sentiment value distribution for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment1_highest_score",
+      "description": "Maximum value of the first sentiment measure for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment1_lowest_score",
+      "description": "Minimum value of the first sentiment measure for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment1_median_value",
+      "description": "Median value of the first sentiment metric for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment1_raw_score",
+      "description": "Raw value of the first sentiment metric for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7182,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment2_aggregate_total",
+      "description": "Sum of all second sentiment values for the entity over the period.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment2_average_value",
+      "description": "Mean value of the second sentiment metric for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment2_central_tendency",
+      "description": "Median value of the second sentiment measure for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment2_distribution_skewness",
+      "description": "Skewness of the second sentiment value distribution for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment2_highest_score",
+      "description": "Maximum value of the second sentiment measure for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment2_lowest_score",
+      "description": "Minimum value of the second sentiment measure for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 9,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment2_raw_score",
+      "description": "Raw value of the second sentiment metric for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7182,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment_distribution_skewness",
+      "description": "Skewness of the sentiment value distribution for the entity.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment_overall_average",
+      "description": "Average sentiment value for the entity across all news items.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment_overall_median",
+      "description": "Median sentiment value for the entity across all news items.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment_overall_minimum",
+      "description": "Lowest sentiment value for the entity across all news items.",
+      "dataset": {
+        "id": "news85",
+        "name": "News Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8387,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

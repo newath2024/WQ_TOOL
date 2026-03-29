@@ -1,0 +1,46 @@
+{
+  "exported_at": "2026-03-29T04:39:52.352Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/macro63?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 1,
+  "row_count": 1,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 1,
+      "new_item_count": 1,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=macro63"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mcr63_membership",
+      "description": "Indicates the membership status of stocks in the WisdomTree WTIDJH Index",
+      "dataset": {
+        "id": "macro63",
+        "name": "Index Reconstitution Data"
+      },
+      "category": {
+        "id": "macro",
+        "name": "Macro"
+      },
+      "subcategory": {
+        "id": "macro-macroeconomic-activities",
+        "name": "Macroeconomic Activities"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 236,
+      "alphaCount": 568,
+      "pyramidMultiplier": 1,
+      "themes": []
+    }
+  ]
+}

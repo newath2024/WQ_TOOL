@@ -1,0 +1,3604 @@
+{
+  "exported_at": "2026-03-29T04:55:04.009Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news23?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 136,
+  "row_count": 136,
+  "page_count": 7,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news23"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=news23"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=news23"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=news23"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=EUR&universe=TOP2500&dataset.id=news23"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=EUR&universe=TOP2500&dataset.id=news23"
+    },
+    {
+      "page": 7,
+      "offset": 120,
+      "item_count": 16,
+      "new_item_count": 16,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=120&region=EUR&universe=TOP2500&dataset.id=news23"
+    }
+  ],
+  "rows": [
+    {
+      "id": "actual_investment_round_total",
+      "description": "Actual total amount for the investment round.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "aggregate_dollar_amount",
+      "description": "Total dollar amount for the transaction.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "aggregate_transaction_proceeds",
+      "description": "Total proceeds amount for the entire transaction.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "basis_point_spread_to_benchmark",
+      "description": "Difference in yield between the offered security and a benchmark, in basis points.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.9307,
+      "coverage": 0.1856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "bond_to_equity_exchange_ratio",
+      "description": "Ratio for exchanging bonds or preferred shares for common stock.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "bookrunner_proceeds_amount",
+      "description": "Proceeds amount per book runner for the market.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_employee_count",
+      "description": "Number of employees at the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_employee_count_2",
+      "description": "Number of employees at the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_inception_year",
+      "description": "Year the company was established.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_industry_code",
+      "description": "Industry classification code for the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_industry_sic_code",
+      "description": "Standard Industrial Classification code for the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_offer_size_value",
+      "description": "Size of the offer made to the company, typically in monetary terms.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_offer_total_size",
+      "description": "Total size of the offer for company shares or assets.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_offer_unit_price",
+      "description": "Unit price offered for company shares or assets.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_offered_price",
+      "description": "Price offered for the company's shares or assets.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_purchase_price",
+      "description": "Price paid to purchase the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_purchase_price_2",
+      "description": "Purchase price paid for the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_sales_amount",
+      "description": "Reported sales amount for the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_sales_amount_2",
+      "description": "Reported sales amount for the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_sic_code",
+      "description": "Standard Industrial Classification code for the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_veic6_category",
+      "description": "VEIC6 category classification for the company.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "deal_amount_in_issue_currency",
+      "description": "Total value of the transaction in the currency of issuance.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "equity_bookrunner_proceeds_amount",
+      "description": "Proceeds amount per book runner for the equity market.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "equity_highest_filing_price",
+      "description": "Highest price in the original equity filing price range.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "equity_lowest_filing_price",
+      "description": "Lowest price in the original equity filing price range.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "equity_total_proceeds_with_overallotment",
+      "description": "Total proceeds including overallotment sold in the equity market.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "equity_total_proceeds_with_overallotment_all_markets",
+      "description": "Total proceeds amount including overallotment sold in all equity markets.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "equity_years_to_final_maturity",
+      "description": "Number of years from offer date to final maturity for the equity security.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "estimated_investment_round_total",
+      "description": "Estimated total amount for the investment round.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "euro_total_proceeds_amount",
+      "description": "Total proceeds amount in Euros for the transaction.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "euro_total_proceeds_with_overallotment",
+      "description": "Proceeds amount plus overallotment sold in all markets, denominated in Euros.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "euro_total_proceeds_with_overallotment_2",
+      "description": "Total proceeds including overallotment sold in all markets, denominated in Euros.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "firm_capital_under_management",
+      "description": "Total capital managed by the investment firm.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "firm_capital_under_management_2",
+      "description": "Total capital managed by the firm.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "firm_establishment_year",
+      "description": "Year the investment firm was founded.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "firm_inception_year",
+      "description": "Year the investment firm was established.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "floating_rate_spread_to_index",
+      "description": "Basis point spread to floating index for the security.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.9406,
+      "coverage": 0.1856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_establishment_year",
+      "description": "Year the fund was established.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_inception_year",
+      "description": "Year the investment fund was established.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_raising_quarter_amount",
+      "description": "Amount raised in the fund raising quarter.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_raising_quarter_amount_2",
+      "description": "Amount raised by the fund in a specific quarter.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_raising_year",
+      "description": "Year in which the fund raising occurred.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_total_size",
+      "description": "Total size of the investment fund.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_total_size_2",
+      "description": "Total capital committed to the investment fund.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_total_target_amount",
+      "description": "Target amount for the fund raising round.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fund_total_target_amount_2",
+      "description": "Total target amount for the fund's capital raise.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fundraising_commitment_amount",
+      "description": "Amount committed during the fundraising process for the fund.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "fundraising_commitment_amount_2",
+      "description": "Amount committed during fundraising for the fund.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "global_equity_overallotment_amount",
+      "description": "Global overallotment amount option for the equity issue.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "global_shares_filed_initial",
+      "description": "Total number of shares filed globally at the time of the original filing.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "gross_spread_percent_of_principal",
+      "description": "Gross spread expressed as a percentage of the principal amount of the security.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "individual_job_title",
+      "description": "Job title of the individual.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "individual_job_title_2",
+      "description": "Current job title of the individual.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_age_months",
+      "description": "Age of the investment in months since inception.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_deal_value",
+      "description": "Total value of the investment deal.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_age_months",
+      "description": "Age of the investment detail in months.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_age_years",
+      "description": "Age of the investment in years.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_age_years_2",
+      "description": "Age of the investment detail in years.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_deal_value",
+      "description": "Deal value for the investment detail.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_disclosed_valuation",
+      "description": "Disclosed valuation amount for the investment detail.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_estimated_fund_total",
+      "description": "Estimated total amount for the fund in investment details.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_estimated_round_total",
+      "description": "Estimated total amount for the investment round.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_stage_one",
+      "description": "Stage one classification for the investment detail.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_stage_three",
+      "description": "Stage three classification for the investment detail.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_detail_stage_two",
+      "description": "Stage two classification for the investment detail.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_disclosed_valuation",
+      "description": "Disclosed valuation amount for the investment.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_estimated_total_funding",
+      "description": "Estimated total funding amount for the investment.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_round_number",
+      "description": "Number indicating the investment round sequence.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_round_total_amount",
+      "description": "Total amount raised in the investment round.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.7702,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_stage_category",
+      "description": "Category describing the stage of the investment (e.g., seed, growth, exit).",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_stage_primary",
+      "description": "Primary stage of the investment (e.g., seed, growth).",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "investment_stage_secondary",
+      "description": "Secondary stage of the investment (e.g., expansion, late).",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8656,
+      "coverage": 0.6957,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "lead_manager_fee_amount",
+      "description": "Portion of gross spread paid to the lead manager.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "loan_amount_host_currency",
+      "description": "Total amount of the loan in the currency of issuance.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "loan_amount_usd",
+      "description": "Total amount of the loan in US dollars.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "loan_principal_amount",
+      "description": "Total principal amount of the loan transaction.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "loan_tranche_count",
+      "description": "Total number of tranches in the loan package.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "lockup_period_duration_days",
+      "description": "Number of days shares are restricted from sale due to lockup.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "non_buyback_years_post_issue",
+      "description": "Number of years after issuance during which shares cannot be repurchased.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.9326,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_akw1rpa",
+      "description": "Acquiror Stock Price 1 Week after Announcement",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_apr1daya",
+      "description": "Acquiror Stock Price 1 Day after Announcement",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_apr1dayb",
+      "description": "Acquiror Stock Price 1 Day Prior to Announcement",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 6,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_asalesltm",
+      "description": "Acquiror Net Sales in Last 12 Months",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_emu_hostvalue",
+      "description": "Deal Value in million Euros",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_laitni_rp",
+      "description": "Initial price per common shares or partnership units offered by the acquiror in the transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_mtlspe",
+      "description": "EPS of target in last financial year prior to announcement of transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_niltm",
+      "description": "Net Income of target in last financial year prior to announcement of transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_pctown",
+      "description": "Percentage of Shares Owned After Transaction: Number of common shares acquired in the transaction plus any shares previously owned by the acquiror divided by the total number of shares outstanding.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 6,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_pricebook",
+      "description": "Offering price in the deal divided by target's book value per share as of the date of the most current financial information prior to the announcement of the transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_psought",
+      "description": "Percentage of common, or common equivalent, shares outstanding sought by the acquiror in this transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_qcatcp",
+      "description": "Percentage of Shares Acquired: Number of common shares acquired in the transaction divided by the total number of shares outstanding",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_rank_rankval",
+      "description": "Rank value is calculated by subtracting the value of any liabilities assumed in a transaction from the transaction value and by adding the target's net debt",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_rp",
+      "description": "Price per common shares or partnership unit paid by the acquiror in the transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_saleslltm",
+      "description": "Target Net Sales in Last 12 Months",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_spea",
+      "description": "EPS of acquiror in last financial year prior to announcement of transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_acquiror_value",
+      "description": "Total value of consideration paid by the acquiror.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_akw1rpa",
+      "description": "Acquiror Stock Price 1 Week after Announcement",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_apr1daya",
+      "description": "Acquiror Stock Price 1 Day after Announcement",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_apr1dayb",
+      "description": "Acquiror Stock Price 1 Day Prior to Announcement",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_asalesltm",
+      "description": "Acquiror Net Sales in Last 12 Months",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_emu_hostvalue",
+      "description": "Deal Value in million Euros",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_laitni_rp",
+      "description": "Initial price per common shares or partnership units offered by the acquiror in the transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_mtlspe",
+      "description": "EPS of target in last financial year prior to announcement of transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_niltm",
+      "description": "Net Income of target in last financial year prior to announcement of transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 5,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_pctown",
+      "description": "Percentage of Shares Owned After Transaction: Number of common shares acquired in the transaction plus any shares previously owned by the acquiror divided by the total number of shares outstanding.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_pricebook",
+      "description": "Offering price in the deal divided by target's book value per share as of the date of the most current financial information prior to the announcement of the transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_psought",
+      "description": "Percentage of common, or common equivalent, shares outstanding sought by the acquiror in this transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_qcatcp",
+      "description": "Percentage of Shares Acquired: Number of common shares acquired in the transaction divided by the total number of shares outstanding",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_rank_rankval",
+      "description": "Rank value is calculated by subtracting the value of any liabilities assumed in a transaction from the transaction value and by adding the target's net debt",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_rp",
+      "description": "Price per common shares or partnership unit paid by the acquiror in the transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_saleslltm",
+      "description": "Target Net Sales in Last 12 Months",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_spea",
+      "description": "EPS of acquiror in last financial year prior to announcement of transaction",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws23_target_value",
+      "description": "Total value of consideration paid by the acquiror.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "offer_premium_four_weeks_prior",
+      "description": "Premium of offer price to target's closing stock price four weeks before announcement.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "offer_premium_four_weeks_prior_2",
+      "description": "Premium of offer price to target closing stock price four weeks before announcement.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "offer_premium_one_day_prior",
+      "description": "Premium of offer price over target's closing price one day before announcement.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "offer_premium_one_day_prior_2",
+      "description": "Percentage premium of offer price over target's closing price one day before announcement.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "offer_premium_one_week_prior",
+      "description": "Premium of offer price to target's closing stock price one week before announcement.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3127,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "offer_premium_one_week_prior_2",
+      "description": "Premium of offer price to target closing stock price one week before announcement.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3588,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "preferred_to_common_conversion_ratio",
+      "description": "Ratio for converting preferred stock to common stock.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "primary_shares_filed_pct_of_total",
+      "description": "Percentage of total global shares filed that are primary shares.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "principal_amount_host_currency",
+      "description": "Principal amount of the loan in the host currency.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "security_offering_price",
+      "description": "Price per share or bond at which the security is offered.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "security_offering_unit_price",
+      "description": "Price per share or bond at which the security is offered to investors.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "selling_concession_amount",
+      "description": "Portion of gross spread allocated to the selling group.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "shares_eligible_post_lockup",
+      "description": "Number of shares that can be sold after the lockup period expires.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "shares_sold_by_existing_shareholders",
+      "description": "Number of shares sold by the selling shareholder(s) in the equity issue.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2045,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "total_manager_fee_amount",
+      "description": "Total manager's fee per share or bond for the offering.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "total_proceeds_with_overallotment",
+      "description": "Total proceeds including overallotment sold in the market.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "total_tranche_count",
+      "description": "Total number of tranches in the loan package.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "total_transaction_amount_usd",
+      "description": "Total principal amount of the transaction in US dollars.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "total_transaction_value",
+      "description": "Total value of the loan transaction.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "transaction_total_amount_usd",
+      "description": "Total amount of the transaction in US dollars.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "underwriting_fee_amount",
+      "description": "Portion of gross spread paid to underwriters.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1856,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "years_to_final_maturity",
+      "description": "Number of years from the offer date to the loan's final maturity.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "years_to_final_maturity_2",
+      "description": "Number of years from the offer date to the final maturity of the loan.",
+      "dataset": {
+        "id": "news23",
+        "name": "MnA Deals Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2114,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

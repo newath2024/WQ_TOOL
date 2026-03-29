@@ -1,0 +1,1990 @@
+{
+  "exported_at": "2026-03-29T04:54:11.964Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news17?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 75,
+  "row_count": 75,
+  "page_count": 4,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news17"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=news17"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=news17"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 15,
+      "new_item_count": 15,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=news17"
+    }
+  ],
+  "rows": [
+    {
+      "id": "analyst_recommendation_change_score",
+      "description": "A score representing changes in analyst recommendations, such as upgrade or downgrade.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_acb",
+      "description": "A score that represents the news sentiment of the given story according to the BER classifier, which specializes in news stories about earnings releases. Scores can take values of -1, 0, or 1 indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_bam",
+      "description": "A score that represents the news sentiment of the given news story according to the BCA classifier, which specializes in reports on corporate action announcements. Scores can take values of -1, 0, or 1 indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_bee",
+      "description": "A score that represents the news sentiment of the given story according to the BEE classifier, which specializes in news stories about earnings evaluations. Scores can take values of -1, 0, or 1 indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 3,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_ber",
+      "description": "A score that represents a change in recommendation by an analyst firm in the form of a numerical score. When the mention of a company in a story matches the criteria for ANL-CHG, scores can take values of -1, 0, or 1, indicating a downgrade, neutral, or upgrade rating, depending on the recommendation change by the analyst",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_acb",
+      "description": "A score that represents the news sentiment of the given story according to the BER classifier, which specializes in news stories about earnings releases. Scores can take values of -1, 0, or 1, indicating negative, neutral, or positive sentiment, respectively.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5445,
+      "userCount": 47,
+      "alphaCount": 69,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_bee",
+      "description": "A score that represents the news sentiment of the given story according to the BEE classifier, which specializes in news stories about earnings evaluations. Scores can take values of -1, 0, or 1 indicating negative, neutral, or positive sentiment, respectively.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3968,
+      "userCount": 23,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_ber",
+      "description": "A score that represents a change in recommendation by an analyst firm in the form of a numerical score. When the mention of a company in a story matches the criteria for ANL-CHG, scores can take values of -1, 0, or 1, indicating a downgrade, neutral, or upgrade rating, depending on the recommendation change by the analyst.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5585,
+      "userCount": 15,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_country_code",
+      "description": "The two-character ISO-3166 country code associated with an entity. Companies and organizations are associated with the country of incorporation, currencies are associated with the country where the central bank resides. Entities such as commodities have a country code of XX as they are global and not associated with any specific country",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8528,
+      "userCount": 17,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_event_end_time_utc",
+      "description": "The time when the event ends in UTC.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8527,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_event_relevance",
+      "description": "An integer between 0-100 that reflects the relevance of the event in the story",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8528,
+      "userCount": 17,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_event_sentiment_score",
+      "description": "A granular score between -1.00 and +1.00 with 2 decimal places that represents the news sentiment for a given entity by measuring various proxies sampled from the news",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6673,
+      "userCount": 19,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_event_similarity_days",
+      "description": "Count of unique IDs of industry participants. Industry stands for an aggregate view of all  equity clearance activity for the date, symbol, and transaction type in question.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6862,
+      "userCount": 17,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_event_start_time_utc",
+      "description": "The time when the event starts in UTC.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8527,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_event_text",
+      "description": "A short text summary of an event captured in a document",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.8528,
+      "userCount": 11,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_headline",
+      "description": "The headline or summary text for the document.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.8528,
+      "userCount": 9,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_nip",
+      "description": "A granular score between -1.00 and 1.00 with up to 2 decimal places that represents the degree of impact a news flash has on the market over the following two-hour period.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8516,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_qcm",
+      "description": "A score that represents the news sentiment based on the tone; applicable only towards the most relevant entities mentioned in a story. The score is derived from a combination of analytics values produced by the BMQ, BEE, BCA, and ANL-CHG classifiers.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6101,
+      "userCount": 18,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_qep",
+      "description": "A score that represents the news sentiment of the given news item according to the PEQ classifier, which specializes in identifying positive and negative words and phrases in articles about global equities.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6989,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_qmb",
+      "description": "A score that represents the news sentiment of the given story according to the BAM classifier, which specializes in news stories about mergers, acquisitions, and takeovers. Scores can take values of -1, 0, or 1, indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7602,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_relevance",
+      "description": "An integer score between 0-100 that indicates how strongly related the mention of an entity is to the underlying news story, with higher values indicating greater relevance. For any news story that mentions an entity, vendor provides a relevance score. A score of 0 means the entity was passively mentioned while a score of 100 means the entity was prominent in the news story. Values above 75 are considered significantly relevant.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8503,
+      "userCount": 15,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_reporting_end_time_utc",
+      "description": "The end time of the reporting period associated with the event.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8519,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_reporting_start_time_utc",
+      "description": "The start time of the reporting period associated with the event.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8519,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_rp_story_event_count",
+      "description": "Represents the total entity records published by vendor per news story",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8528,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_rp_story_event_index",
+      "description": "Represents the order in which entity records are published by the vendor per news story. This integer can be equal to or less than the RP_STORY_EVENT_COUNT",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8528,
+      "userCount": 4,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_ssc",
+      "description": "A granular score between -1.00 and +1.00 with up to 2 decimal places that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8038,
+      "userCount": 11,
+      "alphaCount": 39,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_comp_d1_timestamp_utc_time",
+      "description": "Time of news arrival as received by WorldQuant",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8528,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_country_code",
+      "description": "The two character ISO-3166 country code associated with an entity. Companies and organizations are associated with the country of incorporation, currencies are associated with the country where the central bank resides. Entities such as commodities have a country code of XX as they are global and not associated with any specific country",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_ghc_lna",
+      "description": "A score that represents the news sentiment based on the tone; applicable only towards the most relevant entities mentioned in a story. The score is derived from a combination of analytics values produced by the BMQ, BEE, BCA, and ANL-CHG classifiers.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_acb",
+      "description": "A score that represents the news sentiment of the given story according to the BER classifier, which specializes in news stories about earnings releases. Scores can take values of -1, 0, or 1, indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_bam",
+      "description": "A score that represents the news sentiment of the given news story according to the BCA classifier, which specializes in reports on corporate action announcements. Scores can take values of -1, 0, or 1, indicating negative, neutral, or positive sentiment, respectively.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_bee",
+      "description": "A score that represents the news sentiment of the given story according to the BEE classifier, which specializes in news stories about earnings evaluations. Scores can take values of -1, 0, or 1 indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_ber",
+      "description": "A score that represents a change in recommendation by an analyst firm in the form of a numerical score. When the mention of a company in a story matches the criteria for ANL-CHG, scores can take values of -1, 0, or 1, indicating a downgrade, neutral, or upgrade rating, depending on the recommendation change by the analyst.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_country_code",
+      "description": "The two-character ISO-3166 country code associated with an entity. Companies and organizations are associated with the country of incorporation, currencies are associated with the country where the central bank resides. Entities such as commodities have a country code of XX as they are global and not associated with any specific country.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_acb",
+      "description": "A score that represents the news sentiment of the given story according to the BER classifier, which specializes in news stories about earnings releases. Scores can take values of -1, 0, or 1, indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.652,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_bam",
+      "description": "A score that represents the news sentiment of the given news story according to the BCA classifier, which specializes in reports on corporate action announcements. Scores can take values of -1, 0, or 1, indicating negative, neutral, or positive sentiment, respectively.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2586,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_bee",
+      "description": "A score that represents the news sentiment of the given story according to the BEE classifier, which specializes in news stories about earnings evaluations. Scores can take values of -1, 0, or 1 indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4918,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_ber",
+      "description": "A score that represents a change in recommendation by an analyst firm in the form of a numerical score. When the mention of a company in a story matches the criteria for ANL-CHG, scores can take values of -1, 0, or 1, indicating a downgrade, neutral, or upgrade rating, depending on the recommendation change by the analyst.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6675,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_country_code",
+      "description": "The two-character ISO-3166 country code associated with an entity. Companies and organizations are associated with the country of incorporation, currencies are associated with the country where the central bank resides. Entities such as commodities have a country code of XX as they are global and not associated with any specific country.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9814,
+      "userCount": 3,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_event_end_time_utc",
+      "description": "The time when the event ends in UTC.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9813,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_event_relevance",
+      "description": "An integer between 0-100 that reflects the relevance of the event in the story",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9814,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_event_sentiment_score",
+      "description": "A granular score between -1.00 and +1.00 with 2 decimal places that represents the news sentiment for a given entity by measuring various proxies sampled from the news",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7811,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_event_similarity_days",
+      "description": "A granular number with up to 5 decimal places which indicates the number of days since a similar event was detected over the last 365 days. Values range between 0.00000 and 365 inclusive",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8014,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_event_start_time_utc",
+      "description": "The time when the event starts in UTC.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9813,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_event_text",
+      "description": "A short text summary of an event captured in a document",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9814,
+      "userCount": 5,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_headline",
+      "description": "The headline or summary text for the document",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9814,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_nip",
+      "description": "A granular score between -1.00 and 1.00 with up to 2 decimal places that represents the degree of impact a news flash has on the market over the following 2-hour period.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9801,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_qcm",
+      "description": "A score that represents the news sentiment based on the tone; applicable only towards the most relevant entities mentioned in a story. The score is derived from a combination of analytics values produced by the BMQ, BEE, BCA, and ANL-CHG classifiers.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7194,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_qep",
+      "description": "A score that represents the news sentiment of the given news item according to the PEQ classifier, which specializes in identifying positive and negative words and phrases in articles about global equities.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8183,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_qmb",
+      "description": "A score that represents the news sentiment of the given story according to the BAM classifier, which specializes in news stories about mergers, acquisitions, and takeovers. Scores can take values of -1, 0, or 1, indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.884,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_relevance",
+      "description": "An integer score between 0-100 that indicates how strongly related the mention of an entity is to the underlying news story, with higher values indicating greater relevance. For any news story that mentions an entity, RavenPack provides a relevance score. A score of 0 means the entity was passively mentioned while a score of 100 means the entity was prominent in the news story. Values above 75 are considered significantly relevant",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9789,
+      "userCount": 12,
+      "alphaCount": 40,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_reporting_end_time_utc",
+      "description": "The end time of the reporting period associated with the event.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9805,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_reporting_start_time_utc",
+      "description": "The start time of the reporting period associated with the event.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9805,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_rp_story_event_count",
+      "description": "Represents the total entity records published by the vendor per news story",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9814,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_rp_story_event_index",
+      "description": "Represents the order in which entity records are published by vendor per news story. This integer can be equal to or less than the RP_STORY_EVENT_COUNT.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9814,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_ssc",
+      "description": "A granular score between -1.00 and +1.00 with up to 2 decimal places that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9299,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_d1_timestamp_utc_time",
+      "description": "Time of news arrival as received by WorldQuant",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9814,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_nip",
+      "description": "A granular score between -1.00 and 1.00 with up to 2 decimal places that represents the degree of impact a news flash has on the market over the following 2-hour period.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_qcm",
+      "description": "A score that represents the news sentiment based on the tone; applicable only towards the most relevant entities mentioned in a story. The score is derived from a combination of analytics values produced by the BMQ, BEE, BCA, and ANL-CHG classifiers.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_qep",
+      "description": "A score that represents the news sentiment of the given news item according to the PEQ classifier, which specializes in identifying positive and negative words and phrases in articles about global equities.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_qmb",
+      "description": "A score that represents the news sentiment of the given story according to the BAM classifier, which specializes in news stories about mergers, acquisitions, and takeovers. Scores can take values of -1, 0, or 1, indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_relevance",
+      "description": "An integer score between 0-100 that indicates how strongly related the mention of an entity is to the underlying news story, with higher values indicating greater relevance. For any news story that mentions an entity, RavenPack provides a relevance score. A score of 0 means the entity was passively mentioned while a score of 100 means the entity was prominent in the news story. Values above 75 are considered significantly relevant",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_reporting_end_time_utc",
+      "description": "The end time of the reporting period associated with the event.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_reporting_start_time_utc",
+      "description": "The start time of the reporting period associated with the event.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_ssc",
+      "description": "A granular score between -1.00 and +1.00 with up to 2 decimal places that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_multiple_comp_timestamp_utc_time",
+      "description": "Time of news arrival as received by WorldQuant",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9048,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_nip",
+      "description": "A granular score between -1.00 and 1.00 with up to 2 decimal places that represents the degree of impact a news flash has on the market over the following two-hour period.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_qcm",
+      "description": "A score that represents the news sentiment based on the tone; applicable only towards the most relevant entities mentioned in a story. The score is derived from a combination of analytics values produced by the BMQ, BEE, BCA, and ANL-CHG classifiers.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_qep",
+      "description": "A score that represents the news sentiment of the given news item according to the PEQ classifier, which specializes in identifying positive and negative words and phrases in articles about global equities.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_qmb",
+      "description": "A score that represents the news sentiment of the given story according to the BAM classifier, which specializes in news stories about mergers, acquisitions, and takeovers. Scores can take values of -1, 0, or 1 indicating negative, neutral, or positive sentiment, respectively",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_relevance",
+      "description": "An integer score between 0-100 that indicates how strongly related the mention of an entity is to the underlying news story, with higher values indicating greater relevance. For any news story that mentions an entity, RavenPack provides a relevance score. A score of 0 means the entity was passively mentioned while a score of 100 means the entity was prominent in the news story. Values above 75 are considered significantly relevant",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_reporting_end_time_utc",
+      "description": "The end time of the reporting period associated with the event.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_reporting_start_time_utc",
+      "description": "The start time of the reporting period associated with the event.",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_ssc",
+      "description": "A granular score between -1.00 and +1.00 with up to 2 decimal places that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws17_timestamp_utc_time",
+      "description": "Time of news arrival as received by WorldQuant",
+      "dataset": {
+        "id": "news17",
+        "name": "PR Edition Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

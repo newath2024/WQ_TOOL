@@ -1,0 +1,2046 @@
+{
+  "exported_at": "2026-03-29T04:48:08.728Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model30?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 77,
+  "row_count": 77,
+  "page_count": 4,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model30"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model30"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model30"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 17,
+      "new_item_count": 17,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=model30"
+    }
+  ],
+  "rows": [
+    {
+      "id": "d1_fq1_period_end_date",
+      "description": "Period end date for first fiscal quarter in d1 module.",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.9452,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "d1_fq2_period_end_date",
+      "description": "Period end date for second fiscal quarter in d1 module.",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.945,
+      "userCount": 5,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "d1_fy1_period_end_date",
+      "description": "Period end date for first fiscal year in d1 module.",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.9599,
+      "userCount": 1,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "d1_fy2_period_end_date",
+      "description": "Period end date for second fiscal year in d1 module.",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.9598,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "is_parent_company_flag",
+      "description": "Flag indicating whether the security is a parent company.",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_numnly_fq1_eps",
+      "description": "Number of SmartEstimate Analysts FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4168,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_numnly_fq2_eps",
+      "description": "Number of SmartEstimate Analysts FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3689,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_numnly_fy1_eps",
+      "description": "Number of SmartEstimate Analysts FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 13,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_numnly_fy2_eps",
+      "description": "Number of SmartEstimate Analysts FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 12,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_psprise_pct_f12m_eps",
+      "description": "Predicted Surprise % F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.99,
+      "userCount": 41,
+      "alphaCount": 99,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_psprise_pct_fq1_eps",
+      "description": "Predicted Surprise % FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4178,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_psprise_pct_fq2_eps",
+      "description": "Predicted Surprise % FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3711,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_psprise_pct_fy1_eps",
+      "description": "Predicted Surprise % FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9899,
+      "userCount": 53,
+      "alphaCount": 124,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_psprise_pct_fy2_eps",
+      "description": "Predicted Surprise % FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9893,
+      "userCount": 20,
+      "alphaCount": 55,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_smartestimate_f12m_eps",
+      "description": "SmartEstimate F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 45,
+      "alphaCount": 178,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_smartestimate_fq1_eps",
+      "description": "SmartEstimate FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4168,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_smartestimate_fq2_eps",
+      "description": "SmartEstimate FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3689,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_smartestimate_fy1_eps",
+      "description": "SmartEstimate FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 31,
+      "alphaCount": 52,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_new_smartestimate_fy2_eps",
+      "description": "SmartEstimate FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 27,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_numnly_fq1_eps",
+      "description": "Number of SmartEstimate Analysts FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_numnly_fq2_eps",
+      "description": "Number of SmartEstimate Analysts FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_numnly_fy1_eps",
+      "description": "Number of SmartEstimate Analysts FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_numnly_fy2_eps",
+      "description": "Number of SmartEstimate Analysts FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_parent_flag_d1",
+      "description": "Parent Flag",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9608,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_psprise_pct_f12m_eps",
+      "description": "Predicted Surprise % F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7328,
+      "userCount": 40,
+      "alphaCount": 74,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_psprise_pct_fq1_eps",
+      "description": "Predicted Surprise % FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2694,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_psprise_pct_fq2_eps",
+      "description": "Predicted Surprise % FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2418,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_psprise_pct_fy1_eps",
+      "description": "Predicted Surprise % FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7355,
+      "userCount": 49,
+      "alphaCount": 87,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_psprise_pct_fy2_eps",
+      "description": "Predicted Surprise % FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.735,
+      "userCount": 11,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_smartestimate_f12m_eps",
+      "description": "SmartEstimate F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7328,
+      "userCount": 24,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_smartestimate_fq1_eps",
+      "description": "SmartEstimate FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2694,
+      "userCount": 9,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_smartestimate_fq2_eps",
+      "description": "SmartEstimate FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2418,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_smartestimate_fy1_eps",
+      "description": "SmartEstimate FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7355,
+      "userCount": 31,
+      "alphaCount": 40,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl30_smartestimate_fy2_eps",
+      "description": "SmartEstimate FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.735,
+      "userCount": 18,
+      "alphaCount": 27,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "parent_company_indicator",
+      "description": "Indicator showing if the security is a parent company.",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_analyst_number_fq1",
+      "description": "Number of SmartEstimate Analysts FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4162,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_analyst_number_fq1_d1",
+      "description": "Number of SmartEstimate Analysts FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_analyst_number_fq2",
+      "description": "Number of SmartEstimate Analysts FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3732,
+      "userCount": 11,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_analyst_number_fq2_d1",
+      "description": "Number of SmartEstimate Analysts FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_analyst_number_fy1",
+      "description": "Number of SmartEstimate Analysts FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_analyst_number_fy1_d1",
+      "description": "Number of SmartEstimate Analysts FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_analyst_number_fy2",
+      "description": "Number of SmartEstimate Analysts FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 11,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_analyst_number_fy2_d1",
+      "description": "Number of SmartEstimate Analysts FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_12m",
+      "description": "SmartEstimate F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 40,
+      "alphaCount": 74,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_12m_d1",
+      "description": "SmartEstimate F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.949,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_fq1",
+      "description": "SmartEstimate FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4162,
+      "userCount": 15,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_fq1_d1",
+      "description": "SmartEstimate FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4057,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_fq2",
+      "description": "SmartEstimate FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3732,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_fq2_d1",
+      "description": "SmartEstimate FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3701,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_fy1",
+      "description": "SmartEstimate FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 46,
+      "alphaCount": 75,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_fy1_d1",
+      "description": "SmartEstimate FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9505,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_fy2",
+      "description": "SmartEstimate FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 23,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_smart_estimate_fy2_d1",
+      "description": "SmartEstimate FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9501,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_12m",
+      "description": "Predicted Surprise % F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9896,
+      "userCount": 41,
+      "alphaCount": 63,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_12m_d1",
+      "description": "Predicted Surprise % F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.949,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_fq1",
+      "description": "Predicted Surprise % FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4174,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_fq1_d1",
+      "description": "Predicted Surprise % FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4057,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_fq2",
+      "description": "Predicted Surprise % FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3751,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_fq2_d1",
+      "description": "Predicted Surprise % FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3701,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_fy1",
+      "description": "Predicted Surprise % FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9895,
+      "userCount": 99,
+      "alphaCount": 160,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_fy1_d1",
+      "description": "Predicted Surprise % FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9505,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_fy2",
+      "description": "Predicted Surprise % FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9889,
+      "userCount": 41,
+      "alphaCount": 128,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_eps_surprise_prediction_fy2_d1",
+      "description": "Predicted Surprise % FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9501,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_analyst_number_fq1",
+      "description": "Number of SmartEstimate Analysts FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_analyst_number_fq2",
+      "description": "Number of SmartEstimate Analysts FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_analyst_number_fy1",
+      "description": "Number of SmartEstimate Analysts FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_analyst_number_fy2",
+      "description": "Number of SmartEstimate Analysts FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_smart_estimate_12m",
+      "description": "SmartEstimate F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7328,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_smart_estimate_fq1",
+      "description": "SmartEstimate FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2694,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_smart_estimate_fq2",
+      "description": "SmartEstimate FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2418,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_smart_estimate_fy1",
+      "description": "SmartEstimate FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7355,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_smart_estimate_fy2",
+      "description": "SmartEstimate FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.735,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_surprise_prediction_12m",
+      "description": "Predicted Surprise % F12M EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7328,
+      "userCount": 1,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_surprise_prediction_fq1",
+      "description": "Predicted Surprise % FQ1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2694,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_surprise_prediction_fq2",
+      "description": "Predicted Surprise % FQ2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2418,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_surprise_prediction_fy1",
+      "description": "Predicted Surprise % FY1 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7355,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_new_eps_surprise_prediction_fy2",
+      "description": "Predicted Surprise % FY2 EPS",
+      "dataset": {
+        "id": "model30",
+        "name": "EPS Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.735,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

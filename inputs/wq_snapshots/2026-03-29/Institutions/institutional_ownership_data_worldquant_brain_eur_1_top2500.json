@@ -1,0 +1,332 @@
+{
+  "exported_at": "2026-03-29T04:39:31.123Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/institutions4?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 12,
+  "row_count": 12,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 12,
+      "new_item_count": 12,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=institutions4"
+    }
+  ],
+  "rows": [
+    {
+      "id": "io_fund_holding",
+      "description": "Total shares that the entity holds at the reported time",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7578,
+      "userCount": 562,
+      "alphaCount": 2375,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_fund_mv",
+      "description": "Total market values that the entity holds at the reported time",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7578,
+      "userCount": 391,
+      "alphaCount": 1054,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_fund_number",
+      "description": "The total number of holders of the security",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7578,
+      "userCount": 281,
+      "alphaCount": 642,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_fund_pct",
+      "description": "The percentage of the total shares outstanding (TSO) of the security held in aggregate by all filing funds // Note: For some records pct_held is greater than 100 (error at vendor's end); use with discretion.",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7578,
+      "userCount": 349,
+      "alphaCount": 1378,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_fund_prev_holding",
+      "description": "The number of shares in that entity at the last reported time",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7578,
+      "userCount": 252,
+      "alphaCount": 532,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_fund_prev_mv",
+      "description": "The total value of that entity at the last reported time",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7578,
+      "userCount": 166,
+      "alphaCount": 331,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_inst_holding",
+      "description": "Total shares that the institution holds at the reported time",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3836,
+      "userCount": 66,
+      "alphaCount": 95,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_inst_mv",
+      "description": "Total market values that the institution holds at the reported time",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3835,
+      "userCount": 87,
+      "alphaCount": 114,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_inst_number",
+      "description": "The total number of institutional holders of the security",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3839,
+      "userCount": 93,
+      "alphaCount": 130,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_inst_pct",
+      "description": "The percentage of the total shares outstanding (TSO) of the security held in aggregate by all institutions Note: For some records pct_held is greater than 100 (error at vendor's end); use with discretion.",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.926,
+      "userCount": 181,
+      "alphaCount": 383,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_inst_prev_holding",
+      "description": "The number of shares in that institution at the last reported time",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3832,
+      "userCount": 103,
+      "alphaCount": 127,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "io_inst_prev_mv",
+      "description": "The total value of that institution at the last reported time",
+      "dataset": {
+        "id": "institutions4",
+        "name": "Institutional Ownership Data"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3832,
+      "userCount": 115,
+      "alphaCount": 202,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

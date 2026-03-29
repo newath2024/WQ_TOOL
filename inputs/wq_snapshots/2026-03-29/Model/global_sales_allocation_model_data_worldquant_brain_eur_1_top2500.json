@@ -1,0 +1,280 @@
+{
+  "exported_at": "2026-03-29T04:48:16.964Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model307?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 10,
+  "row_count": 10,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 10,
+      "new_item_count": 10,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model307"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mdl307_atlas_unit_name",
+      "description": "Atlas unit name",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6675,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_country",
+      "description": "Country Code",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6675,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_cusip",
+      "description": "Point in Time CUSIP",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6675,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_sales_pct_axj",
+      "description": "Fraction of Sale Allocated to Asia ex Japan",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6095,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_sales_pct_emea",
+      "description": "Fraction of Sale Allocated to EMEA",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6095,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_sales_pct_eu",
+      "description": "Fraction of Sale Allocated to EU (ex GB)",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6095,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_sales_pct_gb",
+      "description": "Fraction of Sale Allocated to GB",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6095,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_sales_pct_unclassified",
+      "description": "Fraction of Sale Unclassified",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6095,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_sales_pct_us",
+      "description": "Fraction of Sale Allocated to US",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6095,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl307_sector",
+      "description": "Sector",
+      "dataset": {
+        "id": "model307",
+        "name": "Global Sales Allocation Model Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6675,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

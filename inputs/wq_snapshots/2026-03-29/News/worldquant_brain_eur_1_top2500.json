@@ -1,0 +1,626 @@
+{
+  "exported_at": "2026-03-29T04:59:00.919Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news84?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 23,
+  "row_count": 23,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news84"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 3,
+      "new_item_count": 3,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=news84"
+    }
+  ],
+  "rows": [
+    {
+      "id": "max_primary_sentiment_score_transfer",
+      "description": "The highest value of the primary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "max_secondary_sentiment_score_transfer",
+      "description": "The highest value of the secondary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "max_sentiment_score_transfer",
+      "description": "The maximum sentiment score derived from transferred news sentiment for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mean_primary_sentiment_score_transfer",
+      "description": "The average value of the primary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mean_secondary_sentiment_score_transfer",
+      "description": "The average value of the secondary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mean_sentiment_score_transfer",
+      "description": "The average of all transferred sentiment scores for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "median_primary_sentiment_score_transfer",
+      "description": "The median value of the primary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "median_secondary_sentiment_score_transfer",
+      "description": "The median value of the secondary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "median_sentiment_score_transfer",
+      "description": "The median value of transferred sentiment scores for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "min_primary_sentiment_score_transfer",
+      "description": "The lowest value of the primary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "min_secondary_sentiment_score_transfer",
+      "description": "The lowest value of the secondary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "min_sentiment_score_transfer",
+      "description": "The minimum sentiment score derived from transferred news sentiment for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws84_sentiment",
+      "description": "Sentiment of headlines",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 21,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "news_item_count_transfer",
+      "description": "The total number of news items used for transferred sentiment calculation.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 4,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "normalized_news_item_count_transfer_2",
+      "description": "The count of news items used for sentiment transfer, normalized for comparability.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "primary_sentiment_score_transfer",
+      "description": "The primary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "secondary_sentiment_score_transfer",
+      "description": "The secondary transferred sentiment score for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6644,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "skew_primary_sentiment_score_transfer",
+      "description": "The skewness of the primary transferred sentiment score distribution for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "skew_secondary_sentiment_score_transfer",
+      "description": "The skewness of the secondary transferred sentiment score distribution for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "skew_sentiment_score_transfer",
+      "description": "The skewness of the transferred sentiment score distribution for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sum_primary_sentiment_score_transfer",
+      "description": "The sum of all primary transferred sentiment scores for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sum_secondary_sentiment_score_transfer",
+      "description": "The sum of all secondary transferred sentiment scores for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sum_sentiment_score_transfer",
+      "description": "The sum of all transferred sentiment scores for the period.",
+      "dataset": {
+        "id": "news84",
+        "name": "Headline Sentiment Analysis using DNN"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

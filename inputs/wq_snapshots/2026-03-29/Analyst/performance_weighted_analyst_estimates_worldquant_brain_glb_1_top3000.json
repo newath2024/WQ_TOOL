@@ -1,0 +1,1583 @@
+{
+  "exported_at": "2026-03-29T04:10:10.373Z",
+  "source": "dom",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/analyst10?delay=1&instrumentType=EQUITY&limit=20&offset=160&region=GLB&universe=TOP3000",
+  "headers": [
+    "Field",
+    "Description",
+    "Type",
+    "Coverage",
+    "Date Coverage",
+    "Alphas"
+  ],
+  "row_count": 174,
+  "page_count": 9,
+  "rows": [
+    {
+      "Field": "anl10_bpspast_det_analyst_6402",
+      "Description": "Analyst ID for book value per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_bpspast_det_anntime_6403",
+      "Description": "Announce time for book value per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_bpspast_det_estage_6399",
+      "Description": "Age of book value per share estimates in days",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_bpspast_det_estflag_6404",
+      "Description": "Estimate flag for book value per share",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_bpspast_det_estvalue_6397",
+      "Description": "Estimate value for book value per share",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_bpspast_det_excflag_6398",
+      "Description": "Exclusion flag for book value per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_bpspast_det_indicator_6405",
+      "Description": "Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for book value per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsff_6268",
+      "Description": "Ff 6268 for cash per share",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq1_consensus_6279",
+      "Description": "Consensus estimate value for cash per share Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "97%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq1_pred_surps_v0_6305",
+      "Description": "Predicted surprise version 0 for cash per share for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "97%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq1_pred_surps_v1_6289",
+      "Description": "Predicted surprise version 1 for cash per share for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "97%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq1_pred_surps_v2_6306",
+      "Description": "Predicted surprise version 2 for cash per share for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "97%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq1_smart_ests_v0_6280",
+      "Description": "Smart estimates version 0 value for cash per share for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "97%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq1_smart_ests_v1_6275",
+      "Description": "Smart estimates version 1 value for cash per share for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "97%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq1_smart_ests_v2_6288",
+      "Description": "Smart estimates version 2 value for cash per share for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "97%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq2_consensus_6300",
+      "Description": "Consensus estimate value for cash per share Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq2_pred_surps_v0_6298",
+      "Description": "Predicted surprise version 0 for cash per share for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq2_pred_surps_v1_6301",
+      "Description": "Predicted surprise version 1 for cash per share for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq2_pred_surps_v2_6277",
+      "Description": "Predicted surprise version 2 for cash per share for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq2_smart_ests_v0_6287",
+      "Description": "Smart estimates version 0 value for cash per share for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl10_cpsfq2_smart_ests_v1_6299",
+      "Description": "Smart estimates version 1 value for cash per share for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfq2_smart_ests_v2_6302",
+      "Description": "Smart estimates version 2 value for cash per share for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy1_consensus_6271",
+      "Description": "Consensus estimate value for cash per share FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy1_pred_surps_v0_6272",
+      "Description": "Predicted surprise version 0 for cash per share for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy1_pred_surps_v1_6285",
+      "Description": "Predicted surprise version 1 for cash per share for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy1_pred_surps_v2_6281",
+      "Description": "Predicted surprise version 2 for cash per share for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy1_smart_ests_v0_6291",
+      "Description": "Smart estimates version 0 value for cash per share for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy1_smart_ests_v1_6276",
+      "Description": "Smart estimates version 1 value for cash per share for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy1_smart_ests_v2_6267",
+      "Description": "Smart estimates version 2 value for cash per share for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy2_consensus_6282",
+      "Description": "Consensus estimate value for cash per share FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy2_pred_surps_v0_6297",
+      "Description": "Predicted surprise version 0 for cash per share for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy2_pred_surps_v1_6286",
+      "Description": "Predicted surprise version 1 for cash per share for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy2_pred_surps_v2_6294",
+      "Description": "Predicted surprise version 2 for cash per share for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy2_smart_ests_v0_6269",
+      "Description": "Smart estimates version 0 value for cash per share for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy2_smart_ests_v1_6270",
+      "Description": "Smart estimates version 1 value for cash per share for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpsfy2_smart_ests_v2_6304",
+      "Description": "Smart estimates version 2 value for cash per share for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpspast_det_analyst_6350",
+      "Description": "Analyst ID for cash per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpspast_det_anntime_6354",
+      "Description": "Announce time for cash per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpspast_det_estage_6349",
+      "Description": "Age of cash per share estimates in days",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpspast_det_estflag_6355",
+      "Description": "Estimate flag for cash per share",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl10_cpspast_det_estvalue_6352",
+      "Description": "Estimate value for cash per share",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_cpspast_det_excflag_6356",
+      "Description": "Exclusion flag for cash per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_cpspast_det_indicator_6348",
+      "Description": "Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for cash per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_cpssmun_1qf_6278",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for cash per share",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_cpssmun_1yf_6295",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for cash per share",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_cpssmun_2qf_6303",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for cash per share",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_cpssmun_2yf_6284",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for cash per share",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_dpspast_det_analyst_6222",
+      "Description": "Analyst ID for dividends per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_dpspast_det_anntime_6225",
+      "Description": "Announce time for dividends per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_dpspast_det_estage_6223",
+      "Description": "Age of dividends per share estimates in days",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_dpspast_det_estflag_6221",
+      "Description": "Estimate flag for dividends per share",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_dpspast_det_estvalue_6217",
+      "Description": "Estimate value for dividends per share",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_dpspast_det_excflag_6226",
+      "Description": "Exclusion flag for dividends per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_dpspast_det_indicator_6220",
+      "Description": "Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for dividends per share estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_ebspast_det_analyst_6215",
+      "Description": "Analyst ID for earnings before others estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_ebspast_det_anntime_6209",
+      "Description": "Announce time for earnings before others estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_ebspast_det_estage_6210",
+      "Description": "Age of earnings before others estimates in days",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_ebspast_det_estflag_6211",
+      "Description": "Estimate flag for earnings before others",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_ebspast_det_estvalue_6216",
+      "Description": "Estimate value for earnings before others",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_ebspast_det_excflag_6213",
+      "Description": "Exclusion flag for earnings before others estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl10_ebspast_det_indicator_6212",
+      "Description": "Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for earnings before others estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entff_6479",
+      "Description": "Ff 6479 for earnings net taxes",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy1_consensus_6473",
+      "Description": "Consensus estimate value for earnings net taxes FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy1_pred_surps_v0_6466",
+      "Description": "Predicted surprise version 0 for earnings net taxes for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy1_pred_surps_v1_6484",
+      "Description": "Predicted surprise version 1 for earnings net taxes for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy1_pred_surps_v2_6465",
+      "Description": "Predicted surprise version 2 for earnings net taxes for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy1_smart_ests_v0_6491",
+      "Description": "Smart estimates version 0 value for earnings net taxes for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy1_smart_ests_v1_6493",
+      "Description": "Smart estimates version 1 value for earnings net taxes for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy1_smart_ests_v2_6489",
+      "Description": "Smart estimates version 2 value for earnings net taxes for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy2_consensus_6492",
+      "Description": "Consensus estimate value for earnings net taxes FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy2_pred_surps_v0_6487",
+      "Description": "Predicted surprise version 0 for earnings net taxes for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy2_pred_surps_v1_6476",
+      "Description": "Predicted surprise version 1 for earnings net taxes for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy2_pred_surps_v2_6481",
+      "Description": "Predicted surprise version 2 for earnings net taxes for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy2_smart_ests_v0_6468",
+      "Description": "Smart estimates version 0 value for earnings net taxes for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy2_smart_ests_v1_6488",
+      "Description": "Smart estimates version 1 value for earnings net taxes for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entfy2_smart_ests_v2_6457",
+      "Description": "Smart estimates version 2 value for earnings net taxes for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entpast_det_analyst_6309",
+      "Description": "Analyst ID for earnings net taxes estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entpast_det_anntime_6312",
+      "Description": "Announce time for earnings net taxes estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entpast_det_estage_6314",
+      "Description": "Age of earnings net taxes estimates in days",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entpast_det_estflag_6311",
+      "Description": "Estimate flag for earnings net taxes",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl10_entpast_det_estvalue_6307",
+      "Description": "Estimate value for earnings net taxes",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_entpast_det_excflag_6310",
+      "Description": "Exclusion flag for earnings net taxes estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_entpast_det_indicator_6315",
+      "Description": "Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for earnings net taxes estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_entsmun_1qf_6470",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for earnings net taxes",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_entsmun_1yf_6458",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for earnings net taxes",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_entsmun_2qf_6464",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for earnings net taxes",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_entsmun_2yf_6480",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for earnings net taxes",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcfff_6440",
+      "Description": "Ff 6440 for free cash flow",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq1_consensus_6421",
+      "Description": "Consensus estimate value for free cash flow Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "53%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq1_pred_surps_v0_6418",
+      "Description": "Predicted surprise version 0 for free cash flow for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "53%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq1_pred_surps_v1_6425",
+      "Description": "Predicted surprise version 1 for free cash flow for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "53%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq1_pred_surps_v2_6408",
+      "Description": "Predicted surprise version 2 for free cash flow for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "53%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq1_smart_ests_v0_6434",
+      "Description": "Smart estimates version 0 value for free cash flow for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "53%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq1_smart_ests_v1_6435",
+      "Description": "Smart estimates version 1 value for free cash flow for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "53%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq1_smart_ests_v2_6410",
+      "Description": "Smart estimates version 2 value for free cash flow for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "53%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq2_consensus_6415",
+      "Description": "Consensus estimate value for free cash flow Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "42%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq2_pred_surps_v0_6445",
+      "Description": "Predicted surprise version 0 for free cash flow for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "42%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq2_pred_surps_v1_6428",
+      "Description": "Predicted surprise version 1 for free cash flow for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "42%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq2_pred_surps_v2_6443",
+      "Description": "Predicted surprise version 2 for free cash flow for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "42%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq2_smart_ests_v0_6432",
+      "Description": "Smart estimates version 0 value for free cash flow for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "42%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl10_fcffq2_smart_ests_v1_6431",
+      "Description": "Smart estimates version 1 value for free cash flow for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "42%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffq2_smart_ests_v2_6424",
+      "Description": "Smart estimates version 2 value for free cash flow for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "42%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy1_consensus_6439",
+      "Description": "Consensus estimate value for free cash flow FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy1_pred_surps_v0_6412",
+      "Description": "Predicted surprise version 0 for free cash flow for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy1_pred_surps_v1_6437",
+      "Description": "Predicted surprise version 1 for free cash flow for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy1_pred_surps_v2_6446",
+      "Description": "Predicted surprise version 2 for free cash flow for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy1_smart_ests_v0_6422",
+      "Description": "Smart estimates version 0 value for free cash flow for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy1_smart_ests_v1_6416",
+      "Description": "Smart estimates version 1 value for free cash flow for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy1_smart_ests_v2_6419",
+      "Description": "Smart estimates version 2 value for free cash flow for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy2_consensus_6407",
+      "Description": "Consensus estimate value for free cash flow FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy2_pred_surps_v0_6436",
+      "Description": "Predicted surprise version 0 for free cash flow for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy2_pred_surps_v1_6420",
+      "Description": "Predicted surprise version 1 for free cash flow for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy2_pred_surps_v2_6411",
+      "Description": "Predicted surprise version 2 for free cash flow for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy2_smart_ests_v0_6441",
+      "Description": "Smart estimates version 0 value for free cash flow for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy2_smart_ests_v1_6414",
+      "Description": "Smart estimates version 1 value for free cash flow for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcffy2_smart_ests_v2_6426",
+      "Description": "Smart estimates version 2 value for free cash flow for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcfpast_det_analyst_6379",
+      "Description": "Analyst ID for free cash flow estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcfpast_det_anntime_6382",
+      "Description": "Announce time for free cash flow estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcfpast_det_estage_6380",
+      "Description": "Age of free cash flow estimates in days",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcfpast_det_estflag_6383",
+      "Description": "Estimate flag for free cash flow",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl10_fcfpast_det_estvalue_6385",
+      "Description": "Estimate value for free cash flow",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_fcfpast_det_excflag_6386",
+      "Description": "Exclusion flag for free cash flow estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_fcfpast_det_indicator_6377",
+      "Description": "Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for free cash flow estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_fcfsmun_1qf_6438",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for free cash flow",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_fcfsmun_1yf_6427",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for free cash flow",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_fcfsmun_2qf_6417",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for free cash flow",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_fcfsmun_2yf_6430",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for free cash flow",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmff_6248",
+      "Description": "Ff 6248 for gross margin",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq1_consensus_6261",
+      "Description": "Consensus estimate value for gross margin Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq1_pred_surps_v0_6232",
+      "Description": "Predicted surprise version 0 for gross margin for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq1_pred_surps_v1_6234",
+      "Description": "Predicted surprise version 1 for gross margin for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq1_pred_surps_v2_6264",
+      "Description": "Predicted surprise version 2 for gross margin for Q1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq1_smart_ests_v0_6238",
+      "Description": "Smart estimates version 0 value for gross margin for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq1_smart_ests_v1_6245",
+      "Description": "Smart estimates version 1 value for gross margin for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq1_smart_ests_v2_6250",
+      "Description": "Smart estimates version 2 value for gross margin for Q1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq2_consensus_6233",
+      "Description": "Consensus estimate value for gross margin Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq2_pred_surps_v0_6241",
+      "Description": "Predicted surprise version 0 for gross margin for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq2_pred_surps_v1_6235",
+      "Description": "Predicted surprise version 1 for gross margin for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq2_pred_surps_v2_6266",
+      "Description": "Predicted surprise version 2 for gross margin for Q2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq2_smart_ests_v0_6260",
+      "Description": "Smart estimates version 0 value for gross margin for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl10_grmfq2_smart_ests_v1_6246",
+      "Description": "Smart estimates version 1 value for gross margin for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfq2_smart_ests_v2_6231",
+      "Description": "Smart estimates version 2 value for gross margin for Q2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy1_consensus_6249",
+      "Description": "Consensus estimate value for gross margin FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy1_pred_surps_v0_6259",
+      "Description": "Predicted surprise version 0 for gross margin for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy1_pred_surps_v1_6253",
+      "Description": "Predicted surprise version 1 for gross margin for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy1_pred_surps_v2_6243",
+      "Description": "Predicted surprise version 2 for gross margin for FY1 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy1_smart_ests_v0_6242",
+      "Description": "Smart estimates version 0 value for gross margin for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy1_smart_ests_v1_6254",
+      "Description": "Smart estimates version 1 value for gross margin for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy1_smart_ests_v2_6262",
+      "Description": "Smart estimates version 2 value for gross margin for FY1",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy2_consensus_6236",
+      "Description": "Consensus estimate value for gross margin FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy2_pred_surps_v0_6263",
+      "Description": "Predicted surprise version 0 for gross margin for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy2_pred_surps_v1_6255",
+      "Description": "Predicted surprise version 1 for gross margin for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy2_pred_surps_v2_6258",
+      "Description": "Predicted surprise version 2 for gross margin for FY2 (calculated as (smart_ests - consensus)/consensus)",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy2_smart_ests_v0_6229",
+      "Description": "Smart estimates version 0 value for gross margin for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy2_smart_ests_v1_6227",
+      "Description": "Smart estimates version 1 value for gross margin for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmfy2_smart_ests_v2_6247",
+      "Description": "Smart estimates version 2 value for gross margin for FY2",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmpast_det_analyst_6324",
+      "Description": "Analyst ID for gross margin estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmpast_det_anntime_6325",
+      "Description": "Announce time for gross margin estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmpast_det_estage_6320",
+      "Description": "Age of gross margin estimates in days",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmpast_det_estflag_6319",
+      "Description": "Estimate flag for gross margin",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl10_grmpast_det_estvalue_6318",
+      "Description": "Estimate value for gross margin",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_grmpast_det_excflag_6317",
+      "Description": "Exclusion flag for gross margin estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_grmpast_det_indicator_6322",
+      "Description": "Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for gross margin estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_grmsmun_1qf_6228",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for gross margin",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_grmsmun_1yf_6257",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for gross margin",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_grmsmun_2qf_6265",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for gross margin",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_grmsmun_2yf_6237",
+      "Description": "Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for gross margin",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_roapast_det_analyst_6329",
+      "Description": "Analyst ID for return on assets estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_roapast_det_anntime_6334",
+      "Description": "Announce time for return on assets estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_roapast_det_estage_6330",
+      "Description": "Age of return on assets estimates in days",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_roapast_det_estflag_6336",
+      "Description": "Estimate flag for return on assets",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_roapast_det_estvalue_6335",
+      "Description": "Estimate value for return on assets",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_roapast_det_excflag_6333",
+      "Description": "Exclusion flag for return on assets estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl10_roapast_det_indicator_6332",
+      "Description": "Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for return on assets estimates",
+      "Type": "Vector",
+      "Coverage": "1.5",
+      "Date Coverage": "100%",
+      "Alphas": "100%",
+      "__page": 9
+    }
+  ]
+}

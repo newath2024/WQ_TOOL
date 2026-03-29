@@ -1,0 +1,600 @@
+{
+  "exported_at": "2026-03-29T04:56:38.028Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news48?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 22,
+  "row_count": 22,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news48"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 2,
+      "new_item_count": 2,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=news48"
+    }
+  ],
+  "rows": [
+    {
+      "id": "nws48_acb",
+      "description": "Reports on Corporate Actions - A score that represents the news sentiment of the given news story, which specializes in reports on corporate action announcements",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_aes",
+      "description": "A granular score between 0 and 100 that represents the ratio of positive events reported on an entity compared to the total count of events (excluding neutral ones) measured over a rolling 91-day window",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_bam",
+      "description": "Venture, Company, Mergers & Acquisitions - A score that represents the news sentiment of the given story, which specializes in news stories about mergers, acquisitions, and takeovers",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_bee",
+      "description": "Earnings Evaluations - A score that represents the news sentiment of the given story, which specializes in news stories about earnings evaluations",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 6,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_ber",
+      "description": "Earnings Releases - A score that represents the news sentiment of the given story, which specializes in news stories about earnings releases",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_ens",
+      "description": "Event Novelty Score - A score between 0 and 100 that represents how \"new\" or novel a news story is within a 24-hour time window across all news stories",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_ens_elapsed",
+      "description": "Event Novelty Elapsed Time - The number of milliseconds between the first story and the current story in an event novelty chain",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_ens_similarity_gap",
+      "description": "The number of days since a similar story was detected. Values range between 0.00000 and 100.00000 inclusive. The value 100.00000 means that the most recent similar story occurred 100 or more days in the past. The value 0.00000 means a similar story exists with the exact same timestamp",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_ess",
+      "description": "Event Sentiment Score - A granular score between 0 and 100 that represents the news sentiment for a given entity by measuring various proxies sampled from the news. The ratings are encapsulated in an algorithm that generates a score range between 0 and 100 where higher values indicate more positive sentiment while values below 50 show negative sentiment",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_g_ens",
+      "description": "Global Event Novelty Score - A score between 0 and 100 that represents how \"new\" or novel a news story is within a 24-hour time window across all news providers",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_g_ens_elapsed",
+      "description": "Global Event Novelty Elapsed Time - The number of milliseconds between the first story and the current story in an event novelty chain across all news providers covered by",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_g_ens_similarity_gap",
+      "description": "The number of days since a similar story was detected",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_ghc_lna",
+      "description": "Analyst Recommendations & Changes - A score that represents a change in recommendation by an analyst firm in the form of a numerical score",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_nip",
+      "description": "News Impact Projections - A score taking values between 0 and 100 that represents the degree of impact a news flash has on the market over the following 2-hour period. Whether something is considered high or low depends on the time of day when the story arrived",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_qcm",
+      "description": "Multi Classifier for Equities - A score that represents the news sentiment based on the tone; applicable only towards the most relevant companies mentioned in a story",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_qep",
+      "description": "Global Equities - A score that represents the news sentiment of the given news item, which specializes in identifying positive and negative words and phrases in articles about global equities",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 6,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_qmb",
+      "description": "Editorials & Commentary - A score that represents the news sentiment of the given story, which specializes in short commentary and editorials on global equity markets",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_relevance",
+      "description": "A score between 0-100 that indicates how strongly related the entity is to the underlying news story, with higher values indicating greater relevance. Specifically, a value of 100 indicates that the entity identified plays a key role in the news story and is considered highly relevant",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_rp_story_event_count",
+      "description": "Represents the total entity records published per news story",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_rp_story_event_index",
+      "description": "Represents the order in which entity records are published per news story",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_ssc",
+      "description": "A sentiment score between 0 and 100 that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws48_vea",
+      "description": "A value that represents the count of events for an entity (excluding neutral ones) measured over a rolling 91-day window",
+      "dataset": {
+        "id": "news48",
+        "name": "Global Media News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6326,
+      "userCount": 7,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

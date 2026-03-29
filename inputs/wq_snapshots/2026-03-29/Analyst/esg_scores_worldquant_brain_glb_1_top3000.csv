@@ -1,0 +1,236 @@
+Field,Description,Type,Coverage,Date Coverage,Alphas,__page
+anl11_1e,Aggregate KPI for Pollution Prevention & Environmental Remediation,Matrix,1.5,77%,100%,1
+anl11_1g,"Aggregate KPI for Board Indepndence, Diversity, & Effectiveness",Matrix,1.5,77%,100%,1
+anl11_1pme,Aggregate KPI for Compensation & Employee Satisfaction,Matrix,1.5,77%,100%,1
+anl11_1tic,Aggregate KPI for Community Engagement & Charitable Activities,Matrix,1.5,77%,100%,1
+anl11_2_1e,Aggregate KPI for Pollution Prevention & Environmental Remediation,Matrix,1.5,82%,100%,1
+anl11_2_1g,"Aggregate KPI for Board Independence, Diversity, & Effectiveness",Matrix,1.5,83%,100%,1
+anl11_2_1pme,Aggregate KPI for Compensation & Employee Satisfaction,Matrix,1.5,83%,100%,1
+anl11_2_1tic,Aggregate KPI for Community Engagement & Charitable Activities,Matrix,1.5,83%,100%,1
+anl11_2_2e,Aggregate KPI for Anti-Pollution Policies & Environmental Transparency,Matrix,1.5,82%,100%,1
+anl11_2_2g,Aggregate KPI for Management Standards & Ethics,Matrix,1.5,84%,100%,1
+anl11_2_2pme,Aggregate KPI for employee diversity treatment & labor rights,Matrix,1.5,83%,100%,1
+anl11_2_2tic,"Aggregate KPI for Human Rights Activism, Supply Chain, Labor & Human Rights Policies",Matrix,1.5,83%,100%,1
+anl11_2_3e,Aggregate KPI for Energy & Resource Efficiency,Matrix,1.5,84%,100%,1
+anl11_2_3g,"Aggregate KPI for Disclosure, Transparency, & Stakeholder Accountability",Matrix,1.5,84%,100%,1
+anl11_2_3pme,"Aggregate KPI for Employee Continuing Education, Training, Work Conditions, Safety & Health",Matrix,1.5,83%,100%,1
+anl11_2_3tic,Aggregate KPI for Business Model & Products,Matrix,1.5,80%,100%,1
+anl11_2_e,"The E Score averages the E1, E2, and E3 scores.",Matrix,1.5,84%,100%,1
+anl11_2_g,"The G Score averages the G1, G2, and G3 scores.",Matrix,1.5,84%,100%,1
+anl11_2_gse,"The ESG Score averages the E, S, and G scores.",Matrix,1.5,84%,100%,1
+anl11_2_pme,The EMP score averages the three EMP scores.,Matrix,1.5,84%,100%,1
+anl11_2_region,Region of the world in which the company is headquartered,Matrix,1.5,84%,100%,2
+anl11_2_tic,"The CIT Score averages the CIT1, CIT2, and CIT3 scores.",Matrix,1.5,84%,100%,2
+anl11_2e,Aggregate KPI for Anti-Polution Policies & Environmental Transparency,Matrix,1.5,77%,100%,2
+anl11_2g,Aggregate KPI for Management Standards & Ethics,Matrix,1.5,77%,100%,2
+anl11_2pme,"Aggregate KPI for Employee Diversity Treatment, & Labor Rights",Matrix,1.5,77%,100%,2
+anl11_2tic,"Aggregate KPI for Human Rights Activism, Supply Chain, Labor & Human Rights Policies",Matrix,1.5,77%,100%,2
+anl11_3e,Aggregate KPI for Energy & Resource Efficiency,Matrix,1.5,77%,100%,2
+anl11_3g,"Aggregate KPI for Disclosure, Transparency, & Stakeholder Accountability",Matrix,1.5,77%,100%,2
+anl11_3pme,"Aggregate KPI for Employee Continuing Education, Training, Work Conditionsw, Safety & Health",Matrix,1.5,77%,100%,2
+anl11_3tic,Aggregate KPI for Business Model & Products,Matrix,1.5,77%,100%,2
+anl11_cit1reg_industryperc,Industry Percentile on CIT1 100% being the best,Matrix,1.5,76%,100%,2
+anl11_cit1reg_industryrnk,Industry Rank on CIT1 1 being the highest rank,Matrix,1.5,77%,100%,2
+anl11_cit1regsubsecperc,SubSector Percentile on CIT1 100% being the best,Matrix,1.5,76%,100%,2
+anl11_cit1regsubsecrnk,SubSector Rank on CIT1 1 being the highest rank,Matrix,1.5,77%,100%,2
+anl11_cit2reg_industryperc,Industry Percentile on CIT2 100% being the best,Matrix,1.5,76%,100%,2
+anl11_cit2reg_industryrnk,Industry Rank on CIT2 1 being the highest rank,Matrix,1.5,77%,100%,2
+anl11_cit2regsubsecperc,SubSector Percentile on CIT2 100% being the best,Matrix,1.5,76%,100%,2
+anl11_cit2regsubsecrnk,SubSector Rank on CIT2 1 being the highest rank,Matrix,1.5,77%,100%,2
+anl11_cit3reg_industryperc,Industry Percentile on CIT3 100% being the best,Matrix,1.5,76%,100%,2
+anl11_cit3reg_industryrnk,Industry Rank on CIT3 1 being the highest rank,Matrix,1.5,77%,100%,2
+anl11_cit3regsubsecperc,SubSector Percentile on CIT3 100% being the best,Matrix,1.5,76%,100%,3
+anl11_cit3regsubsecrnk,SubSector Rank on CIT3 1 being the highest rank,Matrix,1.5,77%,100%,3
+anl11_cit_totalcor,The CIT Hybrid Score weights the three CIT scores based on which are strongly rank correlated (to the positive) to financial metrics that are strongly rank correlated to 1yr and 3 yr total returns for that company's peer group,Matrix,1.5,68%,100%,3
+anl11_cit_totalcorregsectperc,Sector Percentile on CIT Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,3
+anl11_cit_totalcorregsectrnk,Sector Rank on CIT Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,3
+anl11_cit_totalcorregsubsecperc,SubSector Percentile on CIT Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,3
+anl11_cit_totalcorregsubsecrnk,SubSector Rank on CIT Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,3
+anl11_cit_ttcrg_industryperc,Industry Percentile on CIT Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,3
+anl11_cit_ttcrg_industryrnk,Industry Rank on CIT Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,3
+anl11_citposcorreg_industryperc,Industry Percentile on CIT Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,3
+anl11_citposcorreg_industryrnk,Industry Rank on CIT Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,3
+anl11_citposcorregsubsecrnk,SubSector Percentile on CIT Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,3
+anl11_citreg_industryperc,Industry Percentile on CIT Score with 100% being the best,Matrix,1.5,76%,100%,3
+anl11_citreg_industryrnk,Industry Rank on CIT Score with 1 being the highest rank,Matrix,1.5,78%,100%,3
+anl11_citregsubsecperc,SubSector Percentile on CIT Score with 100% being the best,Matrix,1.5,76%,100%,3
+anl11_citregsubsecrnk,SubSector Rank on CIT Score with 1 being the highest rank,Matrix,1.5,78%,100%,3
+anl11_company_name,Company name,Matrix,1.5,84%,100%,3
+anl11_creptcesger1e,Sector Percentile on E1 100% being the best,Matrix,1.5,76%,100%,3
+anl11_creptcesger1g,Sector Percentile on G1 100% being the best,Matrix,1.5,76%,100%,3
+anl11_creptcesger1pme,Sector Percentile on EMP1 100% being the best,Matrix,1.5,76%,100%,3
+anl11_creptcesger1tic,Sector Percentile on CIT1 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesger2e,Sector Percentile on E2 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesger2g,Sector Percentile on G2 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesger2pme,Sector Percentile on EMP2 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesger2tic,Sector Percentile on CIT2 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesger3e,Sector Percentile on E3 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesger3g,Sector Percentile on G3 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesger3pme,Sector Percentile on EMP3 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesger3tic,Sector Percentile on CIT3 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesgere,Sector Percentile on E Score with 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesgerg,Sector Percentile on G Score with 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesgergse,Sector Percentile on ESG Score with 100% being the best,Matrix,1.5,77%,100%,4
+anl11_creptcesgerpme,Sector Percentile on EMP Score with 100% being the best,Matrix,1.5,76%,100%,4
+anl11_creptcesgerrocsope,Sector Percentile on E Max Correlation Score with 100% being the best,Matrix,1.5,66%,100%,4
+anl11_creptcesgerrocsopg,Sector Percentile on G Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,4
+anl11_creptcesgerrocsopgse,Sector Percentile on ESG Max Correlation Score with 100% being the best,Matrix,1.5,68%,100%,4
+anl11_creptcesgerrocsoppme,Sector Percentile on EMP Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,4
+anl11_creptcesgertic,Sector Percentile on CIT Score with 100% being the best,Matrix,1.5,76%,100%,4
+anl11_crptcsknrtcsgrscptc,Sector Rank on CIT Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,4
+anl11_ctpscrgsbscrnksbscprc,SubSector Rank on CIT Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,4
+anl11_e,"The E Score averages the E1, E2, and E3 scores.",Matrix,1.5,78%,100%,5
+anl11_e1reg_industryperc,Industry Percentile on E1 100% being the best,Matrix,1.5,76%,100%,5
+anl11_e1reg_industryrnk,Industry Rank on E1 1 being the highest rank,Matrix,1.5,77%,100%,5
+anl11_e1regsubsecperc,SubSector Percentile on E1 100% being the best,Matrix,1.5,76%,100%,5
+anl11_e1regsubsecrnk,SubSector Rank on E1 1 being the highest rank,Matrix,1.5,77%,100%,5
+anl11_e2reg_industryperc,Industry Percentile on E2 100% being the best,Matrix,1.5,76%,100%,5
+anl11_e2reg_industryrnk,Industry Rank on E2 1 being the highest rank,Matrix,1.5,77%,100%,5
+anl11_e2regsubsecperc,SubSector Percentile on E2 100% being the best,Matrix,1.5,76%,100%,5
+anl11_e2regsubsecrnk,SubSector Rank on E2 1 being the highest rank,Matrix,1.5,77%,100%,5
+anl11_e3reg_industryperc,Industry Percentile on E3 100% being the best,Matrix,1.5,76%,100%,5
+anl11_e3reg_industryrnk,Industry Rank on E3 1 being the highest rank,Matrix,1.5,77%,100%,5
+anl11_e3regsubsecperc,SubSector Percentile on E3 100% being the best,Matrix,1.5,76%,100%,5
+anl11_e3regsubsecrnk,SubSector Rank on E3 1 being the highest rank,Matrix,1.5,77%,100%,5
+anl11_e_totalcor,The E Hybrid Score weights the three E scores based on which are strongly rank correlated (to the positive) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.,Matrix,1.5,68%,100%,5
+anl11_e_totalcorregsectperc,Sector Percentile on E Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,5
+anl11_e_totalcorregsectrnk,Sector Rank on E Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,5
+anl11_e_totalcorregsubsecperc,SubSector Percentile on E Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,5
+anl11_e_totalcorregsubsecrnk,SubSector Rank on E Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,5
+anl11_e_ttcrg_industryperc,Industry Percentile on E Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,5
+anl11_e_ttcrg_industryrnk,Industry Rank on E Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,5
+anl11_emp1reg_industryperc,Industry Percentile on EMP1 100% being the best,Matrix,1.5,76%,100%,6
+anl11_emp1reg_industryrnk,Industry Rank on the first EMP score with 1 as highest,Matrix,1.5,77%,100%,6
+anl11_emp1regsubsecperc,SubSector Percentile on EMP1 100% being the best,Matrix,1.5,76%,100%,6
+anl11_emp1regsubsecrnk,SubSector Rank on the first EMP score with 1 as highest,Matrix,1.5,77%,100%,6
+anl11_emp2reg_industryperc,Industry Percentile on EMP2 100% being the best,Matrix,1.5,76%,100%,6
+anl11_emp2reg_industryrnk,Industry Rank on the second EMP score with 1 as highest,Matrix,1.5,77%,100%,6
+anl11_emp2regsubsecperc,SubSector Percentile on EMP2 100% being the best,Matrix,1.5,76%,100%,6
+anl11_emp2regsubsecrnk,SubSector Rank on the second EMP score with 1 as highest,Matrix,1.5,77%,100%,6
+anl11_emp3reg_industryperc,Industry Percentile on EMP3 100% being the best,Matrix,1.5,76%,100%,6
+anl11_emp3reg_industryrnk,Industry Rank on the third EMP score with 1 as highest,Matrix,1.5,77%,100%,6
+anl11_emp3regsubsecperc,SubSector Percentile on EMP3 100% being the best,Matrix,1.5,76%,100%,6
+anl11_emp3regsubsecrnk,SubSector Rank on the third EMP score with 1 as highest,Matrix,1.5,77%,100%,6
+anl11_emp_totalcor,The EMP Hybrid Score weights the three EMP scores based on which are strongly rank correlated (to the positive) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.,Matrix,1.5,68%,100%,6
+anl11_emp_totalcorregsectperc,Sector Percentile on EMP Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,6
+anl11_emp_totalcorregsectrnk,Sector Rank on EMP Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,6
+anl11_emp_totalcorregsubsecperc,SubSector Percentile on EMP Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,6
+anl11_emp_totalcorregsubsecrnk,SubSector Rank on EMP Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,6
+anl11_emp_ttcrg_industryperc,Industry Percentile on EMP Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,6
+anl11_emp_ttcrg_industryrnk,Industry Rank on EMP Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,6
+anl11_empposcorreg_industryperc,Industry Percentile on EMP Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,6
+anl11_empposcorreg_industryrnk,Industry Rank on EMP Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,7
+anl11_empposcorregsubsecperc,SubSector Percentile on EMP Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,7
+anl11_empposcorregsubsecrnk,SubSector Rank on EMP Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,7
+anl11_empreg_industryperc,Industry Percentile on EMP Score with 100% being the best,Matrix,1.5,76%,100%,7
+anl11_empreg_industryrnk,Industry Rank on EMP Score with 1 being the highest rank,Matrix,1.5,77%,100%,7
+anl11_empregsubsecperc,SubSector Percentile on EMP Score with 100% being the best,Matrix,1.5,76%,100%,7
+anl11_empregsubsecrnk,SubSector Rank on EMP Score with 1 being the highest rank,Matrix,1.5,77%,100%,7
+anl11_eposcorreg_industryperc,Industry Percentile on E Max Correlation Score with 100% being the best,Matrix,1.5,66%,100%,7
+anl11_eposcorreg_industryrnk,Industry Rank on E Max Correlation Score with 1 being the highest rank,Matrix,1.5,66%,100%,7
+anl11_eposcorregsubsecperc,SubSector Percentile on E Max Correlation Score with 100% being the best,Matrix,1.5,66%,100%,7
+anl11_eposcorregsubsecrnk,SubSector Rank on E Max Correlation Score with 1 being the highest rank,Matrix,1.5,66%,100%,7
+anl11_ereg_industryperc,Industry Percentile on E Score with 100% being the best,Matrix,1.5,76%,100%,7
+anl11_ereg_industryrnk,Industry Rank on E Score with 1 being the highest rank,Matrix,1.5,78%,100%,7
+anl11_eregsubsecperc,SubSector Percentile on E Score with 100% being the best,Matrix,1.5,76%,100%,7
+anl11_eregsubsecrnk,SubSector Rank on E Score with 1 being the highest rank,Matrix,1.5,78%,100%,7
+anl11_esg_totalcor,The ESG Hybrid Score weights the individual E EMP CIT and G scores based on which are strongly rank correlated (to the positive) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.,Matrix,1.5,69%,100%,7
+anl11_esg_totalcorregsectperc,Sector Percentile on ESG Hybrid Score with 100% being the best,Matrix,1.5,69%,100%,7
+anl11_esg_totalcorregsectrnk,Sector Rank on ESG Hybrid Score with 1 being the highest rank,Matrix,1.5,69%,100%,7
+anl11_esg_totalcorregsubsecperc,SubSector Percentile on ESG Hybrid Score with 100% being the best,Matrix,1.5,69%,100%,7
+anl11_esg_totalcorregsubsecrnk,SubSector Rank on ESG Hybrid Score with 1 being the highest rank,Matrix,1.5,69%,100%,7
+anl11_esg_ttcrg_industryperc,Industry Percentile on ESG Hybrid Score with 100% being the best,Matrix,1.5,69%,100%,8
+anl11_esg_ttcrg_industryrnk,Industry Rank on ESG Hybrid Score with 1 being the highest rank,Matrix,1.5,69%,100%,8
+anl11_esgposcorreg_industryperc,Industry Percentile on ESG Max Correlation Score with 100% being the best,Matrix,1.5,68%,100%,8
+anl11_esgposcorreg_industryrnk,Industry Rank on ESG Max Correlation Score with 1 being the highest rank,Matrix,1.5,69%,100%,8
+anl11_esgposcorregsubsecperc,SubSector Percentile on ESG Max Correlation Score with 100% being the best,Matrix,1.5,68%,100%,8
+anl11_esgposcorregsubsecrnk,SubSector Rank on ESG Max Correlation Score with 1 being the highest rank,Matrix,1.5,69%,100%,8
+anl11_esgreg_industryperc,Industry Percentile on ESG Score with 100% being the best,Matrix,1.5,77%,100%,8
+anl11_esgreg_industryrnk,Industry Rank on ESG Score with 1 being the highest rank,Matrix,1.5,78%,100%,8
+anl11_esgregsubsecperc,SubSector Percentile on ESG Score with 100% being the best,Matrix,1.5,77%,100%,8
+anl11_esgregsubsecrnk,SubSector Rank on ESG Score with 1 being the highest rank,Matrix,1.5,78%,100%,8
+anl11_g,"The G Score averages the G1, G2, and G3 scores.",Matrix,1.5,77%,100%,8
+anl11_g1reg_industryperc,Industry Percentile on G1 100% being the best,Matrix,1.5,76%,100%,8
+anl11_g1reg_industryrnk,Industry Rank on G1 1 being the highest rank,Matrix,1.5,77%,100%,8
+anl11_g1regsubsecperc,SubSector Percentile on G1 100% being the best,Matrix,1.5,76%,100%,8
+anl11_g1regsubsecrnk,SubSector Rank on G1 1 being the highest rank,Matrix,1.5,77%,100%,8
+anl11_g2reg_industryperc,Industry Percentile on G2 100% being the best,Matrix,1.5,76%,100%,8
+anl11_g2reg_industryrnk,Industry Rank on G2 1 being the highest rank,Matrix,1.5,77%,100%,8
+anl11_g2regsubsecperc,SubSector Percentile on G2 100% being the best,Matrix,1.5,76%,100%,8
+anl11_g2regsubsecrnk,SubSector Rank on G2 1 being the highest rank,Matrix,1.5,77%,100%,8
+anl11_g3reg_industryperc,Industry Percentile on G3 100% being the best,Matrix,1.5,76%,100%,8
+anl11_g3reg_industryrnk,Industry Rank on G3 1 being the highest rank,Matrix,1.5,77%,100%,9
+anl11_g3regsubsecperc,SubSector Percentile on G3 100% being the best,Matrix,1.5,76%,100%,9
+anl11_g3regsubsecrnk,SubSector Rank on G3 1 being the highest rank,Matrix,1.5,77%,100%,9
+anl11_g_totalcor,The G Hybrid Score weights the three G scores based on which are strongly rank correlated (to the positive) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.,Matrix,1.5,68%,100%,9
+anl11_g_totalcorregsectperc,Sector Percentile on G Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,9
+anl11_g_totalcorregsectrnk,Sector Rank on G Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,9
+anl11_g_totalcorregsubsecperc,SubSector Percentile on G Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,9
+anl11_g_totalcorregsubsecrnk,SubSector Rank on G Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,9
+anl11_g_ttcrg_industryperc,Industry Percentile on G Hybrid Score with 100% being the best,Matrix,1.5,68%,100%,9
+anl11_g_ttcrg_industryrnk,Industry Rank on G Hybrid Score with 1 being the highest rank,Matrix,1.5,68%,100%,9
+anl11_global_industrycount,Global Industry Count,Matrix,1.5,75%,100%,9
+anl11_globalsectcount,Global Sector Count,Matrix,1.5,75%,100%,9
+anl11_globalsubseccount,Global SubSector Count,Matrix,1.5,75%,100%,9
+anl11_gposcorreg_industryperc,Industry Percentile on G Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,9
+anl11_gposcorreg_industryrnk,Industry Rank on G Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,9
+anl11_gposcorregsubsecperc,SubSector Percentile on G Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,9
+anl11_gposcorregsubsecrnk,SubSector Rank on G Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,9
+anl11_greg_industryperc,Industry Percentile on G Score with 100% being the best,Matrix,1.5,76%,100%,9
+anl11_greg_industryrnk,Industry Rank on G Score with 1 being the highest rank,Matrix,1.5,77%,100%,9
+anl11_gregsubsecperc,SubSector Percentile on G Score with 100% being the best,Matrix,1.5,76%,100%,9
+anl11_gregsubsecrnk,SubSector Rank on G Score with 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_gse,"The ESG Score averages the E, S, and G scores.",Matrix,1.5,78%,100%,10
+anl11_knrtcesger1e,Sector Rank on E1 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesger1g,Sector Rank on G1 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesger1pme,Sector Rank on the first EMP score with 1 as highest,Matrix,1.5,77%,100%,10
+anl11_knrtcesger1tic,Sector Rank on CIT1 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesger2e,Sector Rank on E2 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesger2g,Sector Rank on G2 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesger2pme,Sector Rank on the second EMP score with 1 as highest,Matrix,1.5,77%,100%,10
+anl11_knrtcesger2tic,Sector Rank on CIT2 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesger3e,Sector Rank on E3 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesger3g,Sector Rank on G3 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesger3pme,Sector Rank on the third EMP score with 1 as highest,Matrix,1.5,77%,100%,10
+anl11_knrtcesger3tic,Sector Rank on CIT3 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesgere,Sector Rank on E Score with 1 being the highest rank,Matrix,1.5,78%,100%,10
+anl11_knrtcesgerg,Sector Rank on G Score with 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesgergse,Sector Rank on ESG Score with 1 being the highest rank,Matrix,1.5,78%,100%,10
+anl11_knrtcesgerpme,Sector Rank on EMP Score with 1 being the highest rank,Matrix,1.5,77%,100%,10
+anl11_knrtcesgerrocsope,Sector Rank on E Max Correlation Score with 1 being the highest rank,Matrix,1.5,66%,100%,10
+anl11_knrtcesgerrocsopg,Sector Rank on G Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,10
+anl11_knrtcesgerrocsopgse,Sector Rank on ESG Max Correlation Score with 1 being the highest rank,Matrix,1.5,69%,100%,11
+anl11_knrtcesgerrocsoppme,Sector Rank on EMP Max Correlation Score with 1 being the highest rank,Matrix,1.5,67%,100%,11
+anl11_knrtcesgerrocsoptic,Sector Percentile on CIT Max Correlation Score with 100% being the best,Matrix,1.5,67%,100%,11
+anl11_knrtcesgertic,Sector Rank on CIT Score with 1 being the highest rank,Matrix,1.5,78%,100%,11
+anl11_pme,The EMP Score averages the three EMP scores .,Matrix,1.5,77%,100%,11
+anl11_region_industrycount,Region Industry Count,Matrix,1.5,78%,100%,11
+anl11_regionsectcount,Region Sector Count,Matrix,1.5,78%,100%,11
+anl11_regionsubseccount,Region SubSector Count,Matrix,1.5,78%,100%,11
+anl11_rocsope,The E Max Correlation Score weights the three E scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peers.,Matrix,1.5,66%,100%,11
+anl11_rocsopg,The G Max Correlation Score weights the three G scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.,Matrix,1.5,67%,100%,11
+anl11_rocsopgse,The ESG Max Correlation Score weights the individual E EMP CIT and G scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.,Matrix,1.5,69%,100%,11
+anl11_rocsoppme,The EMP Max Correlation Score weights the three EMP scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.,Matrix,1.5,67%,100%,11
+anl11_rocsoptic,The CIT Max Correlation Score weights the three CIT scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peer group,Matrix,1.5,67%,100%,11
+anl11_tic,"The CIT Score averages the CIT1, CIT2, and CIT3 scores.",Matrix,1.5,78%,100%,11
+social_pillar_score,Aggregated score representing company performance on social factors.,Matrix,1.5,78%,100%,11
+social_poscorr_industry_percentile,Percentile ranking within industry peer group for social score weighted by positive correlation to financial returns.,Matrix,1.5,68%,100%,11
+social_poscorr_industry_position,Company’s position within industry peer group for social score weighted by positive correlation to financial returns.,Matrix,1.5,68%,100%,11
+social_poscorr_sector_percentile,Percentile ranking within sector peer group for social score weighted by positive correlation to financial returns.,Matrix,1.5,68%,100%,11
+social_poscorr_sector_position,Company’s position within sector peer group for social score weighted by positive correlation to financial returns.,Matrix,1.5,68%,100%,11
+social_poscorr_subsector_percentile,Percentile ranking within subsector peer group for social score weighted by positive correlation to financial returns.,Matrix,1.5,68%,100%,11
+social_poscorr_subsector_position,Company’s position within subsector peer group for social score weighted by positive correlation to financial returns.,Matrix,1.5,68%,100%,12
+social_score_industry_percentile,Percentile ranking within industry peer group for social score.,Matrix,1.5,77%,100%,12
+social_score_industry_position,Company’s position within industry peer group for social score.,Matrix,1.5,78%,100%,12
+social_score_positive_correlation,Social score weighted by metrics most positively correlated to financial returns.,Matrix,1.5,68%,100%,12
+social_score_sector_percentile,Percentile ranking within sector peer group for social score.,Matrix,1.5,77%,100%,12
+social_score_sector_position,Company’s position within sector peer group for social score.,Matrix,1.5,78%,100%,12
+social_score_subsector_percentile,Percentile ranking within subsector peer group for social score.,Matrix,1.5,77%,100%,12
+social_score_subsector_position,Company’s position within subsector peer group for social score.,Matrix,1.5,78%,100%,12
+social_score_total_correlation,Social score weighted by metrics most strongly correlated (positive and negative) to financial returns.,Matrix,1.5,69%,100%,12
+social_totalcorr_industry_percentile,Percentile ranking within industry peer group for social score weighted by total correlation to financial returns.,Matrix,1.5,69%,100%,12
+social_totalcorr_industry_position,Company’s position within industry peer group for social score weighted by total correlation to financial returns.,Matrix,1.5,69%,100%,12
+social_totalcorr_sector_percentile,Percentile ranking within sector peer group for social score weighted by total correlation to financial returns.,Matrix,1.5,69%,100%,12
+social_totalcorr_sector_position,Company’s position within sector peer group for social score weighted by total correlation to financial returns.,Matrix,1.5,69%,100%,12
+social_totalcorr_subsector_percentile,Percentile ranking within subsector peer group for social score weighted by total correlation to financial returns.,Matrix,1.5,69%,100%,12
+social_totalcorr_subsector_position,Company’s position within subsector peer group for social score weighted by total correlation to financial returns.,Matrix,1.5,69%,100%,12

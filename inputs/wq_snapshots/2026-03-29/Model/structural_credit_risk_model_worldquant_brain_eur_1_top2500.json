@@ -1,0 +1,1154 @@
+{
+  "exported_at": "2026-03-29T04:47:52.594Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model28?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 43,
+  "row_count": 43,
+  "page_count": 3,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model28"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model28"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 3,
+      "new_item_count": 3,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model28"
+    }
+  ],
+  "rows": [
+    {
+      "id": "annualized_asset_drift_pct",
+      "description": "Annualized rate of change in asset value used in default modeling.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7604,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "annualized_asset_volatility_pct",
+      "description": "Annualized volatility of asset value used in default modeling.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7603,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "asset_drift_rate_pct",
+      "description": "Annualized rate of change in asset value used in default modeling (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7605,
+      "userCount": 6,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "asset_volatility_annualized_pct",
+      "description": "Annualized volatility of asset value used in default modeling (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7604,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_default_risk_percentile",
+      "description": "Percentile rank of default likelihood within the same country.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.76,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_default_risk_percentile_float",
+      "description": "Percentile rank of default likelihood within the same country (float version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_default_risk_percentile_v1",
+      "description": "Percentile rank of default likelihood within the same country (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_probability_one_year_pct",
+      "description": "Estimated probability of default over the next year, expressed as a percent (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_country_percentile_d1",
+      "description": "Percentile rank of default likelihood within the same country (d1 version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_global_percentile_d1",
+      "description": "Percentile rank of default likelihood compared to all companies worldwide (d1 version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_global_percentile_v1",
+      "description": "Percentile rank of default likelihood compared to all companies worldwide (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_industry_percentile_d1",
+      "description": "Percentile rank of default likelihood within the same industry group (d1 version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9243,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_region_percentile_d1",
+      "description": "Percentile rank of default likelihood within the same geographic region (d1 version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_sector_percentile_d1",
+      "description": "Percentile rank of default likelihood within the same economic sector (d1 version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9291,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_threshold_to_asset_ratio",
+      "description": "Ratio comparing the default threshold to total asset value (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7646,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "distance_to_default_standard_deviation",
+      "description": "Number of standard deviations between asset value and default threshold (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "distance_to_default_stddev",
+      "description": "Number of standard deviations between asset value and default threshold.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.76,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "global_default_risk_percentile",
+      "description": "Percentile rank of default likelihood compared to all companies globally.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.76,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "global_default_risk_percentile_v1",
+      "description": "Percentile rank of default likelihood compared to all companies globally (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_default_risk_percentile",
+      "description": "Percentile rank of default likelihood within the same industry.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7547,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_default_risk_percentile_float",
+      "description": "Percentile rank of default likelihood within the same industry (float version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7548,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_default_risk_percentile_v1",
+      "description": "Percentile rank of default likelihood within the same industry (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7548,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leverage_ratio_to_assets",
+      "description": "Ratio comparing the default threshold to total asset value.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7646,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "model_based_letter_grade_d1",
+      "description": "Agency-style rating derived from model-estimated default probability (d1 version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "model_based_letter_grade_v1",
+      "description": "Agency-style rating derived from model-estimated default probability (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "one_year_default_probability_pct",
+      "description": "Estimated probability of default over the next year, expressed as a percent.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.76,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_default_risk_percentile",
+      "description": "Percentile rank of default likelihood within the same region.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.76,
+      "userCount": 6,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_default_risk_percentile_float",
+      "description": "Percentile rank of default likelihood within the same region (float version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_default_risk_percentile_v1",
+      "description": "Percentile rank of default likelihood within the same region (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7601,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_default_risk_percentile",
+      "description": "Percentile rank of default likelihood within the same sector.",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.759,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_default_risk_percentile_float",
+      "description": "Percentile rank of default likelihood within the same sector (float version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7591,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_default_risk_percentile_v1",
+      "description": "Percentile rank of default likelihood within the same sector (original version).",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7591,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_asset_drift_pct",
+      "description": "1-100 rank of the annualized rate of change of the market value of the firm’s assets",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9308,
+      "userCount": 36,
+      "alphaCount": 135,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_asset_volatility_pct",
+      "description": "annualized volatility of the market value of the firm’s assets",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9308,
+      "userCount": 10,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_country_rank",
+      "description": "\"The current 1-100 percentile rank, by country, of a company's 1.year default probability based on the Structural Component of the Thomson Reuters StarMine Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1.year period.\",,,",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 16,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_dist_to_default",
+      "description": "Number of standard deviations difference between the market value of the firm's assets and its estimated default point.,,,",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_global_rank",
+      "description": "\"The current global 1-100 percentile rank of a company's 1-year default probability based on the Structural Component of the Thomson Reuters StarMine Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1-year period.\",,,",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 14,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_implied_rating",
+      "description": "Agency.equivalent credit rating implied by the current estimated forward 1.year SCR default probability.,,,",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9696,
+      "userCount": 12,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_industry_rank",
+      "description": "\"The current 1-100 percentile rank, among other firms in the same region and industry, of a company's 1.year default probability based on the Structural Component of the Thomson Reuters StarMine Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1.year period.\",,,",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9243,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_leverage",
+      "description": "The current 1-100 percentile rank, among other firms in the same region and industry, of a company's 1.year default probability",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9406,
+      "userCount": 14,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_pd_pct",
+      "description": "A percentage that indicates the probability,that the company will go bankrupt, or default on its debt obligations,\r\nover the next 1-year period",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_region_rank",
+      "description": "\"The current 1-100 percentile rank, among other firms in the same region, of a company's 1.year default probability based on the Structural Component of the Thomson Reuters StarMine Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1.year period.\",,,",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9305,
+      "userCount": 9,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_cr_sector_rank",
+      "description": "\"The current 1-100 percentile rank, among other firms in the same region and industrial sector, of a company's 1.year default probability based on the Structural Component of the Thomson Reuters StarMine Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1.year period.\",,,",
+      "dataset": {
+        "id": "model28",
+        "name": "Structural Credit Risk Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9291,
+      "userCount": 7,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

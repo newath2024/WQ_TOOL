@@ -1,0 +1,990 @@
+{
+  "exported_at": "2026-03-29T04:56:59.157Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news50?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 37,
+  "row_count": 37,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news50"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 17,
+      "new_item_count": 17,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=news50"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mws50_acb",
+      "description": "REPORTS ON CORPORATE ACTIONS (Equities Package Only) - A score that represents the news sentiment of the given news story according to the BCA classifier, which specializes in reports on corporate action announcements",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 10,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_aes",
+      "description": "A granular score between 0 and 100 that represents the ratio of positive events reported on an entity compared to the total count of events (excluding neutral ones) measured over a rolling 91- day window in a particular package (Dow Jones, Web or PR Editions). Only news items that match a RavenPack event category receiving an ESS score are included in the computation of AES. An event with ESS>50 is counted as a positive entry whereas one with ESS<50 is counted as a negative entry. Events with ESS=50 are considered neutral and excluded from the computation.",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 10,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_bam",
+      "description": "VENTURE, COMPANY, MERGERS & ACQUISITIONS (Equities Package Only) - A score that represents the news sentiment of the given story according to the BAM classifier, which specializes in news stories about mergers, acquisitions, and takeovers",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_bee",
+      "description": "EARNINGS EVALUATIONS (Equities Package Only) - A score that represents the news sentiment of the given story according to the BEE classifier, which specializes in news stories about earnings evaluations",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 10,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_ber",
+      "description": "EARNINGS RELEASES (Equities Package Only) - A score that represents the news sentiment of the given story according to the BER classifier, which specializes in news stories about earnings releases",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_category",
+      "description": "A unique tag to label, identify, and recognize a particular type and property of an entity-specific news event",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9085,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_country_code",
+      "description": "The two character ISO-3166 country code associated with an entity. Companies and organizations are associated with the country of incorporation, currencies are associated with the country where the central bank resides, and commodities are global and not associated with specific countries, so their COUNTRY_CODE label is 'XX'",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_ens",
+      "description": "EVENT NOVELTY SCORE - A score between 0 and 100 that represents how \"new\" or novel a news story is within a 24-hour time window across all news stories in a particular package",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_ens_elapsed",
+      "description": "EVENT NOVELTY ELAPSED TIME - The number of milliseconds between the first story and the current story in an event novelty chain. The first story in a chain will always be given a value of zero milliseconds (ENS_ELAPSED = 0). Subsequent stories in the same event novelty chain will receive higher values indicating the number of milliseconds elapsed since the first news story reporting the event. ENS_ELAPSED is only based on news stories from a particular package (Dow Jones Edition, Web Edition, or PR Edition)",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_ens_key",
+      "description": "An alphanumeric identifier that provides a way to chain or relate stories about the same categorized event for the same entities.",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9085,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_ens_similarity_gap",
+      "description": "The number of days since a similar story was detected in this RPNA edition (Dow Jones Edition, Web Edition, or PR Edition). Values range between 0.00000 and 100.00000 inclusive. The value 100.00000 means that the most recent similar story occurred 100 or more days in the past. The value 0.00000 means a similar story exists with the exact same timestamp",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5761,
+      "coverage": 0.7863,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_ess",
+      "description": "EVENT SENTIMENT SCORE - A granular score between 0 and 100 that represents the news sentiment for a given entity by measuring various proxies sampled from the news. The score is determined by systematically matching stories typically categorized by financial experts as having short-term positive or negative financial or economic impact. Their ratings are encapsulated in an algorithm that generates a score range between 0-100 where higher values indicate more positive sentiment while values below 50 show negative sentiment.",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_evaluation_method",
+      "description": "A period of time used to measure changes from previous levels in an event.",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5761,
+      "coverage": 0.9085,
+      "userCount": 13,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_g_ens",
+      "description": "GLOBAL EVENT NOVELTY SCORE - A score between 0 and 100 that represents how \"new\" or novel a news story is within a 24-hour time window across all news providers covered by RavenPack",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_g_ens_elapsed",
+      "description": "GLOBAL EVENT NOVELTY ELAPSED TIME - The number of milliseconds between the first story and the current story in an event novelty chain across all news providers covered by RavenPack",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_g_ens_key",
+      "description": "An alphanumeric identifier that provides a way to chain or relate stories about the same categorized event for the same entities across all news providers.",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9085,
+      "userCount": 4,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_g_ens_similarity_gap",
+      "description": "The number of days since a similar story was detected across all product editions (Dow Jones Edition, Web Edition, and PR Edition)",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5761,
+      "coverage": 0.7863,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_ghc_lna",
+      "description": "ANALYST RECOMMENDATIONS & CHANGES (Equities Package Only) - A score that represents a change in recommendation by an analyst firm in the form of a numerical score",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 12,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_group",
+      "description": "A collection of related events.",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9079,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_maturity",
+      "description": "For events related to debt, this named attribute indicates the period of time for which a financial instrument remains outstanding.",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5761,
+      "coverage": 0.9085,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_news_type",
+      "description": "Classifies the type of news story",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 14,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_nip",
+      "description": "NEWS IMPACT PROJECTIONS (Equities Package Only) - A score taking values between 0 and 100 that represents the degree of impact a news flash has on the market over the following two-hour period Whether something is considered high or low depends on the time of day when the story arrived",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_position_name",
+      "description": "The position held by an individual within the entity involved in a specific news event.",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5761,
+      "coverage": 0.7772,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_product_key",
+      "description": "Identifies which subscription package contains the record",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9239,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_property",
+      "description": "A named attribute of an event such as an entity, role, or string extracted from a matched event type. When applicable, the role played by the entity in the story is detected and tagged",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9085,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_qcm",
+      "description": "MULTI CLASSIFIER FOR EQUITIES (Equities Package Only) - A score that represents the news sentiment based on th tone; applicable only towards the most relevant companies mentioned in a story. The score is derived from a combination of analytics values produced by the BMQ, BEE, BCA, and ANL-CHG classifiers",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 6,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_qep",
+      "description": "GLOBAL EQUITIES (Equities Package Only) - A score that represents the news sentiment of the given news item according to the PEQ classifier, which specializes in identifying positive and negative words and phrases in articles about global equities",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 5,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_qmb",
+      "description": "EDITORIALS & COMMENTARY (Equities Package Only) - A score that represents the news sentiment of the given story according to the BMQ classifier, which specializes in short commentary and editorials on global equity markets",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 23,
+      "alphaCount": 53,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_relevance",
+      "description": "A score between 0-100 that indicates how strongly related the entity is to the underlying newsstory, with higher values indicating greater relevance Specifically, a value of 100 indicates that the entity identified plays a key role in the news story and is considered highly relevant",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_rp_story_event_count",
+      "description": "Represents the total entity records published by RavenPack per news story",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 42,
+      "alphaCount": 61,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_rp_story_event_index",
+      "description": "Represents the order in which entity records are published by RavenPack per news story. This integer can be equal to or less than the RP_STORY_EVENT_COUNT",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 15,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_ssc",
+      "description": "A sentiment score between 0 and 100 that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_sub_type",
+      "description": "A subdivision of a particular class of events",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9083,
+      "userCount": 6,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_time",
+      "description": "Time information",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_topic",
+      "description": "A subject or theme of events detected",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9047,
+      "userCount": 2,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_type",
+      "description": "A class of events, the constituents of which share similar characteristics",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9084,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws50_vea",
+      "description": "A value that represents the count of events for an entity (excluding neutral ones) measured over a rolling 91-day window in a particular package (Dow Jones, Web, or PR Editions). Only news items that match a RavenPack event category receiving an ESS score are included in the computation of AEV. Both events with an ESS score above and below 50 are counted by AEV, effectively signaling the volume of highly relevant news on the entity over the past 91 days. Events with ESS=50 are considered neutral and excluded from the computation",
+      "dataset": {
+        "id": "news50",
+        "name": "Web News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7863,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

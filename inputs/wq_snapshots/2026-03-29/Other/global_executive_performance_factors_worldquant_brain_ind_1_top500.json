@@ -1,0 +1,384 @@
+{
+  "exported_at": "2026-03-29T05:00:59.122Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other128?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 14,
+  "row_count": 14,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 14,
+      "new_item_count": 14,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=other128"
+    }
+  ],
+  "rows": [
+    {
+      "id": "chief_exec_equity_award_score",
+      "description": "A normalized score representing the non-cash compensation, such as equity or options, awarded to the chief executive officer.",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "chief_exec_investor_sentiment_score_em",
+      "description": "A normalized score reflecting investor confidence in the chief executive officer for emerging markets.",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "finance_exec_equity_award_score",
+      "description": "A normalized score representing the non-cash compensation, such as equity or options, awarded to the chief financial officer.",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "finance_exec_investor_sentiment_score_em",
+      "description": "A normalized score reflecting investor confidence in the chief financial officer for emerging markets.",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "finance_exec_salary_bonus_score",
+      "description": "A normalized score representing the cash compensation, such as salary and bonuses, awarded to the chief financial officer.",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emceocashcompensation_26",
+      "description": "CEO cash compensation",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 55,
+      "alphaCount": 76,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emceotenure_31",
+      "description": "CEO tenure",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 29,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emcfotenure_30",
+      "description": "CFO tenure",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 18,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emexecutiveefficiencyinput_36",
+      "description": "executive efficiency model input",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emexecutiveefficiencyoutput_37",
+      "description": "executive efficiency model output",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emkeyexecutiveice_35",
+      "description": "investor confidence on key executives",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 17,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emkeyexecutivetenure_32",
+      "description": "key executive tenure",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 13,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emmarketcap_23",
+      "description": "market cap",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 20,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth128_emscore_38",
+      "description": "Final Capri Score",
+      "dataset": {
+        "id": "other128",
+        "name": "Global Executive Performance Factors"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.742,
+      "userCount": 44,
+      "alphaCount": 47,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

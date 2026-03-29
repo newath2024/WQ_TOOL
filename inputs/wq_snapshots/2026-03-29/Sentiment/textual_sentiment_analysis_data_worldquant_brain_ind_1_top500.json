@@ -1,0 +1,2790 @@
+{
+  "exported_at": "2026-03-29T05:11:31.748Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/sentiment23?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 105,
+  "row_count": 105,
+  "page_count": 6,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=sentiment23"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=IND&universe=TOP500&dataset.id=sentiment23"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=IND&universe=TOP500&dataset.id=sentiment23"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=IND&universe=TOP500&dataset.id=sentiment23"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=IND&universe=TOP500&dataset.id=sentiment23"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 5,
+      "new_item_count": 5,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=IND&universe=TOP500&dataset.id=sentiment23"
+    }
+  ],
+  "rows": [
+    {
+      "id": "snt23_2neg_conf_low",
+      "description": "95% interval lower end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 85,
+      "alphaCount": 136,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neg_conf_up",
+      "description": "95% interval upper end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 62,
+      "alphaCount": 162,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neg_max",
+      "description": "Maximum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 44,
+      "alphaCount": 89,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neg_mean",
+      "description": "Average negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 44,
+      "alphaCount": 64,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neg_median",
+      "description": "Median negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 38,
+      "alphaCount": 54,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neg_min",
+      "description": "Minimum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 28,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neg_std",
+      "description": "Standard Deviation of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 55,
+      "alphaCount": 100,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neut_conf_low",
+      "description": "95% interval lower end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 24,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neut_conf_up",
+      "description": "95% interval upper end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 17,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neut_max",
+      "description": "Maximum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 41,
+      "alphaCount": 103,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neut_mean",
+      "description": "Average neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 36,
+      "alphaCount": 49,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neut_median",
+      "description": "Median neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 21,
+      "alphaCount": 45,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neut_min",
+      "description": "Minimum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 18,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2neut_std",
+      "description": "Standard Deviation of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 19,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2pos_conf_low",
+      "description": "95% interval lower end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 20,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2pos_conf_up",
+      "description": "95% interval upper end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 19,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2pos_max",
+      "description": "Maximum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 22,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2pos_mean",
+      "description": "Average positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 25,
+      "alphaCount": 38,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2pos_median",
+      "description": "Median positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 41,
+      "alphaCount": 86,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2pos_min",
+      "description": "Minimum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 43,
+      "alphaCount": 50,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_2pos_std",
+      "description": "Standard Deviation of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 21,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neg_conf_low",
+      "description": "95% interval lower end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 14,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neg_conf_up",
+      "description": "95% interval upper end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neg_max",
+      "description": "Maximum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 16,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neg_mean",
+      "description": "Average negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neg_median",
+      "description": "Median negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neg_min",
+      "description": "Minimum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neg_std",
+      "description": "Standard Deviation of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 12,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neut_conf_low",
+      "description": "95% interval lower end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 14,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neut_conf_up",
+      "description": "95% interval upper end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neut_max",
+      "description": "Maximum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 7,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neut_mean",
+      "description": "Average neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neut_median",
+      "description": "Median neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 15,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neut_min",
+      "description": "Minimum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 17,
+      "alphaCount": 52,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3neut_std",
+      "description": "Standard Deviation of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 11,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3pos_conf_low",
+      "description": "95% interval lower end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3pos_conf_up",
+      "description": "95% interval upper end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3pos_max",
+      "description": "Maximum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 11,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3pos_mean",
+      "description": "Average positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3pos_median",
+      "description": "Median positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 7,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3pos_min",
+      "description": "Minimum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_3pos_std",
+      "description": "Standard Deviation of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neg_conf_low",
+      "description": "95% interval lower end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 18,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neg_conf_up",
+      "description": "95% interval upper end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neg_max",
+      "description": "Maximum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neg_mean",
+      "description": "Average negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neg_median",
+      "description": "Median negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 12,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neg_min",
+      "description": "Minimum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neg_std",
+      "description": "Standard Deviation of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neut_conf_low",
+      "description": "95% interval lower end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neut_conf_up",
+      "description": "95% interval upper end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neut_max",
+      "description": "Maximum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 14,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neut_mean",
+      "description": "Average neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neut_median",
+      "description": "Median neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neut_min",
+      "description": "Minimum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4neut_std",
+      "description": "Standard Deviation of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4pos_conf_low",
+      "description": "95% interval lower end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4pos_conf_up",
+      "description": "95% interval upper end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 15,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4pos_max",
+      "description": "Maximum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4pos_mean",
+      "description": "Average positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4pos_median",
+      "description": "Median positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4pos_min",
+      "description": "Minimum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 14,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_4pos_std",
+      "description": "Standard Deviation of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 10,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neg_conf_low",
+      "description": "95% interval lower end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neg_conf_up",
+      "description": "95% interval upper end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neg_max",
+      "description": "Maximum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neg_mean",
+      "description": "Average negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 12,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neg_median",
+      "description": "Median negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 14,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neg_min",
+      "description": "Minimum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neg_std",
+      "description": "Standard Deviation of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neut_conf_low",
+      "description": "95% interval lower end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neut_conf_up",
+      "description": "95% interval upper end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neut_max",
+      "description": "Maximum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neut_mean",
+      "description": "Average neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neut_median",
+      "description": "Median neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neut_min",
+      "description": "Minimum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5neut_std",
+      "description": "Standard Deviation of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5pos_conf_low",
+      "description": "95% interval lower end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5pos_conf_up",
+      "description": "95% interval upper end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5pos_max",
+      "description": "Maximum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 12,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5pos_mean",
+      "description": "Average positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5pos_median",
+      "description": "Median positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5pos_min",
+      "description": "Minimum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_5pos_std",
+      "description": "Standard Deviation of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neg_conf_low",
+      "description": "95% interval lower end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neg_conf_up",
+      "description": "95% interval upper end point of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neg_max",
+      "description": "Maximum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neg_mean",
+      "description": "Average negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 13,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neg_median",
+      "description": "Median negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neg_min",
+      "description": "Minimum negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neg_std",
+      "description": "Standard Deviation of negative sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neut_conf_low",
+      "description": "95% interval lower end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neut_conf_up",
+      "description": "95% interval upper end point of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neut_max",
+      "description": "Maximum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neut_mean",
+      "description": "Average neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 10,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neut_median",
+      "description": "Median neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neut_min",
+      "description": "Minimum neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_neut_std",
+      "description": "Standard Deviation of neutral sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_pos_conf_low",
+      "description": "95% interval lower end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 6,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_pos_conf_up",
+      "description": "95% interval upper end point of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 12,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_pos_max",
+      "description": "Maximum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 9,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_pos_mean",
+      "description": "Average positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 29,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_pos_median",
+      "description": "Median positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 26,
+      "alphaCount": 55,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_pos_min",
+      "description": "Minimum positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 69,
+      "alphaCount": 147,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt23_pos_std",
+      "description": "Standard Deviation of positive sentiment value",
+      "dataset": {
+        "id": "sentiment23",
+        "name": "Textual Sentiment Analysis Data"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7028,
+      "userCount": 18,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

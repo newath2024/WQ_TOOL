@@ -1,0 +1,45 @@
+{
+  "exported_at": "2026-03-29T05:07:40.110Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/univ1?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 1,
+  "row_count": 1,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 1,
+      "new_item_count": 1,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=univ1"
+    }
+  ],
+  "rows": [
+    {
+      "id": "top500",
+      "description": "20140630",
+      "dataset": {
+        "id": "univ1",
+        "name": "Universe Dataset"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "UNIVERSE",
+      "coverage": 0,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    }
+  ]
+}

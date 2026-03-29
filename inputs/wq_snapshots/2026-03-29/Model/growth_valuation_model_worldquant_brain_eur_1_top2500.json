@@ -1,0 +1,3846 @@
+{
+  "exported_at": "2026-03-29T04:50:34.594Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model38?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 145,
+  "row_count": 145,
+  "page_count": 8,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model38"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model38"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model38"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=model38"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=EUR&universe=TOP2500&dataset.id=model38"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=EUR&universe=TOP2500&dataset.id=model38"
+    },
+    {
+      "page": 7,
+      "offset": 120,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=120&region=EUR&universe=TOP2500&dataset.id=model38"
+    },
+    {
+      "page": 8,
+      "offset": 140,
+      "item_count": 5,
+      "new_item_count": 5,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=140&region=EUR&universe=TOP2500&dataset.id=model38"
+    }
+  ],
+  "rows": [
+    {
+      "id": "buyback_yield_relative_component_rank_d1",
+      "description": "Global rank for the share buyback yield component in the valuation model (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9388,
+      "userCount": 36,
+      "alphaCount": 67,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "buyback_yield_relative_score",
+      "description": "Relative ranking score for the share buyback yield component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7611,
+      "userCount": 23,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "buyback_yield_relative_score_float",
+      "description": "Relative ranking score for the share buyback yield component (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7611,
+      "userCount": 19,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "dividend_yield_relative_component_rank_d1",
+      "description": "Global rank for the dividend yield component in the valuation model (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8601,
+      "userCount": 24,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "dividend_yield_relative_score",
+      "description": "Relative ranking score for the dividend yield component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6683,
+      "userCount": 22,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "dividend_yield_relative_score_float",
+      "description": "Relative ranking score for the dividend yield component (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6683,
+      "userCount": 32,
+      "alphaCount": 50,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "earnings_measure_type_float",
+      "description": "Type of financial measure used for earnings projections (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "earnings_projection_metric_type_d1",
+      "description": "Type of financial metric used for earnings projections, typically EPS (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "ev_ebitda_relative_score",
+      "description": "Relative ranking score for the enterprise value to EBITDA ratio component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8141,
+      "userCount": 16,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "ev_ebitda_relative_score_float",
+      "description": "Relative ranking score for the enterprise value to EBITDA ratio component (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6655,
+      "userCount": 20,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "ev_ebitda_relative_score_main",
+      "description": "Relative ranking score for the enterprise value to EBITDA ratio component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6655,
+      "userCount": 14,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "ev_sales_relative_component_rank_d1",
+      "description": "Global rank for the enterprise value to sales ratio component in the valuation model (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7549,
+      "userCount": 9,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "ev_sales_relative_score",
+      "description": "Relative ranking score for the enterprise value to sales ratio component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6092,
+      "userCount": 9,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "ev_sales_relative_score_float",
+      "description": "Relative ranking score for the enterprise value to sales ratio component (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6092,
+      "userCount": 11,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "forward_10yr_eps_growth_rate",
+      "description": "Compound annual EPS growth rate projected for the next 10 years.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6731,
+      "userCount": 8,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "forward_5yr_eps_growth_rate",
+      "description": "Compound annual EPS growth rate projected for the next 5 years.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6731,
+      "userCount": 14,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "global_relative_valuation_rank_main",
+      "description": "Global-relative score ranking companies by valuation metrics.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7754,
+      "userCount": 27,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "global_relative_valuation_score",
+      "description": "Global-relative score ranking companies by valuation metrics.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7754,
+      "userCount": 31,
+      "alphaCount": 43,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_rank_price_intrinsic_value",
+      "description": "Ranking of price to intrinsic value ratio relative to industry peers.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5746,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_rank_price_to_intrinsic_value",
+      "description": "Industry-relative ranking of the price to intrinsic value ratio.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5746,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_relative_valuation_rank",
+      "description": "Industry-relative score ranking companies by valuation metrics.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9454,
+      "userCount": 40,
+      "alphaCount": 81,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_relative_valuation_rank_main",
+      "description": "Industry-relative score ranking companies by valuation metrics.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7649,
+      "userCount": 19,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_relative_valuation_score",
+      "description": "Industry-relative score ranking companies by valuation metrics.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7649,
+      "userCount": 40,
+      "alphaCount": 52,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "intrinsic_value_in_currency",
+      "description": "Calculated intrinsic value of the company in the projection currency.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "justified_forward_pe_ratio_2",
+      "description": "Justified forward 12-month price-to-earnings ratio based on model assumptions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6729,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "latest_fiscal_year_period_end_date_d1",
+      "description": "Date marking the end of the most recent fiscal year for the company (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "long_term_assumed_annual_dividends",
+      "description": "Projected annual dividend value in the steady-state period.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 20,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "long_term_assumed_annual_earnings",
+      "description": "Projected annual earnings value in the steady-state period.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 24,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "long_term_assumed_annual_earnings_main",
+      "description": "Projected annual earnings value in the steady-state period.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 22,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "long_term_dividend_payout_ratio_2",
+      "description": "Assumed proportion of earnings paid as dividends in the steady-state period.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "long_term_earnings_growth_rate_2",
+      "description": "Assumed long-term rate of earnings growth in the steady-state period.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 5,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "market_implied_10yr_eps_growth",
+      "description": "Compound annual EPS growth rate implied by market price over 10 years.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.671,
+      "userCount": 6,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "market_implied_5yr_eps_growth",
+      "description": "Compound annual EPS growth rate implied by market price over 5 years.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.671,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl38_iv_cagr_base_year",
+      "description": "IV_CAGR_Base_Year : Base year",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8498,
+      "userCount": 115,
+      "alphaCount": 315,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl38_iv_discount_rate",
+      "description": "IV_Discount_Rate : This field displays the discount rate used in the StarMine Intrinsic Valuation model to discount the dividends to the end of the FY0 period. Requires Valuation Daily Download permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 78,
+      "alphaCount": 203,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl38_iv_div_payout_rate",
+      "description": "IV_Steady_State_Dividend_Payout_Rate : This field displays the dividend payout rate of the company at and after the year indicated by the IV Steady State Year (Dividends) value in the StarMine SmartGrowth model. Requires Valuation Daily Download permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 64,
+      "alphaCount": 177,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl38_iv_growth_ear",
+      "description": "IV_Steady_State_Growth_Earnings : This field displays the growth rate of the company at and after the year indicated by the IV Steady State Year (Earnings) value in the StarMine SmartGrowth model. Requires Valuation Daily Download permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 130,
+      "alphaCount": 454,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl38_iv_warranted_f12m_p_e",
+      "description": "IV_Warranted_F12M_P_E : The IV Warranted F12M P/E is a price to earnings multiple that uses the intrinsic value for the security from the StarMine valuation model (using StarMine SmartGrowth EPS projections) as the numerator and the forward 12-month (F12M) EPS from the SmartGrowth model as the denominator. The figure represents what the F12M P/E would be if both measures were accepted as accurate. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8495,
+      "userCount": 80,
+      "alphaCount": 311,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl38_iv_year_div",
+      "description": "IV_Steady_State_Year_Dividends : This field displays the year in which the company reaches Steady State Dividend Payout in the StarMine SmartGrowth model. Requires Valuation Daily Download permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 66,
+      "alphaCount": 202,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl38_rel_val_ev_ebitda",
+      "description": "Rel Val EV/EBITDA Component : The current global 1-100 percentile rank of the security in the EV/EBITDA Component of the Relative Valuation Model. Higher scores indicate stocks with the best value on this measure. For example",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8141,
+      "userCount": 421,
+      "alphaCount": 1339,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl38_rel_val_global_rk",
+      "description": "Rel Val Global Rank : The current global 1-100 percentile rank of the security in the overall Relative Valuation Model. Higher scores indicate stocks with the best value when considering all Relative Valuation model components that are relevant for the stock. Requires Valuation Daily Download permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.959,
+      "userCount": 934,
+      "alphaCount": 5283,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "model_discount_rate",
+      "description": "Discount rate used to calculate present value of future cash flows.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 3,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pb_ratio_relative_component_rank_d1",
+      "description": "Global rank for the price-to-book ratio component in the valuation model (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9601,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pb_ratio_relative_score",
+      "description": "Relative ranking score for the price-to-book ratio component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7758,
+      "userCount": 9,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pb_ratio_relative_score_float",
+      "description": "Relative ranking score for the price-to-book ratio component (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7758,
+      "userCount": 10,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pcf_ratio_relative_component_rank_d1",
+      "description": "Global rank for the price-to-cash-flow ratio component in the valuation model (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7547,
+      "userCount": 28,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pcf_ratio_relative_score",
+      "description": "Relative ranking score for the price-to-cash-flow ratio component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6086,
+      "userCount": 18,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pcf_ratio_relative_score_float",
+      "description": "Relative ranking score for the price-to-cash-flow ratio component (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6086,
+      "userCount": 24,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pe_ratio_relative_score",
+      "description": "Relative ranking score for the price-to-earnings ratio component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9617,
+      "userCount": 25,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pe_ratio_relative_score_float",
+      "description": "Relative ranking score for the price-to-earnings ratio component (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7781,
+      "userCount": 16,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pe_ratio_relative_score_main",
+      "description": "Relative ranking score for the price-to-earnings ratio component.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7781,
+      "userCount": 20,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "price_to_intrinsic_value_industry_position_d1",
+      "description": "Rank of a stock's price-to-intrinsic-value ratio compared to industry peers (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7249,
+      "userCount": 21,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "price_to_intrinsic_value_ratio",
+      "description": "Ratio of current share price to calculated intrinsic value.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6729,
+      "userCount": 13,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy10_2",
+      "description": "Estimated dividends per share for fiscal year ten.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 4,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy11_2",
+      "description": "Estimated dividends per share for fiscal year eleven.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy12_2",
+      "description": "Estimated dividends per share for fiscal year twelve.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy13_2",
+      "description": "Estimated dividends per share for fiscal year thirteen.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 4,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy14_2",
+      "description": "Estimated dividends per share for fiscal year fourteen.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy15_2",
+      "description": "Estimated dividends per share for fiscal year fifteen.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy1_2",
+      "description": "Estimated dividends per share for fiscal year one.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7773,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy2_2",
+      "description": "Estimated dividends per share for fiscal year two.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy3_2",
+      "description": "Estimated dividends per share for fiscal year three.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy4_2",
+      "description": "Estimated dividends per share for fiscal year four.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 2,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy5_2",
+      "description": "Estimated dividends per share for fiscal year five.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy6_2",
+      "description": "Estimated dividends per share for fiscal year six.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy7_2",
+      "description": "Estimated dividends per share for fiscal year seven.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy8_2",
+      "description": "Estimated dividends per share for fiscal year eight.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 2,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_dividends_fy9_2",
+      "description": "Estimated dividends per share for fiscal year nine.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy10_2",
+      "description": "Estimated earnings per share for fiscal year ten.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy11_2",
+      "description": "Estimated earnings per share for fiscal year eleven.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy12_2",
+      "description": "Estimated earnings per share for fiscal year twelve.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 2,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy13_2",
+      "description": "Estimated earnings per share for fiscal year thirteen.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy14_2",
+      "description": "Estimated earnings per share for fiscal year fourteen.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 3,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy15_2",
+      "description": "Estimated earnings per share for fiscal year fifteen.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy1_2",
+      "description": "Estimated earnings per share for fiscal year one.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 10,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy2_2",
+      "description": "Estimated earnings per share for fiscal year two.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy3_2",
+      "description": "Estimated earnings per share for fiscal year three.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy4_2",
+      "description": "Estimated earnings per share for fiscal year four.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy5_2",
+      "description": "Estimated earnings per share for fiscal year five.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy6_2",
+      "description": "Estimated earnings per share for fiscal year six.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy7_2",
+      "description": "Estimated earnings per share for fiscal year seven.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 2,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy8_2",
+      "description": "Estimated earnings per share for fiscal year eight.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "projected_earnings_fy9_2",
+      "description": "Estimated earnings per share for fiscal year nine.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6734,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_rank_price_intrinsic_value",
+      "description": "Ranking of price to intrinsic value ratio relative to region peers.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6729,
+      "userCount": 17,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_rank_price_to_intrinsic_value",
+      "description": "Region-relative ranking of the price to intrinsic value ratio.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8496,
+      "userCount": 22,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_rank_price_to_intrinsic_value_float",
+      "description": "Region-relative ranking of the price to intrinsic value ratio (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6729,
+      "userCount": 15,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_relative_valuation_rank",
+      "description": "Region-relative score ranking companies by valuation metrics.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.959,
+      "userCount": 26,
+      "alphaCount": 40,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_relative_valuation_score",
+      "description": "Score ranking companies by valuation metrics within their region.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7754,
+      "userCount": 13,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_relative_valuation_score_float",
+      "description": "Region-relative score ranking companies by valuation metrics (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7754,
+      "userCount": 15,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "relative_valuation_global_position_d1",
+      "description": "Global rank of a stock based on its relative valuation score (d1 version).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.959,
+      "userCount": 23,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_rank_price_intrinsic_value",
+      "description": "Ranking of price to intrinsic value ratio relative to sector peers.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6724,
+      "userCount": 11,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_rank_price_to_intrinsic_value",
+      "description": "Sector-relative ranking of the price to intrinsic value ratio.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8489,
+      "userCount": 23,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_rank_price_to_intrinsic_value_float",
+      "description": "Sector-relative ranking of the price to intrinsic value ratio (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6724,
+      "userCount": 15,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_relative_valuation_rank",
+      "description": "Sector-relative score ranking companies by valuation metrics.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9577,
+      "userCount": 48,
+      "alphaCount": 101,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_relative_valuation_rank_main",
+      "description": "Sector-relative score ranking companies by valuation metrics.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7741,
+      "userCount": 38,
+      "alphaCount": 60,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_relative_valuation_score_float",
+      "description": "Sector-relative score ranking companies by valuation metrics (float type).",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7741,
+      "userCount": 36,
+      "alphaCount": 64,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_buyback_yield",
+      "description": "Rel Val Buyback Yield Component : The current global 1-100 percentile rank of the security in the Buyback Component of the Relative Valuation Model. Higher scores indicate stocks with the best value on this measure. For example",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9388,
+      "userCount": 411,
+      "alphaCount": 2131,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy1",
+      "description": "IV Dividends Projection FY1 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.962,
+      "userCount": 131,
+      "alphaCount": 485,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy10",
+      "description": "IV Dividends Projection FY10 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 89,
+      "alphaCount": 371,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy11",
+      "description": "IV Dividends Projection FY11 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 52,
+      "alphaCount": 230,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy12",
+      "description": "IV Dividends Projection FY12 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 79,
+      "alphaCount": 505,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy13",
+      "description": "IV Dividends Projection FY13 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 51,
+      "alphaCount": 146,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy14",
+      "description": "IV Dividends Projection FY14 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 60,
+      "alphaCount": 238,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy15",
+      "description": "IV Dividends Projection FY15 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 60,
+      "alphaCount": 174,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy2",
+      "description": "IV Dividends Projection FY2 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 67,
+      "alphaCount": 200,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy3",
+      "description": "IV Dividends Projection FY3 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 65,
+      "alphaCount": 298,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy4",
+      "description": "IV Dividends Projection FY4 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 62,
+      "alphaCount": 214,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy5",
+      "description": "IV Dividends Projection FY5 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 60,
+      "alphaCount": 181,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy6",
+      "description": "IV Dividends Projection FY6 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 55,
+      "alphaCount": 195,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy7",
+      "description": "IV Dividends Projection FY7 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 63,
+      "alphaCount": 148,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy8",
+      "description": "IV Dividends Projection FY8 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 39,
+      "alphaCount": 133,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_projection_fy9",
+      "description": "IV Dividends Projection FY9 : This field displays the fiscal year dividends per share (DPS) estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 56,
+      "alphaCount": 156,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_dividend_yield",
+      "description": "Rel Val Dividend Yield Component : The current global 1-100 percentile rank of the security in the Dividend Yield Component of the Relative Valuation Model. Higher scores indicate stocks with the best value on this measure. For example",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8601,
+      "userCount": 326,
+      "alphaCount": 1100,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_measure_type",
+      "description": "IV Earnings Measure Type : This field displays the type of earnings projected for this company in the StarMine SmartGrowth model. The field will have a value of either EPS or FFO. Requires Valuation Daily Download permissions",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9696,
+      "userCount": 42,
+      "alphaCount": 122,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy1",
+      "description": "IV Earnings Projection FY1 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 124,
+      "alphaCount": 540,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy10",
+      "description": "IV Earnings Projection FY10 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 83,
+      "alphaCount": 320,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy11",
+      "description": "IV Earnings Projection FY11 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 64,
+      "alphaCount": 156,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy12",
+      "description": "IV Earnings Projection FY12 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 46,
+      "alphaCount": 118,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy13",
+      "description": "IV Earnings Projection FY13 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 45,
+      "alphaCount": 111,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy14",
+      "description": "IV Earnings Projection FY14 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 51,
+      "alphaCount": 146,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy15",
+      "description": "IV Earnings Projection FY15 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 51,
+      "alphaCount": 141,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy2",
+      "description": "IV Earnings Projection FY2 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 47,
+      "alphaCount": 157,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy3",
+      "description": "IV Earnings Projection FY3 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 58,
+      "alphaCount": 212,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy4",
+      "description": "IV Earnings Projection FY4 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 47,
+      "alphaCount": 172,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy5",
+      "description": "IV Earnings Projection FY5 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 39,
+      "alphaCount": 196,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy6",
+      "description": "IV Earnings Projection FY6 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 42,
+      "alphaCount": 179,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy7",
+      "description": "IV Earnings Projection FY7 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 41,
+      "alphaCount": 131,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy8",
+      "description": "IV Earnings Projection FY8 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 65,
+      "alphaCount": 262,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_earnings_projection_fy9",
+      "description": "IV Earnings Projection FY9 : This field displays the fiscal year EPS estimate for the selected period from the StarMine SmartGrowth model. Fiscal Years 1 through 15 are available. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 60,
+      "alphaCount": 322,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_ev_sales",
+      "description": "Rel Val EV/Sales Component : The current global 1-100 percentile rank of the security in the EV/Sales Component of the Relative Valuation Model. Higher scores indicate stocks with the best value on this measure. For example",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7549,
+      "userCount": 240,
+      "alphaCount": 737,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_fwd10_eps_cagr",
+      "description": "IV Forward 10Year EPS CAGR : The compound annual growth rate (CAGR) between the last reported EPS figure and the Fiscal Year 10 EPS figure projected by the StarMine SmartGrowth model. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8498,
+      "userCount": 95,
+      "alphaCount": 311,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_fwd5_eps_cagr",
+      "description": "IV Forward 5Year EPS CAGR : The compound annual growth rate (CAGR) between the last reported EPS figure and the Fiscal Year 5 EPS figure projected by the StarMine SmartGrowth model. Requires Fundamental Module permssions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8498,
+      "userCount": 143,
+      "alphaCount": 672,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_implied10_eps_cagr",
+      "description": "IV Market Implied 10Year EPS CAGR : The Forward 10-Year EPS CAGR that results from proportionally changing FY1 through FY5 EPS figures such that the resulting Intrinsic Value matches the previous day's market close price. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8475,
+      "userCount": 112,
+      "alphaCount": 729,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_implied5_eps_cagr",
+      "description": "IV Market Implied 5Year EPS CAGR : The Forward 5-Year EPS CAGR that results from proportionally changing FY1 through FY5 EPS figures such that the resulting Intrinsic Value matches the previous day's market close price. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8475,
+      "userCount": 67,
+      "alphaCount": 277,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_industry_rank",
+      "description": "Rel Val Industry Rank : The current industry 1-100 percentile rank of the security in the overall Relative Valuation Model. Higher scores indicate stocks with the best value when considering all Relative Valuation model components that are relevant for the stock. Requires Valuation Daily Download permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9454,
+      "userCount": 1014,
+      "alphaCount": 7424,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_iv_projection",
+      "description": "Intrinsic Value - In Projection Currency : The Intrinsic Value of a security calculated by the StarMine valuation model",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8502,
+      "userCount": 92,
+      "alphaCount": 269,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_pb",
+      "description": "Rel Val P/Book Component : The current global 1-100 percentile rank of the security in the P/Book Component of the Relative Valuation Model. Higher scores indicate stocks with the best value on this measure. For example",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9601,
+      "userCount": 201,
+      "alphaCount": 637,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_pcf",
+      "description": "Rel Val P/CF Component : The current global 1-100 percentile rank of the security in the Price/Cash Flow Component of he Relative Valuation Model. Higher scores indicate stocks with the best value on this measure. For example",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7547,
+      "userCount": 627,
+      "alphaCount": 3242,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_pe",
+      "description": "Rel Val P/E Component : The current global 1-100 percentile rank of the security in the P/E Component of the Relative Valuation Model. Higher scores indicate stocks with the best value on this measure. For example",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9617,
+      "userCount": 384,
+      "alphaCount": 1530,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_piv_industry_rank",
+      "description": "Price / Intrinsic Value Industry Rank : The P/IV Industry Rank (StarMine) is a 1-100 score ranking StarMine's P/IV ratio (lowest P/IV = 100) within the security's region-industry. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7249,
+      "userCount": 538,
+      "alphaCount": 1890,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_piv_ratio",
+      "description": "Price / Intrinsic Value : The ratio of the previous day's market close price to the Intrinsic Value calculated by the StarMine valuation model",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8496,
+      "userCount": 255,
+      "alphaCount": 1078,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_piv_region_rank",
+      "description": "Price / Intrinsic Value Region Rank : The P/IV Region Rank (StarMine) is a 1-100 score ranking StarMine's P/IV ratio (lowest P/IV = 100) within the security's region. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8496,
+      "userCount": 541,
+      "alphaCount": 2172,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_piv_sector_rank",
+      "description": "Price / Intrinsic Value Sector Rank : The P/IV Sector Rank (StarMine) is a 1-100 score ranking StarMine's P/IV ratio (lowest P/IV = 100) within the security's region-sector. Requires Fundamental Module permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8489,
+      "userCount": 619,
+      "alphaCount": 2457,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_region_rank",
+      "description": "Rel Val Region Rank : The current regional 1-100 percentile rank of the security in the overall Relative Valuation Model. Higher scores indicate stocks with the best value when considering all Relative Valuation model components that are relevant for the stock. Requires Valuation Daily Download permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.959,
+      "userCount": 696,
+      "alphaCount": 3600,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_val_sector_rank",
+      "description": "Rel Val Sector Rank : The current sector 1-100 percentile rank of the security in the overall Relative Valuation Model. Higher scores indicate stocks with the best value when considering all Relative Valuation model components that are relevant for the stock. Requires Valuation Daily Download permissions.",
+      "dataset": {
+        "id": "model38",
+        "name": "Growth Valuation Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9577,
+      "userCount": 984,
+      "alphaCount": 8139,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

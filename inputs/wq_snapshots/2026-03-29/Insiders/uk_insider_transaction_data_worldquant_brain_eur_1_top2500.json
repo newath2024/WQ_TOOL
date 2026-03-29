@@ -1,0 +1,150 @@
+{
+  "exported_at": "2026-03-29T04:38:32.587Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/insiders12?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 5,
+  "row_count": 5,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 5,
+      "new_item_count": 5,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=insiders12"
+    }
+  ],
+  "rows": [
+    {
+      "id": "insd12_mktprice",
+      "description": "The market price of the security at the time of the transaction.",
+      "dataset": {
+        "id": "insiders12",
+        "name": "UK Insider Transaction Data"
+      },
+      "category": {
+        "id": "insiders",
+        "name": "Insiders"
+      },
+      "subcategory": {
+        "id": "insiders-insider-data",
+        "name": "Insider Data"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2592,
+      "userCount": 236,
+      "alphaCount": 548,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "insd12_percent",
+      "description": "The percentage of ownership or change related to the transaction.",
+      "dataset": {
+        "id": "insiders12",
+        "name": "UK Insider Transaction Data"
+      },
+      "category": {
+        "id": "insiders",
+        "name": "Insiders"
+      },
+      "subcategory": {
+        "id": "insiders-insider-data",
+        "name": "Insider Data"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2592,
+      "userCount": 75,
+      "alphaCount": 222,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "insd12_positionchangetransactionamount",
+      "description": "The amount of change in position resulting from the transaction.",
+      "dataset": {
+        "id": "insiders12",
+        "name": "UK Insider Transaction Data"
+      },
+      "category": {
+        "id": "insiders",
+        "name": "Insiders"
+      },
+      "subcategory": {
+        "id": "insiders-insider-data",
+        "name": "Insider Data"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2517,
+      "userCount": 83,
+      "alphaCount": 254,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "insd12_sharesheld",
+      "description": "The total number of shares held after the transaction.",
+      "dataset": {
+        "id": "insiders12",
+        "name": "UK Insider Transaction Data"
+      },
+      "category": {
+        "id": "insiders",
+        "name": "Insiders"
+      },
+      "subcategory": {
+        "id": "insiders-insider-data",
+        "name": "Insider Data"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2592,
+      "userCount": 70,
+      "alphaCount": 277,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "insd12_transactioncode",
+      "description": "A code representing the type or nature of the transaction.",
+      "dataset": {
+        "id": "insiders12",
+        "name": "UK Insider Transaction Data"
+      },
+      "category": {
+        "id": "insiders",
+        "name": "Insiders"
+      },
+      "subcategory": {
+        "id": "insiders-insider-data",
+        "name": "Insider Data"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2592,
+      "userCount": 196,
+      "alphaCount": 483,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

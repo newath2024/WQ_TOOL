@@ -1,0 +1,7 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+inst1_holdings,Total equity (share) holdings of Insider following the transaction,institutions1,Insider Trading for Europe,institutions,Institutions,institutions-ownership-models,Ownership Models,EUR,1,TOP2500,VECTOR,1,0.3428,92,181,1.1,[]
+inst1_price,"Transaction price per share (if the transaction has a max price, then this is the min price)",institutions1,Insider Trading for Europe,institutions,Institutions,institutions-ownership-models,Ownership Models,EUR,1,TOP2500,VECTOR,1,0.3428,72,130,1.1,[]
+inst1_shares,Number of shares traded,institutions1,Insider Trading for Europe,institutions,Institutions,institutions-ownership-models,Ownership Models,EUR,1,TOP2500,VECTOR,1,0.3428,54,71,1.1,[]
+inst1_tradesignificance,Significance of trade (1 = low significance and 3 = high significance),institutions1,Insider Trading for Europe,institutions,Institutions,institutions-ownership-models,Ownership Models,EUR,1,TOP2500,VECTOR,1,0.3428,45,92,1.1,[]
+inst1_value,Total value of the transaction in original currency,institutions1,Insider Trading for Europe,institutions,Institutions,institutions-ownership-models,Ownership Models,EUR,1,TOP2500,VECTOR,1,0.3428,28,45,1.1,[]
+inst1_valueeur,Total value of the transaction in Euro,institutions1,Insider Trading for Europe,institutions,Institutions,institutions-ownership-models,Ownership Models,EUR,1,TOP2500,VECTOR,1,0.3428,42,58,1.1,[]

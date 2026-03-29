@@ -1,0 +1,5 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+oth54_1mt,Alpha model composite.,other54,Global Quantitative Stock Selection Data,model,Model,model-technical-models,Technical Models,EUR,1,TOP2500,MATRIX,1,0.7482,27,97,1.4,[]
+oth54_factor_momentum_component,Price momentum.,other54,Global Quantitative Stock Selection Data,model,Model,model-technical-models,Technical Models,EUR,1,TOP2500,MATRIX,1,0.7482,11,148,1.4,[]
+oth54_reversal_component,Price reversion.,other54,Global Quantitative Stock Selection Data,model,Model,model-technical-models,Technical Models,EUR,1,TOP2500,MATRIX,1,0.7482,35,133,1.4,[]
+oth54_seasonality_component,Price movement seasonality.,other54,Global Quantitative Stock Selection Data,model,Model,model-technical-models,Technical Models,EUR,1,TOP2500,MATRIX,1,0.7482,18,102,1.4,[]

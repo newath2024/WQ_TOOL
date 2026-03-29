@@ -1,0 +1,11 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+mdl307_atlas_unit_name,Atlas unit name,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6675,1,1,1.4,[]
+mdl307_country,Country Code,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6675,1,1,1.4,[]
+mdl307_cusip,Point in Time CUSIP,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6675,2,2,1.4,[]
+mdl307_sales_pct_axj,Fraction of Sale Allocated to Asia ex Japan,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6095,1,1,1.4,[]
+mdl307_sales_pct_emea,Fraction of Sale Allocated to EMEA,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6095,3,3,1.4,[]
+mdl307_sales_pct_eu,Fraction of Sale Allocated to EU (ex GB),model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6095,4,5,1.4,[]
+mdl307_sales_pct_gb,Fraction of Sale Allocated to GB,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6095,0,0,1.4,[]
+mdl307_sales_pct_unclassified,Fraction of Sale Unclassified,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6095,2,2,1.4,[]
+mdl307_sales_pct_us,Fraction of Sale Allocated to US,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6095,2,2,1.4,[]
+mdl307_sector,Sector,model307,Global Sales Allocation Model Data,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,VECTOR,1,0.6675,2,2,1.4,[]

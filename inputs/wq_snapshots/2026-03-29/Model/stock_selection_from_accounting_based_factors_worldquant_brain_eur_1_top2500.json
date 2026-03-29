@@ -1,0 +1,3180 @@
+{
+  "exported_at": "2026-03-29T04:43:36.502Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model138?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 120,
+  "row_count": 120,
+  "page_count": 6,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model138"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model138"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model138"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=model138"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=EUR&universe=TOP2500&dataset.id=model138"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=EUR&universe=TOP2500&dataset.id=model138"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mdl138_3idpc",
+      "description": "Composite of all PDI3_XYZ Factors based on Point-in-Time Risk Parity Weighting",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 178,
+      "alphaCount": 261,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_3idpqc",
+      "description": "Composite of all QPDI3_XYZ Factors by first equal-weighting factors within the same cluster and then weighting the seven clusters using PIT Risk Parity (see the original report for more details)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 90,
+      "alphaCount": 126,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_4idpc",
+      "description": "Composite of all PDI4_XYZ Factors based on Point-in-Time Risk Parity Weighting",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 243,
+      "alphaCount": 504,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_4idpqc",
+      "description": "Composite of all QPDI4_XYZ Factors by first equal-weighting factors within the same cluster and then weighting the seven clusters using PIT Risk Parity (see the original report for more details)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 115,
+      "alphaCount": 206,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_5idpc",
+      "description": "Composite of all PDI5_XYZ Factors based on Point-in-Time Risk Parity Weighting",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 110,
+      "alphaCount": 161,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_5idpqc",
+      "description": "Composite of all QPDI5_XYZ Factors by first equal-weighting factors within the same cluster and then weighting the seven clusters using PIT Risk Parity (see the original report for more details)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 145,
+      "alphaCount": 250,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_aor_3idpq",
+      "description": "QPDI-3 Factor based on Return on Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_aor_4idpq",
+      "description": "QPDI-4 Factor based on Return on Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 19,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_aor_5idpq",
+      "description": "QPDI-5 Factor based on Return on Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 12,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_dtl_3idp",
+      "description": "PDI-3 Factor based on Long-term Debt",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 42,
+      "alphaCount": 91,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_dtl_4idp",
+      "description": "PDI-4 Factor based on Long-term Debt",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 19,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_dtl_5idp",
+      "description": "PDI-5 Factor based on Long-term Debt",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_epp_3idp",
+      "description": "PDI-3 Factor based on Property",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_epp_4idp",
+      "description": "PDI-4 Factor based on Property",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 6,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_epp_5idp",
+      "description": "PDI-5 Factor based on Property",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_er_3idp",
+      "description": "PDI-3 Factor based on Retained Earnings",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 22,
+      "alphaCount": 38,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_er_4idp",
+      "description": "PDI-4 Factor based on Retained Earnings",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 12,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_er_5idp",
+      "description": "PDI-5 Factor based on Retained Earnings",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_in_3idp",
+      "description": "PDI-3 Factor based on Net Income",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 17,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_in_4idp",
+      "description": "PDI-4 Factor based on Net Income",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_in_5idp",
+      "description": "PDI-5 Factor based on Net Income",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_ofc_3idp",
+      "description": "PDI-3 Factor based on Operating Cash Flow",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 10,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_ofc_4idp",
+      "description": "PDI-4 Factor based on Operating Cash Flow",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 23,
+      "alphaCount": 53,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_ofc_5idp",
+      "description": "PDI-5 Factor based on Operating Cash Flow",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 25,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pa_3idp",
+      "description": "PDI-3 Factor based on Accounts Payable",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pa_4idp",
+      "description": "PDI-4 Factor based on Accounts Payable",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pa_5idp",
+      "description": "PDI-5 Factor based on Accounts Payable",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi3_caps",
+      "description": "PDI-3 Factor based on Capital Surplus",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi3_cash",
+      "description": "PDI-3 Factor based on Cash",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 27,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi3_ebitda",
+      "description": "PDI-3 Factor based on Earnings Before Interest",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi3_sale",
+      "description": "PDI-3 Factor based on Sales/Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi4_caps",
+      "description": "PDI-4 Factor based on Capital Surplus",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 9,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi4_cash",
+      "description": "PDI-4 Factor based on Cash",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 22,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi4_ebitda",
+      "description": "PDI-4 Factor based on Earnings Before Interest",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 25,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi4_sale",
+      "description": "PDI-4 Factor based on Sales/Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 12,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi5_caps",
+      "description": "PDI-5 Factor based on Capital Surplus",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi5_cash",
+      "description": "PDI-5 Factor based on Cash",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 64,
+      "alphaCount": 121,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi5_ebitda",
+      "description": "PDI-5 Factor based on Earnings Before Interest",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pdi5_sale",
+      "description": "PDI-5 Factor based on Sales/Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pg_3idp",
+      "description": "PDI-3 Factor based on Gross Profit",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pg_4idp",
+      "description": "PDI-4 Factor based on Gross Profit",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 13,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_pg_5idp",
+      "description": "PDI-5 Factor based on Gross Profit",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_berry",
+      "description": "QPDI-3 Factor based on Berry Ratio (Gross Profit / Operating Expenses)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_cfo_curr_liab",
+      "description": "QPDI-3 Factor based on Operating Cash Flow / Current Liabilities",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_cfrnoa",
+      "description": "QPDI-3 Factor based on Cash Flow Return on Net Operating Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_cfroa",
+      "description": "QPDI-3 Factor based on Cash Flow Return on Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 16,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_cfroe",
+      "description": "QPDI-3 Factor based on Cash Flow Return on Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_current_r",
+      "description": "QPDI-3 Factor based on Current Ratio (Current Assets / Current Liabilities)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_debt_capital",
+      "description": "QPDI-3 Factor based on Total Debt / Total Capital",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_debt_equity",
+      "description": "QPDI-3 Factor based on Total Debt / Total Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 14,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_debt_mktcapital",
+      "description": "QPDI-3 Factor based on Total Debt / Total Capital at Market Value",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_gross_margin",
+      "description": "QPDI-3 Factor based on Gross Margin",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_int_cover",
+      "description": "QPDI-3 Factor based on Interest Coverage Ratio",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_invent_to",
+      "description": "QPDI-3 Factor based on Inventory Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 1,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_lt_dt_capital",
+      "description": "QPDI-3 Factor based on Long-term Debt / Common Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_lt_dt_equity",
+      "description": "QPDI-3 Factor based on Long-term Debt / Common Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_net_margin",
+      "description": "QPDI-3 Factor based on Net Income Margin",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 8,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_op_margin",
+      "description": "QPDI-3 Factor based on Operating Profit Margin (EBIT Margin)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_payable_to",
+      "description": "QPDI-3 Factor based on Accounts Payable Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_quick_r",
+      "description": "QPDI-3 Factor based on Quick Ratio (Liquid Assets / Current Liabilities)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_receiva_to",
+      "description": "QPDI-3 Factor based on Accounts Receivable Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 6,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_rnoa",
+      "description": "QPDI-3 Factor based on Return on Net Operating Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_roe",
+      "description": "QPDI-3 Factor based on Return on Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_roic",
+      "description": "QPDI-3 Factor based on Return on Invested Capital",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi3_sale_empl",
+      "description": "QPDI-3 Factor based on Revenue per Employee",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 15,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_berry",
+      "description": "QPDI-4 Factor based on Berry Ratio (Gross Profit / Operating Expenses)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_cfo_curr_liab",
+      "description": "QPDI-4 Factor based on Operating Cash Flow / Current Liabilities",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 35,
+      "alphaCount": 56,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_cfrnoa",
+      "description": "QPDI-4 Factor based on Cash Flow Return on Net Operating Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 14,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_cfroa",
+      "description": "QPDI-4 Factor based on Cash Flow Return on Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 27,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_cfroe",
+      "description": "QPDI-4 Factor based on Cash Flow Return on Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 15,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_current_r",
+      "description": "QPDI-4 Factor based on Current Ratio (Current Assets / Current Liabilities)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_debt_capital",
+      "description": "QPDI-4 Factor based on Total Debt / Total Capital",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 12,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_debt_equity",
+      "description": "QPDI-4 Factor based on Total Debt / Total Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 29,
+      "alphaCount": 36,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_debt_mktcapital",
+      "description": "QPDI-4 Factor based on Total Debt / Total Capital at Market Value",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_gross_margin",
+      "description": "QPDI-4 Factor based on Gross Margin",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_int_cover",
+      "description": "QPDI-4 Factor based on Interest Coverage Ratio",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 38,
+      "alphaCount": 53,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_invent_to",
+      "description": "QPDI-4 Factor based on Inventory Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_lt_dt_capital",
+      "description": "QPDI-4 Factor based on Long-term Debt / Common Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_lt_dt_equity",
+      "description": "QPDI-4 Factor based on Long-term Debt / Common Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_net_margin",
+      "description": "QPDI-4 Factor based on Net Income Margin",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_op_margin",
+      "description": "QPDI-4 Factor based on Operating Profit Margin (EBIT Margin)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 53,
+      "alphaCount": 65,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_payable_to",
+      "description": "QPDI-4 Factor based on Accounts Payable Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_quick_r",
+      "description": "QPDI-4 Factor based on Quick Ratio (Liquid Assets / Current Liabilities)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 5,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_receiva_to",
+      "description": "QPDI-4 Factor based on Accounts Receivable Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_rnoa",
+      "description": "QPDI-4 Factor based on Return on Net Operating Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_roe",
+      "description": "QPDI-4 Factor based on Return on Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_roic",
+      "description": "QPDI-4 Factor based on Return on Invested Capital",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 10,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi4_sale_empl",
+      "description": "QPDI-4 Factor based on Revenue per Employee",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_berry",
+      "description": "QPDI-5 Factor based on Berry Ratio (Gross Profit / Operating Expenses)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 14,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_cfo_curr_liab",
+      "description": "QPDI-5 Factor based on Operating Cash Flow / Current Liabilities",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 36,
+      "alphaCount": 52,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_cfrnoa",
+      "description": "QPDI-5 Factor based on Cash Flow Return on Net Operating Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 25,
+      "alphaCount": 40,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_cfroa",
+      "description": "QPDI-5 Factor based on Cash Flow Return on Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 34,
+      "alphaCount": 59,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_cfroe",
+      "description": "QPDI-5 Factor based on Cash Flow Return on Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 20,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_current_r",
+      "description": "QPDI-5 Factor based on Current Ratio (Current Assets / Current Liabilities)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_debt_capital",
+      "description": "QPDI-5 Factor based on Total Debt / Total Capital",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_debt_equity",
+      "description": "QPDI-5 Factor based on Total Debt / Total Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 10,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_debt_mktcapital",
+      "description": "QPDI-5 Factor based on Total Debt / Total Capital at Market Value",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_gross_margin",
+      "description": "QPDI-5 Factor based on Gross Margin",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_int_cover",
+      "description": "QPDI-5 Factor based on Interest Coverage Ratio",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 27,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_invent_to",
+      "description": "QPDI-5 Factor based on Inventory Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_lt_dt_capital",
+      "description": "QPDI-5 Factor based on Long-term Debt / Common Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_lt_dt_equity",
+      "description": "QPDI-5 Factor based on Long-term Debt / Common Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_net_margin",
+      "description": "QPDI-5 Factor based on Net Income Margin",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_op_margin",
+      "description": "QPDI-5 Factor based on Operating Profit Margin (EBIT Margin)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 28,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_payable_to",
+      "description": "QPDI-5 Factor based on Accounts Payable Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_quick_r",
+      "description": "QPDI-5 Factor based on Quick Ratio (Liquid Assets / Current Liabilities)",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 6,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_receiva_to",
+      "description": "QPDI-5 Factor based on Accounts Receivable Turnover",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 8,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_rnoa",
+      "description": "QPDI-5 Factor based on Return on Net Operating Assets",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 19,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_roe",
+      "description": "QPDI-5 Factor based on Return on Equity",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 15,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_roic",
+      "description": "QPDI-5 Factor based on Return on Invested Capital",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_qpdi5_sale_empl",
+      "description": "QPDI-5 Factor based on Revenue per Employee",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 12,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_tvni_3idp",
+      "description": "PDI-3 Factor based on Inventories",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 26,
+      "alphaCount": 42,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_tvni_4idp",
+      "description": "PDI-4 Factor based on Inventories",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 29,
+      "alphaCount": 38,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_tvni_5idp",
+      "description": "PDI-5 Factor based on Inventories",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 32,
+      "alphaCount": 45,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_vcer_3idp",
+      "description": "PDI-3 Factor based on Receivables",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_vcer_4idp",
+      "description": "PDI-4 Factor based on Receivables",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_vcer_5idp",
+      "description": "PDI-5 Factor based on Receivables",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 3,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_vd_3idp",
+      "description": "PDI-3 Factor based on Cash Dividends",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_vd_4idp",
+      "description": "PDI-4 Factor based on Cash Dividends",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl138_vd_5idp",
+      "description": "PDI-5 Factor based on Cash Dividends",
+      "dataset": {
+        "id": "model138",
+        "name": "Stock Selection from Accounting-based Factors"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5537,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

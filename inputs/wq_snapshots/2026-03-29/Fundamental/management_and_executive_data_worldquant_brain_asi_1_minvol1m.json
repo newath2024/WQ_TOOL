@@ -1,0 +1,3128 @@
+{
+  "exported_at": "2026-03-29T04:27:48.215Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/fundamental1?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 118,
+  "row_count": 118,
+  "page_count": 6,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=fundamental1"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=ASI&universe=MINVOL1M&dataset.id=fundamental1"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=ASI&universe=MINVOL1M&dataset.id=fundamental1"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=ASI&universe=MINVOL1M&dataset.id=fundamental1"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=ASI&universe=MINVOL1M&dataset.id=fundamental1"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 18,
+      "new_item_count": 18,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=ASI&universe=MINVOL1M&dataset.id=fundamental1"
+    }
+  ],
+  "rows": [
+    {
+      "id": "aggregate_director_compensation",
+      "description": "Total compensation received by the director for the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "aggregate_director_compensation_2",
+      "description": "Total compensation received by a director for the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "annual_base_salary",
+      "description": "Base annual salary paid to the director.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "annual_bonus_payment",
+      "description": "Bonus payments received by a director for a given year.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "board_nationality_diversity_ratio",
+      "description": "Proportion of directors from different countries on the board.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "board_nationality_diversity_ratio_2",
+      "description": "Proportion of directors from different countries on the board (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "bonus_proportion_total_comp",
+      "description": "Bonus as a proportion of total direct compensation.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "bonus_to_compensation_ratio",
+      "description": "Bonus as a proportion of total direct compensation less pension.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "compensation_change_percent",
+      "description": "Percentage change in total director compensation from previous period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "compensation_change_percent_2",
+      "description": "Percentage change in total director compensation from previous period (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "compensation_currency_code",
+      "description": "Currency code in which director compensation values are reported.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "compensation_currency_code_2",
+      "description": "Currency code in which director compensation values are reported (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "current_other_board_total",
+      "description": "Number of other boards the director currently serves on.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "current_other_listed_boards_count",
+      "description": "Number of other listed boards currently served on by directors.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "current_other_listed_boards_count_2",
+      "description": "Number of other listed boards currently served on by directors (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "director_attrition_ratio",
+      "description": "Proportion of directors who have left a role in the preceding period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "director_attrition_ratio_2",
+      "description": "Proportion of directors who have left a role in the preceding period (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "director_attrition_ratio_3yr",
+      "description": "Proportion of directors who have left a role in the preceding three years.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "director_base_salary",
+      "description": "Base annual salary paid to the director for the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "director_bonus_payment",
+      "description": "Bonus payments received by the director for the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "director_current_other_listed_boards_count",
+      "description": "Number of other listed boards currently served on by the director.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "director_total_other_listed_boards_count",
+      "description": "Total number of other listed boards served on by the director.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "employer_pension_contribution",
+      "description": "Employer’s defined contribution pension for the director during the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "employer_pension_contribution_2",
+      "description": "Employer's defined contribution pension for the director.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "equity_linked_compensation_ratio",
+      "description": "Proportion of equity-linked compensation in total director remuneration.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "equity_linked_compensation_ratio_2",
+      "description": "Proportion of equity-linked compensation in total director remuneration (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "estimated_option_value_held",
+      "description": "Estimated value of options held by the director at period end.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "estimated_value_options_awarded",
+      "description": "Estimated value of options awarded to the director during the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "estimated_value_options_awarded_2",
+      "description": "Estimated value of options awarded to the director during the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "estimated_value_options_held",
+      "description": "Estimated value of options held by the director at period end.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_avgtimeothco",
+      "description": "The Average Time that a Director sits on the Board of Quoted Companies",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_avgtimeothco",
+      "description": "The Average Time that a Director sits on the Board of Quoted Companies",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_noquals",
+      "description": "Total number of Educational qualifications (undergraduate and above) for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_timebrd",
+      "description": "Time on Board for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_timeinco",
+      "description": "Time in Company for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_timeretirement",
+      "description": "Time to Retirement for the individual at a selected AnnualReportDate.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_timerole",
+      "description": "Time in Role for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_totcurrnolstdbrd",
+      "description": "The number of Quoted Boards that an individual serves on at the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_totcurrnounlstdbrd",
+      "description": "The number of Private Boards that an individual serves on at the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_totnolstdbrd",
+      "description": "The total number of Quoted Boards that an individual has served to the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_filtered_totnounlstdbrd",
+      "description": "The total number of Private Boards that an individual has served to the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_noquals",
+      "description": "Total number of Educational qualifications (undergraduate and above) for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_timebrd",
+      "description": "Time on Board for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_timeinco",
+      "description": "Time in Company for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_timeretirement",
+      "description": "Time to Retirement for the individual at a selected AnnualReportDate.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_timerole",
+      "description": "Time in Role for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_totcurrnolstdbrd",
+      "description": "The number of Quoted Boards that an individual serves on at the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_totcurrnounlstdbrd",
+      "description": "The number of Private Boards that an individual serves on at the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_totnolstdbrd",
+      "description": "The total number of Quoted Boards that an individual has served to the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_board_characteristics_totnounlstdbrd",
+      "description": "The total number of Private Boards that an individual has served to the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_avgtimeothco",
+      "description": "The Average Time that a Director sits on the Board of Quoted Companies",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_avgtimeothco",
+      "description": "The Average Time that a Director sits on the Board of Quoted Companies",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_noquals",
+      "description": "Total number of Educational qualifications (undergraduate and above) for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_timebrd",
+      "description": "Time on Board for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_timeinco",
+      "description": "Time in Company for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_timeretirement",
+      "description": "Time to Retirement for the individual at a selected AnnualReportDate.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_timerole",
+      "description": "Time in Role for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_totcurrnolstdbrd",
+      "description": "The number of Quoted Boards that an individual serves on at the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_totcurrnounlstdbrd",
+      "description": "The number of Private Boards that an individual serves on at the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_totnolstdbrd",
+      "description": "The total number of Quoted Boards that an individual has served to the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_filtered_totnounlstdbrd",
+      "description": "The total number of Private Boards that an individual has served to the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_noquals",
+      "description": "Total number of Educational qualifications (undergraduate and above) for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_timebrd",
+      "description": "Time on Board for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_timeinco",
+      "description": "Time in Company for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_timeretirement",
+      "description": "Time to Retirement for the individual at a selected AnnualReportDate.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_timerole",
+      "description": "Time in Role for the individual at a selected AnnualReportDate",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_totcurrnolstdbrd",
+      "description": "The number of Quoted Boards that an individual serves on at the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_totcurrnounlstdbrd",
+      "description": "The number of Private Boards that an individual serves on at the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_totnolstdbrd",
+      "description": "The total number of Quoted Boards that an individual has served to the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_director_characteristics_totnounlstdbrd",
+      "description": "The total number of Private Boards that an individual has served to the AnnualReportDate selected.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_attrition3yr",
+      "description": "Number of Directors that have left a role as a proportion of average number of Directors for the preceding 3 years whether for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_genderratio",
+      "description": "The proportion of male directors whether for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_numberdirectors",
+      "description": "Number of Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_stdevage",
+      "description": "The standard deviation of the population of the ages of Directors for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_stdevnoquals",
+      "description": "The standard deviation of the population of the number of Qualifications for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_stdevtimebrd",
+      "description": "The standard deviation of the population of Time on Board values for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_stdevtimeincompany",
+      "description": "The standard deviation of the population of Time in Companies for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_stdevtotcurrnolstdbrd",
+      "description": "The standard deviation of the population of the number of Quoted Boards that are sat on for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_stdevtotnolstdbrd",
+      "description": "The standard deviation of the population of of the number of Quoted Boards that have been sat on overtime for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_filtered_succession",
+      "description": "Measurement of the Clustering of Directors around retirement age",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_genderratio",
+      "description": "The proportion of male directors whether for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_numberdirectors",
+      "description": "Number of Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_stdevage",
+      "description": "The standard deviation of the population of the ages of Directors for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_stdevnoquals",
+      "description": "The standard deviation of the population of the number of Qualifications for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_stdevtimebrd",
+      "description": "The standard deviation of the population of Time on Board values for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_stdevtimeincompany",
+      "description": "The standard deviation of the population of Time in Companies for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_stdevtotcurrnolstdbrd",
+      "description": "The standard deviation of the population of the number of Quoted Boards that are sat on for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_stdevtotnolstdbrd",
+      "description": "The standard deviation of the population of of the number of Quoted Boards that have been sat on overtime for the Executive Directors",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "fnd1_succession",
+      "description": "Measurement of the Clustering of Directors around retirement age",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "intrinsic_value_options_awarded",
+      "description": "Intrinsic value of options awarded to the director during the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "intrinsic_value_options_awarded_2",
+      "description": "Intrinsic value of options awarded to the director during the period (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "intrinsic_value_options_held",
+      "description": "Intrinsic value of options held by the director at period end.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "intrinsic_value_options_held_2",
+      "description": "Intrinsic value of options held by the director at period end.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "ltip_award_value",
+      "description": "Value of long-term incentive plan awards for the director during the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "ltip_award_value_2",
+      "description": "Value of long-term incentive plan awards for the director during the period (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "ltip_plan_value_held",
+      "description": "Value of long-term incentive plans held by the director at period end.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "ltip_plan_value_held_2",
+      "description": "Value of long-term incentive plans held by the director at period end (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "ltip_to_total_remuneration_ratio",
+      "description": "Ratio of long-term incentive plan value to total remuneration for the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "ltip_to_total_remuneration_ratio_2",
+      "description": "Ratio of long-term incentive plan value to total remuneration for the period (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "other_board_total_count",
+      "description": "Total number of other boards the director has served on.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "other_cash_payments",
+      "description": "Value of ad hoc cash payments such as relocation or fringe benefits.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "other_cash_payments_2",
+      "description": "Value of ad hoc cash payments such as relocation or fringe benefits (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "share_award_value",
+      "description": "Value of shares awarded to the director during the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "share_award_value_2",
+      "description": "Value of shares awarded to the director during the period (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_awards_period",
+      "description": "Total remuneration awards for the director during the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_director_cash_comp",
+      "description": "Total direct cash compensation including salary, bonus, and other payments.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_director_cash_compensation",
+      "description": "Total direct cash compensation including salary, bonus, and pension.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_equity_at_risk",
+      "description": "Total stock, option, and incentive plan awards at risk for the director.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_equity_at_risk_2",
+      "description": "Total stock, option, and incentive plan awards at risk for the director (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_equity_linked_wealth",
+      "description": "Total value of equity-linked wealth held by the director at period end.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_equity_linked_wealth_2",
+      "description": "Total value of equity-linked wealth held by the director at period end (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_other_listed_boards_count",
+      "description": "Total number of other listed boards served on by directors.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2521,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_other_listed_boards_count_2",
+      "description": "Total number of other listed boards served on by directors (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_remuneration_period",
+      "description": "Total remuneration awarded to the director for the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_shareholding_value",
+      "description": "Value of shares held by the director at the end of the period.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "total_shareholding_value_2",
+      "description": "Value of shares held by the director at the end of the period (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "wealth_sensitivity_to_stock",
+      "description": "Change in director’s wealth for each 1% change in stock price.",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2522,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "wealth_sensitivity_to_stock_2",
+      "description": "Change in director’s wealth for each 1% change in stock price (alternate).",
+      "dataset": {
+        "id": "fundamental1",
+        "name": "Management and Executive Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-models",
+        "name": "Fundamental Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2523,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

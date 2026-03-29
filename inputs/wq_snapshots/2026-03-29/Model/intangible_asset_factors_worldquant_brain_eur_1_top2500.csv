@@ -1,0 +1,9 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+mdl313_atlas_unit_name,Atlas unit name,model313,Intangible Asset Factors,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,MATRIX,1,0.7792,3,3,1.4,[]
+mdl313_companyname,Company Name,model313,Intangible Asset Factors,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,MATRIX,1,0.7792,4,4,1.4,[]
+mdl313_iai,Intangible Asset Intensity Score,model313,Intangible Asset Factors,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,MATRIX,1,0.4677,4,4,1.4,[]
+mdl313_ico,Organizational Capital Intensity Score,model313,Intangible Asset Factors,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,MATRIX,1,0.4677,10,14,1.4,[]
+mdl313_mktcap_usd,Market Cap in USD,model313,Intangible Asset Factors,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,MATRIX,1,0.4677,2,3,1.4,[]
+mdl313_sector,Sector,model313,Intangible Asset Factors,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,MATRIX,1,0.7792,2,2,1.4,[]
+mdl313_sub_industry,Sub Industry,model313,Intangible Asset Factors,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,MATRIX,1,0.7792,0,0,1.4,[]
+mdl313_ticker,Exchange Ticker,model313,Intangible Asset Factors,model,Model,model-estimates-models,Estimates Models,EUR,1,TOP2500,MATRIX,1,0.7792,3,3,1.4,[]

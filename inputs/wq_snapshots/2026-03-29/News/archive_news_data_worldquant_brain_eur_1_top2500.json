@@ -1,0 +1,280 @@
+{
+  "exported_at": "2026-03-29T04:59:21.401Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other7?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 10,
+  "row_count": 10,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 10,
+      "new_item_count": 10,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=other7"
+    }
+  ],
+  "rows": [
+    {
+      "id": "oth7_1_confidence",
+      "description": "The probability of the trinary sentiment score (above) matching a known sentiment state alone: 0.000 = zero probability, 1.000 is absolute probability.",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9463,
+      "userCount": 11,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_headlineonly",
+      "description": "Identifies if the item is headline only or if there is a body as well. T\" = true, for headline only, \"F\" = false, indicating there is a body to the story.\"",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.67,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_marketimpactscore",
+      "description": "The estimated risk-adjusted 1 minute forward return for a given article as measured by stock return minus the stock beta multiplied market return, -5 being most negative impact and +5 most positive.",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9463,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_novelty",
+      "description": "Identifies new stories: 1 = new story, 2 or greater means the item is linked to a previous story that was published within the last 24 hours.",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9463,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_prob_neg",
+      "description": "Sentiment probability: The raw probability that the article sentiment is negative expressed as a decimal with all three probabilities summing to 1.",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9463,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_prob_ntr",
+      "description": "Sentiment probability: The raw probability that the article sentiment is neutral expressed as a decimal with all three probabilities summing to 1.",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9463,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_prob_pos",
+      "description": "Sentiment probability: The raw probability that the article sentiment is positive expressed as a decimal with all three probabilities summing to 1.",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9463,
+      "userCount": 11,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_relevance",
+      "description": "Weighting of the sentiment to the company in that line of data. Relevance of 1.00\" = primary relevance, any less indicates the appropriate degree of relevance.\"",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9463,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_sentiment",
+      "description": "Reveals in a trinary score the highest probable state of sentiment found in the news item, 1 = positive, 0 = neutral, and -1 = negative.",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.8295,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "oth7_1_timestamp",
+      "description": "The publication timestamp of the news item in UTC (Coordinated Universal Time) by default.",
+      "dataset": {
+        "id": "other7",
+        "name": "Archive News Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9463,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

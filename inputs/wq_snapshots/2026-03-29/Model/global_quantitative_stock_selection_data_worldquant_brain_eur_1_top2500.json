@@ -1,0 +1,124 @@
+{
+  "exported_at": "2026-03-29T04:52:33.435Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other54?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 4,
+  "row_count": 4,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 4,
+      "new_item_count": 4,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=other54"
+    }
+  ],
+  "rows": [
+    {
+      "id": "oth54_1mt",
+      "description": "Alpha model composite.",
+      "dataset": {
+        "id": "other54",
+        "name": "Global Quantitative Stock Selection Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7482,
+      "userCount": 27,
+      "alphaCount": 97,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth54_factor_momentum_component",
+      "description": "Price momentum.",
+      "dataset": {
+        "id": "other54",
+        "name": "Global Quantitative Stock Selection Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7482,
+      "userCount": 11,
+      "alphaCount": 148,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth54_reversal_component",
+      "description": "Price reversion.",
+      "dataset": {
+        "id": "other54",
+        "name": "Global Quantitative Stock Selection Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7482,
+      "userCount": 35,
+      "alphaCount": 133,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth54_seasonality_component",
+      "description": "Price movement seasonality.",
+      "dataset": {
+        "id": "other54",
+        "name": "Global Quantitative Stock Selection Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7482,
+      "userCount": 18,
+      "alphaCount": 102,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

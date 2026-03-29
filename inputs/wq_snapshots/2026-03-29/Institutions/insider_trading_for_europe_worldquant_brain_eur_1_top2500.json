@@ -1,0 +1,176 @@
+{
+  "exported_at": "2026-03-29T04:39:05.956Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/institutions1?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 6,
+  "row_count": 6,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 6,
+      "new_item_count": 6,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=institutions1"
+    }
+  ],
+  "rows": [
+    {
+      "id": "inst1_holdings",
+      "description": "Total equity (share) holdings of Insider following the transaction",
+      "dataset": {
+        "id": "institutions1",
+        "name": "Insider Trading for Europe"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3428,
+      "userCount": 92,
+      "alphaCount": 181,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "inst1_price",
+      "description": "Transaction price per share (if the transaction has a max price, then this is the min price)",
+      "dataset": {
+        "id": "institutions1",
+        "name": "Insider Trading for Europe"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3428,
+      "userCount": 72,
+      "alphaCount": 130,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "inst1_shares",
+      "description": "Number of shares traded",
+      "dataset": {
+        "id": "institutions1",
+        "name": "Insider Trading for Europe"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3428,
+      "userCount": 54,
+      "alphaCount": 71,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "inst1_tradesignificance",
+      "description": "Significance of trade (1 = low significance and 3 = high significance)",
+      "dataset": {
+        "id": "institutions1",
+        "name": "Insider Trading for Europe"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3428,
+      "userCount": 45,
+      "alphaCount": 92,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "inst1_value",
+      "description": "Total value of the transaction in original currency",
+      "dataset": {
+        "id": "institutions1",
+        "name": "Insider Trading for Europe"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3428,
+      "userCount": 28,
+      "alphaCount": 45,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "inst1_valueeur",
+      "description": "Total value of the transaction in Euro",
+      "dataset": {
+        "id": "institutions1",
+        "name": "Insider Trading for Europe"
+      },
+      "category": {
+        "id": "institutions",
+        "name": "Institutions"
+      },
+      "subcategory": {
+        "id": "institutions-ownership-models",
+        "name": "Ownership Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3428,
+      "userCount": 42,
+      "alphaCount": 58,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

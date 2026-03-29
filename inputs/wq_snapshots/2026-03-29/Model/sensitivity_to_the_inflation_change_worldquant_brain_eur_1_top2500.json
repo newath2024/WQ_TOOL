@@ -1,0 +1,98 @@
+{
+  "exported_at": "2026-03-29T04:43:47.462Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model140?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 3,
+  "row_count": 3,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 3,
+      "new_item_count": 3,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model140"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mdl140_qes_sinc_comp",
+      "description": "QES SINC (Sensitive to Inflation Change) COMP model is the composite stock-level sensitivity to market-based inflation. It consists of a purified breakeven rate sensitivity (\"Pure\" SINC) and interest rate sensitivity (QES SIRC model) two component. Pure SINC is the stock-level sensitivity to changes in the residual of breakeven rates after adjusting for the change in interest rates. This inflation signal can therefore be used together with SIRC as an orthogonal inflation sensitivity factor.",
+      "dataset": {
+        "id": "model140",
+        "name": "Sensitivity to the Inflation Change"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5031,
+      "userCount": 16,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl140_qes_sinc_neut",
+      "description": "Sensitivity to Expected Inflation Adjusted for Interest Rate Change",
+      "dataset": {
+        "id": "model140",
+        "name": "Sensitivity to the Inflation Change"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.518,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl140_qes_sinc_sensitivity",
+      "description": "Sensitivity to Expected Inflation Proxied by Breakeven Rate Change",
+      "dataset": {
+        "id": "model140",
+        "name": "Sensitivity to the Inflation Change"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-mlai-models",
+        "name": "ML/AI Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5019,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

@@ -1,0 +1,488 @@
+{
+  "exported_at": "2026-03-29T05:11:37.636Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/sentiment26?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 18,
+  "row_count": 18,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 18,
+      "new_item_count": 18,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=sentiment26"
+    }
+  ],
+  "rows": [
+    {
+      "id": "snt26_avgranking",
+      "description": "Average of rankings",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 89,
+      "alphaCount": 206,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_kurtosis",
+      "description": "Kurtosis of ranking",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 55,
+      "alphaCount": 142,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_rank",
+      "description": "rank of the domain",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5312,
+      "userCount": 41,
+      "alphaCount": 96,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_relpopularity08",
+      "description": "Relative popularity calculated with alpha=0.8",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 57,
+      "alphaCount": 178,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_relpopularity1",
+      "description": "Relative popularity calculated with alpha=1",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 50,
+      "alphaCount": 128,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_skewness",
+      "description": "Skewness of ranking",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 49,
+      "alphaCount": 122,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_top10pctranking",
+      "description": "The top 10% percentile ranking",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 26,
+      "alphaCount": 82,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_top10pctrankingavg",
+      "description": "The average ranking of the top 10% percentile",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 32,
+      "alphaCount": 77,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_top25pctranking",
+      "description": "The top 25% percentile ranking",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 27,
+      "alphaCount": 60,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_top25pctrankingavg",
+      "description": "The average ranking of the top 25% percentile",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 22,
+      "alphaCount": 67,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_top50pctranking",
+      "description": "The top 50% percentile ranking",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 25,
+      "alphaCount": 59,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_top50pctrankingavg",
+      "description": "The average ranking of the top 50% percentile",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 15,
+      "alphaCount": 41,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_top75pctranking",
+      "description": "The top 75% percentile ranking",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 21,
+      "alphaCount": 36,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_top75pctrankingavg",
+      "description": "The average ranking of the top 75% percentile",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 20,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_topranking",
+      "description": "The top ranking",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 39,
+      "alphaCount": 118,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_totalcountrydomains",
+      "description": "Total number of country-code TLDs",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 30,
+      "alphaCount": 48,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_totaldomains",
+      "description": "Total number of sub-domains",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 33,
+      "alphaCount": 76,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "snt26_wq_pit",
+      "description": "For ongoing data it is wq_append_time, for history data it simulated from PIT simulation field in the MCD input settings. MCD builder can disable auto-filled value of wq_pit for ongoing, by checking the flag \"Always simulate PIT\" in MCD Output Config",
+      "dataset": {
+        "id": "sentiment26",
+        "name": "Website Popularity Ranking Dataset"
+      },
+      "category": {
+        "id": "sentiment",
+        "name": "Sentiment"
+      },
+      "subcategory": {
+        "id": "sentiment-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7202,
+      "coverage": 0.5318,
+      "userCount": 49,
+      "alphaCount": 113,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

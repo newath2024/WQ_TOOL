@@ -1,0 +1,860 @@
+{
+  "exported_at": "2026-03-29T05:01:25.366Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other315?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 32,
+  "row_count": 32,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=other315"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 12,
+      "new_item_count": 12,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=IND&universe=TOP500&dataset.id=other315"
+    }
+  ],
+  "rows": [
+    {
+      "id": "active_notional_value_leg1",
+      "description": "Monetary notional amount effective for leg 1 on a specific date.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "contract_notional_value_leg1",
+      "description": "Monetary notional amount specified for the first leg of the contract.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 23,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "contract_notional_value_leg2",
+      "description": "Monetary notional amount specified for the second leg of the contract.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "contract_trade_price",
+      "description": "Price specified in the transaction, excluding fees and commissions.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 9,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_aggregate_notional_quantity",
+      "description": "Aggregate notional quantity for the first leg over the transaction term.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 17,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_call_option_value",
+      "description": "Monetary amount the option gives the right to buy for the first leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_fixed_payment_period_count",
+      "description": "Number of time units for the fixed rate payment frequency for the first leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_floating_payment_period_count",
+      "description": "Number of time units for floating rate payment frequency for the first leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_floating_reset_period_count",
+      "description": "Number of time units for the reset frequency of the floating leg for the first leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_notional_quantity_value",
+      "description": "Non-monetary quantity specified for the first leg of the contract.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_put_option_value",
+      "description": "Monetary amount the option gives the right to sell for the first leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_quantity_frequency_count",
+      "description": "Number of time units for the quantity frequency for the first leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_spread_expression_format",
+      "description": "Manner in which the spread for the first leg is expressed.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg1_spread_value",
+      "description": "Spread on the floating leg index reference price for the first leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_aggregate_notional_quantity",
+      "description": "Aggregate notional quantity for the second leg over the transaction term.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_call_option_value",
+      "description": "Monetary amount the option gives the right to buy for the second leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_fixed_payment_period_count",
+      "description": "Number of time units for the fixed rate payment frequency for the second leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 17,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_floating_payment_period_count",
+      "description": "Number of time units for floating rate payment frequency for the second leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 43,
+      "alphaCount": 73,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_floating_reset_period_count",
+      "description": "Number of time units for the reset frequency of the floating leg for the second leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_notional_quantity_value",
+      "description": "Non-monetary quantity specified for the second leg of the contract.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_notional_value_on_effective_date",
+      "description": "Notional amount effective on a specific date for the second leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_put_option_value",
+      "description": "Monetary amount the option gives the right to sell for the second leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_quantity_frequency_count",
+      "description": "Number of time units for the quantity frequency for the second leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_spread_expression_format",
+      "description": "Manner in which the spread for the second leg is expressed.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leg2_spread_value",
+      "description": "Spread on the floating leg index reference price for the second leg.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_premium_value",
+      "description": "Amount paid for the option premium.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_strike_expression_format",
+      "description": "Manner in which the strike price is expressed for the option.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_strike_value",
+      "description": "Price at which the owner of an option can buy or sell the underlying asset.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth315_execution_timestamp",
+      "description": "Date and time a transaction was originally executed, resulting in the generation of a new UTI. This data element remains unchanged throughout the life of the UTI. For clearing swaps, the execution timestamp is the date and time when the DCO accepts the original swap.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 17,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "package_trade_price_format",
+      "description": "Specifies the manner in which the price of a package transaction is expressed.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "price_expression_format",
+      "description": "Manner in which the price is expressed for the transaction.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "transaction_currency_exchange_rate",
+      "description": "Rate at which two currencies are exchanged in the transaction.",
+      "dataset": {
+        "id": "other315",
+        "name": "Equity Swap Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7256,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

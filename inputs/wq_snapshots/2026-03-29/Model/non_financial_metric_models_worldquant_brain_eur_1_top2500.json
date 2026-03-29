@@ -1,0 +1,2236 @@
+{
+  "exported_at": "2026-03-29T04:44:42.721Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model176?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 84,
+  "row_count": 84,
+  "page_count": 5,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model176"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model176"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model176"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=model176"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 4,
+      "new_item_count": 4,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=EUR&universe=TOP2500&dataset.id=model176"
+    }
+  ],
+  "rows": [
+    {
+      "id": "annual_ghg_emission_decline",
+      "description": "Year-over-year decrease in the company's greenhouse gas emissions.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "beneficiary_reach_index",
+      "description": "Diversity and geographical reach of the company's products and services.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "client_satisfaction_index",
+      "description": "Level of satisfaction among a company's customers.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "company_financial_performance_metrics",
+      "description": "Financial data used in sustainability and impact analysis.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "corporate_responsibility_score",
+      "description": "Degree of responsibility and answerability for sustainability outcomes within the company.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "customer_warranty_provision",
+      "description": "Indicates whether the company provides guarantees or warranties for its offerings.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "employee_financial_wellbeing_score",
+      "description": "A score measuring economic growth and financial well-being for employees.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "employee_healthcare_benefit_quality",
+      "description": "Quality and breadth of healthcare benefits provided to employees.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "employee_healthcare_benefit_score",
+      "description": "Assessment of the quality and coverage of healthcare benefits for employees.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "employee_wellbeing_score",
+      "description": "A score measuring the physical and mental well-being of employees and stakeholders.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "energy_consumption_per_revenue",
+      "description": "Energy usage by the company per unit of revenue.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "environmental_stewardship_score",
+      "description": "A rating of the company's net positive environmental impact.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "equity_incentive_availability_score",
+      "description": "Extent to which employees can participate in company financial success via stock options.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "executive_to_worker_pay_ratio",
+      "description": "Ratio of CEO compensation to average employee pay.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "external_sustainability_certification_list",
+      "description": "Recognition from independent organizations for meeting sustainability or quality standards.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "female_management_percentage",
+      "description": "Percentage of women in management positions.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "female_workforce_percentage",
+      "description": "Percentage of women in the company's workforce.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "governance_diversity_index",
+      "description": "Measures the diversity of the company's board in terms of gender, ethnicity, and age.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "greenhouse_gas_emission_intensity",
+      "description": "Greenhouse gas emissions produced by the company per unit of revenue.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "impact_assessment_metrics",
+      "description": "Quantitative measures used to evaluate company performance on sustainability and impact.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "impact_disclosure_transparency_level",
+      "description": "Level of disclosure and transparency in reporting impact and sustainability data.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "impact_performance_score",
+      "description": "A composite score reflecting the company's overall social and environmental impact.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_impact_adjusted_score",
+      "description": "Impact score adjusted for industry-specific factors.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leadership_governance_quality_score",
+      "description": "Evaluation of company leadership, governance, and operational policies.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "lgbtq_inclusivity_rating",
+      "description": "A score reflecting the company's support for LGBTQ+ workplace equality.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "litigation_exposure_cost",
+      "description": "Financial resources spent on legal actions and penalties.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "local_community_investment_amount",
+      "description": "Investments made by the company to support local community development.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_accountability",
+      "description": "Accountability value value from 0 to 1 value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 11,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_board_diversity",
+      "description": "Board Diversity value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_carbon_reductions",
+      "description": "Carbon Reductions value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_ceo_comp_to_employee_comp",
+      "description": "CEO Comp to Employee Comp value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_community_development_investment",
+      "description": "Community Development Investment value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_compliance_and_regulation",
+      "description": "Compliance and Regulation value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_customer_satisfaction",
+      "description": "Customer Satisfaction value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_decision_making",
+      "description": "Decision Making value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_earth",
+      "description": "Earth value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_employee_access_to_stock_options",
+      "description": "Employee Access to Stock Options value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_employee_pay",
+      "description": "Employee Pay value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_employee_retention",
+      "description": "Employee Retention value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_employee_satisfaction",
+      "description": "Employee Satisfaction value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_energy_efficiency",
+      "description": "Energy Efficiency value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_equality",
+      "description": "Equality value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_financials",
+      "description": "Financials value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_ghg_emissions",
+      "description": "GHG Emissions value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_health",
+      "description": "Health value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_hip_reporting",
+      "description": "HIP Reporting value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_hrc_score",
+      "description": "HRC Score value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_human_rights_leadership",
+      "description": "Human Rights Leadership value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_independence",
+      "description": "Independence value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_indm5",
+      "description": "products and services, generally associated with its primary industry code. , value in range 0.00-100.00",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_job_safety",
+      "description": "Job Safety value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_legal_judgments",
+      "description": "Legal Judgments value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_lobbying",
+      "description": "Lobbying value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_management_practices",
+      "description": "Management Practices value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_metrics",
+      "description": "Metrics value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_population_served",
+      "description": "Population Served value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_renewable_power_usage",
+      "description": "Renewable Power Usage value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_reportyear",
+      "description": "The calendar year for which the corresponding HIP Proprietary Ratings Field values are applicable. Format is yyyy.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 8,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_score",
+      "description": "Score value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_supplier_sourcing",
+      "description": "Supplier Sourcing value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_third_party_certifications",
+      "description": "Third Party Certifications value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_trust",
+      "description": "Trust value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 5,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_vision",
+      "description": "Vision value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_waste_production",
+      "description": "Waste Production value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_water_usage",
+      "description": "Water Usage value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_wealth",
+      "description": "Wealth value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_women_employees",
+      "description": "Women Employees value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl176_women_managers",
+      "description": "Women Managers value value from 0 to 1",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "natural_resource_utilization_efficiency",
+      "description": "Indicates how effectively a company uses natural resources in its operations.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "operational_waste_generation_rate",
+      "description": "Amount of waste produced by the company per unit of revenue, excluding recycled materials.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "political_advocacy_expenditure_ratio",
+      "description": "Measures company spending on lobbying activities relative to revenue.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "product_warranty_commitment",
+      "description": "Shows whether the company offers guarantees or warranties for its products and services.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "renewable_energy_utilization_rate",
+      "description": "Proportion of total power generated or consumed from renewable sources.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "resource_utilization_effectiveness",
+      "description": "Efficiency of natural resource use in company operations.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6907,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "stakeholder_trustworthiness_score",
+      "description": "A score evaluating the company's transparency, ethics, and stakeholder trust.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "supply_chain_diversity_score",
+      "description": "Inclusion of women and minority-owned businesses in the supply chain.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sustainability_integration_in_decisions",
+      "description": "Assesses how sustainability concerns are incorporated into company decision processes.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sustainability_strategy_alignment",
+      "description": "Company's articulated strategy for sustainability and long-term impact.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "water_consumption_per_revenue",
+      "description": "Volume of water used by the company per unit of revenue.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "workforce_compensation_level",
+      "description": "Average compensation levels for employees relative to industry peers.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "workforce_contentment_score",
+      "description": "A measure of employee happiness and engagement within the company.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "workforce_retention_rate",
+      "description": "Degree to which employees stay with the company over time.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "workplace_inclusion_score",
+      "description": "A score reflecting diversity and inclusion practices within the company.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "workplace_safety_incident_score",
+      "description": "Rates the frequency of workplace accidents and injuries.",
+      "dataset": {
+        "id": "model176",
+        "name": "Non-Financial Metric Models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-consumer-models",
+        "name": "Consumer Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6856,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

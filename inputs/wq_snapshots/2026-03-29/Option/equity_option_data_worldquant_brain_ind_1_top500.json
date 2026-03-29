@@ -1,0 +1,332 @@
+{
+  "exported_at": "2026-03-29T05:00:07.529Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/option30?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 12,
+  "row_count": 12,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 12,
+      "new_item_count": 12,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=option30"
+    }
+  ],
+  "rows": [
+    {
+      "id": "option_ask_quotation_value",
+      "description": "The lowest price a seller is willing to accept for the option.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 19,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_average_bid_ask_value",
+      "description": "The average of the bid and ask prices for the option.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 15,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_bid_quotation_value",
+      "description": "The highest price a buyer is willing to pay for the option.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 11,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_contract_strike_value",
+      "description": "The fixed price at which the option can be exercised.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 16,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_contract_value_multiplier",
+      "description": "The factor used to calculate the total value of the option contract.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 16,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_daily_traded_contracts",
+      "description": "The total number of option contracts traded during the day.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 31,
+      "alphaCount": 37,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_intraday_high_value",
+      "description": "The highest price the option reached during the trading day.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 21,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_intraday_low_value",
+      "description": "The lowest price the option reached during the trading day.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_open_interest_contracts",
+      "description": "The number of outstanding option contracts not yet settled.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 17,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_opening_trade_value",
+      "description": "The price at which the option first traded on the current day.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_recent_trade_value",
+      "description": "The most recent price at which the option was traded.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 17,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "underlying_asset_current_value",
+      "description": "The current price of the asset underlying the option contract.",
+      "dataset": {
+        "id": "option30",
+        "name": "Equity Option Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option",
+        "name": "Option"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3629,
+      "userCount": 41,
+      "alphaCount": 48,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

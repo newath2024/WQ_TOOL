@@ -1,0 +1,202 @@
+{
+  "exported_at": "2026-03-29T05:05:11.742Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/pv103?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 7,
+  "row_count": 7,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 7,
+      "new_item_count": 7,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=pv103"
+    }
+  ],
+  "rows": [
+    {
+      "id": "session_1430to1430_final_trade_price",
+      "description": "Last trade price recorded at the end of the 14:30 to 14:30 session.",
+      "dataset": {
+        "id": "pv103",
+        "name": "Interval and MOO&MOC statistics"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 315,
+      "alphaCount": 980,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "session_1430to1430_initial_trade_price",
+      "description": "First trade price recorded at the start of the 14:30 to 14:30 session.",
+      "dataset": {
+        "id": "pv103",
+        "name": "Interval and MOO&MOC statistics"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 219,
+      "alphaCount": 679,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "session_1430to1430_market_value",
+      "description": "Aggregate market value of all trades during the 14:30 to 14:30 session.",
+      "dataset": {
+        "id": "pv103",
+        "name": "Interval and MOO&MOC statistics"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 226,
+      "alphaCount": 860,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "session_1430to1430_max_trade_price",
+      "description": "Highest trade price recorded during the 14:30 to 14:30 session.",
+      "dataset": {
+        "id": "pv103",
+        "name": "Interval and MOO&MOC statistics"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 201,
+      "alphaCount": 741,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "session_1430to1430_min_trade_price",
+      "description": "Lowest trade price recorded during the 14:30 to 14:30 session.",
+      "dataset": {
+        "id": "pv103",
+        "name": "Interval and MOO&MOC statistics"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 198,
+      "alphaCount": 725,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "session_1430to1430_total_traded_volume",
+      "description": "Total number of shares or contracts traded during the 14:30 to 14:30 session.",
+      "dataset": {
+        "id": "pv103",
+        "name": "Interval and MOO&MOC statistics"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 130,
+      "alphaCount": 274,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "session_1430to1430_volume_weighted_avg_price",
+      "description": "Volume-weighted average price for trades during the 14:30 to 14:30 session.",
+      "dataset": {
+        "id": "pv103",
+        "name": "Interval and MOO&MOC statistics"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 199,
+      "alphaCount": 735,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    }
+  ]
+}

@@ -1,0 +1,5820 @@
+{
+  "exported_at": "2026-03-29T05:03:35.090Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other696?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 220,
+  "row_count": 220,
+  "page_count": 11,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 7,
+      "offset": 120,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=120&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 8,
+      "offset": 140,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=140&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 9,
+      "offset": 160,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=160&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 10,
+      "offset": 180,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=180&region=IND&universe=TOP500&dataset.id=other696"
+    },
+    {
+      "page": 11,
+      "offset": 200,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=200&region=IND&universe=TOP500&dataset.id=other696"
+    }
+  ],
+  "rows": [
+    {
+      "id": "capacity_positive_event_count",
+      "description": "Number of positive statements or events about production or operational capacity.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "future_tense_neutral_statement_count",
+      "description": "Count of neutral statements using future tense verbs.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "inflation_negative_event_count",
+      "description": "Number of negative statements or events related to inflation.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "leadership_positive_event_count",
+      "description": "Number of positive statements or events related to company leadership.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "negative_metrics_change_event_count",
+      "description": "Count of negative events related to changes in key metrics.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_accessaffordability_negative",
+      "description": "Relates to a firm's ability to ensure broad access to its products and services",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_accessaffordability_positive",
+      "description": "Relates to a firm's ability to ensure broad access to its products and services",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_accountingstandards_negative",
+      "description": "Relates to a firm's accepted accounting standards",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_accountingstandards_positive",
+      "description": "Relates to a firm's accepted accounting standards",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_acquisitions_negative",
+      "description": "Relates to a firm's acquisitions and M&A activity.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_acquisitions_positive",
+      "description": "Relates to a firm's acquisitions and M&A activity.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_airquality_negative",
+      "description": "Relates to a firm's management of air quality impacts resulting from stationary (e.g.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_airquality_positive",
+      "description": "Relates to a firm's management of air quality impacts resulting from stationary (e.g.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_alldlneg",
+      "description": "Count of sentences classified as Negative by the DL model, in the entire document",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_alldlpos",
+      "description": "Count of sentences classified as Positive by the DL model, in the entire document",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_awards_negative",
+      "description": "Relates to the awards or honors earned by the firm.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_awards_positive",
+      "description": "Relates to the awards or honors earned by the firm.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_backlog_negative",
+      "description": "Relates to a firm's backlog of product orders.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_backlog_positive",
+      "description": "Relates to a firm's backlog of product orders.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_balancesheet_negative",
+      "description": "Relates to a firm's balance sheet.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_balancesheet_positive",
+      "description": "Relates to a firm's balance sheet.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_boardchange_negative",
+      "description": "Relates to any changes in the firm's board of directors.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_boardchange_positive",
+      "description": "Relates to any changes in the firm's board of directors.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_businessethics_negative",
+      "description": "Relates to a firm's approach to managing risks and opportunities surrounding ethical conduct of business",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_businessethics_positive",
+      "description": "Relates to a firm's approach to managing risks and opportunities surrounding ethical conduct of business",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_businessmodelresilience_negative",
+      "description": "Relates to a firm's business strategy in light of climate change",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_businessmodelresilience_positive",
+      "description": "Relates to a firm's business strategy in light of climate change",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_capacity_negative",
+      "description": "Relates to a firm's capacity to produce or manufacture goods.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_capex_negative",
+      "description": "Relates to a firm's capital expenditures.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_capex_positive",
+      "description": "Relates to a firm's capital expenditures.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_cashflow_negative",
+      "description": "Relates to a firm's cash flow.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_cashflow_positive",
+      "description": "Relates to a firm's cash flow.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_closure_negative",
+      "description": "Relates to a firm's decision to close or shutdown various assets or lines of business.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_closure_positive",
+      "description": "Relates to a firm's decision to close or shutdown various assets or lines of business.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_combined_sentiment_score",
+      "description": "Aggregrate document score based on DL and Pattern models",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 12,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_commodityprice_negative",
+      "description": "Relates to the impact of commodity price and availability changes on the firm.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_commodityprice_positive",
+      "description": "Relates to the impact of commodity price and availability changes on the firm.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_competition_negative",
+      "description": "Relates to a firm's position relative to the competition.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_competition_positive",
+      "description": "Relates to a firm's position relative to the competition.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_competitivebehavior_negative",
+      "description": "Relates to a firm's management of legal and social expectation around monopolistic and anti-competitive practices",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_competitivebehavior_positive",
+      "description": "Relates to a firm's management of legal and social expectation around monopolistic and anti-competitive practices",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_copewithinflation_negative",
+      "description": "Relates to a firm's ability to cope with inflation.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_copewithinflation_positive",
+      "description": "Relates to a firm's ability to cope with inflation.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_costs_negative",
+      "description": "Relates to a firm's management and impact of various changes in costs.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_costs_positive",
+      "description": "Relates to a firm's management and impact of various changes in costs.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_covidimpact_negative",
+      "description": "Relates to a firm's impact of the Covid pandemic.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 5,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_covidimpact_positive",
+      "description": "Relates to a firm's impact of the Covid pandemic.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_creditrating_negative",
+      "description": "Relates to a changes or adjustments in a firm's credit rating.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_creditrating_positive",
+      "description": "Relates to a changes or adjustments in a firm's credit rating.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_criticalincidentriskmanagement_negative",
+      "description": "Relates to a firm's use of management systems and scenario planning to identify",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_criticalincidentriskmanagement_neutral",
+      "description": "Relates to a firm's use of management systems and scenario planning to identify",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_criticalincidentriskmanagement_positive",
+      "description": "Relates to a firm's use of management systems and scenario planning to identify",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_crypto_negative",
+      "description": "Relates to a firm's activity in the crypto currency industry",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_crypto_positive",
+      "description": "Relates to a firm's activity in the crypto currency industry",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_csr_negative",
+      "description": "Relates to a firm's general approach to ESG principles",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_csr_positive",
+      "description": "Relates to a firm's general approach to ESG principles",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customerfeedback_negative",
+      "description": "Relates to the customer feedback for the firm's products and services.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customerfeedback_positive",
+      "description": "Relates to the customer feedback for the firm's products and services.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customerprivacy_negative",
+      "description": "Relates to a firm's management of risks related to the use of personally identifiable information (PII) and other customer or user data.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customerprivacy_positive",
+      "description": "Relates to a firm's management of risks related to the use of personally identifiable information (PII) and other customer or user data.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customerspending_negative",
+      "description": "Relates to a firm's management of customer spending trends",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customerspending_positive",
+      "description": "Relates to a firm's management of customer spending trends",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customertraffic_negative",
+      "description": "Relates to a firm's understanding of its customer traffic",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customertraffic_positive",
+      "description": "Relates to a firm's understanding of its customer traffic",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customerwelfare_negative",
+      "description": "Relates to a firm's ability to provide consumers with manufactured products and services that are aligned with societal expectations",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_customerwelfare_positive",
+      "description": "Relates to a firm's ability to provide consumers with manufactured products and services that are aligned with societal expectations",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_cyber_negative",
+      "description": "Relates to a firm's activity in the cyber industry",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_cyber_positive",
+      "description": "Relates to a firm's activity in the cyber industry",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_datasecurity_negative",
+      "description": "Relates to a firm's management of risks related to collection",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_datasecurity_positive",
+      "description": "Relates to a firm's management of risks related to collection",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_dealcontract_negative",
+      "description": "Relates to new deals or contracts earned by the firm.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_dealcontract_positive",
+      "description": "Relates to new deals or contracts earned by the firm.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_debt_negative",
+      "description": "Relates to a firm's debt.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_debt_positive",
+      "description": "Relates to a firm's debt.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_demand_negative",
+      "description": "Relates to the demand for a firm's goods or services.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_demand_positive",
+      "description": "Relates to the demand for a firm's goods or services.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_disappointed_negative",
+      "description": "Relates to a firm's self-opinion of disappointment.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_disappointed_positive",
+      "description": "Relates to a firm's self-opinion of disappointment.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_diversification_negative",
+      "description": "Relates to a firm's concentration of customers or revenue.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_diversification_positive",
+      "description": "Relates to a firm's concentration of customers or revenue.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_dividend_negative",
+      "description": "Relates to a firm's dividend policy",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_dividend_positive",
+      "description": "Relates to a firm's dividend policy",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_dl_sentiment_score",
+      "description": "Aggregrate document score based on DL model",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_dlneg",
+      "description": "Count of sentences classified as Negative by the DL model",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_dlpos",
+      "description": "Count of sentences classified as Positive by the DL model",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 4,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_docsectioncount",
+      "description": "Count of total sections in the document (i.e. Q&A, Presentation, etc.)",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_docsentencecount",
+      "description": "Count of total sentences in the document",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_ecologicalimpacts_negative",
+      "description": "Relates to a firm's management of the impacts on ecosystems and biodiversity through activities such as land use for: exploration",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_ecologicalimpacts_positive",
+      "description": "Relates to a firm's management of the impacts on ecosystems and biodiversity through activities such as land use for: exploration",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_employeeengagementinclusiondiversity_positive",
+      "description": "Relates to a firm's ability to ensure that its culture and hiring and promotion practices embrace the building of a diverse and inclusive workforce that reflects the makeup of local talent pools and its customer base.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_employeehealthsafety_positive",
+      "description": "Relates to a firm's ability to create and maintain a safe and healthy workplace environment that is free of injuries",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_energymanagement_negative",
+      "description": "Relates to a firm's environmental impacts associated with energy consumption.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_energymanagement_positive",
+      "description": "Relates to a firm's environmental impacts associated with energy consumption.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_eventneg",
+      "description": "Count of sentences classified as Negative by the Pattern model",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_events_sentiment_score",
+      "description": "Aggregrate document score based on Pattern model",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_excited_negative",
+      "description": "Relates to a firm's self-opinion of excitement.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_excited_positive",
+      "description": "Relates to a firm's self-opinion of excitement.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_facilities_negative",
+      "description": "Relates to a firm's physical facilities.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_facilities_positive",
+      "description": "Relates to a firm's physical facilities.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_forex_negative",
+      "description": "Relates to a firm's management of foreign exchange.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_forex_positive",
+      "description": "Relates to a firm's management of foreign exchange.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_geostability_negative",
+      "description": "Relates to a firm's impact of macro geo-political economies.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_geostability_positive",
+      "description": "Relates to a firm's impact of macro geo-political economies.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_ghgemissions_negative",
+      "description": "Relates to a firm's greenhouse gas (GHG) emissions generated through its operations.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_ghgemissions_positive",
+      "description": "Relates to a firm's greenhouse gas (GHG) emissions generated through its operations.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_growth_negative",
+      "description": "Relates to a firm's ability to grow the business.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_growth_positive",
+      "description": "Relates to a firm's ability to grow the business.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_growthweighted_sentiment_score",
+      "description": "Aggregrate document score based on Growth weights",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 6,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_growthweightedneg",
+      "description": "Count of sentences classified as Negative",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_growthweightedpos",
+      "description": "Count of sentences classified as Positive",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_headwinds_negative",
+      "description": "Relates to a firm's management of identified headwinds.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_headwinds_positive",
+      "description": "Relates to a firm's management of identified headwinds.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_humanrightscommunityrelations_negative",
+      "description": "Relates to a firm's management of the relationship between businesses and the communities in which they operate",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_humanrightscommunityrelations_positive",
+      "description": "Relates to a firm's management of the relationship between businesses and the communities in which they operate",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_impact_negative",
+      "description": "Relates to a firm's ability to manage impacts to the business and results.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_impact_positive",
+      "description": "Relates to a firm's ability to manage impacts to the business and results.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_inflation_positive",
+      "description": "Relates to a firm's ability to manage inflation.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_interestrate_negative",
+      "description": "Relates to a firm's ability to manage interest rates.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_interestrate_positive",
+      "description": "Relates to a firm's ability to manage interest rates.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_inventory_negative",
+      "description": "Relates to a firm's inventory",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_inventory_positive",
+      "description": "Relates to a firm's inventory",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_investments_negative",
+      "description": "Relates to a firm's investments in internal and external business lines.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_investments_positive",
+      "description": "Relates to a firm's investments in internal and external business lines.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_laborpractices_negative",
+      "description": "Relates to a firm's ability to uphold commonly accepted labor standards in the workplace",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_laborpractices_positive",
+      "description": "Relates to a firm's ability to uphold commonly accepted labor standards in the workplace",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_lawsuit_negative",
+      "description": "Relates to a firm's management of lawsuits and other legal action.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_lawsuit_positive",
+      "description": "Relates to a firm's management of lawsuits and other legal action.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_logistics_negative",
+      "description": "Relates to a firm's management of their logistics systems",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_logistics_positive",
+      "description": "Relates to a firm's management of their logistics systems",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_management_negative",
+      "description": "Relates to a firm's self-opinion on management's performance and strategies.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_managementlegalregulatoryframework_negative",
+      "description": "Relates to a firm's approach to engaging with regulators in cases where conflicting corporate and public interests may have the potential for long-term adverse direct or indirect environmental and social impacts.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_managementlegalregulatoryframework_positive",
+      "description": "Relates to a firm's approach to engaging with regulators in cases where conflicting corporate and public interests may have the potential for long-term adverse direct or indirect environmental and social impacts.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_margin_negative",
+      "description": "Relates to a firm's margin on products and services.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_margin_positive",
+      "description": "Relates to a firm's margin on products and services.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_marketing_positive",
+      "description": "Relates to a firm's marketing activities",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_marketshare_negative",
+      "description": "Relates to a firm's market share.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_marketshare_positive",
+      "description": "Relates to a firm's market share.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_materialssourcingefficiency_negative",
+      "description": "Relates to a firm's capability to use renewable",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_materialssourcingefficiency_positive",
+      "description": "Relates to a firm's capability to use renewable",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_mediacontent_negative",
+      "description": "Relates to a firm's content creation.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_mediacontent_positive",
+      "description": "Relates to a firm's content creation.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_metricschange_positive",
+      "description": "Relates to a broad array of financial metrics and any changes",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_number_neutral",
+      "description": "the number of numerical mentions",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_obfuscate_negative",
+      "description": "Relates to a firm's use of euphemisms or attempts to dodge questions.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_opportunity_negative",
+      "description": "Relates to a firm's identification of various types of opportunities.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_opportunity_positive",
+      "description": "Relates to a firm's identification of various types of opportunities.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_orders_negative",
+      "description": "Relates to the orders for products and services.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_orders_positive",
+      "description": "Relates to the orders for products and services.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_outlook_negative",
+      "description": "Relates to a firm's outlook",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_outlook_positive",
+      "description": "Relates to a firm's outlook",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_pastverb_neutral",
+      "description": "the number of past tense verbs.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_performance_negative",
+      "description": "Relates to a firm's general level of performance",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_performance_positive",
+      "description": "Relates to a firm's general level of performance",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_physicalimpactsclimatechange_negative",
+      "description": "Relates to a firm's ability to manage risks and opportunities associated with actual or potential physical impacts of climate change.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_physicalimpactsclimatechange_positive",
+      "description": "Relates to a firm's ability to manage risks and opportunities associated with actual or potential physical impacts of climate change.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_presentverb_neutral",
+      "description": "the number of present tense verbs.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_pricepower_negative",
+      "description": "Relates to a firm's pricing power in the market.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_pricepower_positive",
+      "description": "Relates to a firm's pricing power in the market.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_product_positive",
+      "description": "Relates to a firm's ability to deliver a comprehensive product.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productapproval_negative",
+      "description": "Relates to a getting product approvals from a variety of organizations.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productapproval_positive",
+      "description": "Relates to a getting product approvals from a variety of organizations.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productdesignlifecyclemanagement_negative",
+      "description": "Relates to a firm's ability to incorporate environmental",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productdesignlifecyclemanagement_positive",
+      "description": "Relates to a firm's ability to incorporate environmental",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productlaunch_negative",
+      "description": "Relates to a firm's ability to launch a product.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productlaunch_positive",
+      "description": "Relates to a firm's ability to launch a product.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productqualitysafety_negative",
+      "description": "Relates to a firm's ability to offer manufactured products and/or services that meet customer expectations with respect to their health and safety characteristics",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productqualitysafety_positive",
+      "description": "Relates to a firm's ability to offer manufactured products and/or services that meet customer expectations with respect to their health and safety characteristics",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productrecall_negative",
+      "description": "Relates to a firm's need to recall a product.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_productrecall_positive",
+      "description": "Relates to a firm's need to recall a product.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_profitsearnings_negative",
+      "description": "Relates to a firm's profitability and earnings power.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_rawmaterial_negative",
+      "description": "Relates to a firm's management of raw materials",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_receivables_positive",
+      "description": "Relates to a firm's account receivables.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_recession_negative",
+      "description": "Relates to a firm's impact and management of market recessions and downturns.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_recession_positive",
+      "description": "Relates to a firm's impact and management of market recessions and downturns.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_recordresults_positive",
+      "description": "Relates to a firm's achievement of record results.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_researchdevelopment_positive",
+      "description": "Relates to a firm's investment and management of their research and development.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_revenue_positive",
+      "description": "Relates to a firm's revenue.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_sellingpracticesproductlabeling_negative",
+      "description": "Relates to a firm's management of social issues that may arise from a failure to manage the transparency",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_sellingpracticesproductlabeling_positive",
+      "description": "Relates to a firm's management of social issues that may arise from a failure to manage the transparency",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_sentences",
+      "description": "Count of sentences in user specified section",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_shareholderreturn_negative",
+      "description": "Relates to a firm's ability to create value for shareholders.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_shareholderreturn_positive",
+      "description": "Relates to a firm's ability to create value for shareholders.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_stockbuyback_negative",
+      "description": "Relates to a firm's stock buyback policy.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_stockbuyback_positive",
+      "description": "Relates to a firm's stock buyback policy.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_stockprice_negative",
+      "description": "Relates to discussions of a firm's own stock price.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_stockprice_positive",
+      "description": "Relates to discussions of a firm's own stock price.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_strategicalliance_negative",
+      "description": "Relates to a firm's decision to form a partnership or alliance with other companies.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_strategicalliance_positive",
+      "description": "Relates to a firm's decision to form a partnership or alliance with other companies.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_supplychain_negative",
+      "description": "Relates to a firm's ability to manage their supply chain.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_supplychain_positive",
+      "description": "Relates to a firm's ability to manage their supply chain.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_supplychainmanagement_negative",
+      "description": "Relates to a firm's management of environmental",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_supplychainmanagement_positive",
+      "description": "Relates to a firm's management of environmental",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_synergy_negative",
+      "description": "Relates to a firm's ability to deliver synergy in their business lines and/or acquisitions.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_systemicriskmanagement_negative",
+      "description": "Relates to a firm's contributions to or management of systemic risks resulting from large-scale weakening or collapse of systems upon which the economy and society depend.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_systemicriskmanagement_positive",
+      "description": "Relates to a firm's contributions to or management of systemic risks resulting from large-scale weakening or collapse of systems upon which the economy and society depend.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_tailwinds_negative",
+      "description": "Relates to a firm's management of identified tailwinds.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_tailwinds_positive",
+      "description": "Relates to a firm's management of identified tailwinds.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_tax_negative",
+      "description": "Relates to a firm's management of tax obligations.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_tax_positive",
+      "description": "Relates to a firm's management of tax obligations.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_technology_negative",
+      "description": "Relates to a firm's development and use of technology.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_technology_positive",
+      "description": "Relates to a firm's development and use of technology.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_unfilledorders_negative",
+      "description": "Relates to a firm's unfilled orders.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_unfilledorders_positive",
+      "description": "Relates to a firm's unfilled orders.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_valueweightedneg",
+      "description": "Count of sentences classified as Negative",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_valueweightedpos",
+      "description": "Count of sentences classified as Positive",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_wastehazardousmaterialsmanagement_negative",
+      "description": "Relates to a firm's management of hazardous and non-hazardous solid wastes resulting from manufacturing",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_wastehazardousmaterialsmanagement_positive",
+      "description": "Relates to a firm's management of hazardous and non-hazardous solid wastes resulting from manufacturing",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_waterwastewatermanagement_negative",
+      "description": "Relates to a firm's management of water use",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_waterwastewatermanagement_positive",
+      "description": "Relates to a firm's management of water use",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_word_neutral",
+      "description": "number of overall words.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_workforce_negative",
+      "description": "Relates to a firm's workforce",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth696_workforce_positive",
+      "description": "Relates to a firm's workforce",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "positive_event_occurrence_count",
+      "description": "Count of positive events identified in the document.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "profit_earnings_positive_event_count",
+      "description": "Number of positive statements or events about profits or earnings.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "raw_material_positive_event_count",
+      "description": "Number of positive statements or events about raw materials.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "rd_negative_event_count",
+      "description": "Number of negative statements or events related to research and development.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "record_results_negative_event_count",
+      "description": "Number of negative statements or events about record results.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "revenue_negative_event_count",
+      "description": "Number of negative statements or events about company revenue.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "synergy_positive_event_count",
+      "description": "Number of positive statements or events about business synergies.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "value_weighted_sentiment_metric",
+      "description": "Sentiment score with value-related events given higher importance.",
+      "dataset": {
+        "id": "other696",
+        "name": "Hybrid NLP Model"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-aiml-data",
+        "name": "AI/ML Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4138,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

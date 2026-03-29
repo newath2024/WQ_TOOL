@@ -1,0 +1,13 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+option_ask_quotation_value,The lowest price a seller is willing to accept for the option.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,19,25,1.4,[]
+option_average_bid_ask_value,The average of the bid and ask prices for the option.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,15,16,1.4,[]
+option_bid_quotation_value,The highest price a buyer is willing to pay for the option.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,11,13,1.4,[]
+option_contract_strike_value,The fixed price at which the option can be exercised.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,16,30,1.4,[]
+option_contract_value_multiplier,The factor used to calculate the total value of the option contract.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,16,20,1.4,[]
+option_daily_traded_contracts,The total number of option contracts traded during the day.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,31,37,1.4,[]
+option_intraday_high_value,The highest price the option reached during the trading day.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,21,34,1.4,[]
+option_intraday_low_value,The lowest price the option reached during the trading day.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,8,8,1.4,[]
+option_open_interest_contracts,The number of outstanding option contracts not yet settled.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,17,22,1.4,[]
+option_opening_trade_value,The price at which the option first traded on the current day.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,8,8,1.4,[]
+option_recent_trade_value,The most recent price at which the option was traded.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,17,21,1.4,[]
+underlying_asset_current_value,The current price of the asset underlying the option contract.,option30,Equity Option Data,option,Option,option-option,Option,IND,1,TOP500,VECTOR,1,0.3629,41,48,1.4,[]

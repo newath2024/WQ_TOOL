@@ -1,0 +1,652 @@
+{
+  "exported_at": "2026-03-29T04:44:23.280Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model16?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 24,
+  "row_count": 24,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model16"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 4,
+      "new_item_count": 4,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model16"
+    }
+  ],
+  "rows": [
+    {
+      "id": "analyst_revision_rank_derivative",
+      "description": "Change in ranking for analyst revisions and momentum compared to previous period.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 14,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "cashflow_efficiency_rank_derivative",
+      "description": "Change in ranking for cash flow generation and profitability compared to previous period.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "composite_factor_score_derivative",
+      "description": "Change in overall composite factor score from the prior period.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "earnings_certainty_rank_derivative",
+      "description": "Change in ranking for earnings sustainability and certainty compared to previous period.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 5,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_bfl_growth",
+      "description": "The purpose of this metric is to qualify the expected MT growth potential of the stock.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4563,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_bfl_momentum",
+      "description": "The purpose of this metric is to identify stocks which are currently undergoing either up or downward analyst revisions.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4561,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_bfl_profitability",
+      "description": "The purpose of this metric is to rank stock based on their ability to generate cash flows.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4554,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_bfl_quality",
+      "description": "The purpose of this metric is to measure both the sustainability and certainty of earnings.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4571,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_bfl_surface",
+      "description": "The static score. An index between 0 & 100 is applied for each stock and each composite factor - The first ranking is a pentagon surface-based score. The larger the surface, the higher the rank.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4536,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_bfl_surface_accel",
+      "description": "The derivative score. In a second step, we calculate the derivative of this score (ie: Is the surface of the pentagon increasing or decreasing from the previous month?).",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4499,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_bfl_total",
+      "description": "The final score M-Score is a weighted average of both the Pentagon surface score and the Pentagon acceleration score.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4499,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_bfl_value",
+      "description": "The purpose of this metric is to see if the stock is under or overpriced given several well known valuation standards.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4568,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_growth",
+      "description": "The purpose of this metric is to qualify the expected MT growth potential of the stock.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4525,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_momentum",
+      "description": "The purpose of this metric is to identify stocks which are currently undergoing either up or downward analyst revisions.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4522,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_profitability",
+      "description": "The purpose of this metric is to rank stock based on their ability to generate cash flows.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4516,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_quality",
+      "description": "The purpose of this metric is to measure both the sustainability and certainty of earnings.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4533,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_surface",
+      "description": "The static score. An index between 0 & 100 is applied for each stock and each composite factor - The first ranking is a pentagon surface-based score. The larger the surface, the higher the rank.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4496,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_surface_accel",
+      "description": "The derivative score. In a second step, we calculate the derivative of this score (ie: Is the surface of the pentagon increasing or decreasing from the previous month?).",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4459,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_total",
+      "description": "The final score M-Score is a weighted average of both the Pentagon surface score and the Pentagon acceleration score.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4459,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fscore_value",
+      "description": "The purpose of this metric is to see if the stock is under or overpriced given several well known valuation standards.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.453,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "growth_potential_rank_derivative",
+      "description": "Change in ranking for medium-term growth potential compared to previous period.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "multi_factor_acceleration_score_derivative",
+      "description": "Change in the acceleration of multi-factor score compared to previous period.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "multi_factor_static_score_derivative",
+      "description": "Change in static multi-factor score compared to previous period.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "relative_valuation_rank_derivative",
+      "description": "Change in ranking for valuation metrics compared to previous period.",
+      "dataset": {
+        "id": "model16",
+        "name": "Fundamental Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

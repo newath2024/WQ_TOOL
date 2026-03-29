@@ -1,0 +1,72 @@
+{
+  "exported_at": "2026-03-29T04:57:36.051Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news59?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 2,
+  "row_count": 2,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 2,
+      "new_item_count": 2,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news59"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mws59_event_fiscal_year",
+      "description": "Event Fiscal Year is the (fiscal) year where the event takes place",
+      "dataset": {
+        "id": "news59",
+        "name": "Corporate Events Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9505,
+      "userCount": 85,
+      "alphaCount": 334,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws59_event_time_value",
+      "description": "The actual time for the event is in UTC if the MarketTime is specified.",
+      "dataset": {
+        "id": "news59",
+        "name": "Corporate Events Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9505,
+      "userCount": 44,
+      "alphaCount": 96,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+insd12_mktprice,The market price of the security at the time of the transaction.,insiders12,UK Insider Transaction Data,insiders,Insiders,insiders-insider-data,Insider Data,EUR,1,TOP2500,VECTOR,1,0.2592,236,548,1.1,[]
+insd12_percent,The percentage of ownership or change related to the transaction.,insiders12,UK Insider Transaction Data,insiders,Insiders,insiders-insider-data,Insider Data,EUR,1,TOP2500,VECTOR,1,0.2592,75,222,1.1,[]
+insd12_positionchangetransactionamount,The amount of change in position resulting from the transaction.,insiders12,UK Insider Transaction Data,insiders,Insiders,insiders-insider-data,Insider Data,EUR,1,TOP2500,VECTOR,1,0.2517,83,254,1.1,[]
+insd12_sharesheld,The total number of shares held after the transaction.,insiders12,UK Insider Transaction Data,insiders,Insiders,insiders-insider-data,Insider Data,EUR,1,TOP2500,VECTOR,1,0.2592,70,277,1.1,[]
+insd12_transactioncode,A code representing the type or nature of the transaction.,insiders12,UK Insider Transaction Data,insiders,Insiders,insiders-insider-data,Insider Data,EUR,1,TOP2500,VECTOR,1,0.2592,196,483,1.1,[]

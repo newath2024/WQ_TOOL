@@ -1,0 +1,145 @@
+{
+  "exported_at": "2026-03-29T04:20:01.893Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/analyst46?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=GLB&universe=TOP3000",
+  "total_count": 5,
+  "row_count": 5,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 5,
+      "new_item_count": 5,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=GLB&universe=TOP3000&dataset.id=analyst46"
+    }
+  ],
+  "rows": [
+    {
+      "id": "anl46_alphadecay",
+      "description": "Contribution of idea age",
+      "dataset": {
+        "id": "analyst46",
+        "name": "Analyst Investment insight Data"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7301,
+      "userCount": 4,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl46_experts",
+      "description": "Contribution of author historical performance",
+      "dataset": {
+        "id": "analyst46",
+        "name": "Analyst Investment insight Data"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.6776,
+      "userCount": 4,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl46_indicator",
+      "description": "Sentiment deciled by region {1-10}",
+      "dataset": {
+        "id": "analyst46",
+        "name": "Analyst Investment insight Data"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.775,
+      "userCount": 5,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl46_performancepercentile",
+      "description": "A value from 1 to 100 expressing how well the Indicator has predicted price movement on the stock in the last 12 months",
+      "dataset": {
+        "id": "analyst46",
+        "name": "Analyst Investment insight Data"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.9386,
+      "userCount": 15,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl46_sentiment",
+      "description": "Score estimated as a sum of 4 components: decay + experts + earnings + (long/short idea count & open/closed status)",
+      "dataset": {
+        "id": "analyst46",
+        "name": "Analyst Investment insight Data"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "MATRIX",
+      "coverage": 0.7301,
+      "userCount": 11,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

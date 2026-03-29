@@ -1,0 +1,2132 @@
+{
+  "exported_at": "2026-03-29T04:11:38.846Z",
+  "source": "dom",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/analyst11?delay=1&instrumentType=EQUITY&limit=20&offset=220&region=GLB&universe=TOP3000",
+  "headers": [
+    "Field",
+    "Description",
+    "Type",
+    "Coverage",
+    "Date Coverage",
+    "Alphas"
+  ],
+  "row_count": 235,
+  "page_count": 12,
+  "rows": [
+    {
+      "Field": "anl11_1e",
+      "Description": "Aggregate KPI for Pollution Prevention & Environmental Remediation",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_1g",
+      "Description": "Aggregate KPI for Board Indepndence, Diversity, & Effectiveness",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_1pme",
+      "Description": "Aggregate KPI for Compensation & Employee Satisfaction",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_1tic",
+      "Description": "Aggregate KPI for Community Engagement & Charitable Activities",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_1e",
+      "Description": "Aggregate KPI for Pollution Prevention & Environmental Remediation",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "82%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_1g",
+      "Description": "Aggregate KPI for Board Independence, Diversity, & Effectiveness",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "83%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_1pme",
+      "Description": "Aggregate KPI for Compensation & Employee Satisfaction",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "83%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_1tic",
+      "Description": "Aggregate KPI for Community Engagement & Charitable Activities",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "83%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_2e",
+      "Description": "Aggregate KPI for Anti-Pollution Policies & Environmental Transparency",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "82%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_2g",
+      "Description": "Aggregate KPI for Management Standards & Ethics",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_2pme",
+      "Description": "Aggregate KPI for employee diversity treatment & labor rights",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "83%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_2tic",
+      "Description": "Aggregate KPI for Human Rights Activism, Supply Chain, Labor & Human Rights Policies",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "83%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_3e",
+      "Description": "Aggregate KPI for Energy & Resource Efficiency",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_3g",
+      "Description": "Aggregate KPI for Disclosure, Transparency, & Stakeholder Accountability",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_3pme",
+      "Description": "Aggregate KPI for Employee Continuing Education, Training, Work Conditions, Safety & Health",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "83%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_3tic",
+      "Description": "Aggregate KPI for Business Model & Products",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "80%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_e",
+      "Description": "The E Score averages the E1, E2, and E3 scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_g",
+      "Description": "The G Score averages the G1, G2, and G3 scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_gse",
+      "Description": "The ESG Score averages the E, S, and G scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_pme",
+      "Description": "The EMP score averages the three EMP scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 1
+    },
+    {
+      "Field": "anl11_2_region",
+      "Description": "Region of the world in which the company is headquartered",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_2_tic",
+      "Description": "The CIT Score averages the CIT1, CIT2, and CIT3 scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_2e",
+      "Description": "Aggregate KPI for Anti-Polution Policies & Environmental Transparency",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_2g",
+      "Description": "Aggregate KPI for Management Standards & Ethics",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_2pme",
+      "Description": "Aggregate KPI for Employee Diversity Treatment, & Labor Rights",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_2tic",
+      "Description": "Aggregate KPI for Human Rights Activism, Supply Chain, Labor & Human Rights Policies",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_3e",
+      "Description": "Aggregate KPI for Energy & Resource Efficiency",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_3g",
+      "Description": "Aggregate KPI for Disclosure, Transparency, & Stakeholder Accountability",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_3pme",
+      "Description": "Aggregate KPI for Employee Continuing Education, Training, Work Conditionsw, Safety & Health",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_3tic",
+      "Description": "Aggregate KPI for Business Model & Products",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit1reg_industryperc",
+      "Description": "Industry Percentile on CIT1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit1reg_industryrnk",
+      "Description": "Industry Rank on CIT1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit1regsubsecperc",
+      "Description": "SubSector Percentile on CIT1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit1regsubsecrnk",
+      "Description": "SubSector Rank on CIT1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit2reg_industryperc",
+      "Description": "Industry Percentile on CIT2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit2reg_industryrnk",
+      "Description": "Industry Rank on CIT2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit2regsubsecperc",
+      "Description": "SubSector Percentile on CIT2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit2regsubsecrnk",
+      "Description": "SubSector Rank on CIT2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit3reg_industryperc",
+      "Description": "Industry Percentile on CIT3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit3reg_industryrnk",
+      "Description": "Industry Rank on CIT3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 2
+    },
+    {
+      "Field": "anl11_cit3regsubsecperc",
+      "Description": "SubSector Percentile on CIT3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_cit3regsubsecrnk",
+      "Description": "SubSector Rank on CIT3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_cit_totalcor",
+      "Description": "The CIT Hybrid Score weights the three CIT scores based on which are strongly rank correlated (to the positive) to financial metrics that are strongly rank correlated to 1yr and 3 yr total returns for that company's peer group",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_cit_totalcorregsectperc",
+      "Description": "Sector Percentile on CIT Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_cit_totalcorregsectrnk",
+      "Description": "Sector Rank on CIT Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_cit_totalcorregsubsecperc",
+      "Description": "SubSector Percentile on CIT Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_cit_totalcorregsubsecrnk",
+      "Description": "SubSector Rank on CIT Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_cit_ttcrg_industryperc",
+      "Description": "Industry Percentile on CIT Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_cit_ttcrg_industryrnk",
+      "Description": "Industry Rank on CIT Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_citposcorreg_industryperc",
+      "Description": "Industry Percentile on CIT Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_citposcorreg_industryrnk",
+      "Description": "Industry Rank on CIT Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_citposcorregsubsecrnk",
+      "Description": "SubSector Percentile on CIT Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_citreg_industryperc",
+      "Description": "Industry Percentile on CIT Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_citreg_industryrnk",
+      "Description": "Industry Rank on CIT Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_citregsubsecperc",
+      "Description": "SubSector Percentile on CIT Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_citregsubsecrnk",
+      "Description": "SubSector Rank on CIT Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_company_name",
+      "Description": "Company name",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "84%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_creptcesger1e",
+      "Description": "Sector Percentile on E1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_creptcesger1g",
+      "Description": "Sector Percentile on G1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_creptcesger1pme",
+      "Description": "Sector Percentile on EMP1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 3
+    },
+    {
+      "Field": "anl11_creptcesger1tic",
+      "Description": "Sector Percentile on CIT1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesger2e",
+      "Description": "Sector Percentile on E2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesger2g",
+      "Description": "Sector Percentile on G2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesger2pme",
+      "Description": "Sector Percentile on EMP2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesger2tic",
+      "Description": "Sector Percentile on CIT2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesger3e",
+      "Description": "Sector Percentile on E3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesger3g",
+      "Description": "Sector Percentile on G3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesger3pme",
+      "Description": "Sector Percentile on EMP3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesger3tic",
+      "Description": "Sector Percentile on CIT3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgere",
+      "Description": "Sector Percentile on E Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgerg",
+      "Description": "Sector Percentile on G Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgergse",
+      "Description": "Sector Percentile on ESG Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgerpme",
+      "Description": "Sector Percentile on EMP Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgerrocsope",
+      "Description": "Sector Percentile on E Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "66%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgerrocsopg",
+      "Description": "Sector Percentile on G Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgerrocsopgse",
+      "Description": "Sector Percentile on ESG Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgerrocsoppme",
+      "Description": "Sector Percentile on EMP Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_creptcesgertic",
+      "Description": "Sector Percentile on CIT Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_crptcsknrtcsgrscptc",
+      "Description": "Sector Rank on CIT Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_ctpscrgsbscrnksbscprc",
+      "Description": "SubSector Rank on CIT Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 4
+    },
+    {
+      "Field": "anl11_e",
+      "Description": "The E Score averages the E1, E2, and E3 scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e1reg_industryperc",
+      "Description": "Industry Percentile on E1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e1reg_industryrnk",
+      "Description": "Industry Rank on E1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e1regsubsecperc",
+      "Description": "SubSector Percentile on E1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e1regsubsecrnk",
+      "Description": "SubSector Rank on E1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e2reg_industryperc",
+      "Description": "Industry Percentile on E2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e2reg_industryrnk",
+      "Description": "Industry Rank on E2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e2regsubsecperc",
+      "Description": "SubSector Percentile on E2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e2regsubsecrnk",
+      "Description": "SubSector Rank on E2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e3reg_industryperc",
+      "Description": "Industry Percentile on E3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e3reg_industryrnk",
+      "Description": "Industry Rank on E3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e3regsubsecperc",
+      "Description": "SubSector Percentile on E3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e3regsubsecrnk",
+      "Description": "SubSector Rank on E3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e_totalcor",
+      "Description": "The E Hybrid Score weights the three E scores based on which are strongly rank correlated (to the positive) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e_totalcorregsectperc",
+      "Description": "Sector Percentile on E Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e_totalcorregsectrnk",
+      "Description": "Sector Rank on E Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e_totalcorregsubsecperc",
+      "Description": "SubSector Percentile on E Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e_totalcorregsubsecrnk",
+      "Description": "SubSector Rank on E Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e_ttcrg_industryperc",
+      "Description": "Industry Percentile on E Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_e_ttcrg_industryrnk",
+      "Description": "Industry Rank on E Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 5
+    },
+    {
+      "Field": "anl11_emp1reg_industryperc",
+      "Description": "Industry Percentile on EMP1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp1reg_industryrnk",
+      "Description": "Industry Rank on the first EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp1regsubsecperc",
+      "Description": "SubSector Percentile on EMP1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp1regsubsecrnk",
+      "Description": "SubSector Rank on the first EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp2reg_industryperc",
+      "Description": "Industry Percentile on EMP2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp2reg_industryrnk",
+      "Description": "Industry Rank on the second EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp2regsubsecperc",
+      "Description": "SubSector Percentile on EMP2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp2regsubsecrnk",
+      "Description": "SubSector Rank on the second EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp3reg_industryperc",
+      "Description": "Industry Percentile on EMP3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp3reg_industryrnk",
+      "Description": "Industry Rank on the third EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp3regsubsecperc",
+      "Description": "SubSector Percentile on EMP3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp3regsubsecrnk",
+      "Description": "SubSector Rank on the third EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp_totalcor",
+      "Description": "The EMP Hybrid Score weights the three EMP scores based on which are strongly rank correlated (to the positive) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp_totalcorregsectperc",
+      "Description": "Sector Percentile on EMP Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp_totalcorregsectrnk",
+      "Description": "Sector Rank on EMP Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp_totalcorregsubsecperc",
+      "Description": "SubSector Percentile on EMP Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp_totalcorregsubsecrnk",
+      "Description": "SubSector Rank on EMP Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp_ttcrg_industryperc",
+      "Description": "Industry Percentile on EMP Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_emp_ttcrg_industryrnk",
+      "Description": "Industry Rank on EMP Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_empposcorreg_industryperc",
+      "Description": "Industry Percentile on EMP Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 6
+    },
+    {
+      "Field": "anl11_empposcorreg_industryrnk",
+      "Description": "Industry Rank on EMP Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_empposcorregsubsecperc",
+      "Description": "SubSector Percentile on EMP Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_empposcorregsubsecrnk",
+      "Description": "SubSector Rank on EMP Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_empreg_industryperc",
+      "Description": "Industry Percentile on EMP Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_empreg_industryrnk",
+      "Description": "Industry Rank on EMP Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_empregsubsecperc",
+      "Description": "SubSector Percentile on EMP Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_empregsubsecrnk",
+      "Description": "SubSector Rank on EMP Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_eposcorreg_industryperc",
+      "Description": "Industry Percentile on E Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "66%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_eposcorreg_industryrnk",
+      "Description": "Industry Rank on E Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "66%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_eposcorregsubsecperc",
+      "Description": "SubSector Percentile on E Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "66%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_eposcorregsubsecrnk",
+      "Description": "SubSector Rank on E Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "66%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_ereg_industryperc",
+      "Description": "Industry Percentile on E Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_ereg_industryrnk",
+      "Description": "Industry Rank on E Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_eregsubsecperc",
+      "Description": "SubSector Percentile on E Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_eregsubsecrnk",
+      "Description": "SubSector Rank on E Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_esg_totalcor",
+      "Description": "The ESG Hybrid Score weights the individual E EMP CIT and G scores based on which are strongly rank correlated (to the positive) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_esg_totalcorregsectperc",
+      "Description": "Sector Percentile on ESG Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_esg_totalcorregsectrnk",
+      "Description": "Sector Rank on ESG Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_esg_totalcorregsubsecperc",
+      "Description": "SubSector Percentile on ESG Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_esg_totalcorregsubsecrnk",
+      "Description": "SubSector Rank on ESG Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 7
+    },
+    {
+      "Field": "anl11_esg_ttcrg_industryperc",
+      "Description": "Industry Percentile on ESG Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esg_ttcrg_industryrnk",
+      "Description": "Industry Rank on ESG Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esgposcorreg_industryperc",
+      "Description": "Industry Percentile on ESG Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esgposcorreg_industryrnk",
+      "Description": "Industry Rank on ESG Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esgposcorregsubsecperc",
+      "Description": "SubSector Percentile on ESG Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esgposcorregsubsecrnk",
+      "Description": "SubSector Rank on ESG Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esgreg_industryperc",
+      "Description": "Industry Percentile on ESG Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esgreg_industryrnk",
+      "Description": "Industry Rank on ESG Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esgregsubsecperc",
+      "Description": "SubSector Percentile on ESG Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_esgregsubsecrnk",
+      "Description": "SubSector Rank on ESG Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g",
+      "Description": "The G Score averages the G1, G2, and G3 scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g1reg_industryperc",
+      "Description": "Industry Percentile on G1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g1reg_industryrnk",
+      "Description": "Industry Rank on G1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g1regsubsecperc",
+      "Description": "SubSector Percentile on G1 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g1regsubsecrnk",
+      "Description": "SubSector Rank on G1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g2reg_industryperc",
+      "Description": "Industry Percentile on G2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g2reg_industryrnk",
+      "Description": "Industry Rank on G2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g2regsubsecperc",
+      "Description": "SubSector Percentile on G2 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g2regsubsecrnk",
+      "Description": "SubSector Rank on G2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g3reg_industryperc",
+      "Description": "Industry Percentile on G3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 8
+    },
+    {
+      "Field": "anl11_g3reg_industryrnk",
+      "Description": "Industry Rank on G3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g3regsubsecperc",
+      "Description": "SubSector Percentile on G3 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g3regsubsecrnk",
+      "Description": "SubSector Rank on G3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g_totalcor",
+      "Description": "The G Hybrid Score weights the three G scores based on which are strongly rank correlated (to the positive) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g_totalcorregsectperc",
+      "Description": "Sector Percentile on G Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g_totalcorregsectrnk",
+      "Description": "Sector Rank on G Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g_totalcorregsubsecperc",
+      "Description": "SubSector Percentile on G Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g_totalcorregsubsecrnk",
+      "Description": "SubSector Rank on G Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g_ttcrg_industryperc",
+      "Description": "Industry Percentile on G Hybrid Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_g_ttcrg_industryrnk",
+      "Description": "Industry Rank on G Hybrid Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_global_industrycount",
+      "Description": "Global Industry Count",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "75%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_globalsectcount",
+      "Description": "Global Sector Count",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "75%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_globalsubseccount",
+      "Description": "Global SubSector Count",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "75%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_gposcorreg_industryperc",
+      "Description": "Industry Percentile on G Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_gposcorreg_industryrnk",
+      "Description": "Industry Rank on G Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_gposcorregsubsecperc",
+      "Description": "SubSector Percentile on G Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_gposcorregsubsecrnk",
+      "Description": "SubSector Rank on G Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_greg_industryperc",
+      "Description": "Industry Percentile on G Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_greg_industryrnk",
+      "Description": "Industry Rank on G Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_gregsubsecperc",
+      "Description": "SubSector Percentile on G Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "76%",
+      "Alphas": "100%",
+      "__page": 9
+    },
+    {
+      "Field": "anl11_gregsubsecrnk",
+      "Description": "SubSector Rank on G Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_gse",
+      "Description": "The ESG Score averages the E, S, and G scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger1e",
+      "Description": "Sector Rank on E1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger1g",
+      "Description": "Sector Rank on G1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger1pme",
+      "Description": "Sector Rank on the first EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger1tic",
+      "Description": "Sector Rank on CIT1 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger2e",
+      "Description": "Sector Rank on E2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger2g",
+      "Description": "Sector Rank on G2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger2pme",
+      "Description": "Sector Rank on the second EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger2tic",
+      "Description": "Sector Rank on CIT2 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger3e",
+      "Description": "Sector Rank on E3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger3g",
+      "Description": "Sector Rank on G3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger3pme",
+      "Description": "Sector Rank on the third EMP score with 1 as highest",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesger3tic",
+      "Description": "Sector Rank on CIT3 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesgere",
+      "Description": "Sector Rank on E Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesgerg",
+      "Description": "Sector Rank on G Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesgergse",
+      "Description": "Sector Rank on ESG Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesgerpme",
+      "Description": "Sector Rank on EMP Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesgerrocsope",
+      "Description": "Sector Rank on E Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "66%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesgerrocsopg",
+      "Description": "Sector Rank on G Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 10
+    },
+    {
+      "Field": "anl11_knrtcesgerrocsopgse",
+      "Description": "Sector Rank on ESG Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_knrtcesgerrocsoppme",
+      "Description": "Sector Rank on EMP Max Correlation Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_knrtcesgerrocsoptic",
+      "Description": "Sector Percentile on CIT Max Correlation Score with 100% being the best",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_knrtcesgertic",
+      "Description": "Sector Rank on CIT Score with 1 being the highest rank",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_pme",
+      "Description": "The EMP Score averages the three EMP scores .",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_region_industrycount",
+      "Description": "Region Industry Count",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_regionsectcount",
+      "Description": "Region Sector Count",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_regionsubseccount",
+      "Description": "Region SubSector Count",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_rocsope",
+      "Description": "The E Max Correlation Score weights the three E scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peers.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "66%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_rocsopg",
+      "Description": "The G Max Correlation Score weights the three G scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_rocsopgse",
+      "Description": "The ESG Max Correlation Score weights the individual E EMP CIT and G scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_rocsoppme",
+      "Description": "The EMP Max Correlation Score weights the three EMP scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peer group.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_rocsoptic",
+      "Description": "The CIT Max Correlation Score weights the three CIT scores based on which are strongly rank correlated (to the positive and negative) to financial metrics related to 1yr and 3 yr total returns for that company's peer group",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "67%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "anl11_tic",
+      "Description": "The CIT Score averages the CIT1, CIT2, and CIT3 scores.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "social_pillar_score",
+      "Description": "Aggregated score representing company performance on social factors.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "social_poscorr_industry_percentile",
+      "Description": "Percentile ranking within industry peer group for social score weighted by positive correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "social_poscorr_industry_position",
+      "Description": "Company’s position within industry peer group for social score weighted by positive correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "social_poscorr_sector_percentile",
+      "Description": "Percentile ranking within sector peer group for social score weighted by positive correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "social_poscorr_sector_position",
+      "Description": "Company’s position within sector peer group for social score weighted by positive correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "social_poscorr_subsector_percentile",
+      "Description": "Percentile ranking within subsector peer group for social score weighted by positive correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 11
+    },
+    {
+      "Field": "social_poscorr_subsector_position",
+      "Description": "Company’s position within subsector peer group for social score weighted by positive correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_score_industry_percentile",
+      "Description": "Percentile ranking within industry peer group for social score.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_score_industry_position",
+      "Description": "Company’s position within industry peer group for social score.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_score_positive_correlation",
+      "Description": "Social score weighted by metrics most positively correlated to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "68%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_score_sector_percentile",
+      "Description": "Percentile ranking within sector peer group for social score.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_score_sector_position",
+      "Description": "Company’s position within sector peer group for social score.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_score_subsector_percentile",
+      "Description": "Percentile ranking within subsector peer group for social score.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "77%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_score_subsector_position",
+      "Description": "Company’s position within subsector peer group for social score.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "78%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_score_total_correlation",
+      "Description": "Social score weighted by metrics most strongly correlated (positive and negative) to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_totalcorr_industry_percentile",
+      "Description": "Percentile ranking within industry peer group for social score weighted by total correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_totalcorr_industry_position",
+      "Description": "Company’s position within industry peer group for social score weighted by total correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_totalcorr_sector_percentile",
+      "Description": "Percentile ranking within sector peer group for social score weighted by total correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_totalcorr_sector_position",
+      "Description": "Company’s position within sector peer group for social score weighted by total correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_totalcorr_subsector_percentile",
+      "Description": "Percentile ranking within subsector peer group for social score weighted by total correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 12
+    },
+    {
+      "Field": "social_totalcorr_subsector_position",
+      "Description": "Company’s position within subsector peer group for social score weighted by total correlation to financial returns.",
+      "Type": "Matrix",
+      "Coverage": "1.5",
+      "Date Coverage": "69%",
+      "Alphas": "100%",
+      "__page": 12
+    }
+  ]
+}

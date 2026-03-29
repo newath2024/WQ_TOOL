@@ -1,0 +1,72 @@
+{
+  "exported_at": "2026-03-29T04:44:09.154Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model144?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 2,
+  "row_count": 2,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 2,
+      "new_item_count": 2,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model144"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mdl144_predict",
+      "description": "StarPerformer Original Model Output",
+      "dataset": {
+        "id": "model144",
+        "name": "Stock Selection DL model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5511,
+      "userCount": 18,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl144_score",
+      "description": "StarPerformer Systematic Alpha Distilled Model Score",
+      "dataset": {
+        "id": "model144",
+        "name": "Stock Selection DL model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5511,
+      "userCount": 45,
+      "alphaCount": 75,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

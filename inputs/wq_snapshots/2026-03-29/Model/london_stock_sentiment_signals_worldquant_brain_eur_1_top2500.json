@@ -1,0 +1,202 @@
+{
+  "exported_at": "2026-03-29T04:42:31.886Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/london_sentiment?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 7,
+  "row_count": 7,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 7,
+      "new_item_count": 7,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=london_sentiment"
+    }
+  ],
+  "rows": [
+    {
+      "id": "five_day_sentiment_score_change",
+      "description": "Change in normalized sentiment score over a five-day period.",
+      "dataset": {
+        "id": "london_sentiment",
+        "name": "London Stock Sentiment Signals"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8368,
+      "coverage": 0.1634,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "normalized_sentiment_volume_score",
+      "description": "Z-score representing the normalized sentiment volume for a stock.",
+      "dataset": {
+        "id": "london_sentiment",
+        "name": "London Stock Sentiment Signals"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8368,
+      "coverage": 0.1634,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "one_day_sentiment_score_change",
+      "description": "Change in normalized sentiment score over a one-day period.",
+      "dataset": {
+        "id": "london_sentiment",
+        "name": "London Stock Sentiment Signals"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8368,
+      "coverage": 0.1634,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "relative_tweet_volume_stddev",
+      "description": "Mean standard deviation of indicative tweet volume for a stock.",
+      "dataset": {
+        "id": "london_sentiment",
+        "name": "London Stock Sentiment Signals"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8368,
+      "coverage": 0.1634,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sentiment_volume_adjusted_score",
+      "description": "Sentiment score adjusted by the volume of relevant tweets for a stock.",
+      "dataset": {
+        "id": "london_sentiment",
+        "name": "London Stock Sentiment Signals"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8368,
+      "coverage": 0.1634,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sentiment_volume_score_stddev",
+      "description": "Standard deviation of the sentiment volume score over a period.",
+      "dataset": {
+        "id": "london_sentiment",
+        "name": "London Stock Sentiment Signals"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8368,
+      "coverage": 0.1634,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "twenty_day_avg_sentiment_volume_score",
+      "description": "Twenty-day average of the sentiment volume score for a stock.",
+      "dataset": {
+        "id": "london_sentiment",
+        "name": "London Stock Sentiment Signals"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8368,
+      "coverage": 0.1634,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

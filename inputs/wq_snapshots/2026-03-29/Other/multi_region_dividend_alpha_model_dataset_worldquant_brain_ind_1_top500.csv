@@ -1,0 +1,11 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+oth335_combined_all_region_hedge,Score from the hedge model,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,1046,4461,1.4,[]
+oth335_combined_all_region_linear,Score from the linear model,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,743,2613,1.4,[]
+oth335_combined_all_region_mind,Final composite MIND score,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,829,3015,1.4,[]
+oth335_combined_all_region_mktcap,Market Cap,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,366,1099,1.4,[]
+oth335_combined_all_region_shield,Score from the SHIELD model,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,377,1431,1.4,[]
+oth335_hc_combined_all_region_hedge,Score from the hedge model,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,491,1883,1.4,[]
+oth335_hc_combined_all_region_linear,Score from the linear model,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,386,1420,1.4,[]
+oth335_hc_combined_all_region_mind,Final composite MIND score,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,381,1375,1.4,[]
+oth335_hc_combined_all_region_mktcap,Market Cap,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,307,1138,1.4,[]
+oth335_hc_combined_all_region_shield,Score from the SHIELD model,other335,Multi-Region Dividend Alpha Model Dataset,other,Other,other-employee-data,Employee Data,IND,1,TOP500,MATRIX,1,0.6364,302,1223,1.4,[]

@@ -1,0 +1,228 @@
+{
+  "exported_at": "2026-03-29T04:58:44.294Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news76?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 8,
+  "row_count": 8,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 8,
+      "new_item_count": 8,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news76"
+    }
+  ],
+  "rows": [
+    {
+      "id": "company_analytics_previous_score",
+      "description": "Score or value assigned to the company at the previous timestamp.",
+      "dataset": {
+        "id": "news76",
+        "name": "Textual News Feed Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7965,
+      "coverage": 0.719,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "company_analytics_score_value",
+      "description": "Score or value assigned by the analytics model for the company.",
+      "dataset": {
+        "id": "news76",
+        "name": "Textual News Feed Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.7965,
+      "coverage": 0.719,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws76_classnum",
+      "description": "ClassNum: The class number of a specified newswire",
+      "dataset": {
+        "id": "news76",
+        "name": "Textual News Feed Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.822,
+      "coverage": 0.7263,
+      "userCount": 12,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws76_confidence",
+      "description": "For SENTIMENT and SENTIMENT_SMEDIA, an array of confidence values exists between 0 and 100 for each of the values in: /ContentT/StoryAnalytics/StructuredS coreList/Structured Score/Score For MMN and MMN_1STPASS, an array of floating points between 0 and 1 for each of the tagged securities, with 1 being most likely to cause volatility in the security",
+      "dataset": {
+        "id": "news76",
+        "name": "Textual News Feed Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.822,
+      "coverage": 0.7263,
+      "userCount": 17,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws76_score",
+      "description": "For SENTIMENT and SENTIMENT_SMEDIA, an array of integer values {-1,0,1} represents the assigned Analytics Score for each ticker. -1 is negative, 0 neutral and 1 positive For MMN and MMN_1STPASS, an array of 1 for each ticker",
+      "dataset": {
+        "id": "news76",
+        "name": "Textual News Feed Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.822,
+      "coverage": 0.7263,
+      "userCount": 22,
+      "alphaCount": 37,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws76_timeofarrival",
+      "description": "Time that a news story was first created in Bloomberg system (UTC)",
+      "dataset": {
+        "id": "news76",
+        "name": "Textual News Feed Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.822,
+      "coverage": 0.7263,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws76_version",
+      "description": "Version no. of the underlying analytics model",
+      "dataset": {
+        "id": "news76",
+        "name": "Textual News Feed Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.822,
+      "coverage": 0.7263,
+      "userCount": 8,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "news_story_title",
+      "description": "The headline or title of the news story.",
+      "dataset": {
+        "id": "news76",
+        "name": "Textual News Feed Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.822,
+      "coverage": 0.7263,
+      "userCount": 5,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

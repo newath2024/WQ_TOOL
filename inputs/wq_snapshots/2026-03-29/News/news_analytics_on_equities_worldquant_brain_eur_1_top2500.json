@@ -1,0 +1,1397 @@
+{
+  "exported_at": "2026-03-29T04:55:38.484Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news31?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 53,
+  "row_count": 53,
+  "page_count": 3,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news31"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=news31"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 13,
+      "new_item_count": 13,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=news31"
+    }
+  ],
+  "rows": [
+    {
+      "id": "explicit_company_mention_count",
+      "description": "Number of companies explicitly listed in the news item.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "first_appearance_sentence_number",
+      "description": "Sentence number where the asset is first referenced in the news item.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "negative_sentiment_probability_2",
+      "description": "Probability that the sentiment is negative for the asset.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "neutral_sentiment_probability_2",
+      "description": "Probability that the sentiment is neutral for the asset.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "news_relevance_score",
+      "description": "Score reflecting how pertinent the news item is to the asset.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "news_urgency_level",
+      "description": "Integer indicating the urgency or type of the news story.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_amertimestamp_time",
+      "description": "The time when the news arrived(American time)",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5999,
+      "coverage": 0.7504,
+      "userCount": 48,
+      "alphaCount": 62,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_apactimestamp_time",
+      "description": "The time when the news arrived(Asian time)",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5999,
+      "coverage": 0.7504,
+      "userCount": 81,
+      "alphaCount": 139,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_audiences",
+      "description": "Audience code",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 17,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_bodysize",
+      "description": "The size of the current version of the story body in characters",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_companycount",
+      "description": "The number of companies explicitly listed in the news item in the subjects field",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_bodysize",
+      "description": "The size of the current version of the story body in characters",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9074,
+      "userCount": 27,
+      "alphaCount": 37,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_companycount",
+      "description": "The number of companies explicitly listed in the news item in the subjects field",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 9,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_feedtimestamp_time",
+      "description": "The time when the data was available on the feed",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 17,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_firstcreated_time",
+      "description": "UTC timestamp for the first version of the story (time)",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 11,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_firstmentionsentence",
+      "description": "The first sentence, starting with the headline, in which the scored asset is mentioned. Thus, a value of 1 denotes the headline, 2 the first sentence of the story body, 3 the second sentence, etc.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9019,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_noveltycounts",
+      "description": "The number of similar items on a particular asset within 5 time windows. The periods are 12 hours, 24 hours, 3 days, 5 days and 7 days prior to the news item's timestamp.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 15,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_relevance",
+      "description": "The number indicating the relevance of the news item to the asset. It ranges from 0 to 1.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 13,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_sentencecount",
+      "description": "The total number of sentences in the news item",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 24,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_sentimentclass",
+      "description": "This field indicates the predominant sentiment class for this news item with respect to this asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.8987,
+      "userCount": 31,
+      "alphaCount": 43,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_sentimentnegative",
+      "description": "The probability that the sentiment of the news item was negative for the asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 72,
+      "alphaCount": 201,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_sentimentneutral",
+      "description": "The probability that the sentiment of the news item was neutral for the asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 15,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_sentimentpositive",
+      "description": "The probability that the sentiment of the news item was positive for the asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 21,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_sentimentwordcount",
+      "description": "The number of lexical tokens (words and punctuation) in the sections of the item text that are deemed relevant to the asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 21,
+      "alphaCount": 36,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_sourcetimestamp_time",
+      "description": "UTC timestamp of this news item (time)",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 21,
+      "alphaCount": 74,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_urgency",
+      "description": "Differentiates story types: 1: alert, 3: article",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 13,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_volumecounts",
+      "description": "The number of items on a particular asset within 5 time windows. The periods are 12 hours, 24 hours, 3 days, 5 days, and 7 days prior to the news item's timestamp",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 19,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_d1_wordcount",
+      "description": "The total number of lexical tokens (words and punctuation) in the news item. Can be used in conjunction with sentimentWordCount to determine the proportion of the news item discussing an asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "coverage": 0.9095,
+      "userCount": 23,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_emeatimestamp_time",
+      "description": "The time when the news arrived(European time)",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 0.8007,
+      "coverage": 0.7504,
+      "userCount": 18,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_feedtimestamp_time",
+      "description": "The time when the data was available on the feed",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_firstcreated_time",
+      "description": "UTC timestamp for the first version of the story(time)",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_firstmentionsentence",
+      "description": "The first sentence, starting with the headline, in which the scored asset is mentioned Thus, a value of 1 denotes the headline, 2 the first sentence of the story body, 3 the second sentence, etc",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_linkedidpositions",
+      "description": "Position of the linkedId in the complete list of linked Ids 0 is the first/oldest, and the largest/most recent is the 7-day itemCount minus 1",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 14,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_linkedidvalues",
+      "description": "id of the item",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 29,
+      "alphaCount": 64,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_noveltycounts",
+      "description": "The number of similar items on a particular asset within 5 time windows The periods are 12 hours, 24 hours, 3 days, 5 days and 7 days prior to the news item’s timestamp",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_relevance",
+      "description": "The number indicating the relevance of the news item to the asset It ranges from 0 to 1",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_sentencecount",
+      "description": "The total number of sentences in the news item",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_sentimentnegative",
+      "description": "The probability that the sentiment of the news item was negative for the asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_sentimentneutral",
+      "description": "The probability that the sentiment of the news item was neutral for the asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_sentimentpositive",
+      "description": "The probability that the sentiment of the news item was positive for the asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_sentimentwordcount",
+      "description": "The number of lexical tokens (words and punctuation) in the sections of the item text that are deemed relevant to the asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_sourcetimestamp_time",
+      "description": "UTC timestamp of this news item(time)",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_subjects",
+      "description": "Topic codes and company identifiers that relate to this news item",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 16,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_urgency",
+      "description": "Differentiates story types1: alert, 3: article",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_volumecounts",
+      "description": "The number of items on a particular asset within 5 time windows The periods are 12 hours, 24 hours, 3 days, 5 days and 7 days prior to the news item’s timestamp",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_windows",
+      "description": "The windowed count group is used to associate a count with the window of time it relates to It is used for the noveltyCounts and volumeCountsLength of time the count covers nH (for hours) or nD (for days) Default values are “12H”, “24H”, “3D”, “5D”, and “7D”",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 12,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nws31_wordcount",
+      "description": "The total number of lexical tokens (words and punctuation) in the news itemCan be used in conjunction with sentimentWordCount to determine the proportion of the news item discussing an asset",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7504,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "positive_sentiment_probability_2",
+      "description": "Probability that the sentiment is positive for the asset.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "predominant_sentiment_class",
+      "description": "Main sentiment classification for the asset in the news item.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "sentiment_analysis_word_count",
+      "description": "Number of words used in the sentiment calculation for the asset.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "story_body_character_count",
+      "description": "Total number of characters in the news story body.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "total_sentence_count",
+      "description": "Total number of sentences in the news item.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "total_word_token_count",
+      "description": "Total number of words and punctuation tokens in the news item.",
+      "dataset": {
+        "id": "news31",
+        "name": "News Analytics on Equities"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news",
+        "name": "News"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7417,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

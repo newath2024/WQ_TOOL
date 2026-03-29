@@ -1,0 +1,756 @@
+{
+  "exported_at": "2026-03-29T04:59:58.251Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/option1?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 28,
+  "row_count": 28,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=option1"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 8,
+      "new_item_count": 8,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=IND&universe=TOP500&dataset.id=option1"
+    }
+  ],
+  "rows": [
+    {
+      "id": "delta_surface_data_quality",
+      "description": "A measure or flag indicating the quality of the delta surface data.",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 41,
+      "alphaCount": 47,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "implied_yield_value",
+      "description": "The yield value implied by market prices, typically derived from options or futures.",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3432,
+      "userCount": 30,
+      "alphaCount": 37,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_deltasurface_d1_moneyness",
+      "description": "option moneyness",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 28,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_dvd_frequency",
+      "description": "times per year (1 - annually, 2 - semiannually, 4 - quarterly, 12 - monthly)",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5988,
+      "coverage": 0.3304,
+      "userCount": 45,
+      "alphaCount": 113,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_forward_price_d1_forward",
+      "description": "forward price",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5056,
+      "userCount": 88,
+      "alphaCount": 131,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_isenabled",
+      "description": "whether a root is standard (IsEnabled=0) or non-standard IsEnable=0)",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5988,
+      "coverage": 0.5162,
+      "userCount": 79,
+      "alphaCount": 111,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_last_dvd_amount",
+      "description": "dividend amount (used in calculations, if dividends are paid in foreign currecny we transform real amount to stock's currecny)",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 0.5988,
+      "coverage": 0.3304,
+      "userCount": 74,
+      "alphaCount": 92,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_p_deltasurface_d1_delta",
+      "description": "option delta",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 24,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_p_deltasurface_d1_vi",
+      "description": "implied volatility",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 17,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_p_raw_deltasurface_d1_delta",
+      "description": "delta of a virtual contract",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_p_raw_deltasurface_d1_vi",
+      "description": "implied volatility of a virtual contract",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 13,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_parameterization_d1_forward",
+      "description": "equity forward price",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 20,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_price_close",
+      "description": "stock last price (adjusted for corp. actions such as splits, special cash and others). For example, in a 2-for-1 stock split, we divide OHL prices and close price history by 2",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5177,
+      "userCount": 199,
+      "alphaCount": 387,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_price_close_ini",
+      "description": "stock last price (unadjusted; as of trade date)",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5177,
+      "userCount": 54,
+      "alphaCount": 119,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_price_close_opt",
+      "description": "stock last price (as of trade date) used for options calculations (IV&greeks), unadjusted for corp. actions. It could be different from price_close_ini in some cases: for example, for SPX we use 4:15 index price derived from futures instead of 16:00 PM index close. If there is a stock split (or another event which has the influence on pricing), historical prices of this field remain unchanged",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5177,
+      "userCount": 50,
+      "alphaCount": 94,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_price_high",
+      "description": "high price (adjusted)",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5177,
+      "userCount": 102,
+      "alphaCount": 160,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_price_low",
+      "description": "low price (adjusted)",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5177,
+      "userCount": 44,
+      "alphaCount": 55,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_price_open",
+      "description": "open price (adjusted)",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5177,
+      "userCount": 129,
+      "alphaCount": 208,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_raw_deltasurface_d1_moneyness",
+      "description": "moneyness",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 16,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_volume",
+      "description": "stock volume",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5177,
+      "userCount": 101,
+      "alphaCount": 164,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_vp_deltasurface_d1_period",
+      "description": "expiry in days",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 14,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_vp_forward_price_d1_period",
+      "description": "period in days",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5056,
+      "userCount": 37,
+      "alphaCount": 48,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "opt1_vp_raw_deltasurface_d1_period",
+      "description": "maturity in calendar days (30, 60, 90, 120, 150, 180, 360, 720)",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_delta_value",
+      "description": "The delta value representing the sensitivity of the option price to the underlying asset.",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3449,
+      "userCount": 21,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_implied_volatility_value",
+      "description": "The implied volatility value derived from the option price.",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3449,
+      "userCount": 12,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_out_of_money_flag",
+      "description": "Indicator showing if the option is out-of-the-money.",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3449,
+      "userCount": 13,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_strike_price_2",
+      "description": "The strike price at which the option can be exercised.",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3449,
+      "userCount": 20,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "option_time_period",
+      "description": "The time period or tenor associated with the option data point.",
+      "dataset": {
+        "id": "option1",
+        "name": "Options Volatility Surfaces Data"
+      },
+      "category": {
+        "id": "option",
+        "name": "Option"
+      },
+      "subcategory": {
+        "id": "option-option-volatility",
+        "name": "Option Volatility"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3449,
+      "userCount": 13,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

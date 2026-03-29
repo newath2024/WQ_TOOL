@@ -1,0 +1,5266 @@
+{
+  "exported_at": "2026-03-29T04:46:44.893Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model25?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 199,
+  "row_count": 199,
+  "page_count": 10,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 7,
+      "offset": 120,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=120&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 8,
+      "offset": 140,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=140&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 9,
+      "offset": 160,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=160&region=EUR&universe=TOP2500&dataset.id=model25"
+    },
+    {
+      "page": 10,
+      "offset": 180,
+      "item_count": 19,
+      "new_item_count": 19,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=180&region=EUR&universe=TOP2500&dataset.id=model25"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mdl25_01v",
+      "description": "Earnings Quality by Accruals - Period End Date",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9813,
+      "userCount": 149,
+      "alphaCount": 526,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_05v",
+      "description": "Diluted EPS from Total Ops - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4011,
+      "userCount": 14,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_15v",
+      "description": "Pension Expense - Last Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7073,
+      "userCount": 23,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_21v",
+      "description": "Earnings Quality by Cash Flow",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9339,
+      "userCount": 294,
+      "alphaCount": 851,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_22v",
+      "description": "Raw Earnings Quality",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9802,
+      "userCount": 97,
+      "alphaCount": 146,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_31v",
+      "description": "Earnings Quality by Cash Flow - 1 Day Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7212,
+      "userCount": 47,
+      "alphaCount": 213,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_34v",
+      "description": "Diluted EPS from Continuing Ops - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4757,
+      "userCount": 14,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_41v",
+      "description": "Earnings Quality by Cash Flow - Period End Date",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9548,
+      "userCount": 55,
+      "alphaCount": 152,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_44v",
+      "description": "Diluted EPS from Continuing Ops - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4009,
+      "userCount": 7,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_54v",
+      "description": "Diluted EPS from Continuing Ops - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4009,
+      "userCount": 17,
+      "alphaCount": 27,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_61v",
+      "description": "Earnings Quality by Operating Efficiency",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9752,
+      "userCount": 43,
+      "alphaCount": 208,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_64v",
+      "description": "Diluted EPS from Disc Ops & XO - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4753,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_6v",
+      "description": "Earnings Quality Region Rank",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9802,
+      "userCount": 84,
+      "alphaCount": 199,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_71v",
+      "description": "Earnings Quality by Operating Efficiency - 1 Day Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8953,
+      "userCount": 25,
+      "alphaCount": 45,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_73v",
+      "description": "Basic EPS from Total Ops - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4794,
+      "userCount": 13,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_74v",
+      "description": "Diluted EPS from Disc Ops & XO - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4009,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_7v",
+      "description": "Earnings Quality Region Rank - 1 Day Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9206,
+      "userCount": 30,
+      "alphaCount": 37,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_81v",
+      "description": "Earnings Quality by Operating Efficiency - Period End Date",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9768,
+      "userCount": 85,
+      "alphaCount": 314,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_83v",
+      "description": "Basic EPS from Total Ops - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4022,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_84v",
+      "description": "Diluted EPS from Total Ops - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4785,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_8v",
+      "description": "Earnings Quality by Accruals",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9804,
+      "userCount": 21,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_93v",
+      "description": "Basic EPS from Total Ops - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4021,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_94v",
+      "description": "Diluted EPS from Total Ops - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4011,
+      "userCount": 7,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_9v",
+      "description": "Earnings Quality by Accruals - 1 Day Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8418,
+      "userCount": 14,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_01v",
+      "description": "Book Value - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6312,
+      "userCount": 9,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_11v",
+      "description": "BV / Share - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.509,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_21v",
+      "description": "BV / Share - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3969,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_31v",
+      "description": "BV/Share - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3969,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_5v",
+      "description": "Total Assets - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6284,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_6v",
+      "description": "Total Assets - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4615,
+      "userCount": 10,
+      "alphaCount": 27,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_7v",
+      "description": "Average Net Operating Assets - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6538,
+      "userCount": 14,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_8v",
+      "description": "Adjusted Average Net Operating Assets - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6771,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_bsv421_9v",
+      "description": "Adjusted Average Net Operating Assets - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6185,
+      "userCount": 13,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_01v",
+      "description": "Average Traded Volume",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 26,
+      "alphaCount": 81,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_02v",
+      "description": "Data-Through Date (Fundamental) Current",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 11,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_03v",
+      "description": "Consolidated Financials Flag - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6853,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_11v",
+      "description": "Average Traded Volume (Local Currency)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 23,
+      "alphaCount": 58,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_12v",
+      "description": "Period End Date - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6882,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_21v",
+      "description": "Average Traded Volume (USD)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 14,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_22v",
+      "description": "Company Filing Date - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6508,
+      "userCount": 7,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_32v",
+      "description": "New Filing Received Date - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6882,
+      "userCount": 9,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_6v",
+      "description": "Market Cap (Local Currency)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 22,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_7v",
+      "description": "Market Cap (USD)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 30,
+      "alphaCount": 69,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_8v",
+      "description": "52-week High Price",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 23,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cbv421_9v",
+      "description": "52-week Low Price",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 24,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_01v",
+      "description": "Cash Flow from Investing - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3992,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_11v",
+      "description": "Cash Flow from Financing - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4081,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_21v",
+      "description": "Cash Flow from Financing - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3928,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_31v",
+      "description": "FCF - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4133,
+      "userCount": 32,
+      "alphaCount": 63,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_41v",
+      "description": "FCF - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4022,
+      "userCount": 7,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_51v",
+      "description": "Capex - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3446,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_5v",
+      "description": "Total Cash Flow - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4095,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_61v",
+      "description": "Capex - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3307,
+      "userCount": 5,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_6v",
+      "description": "Total Cash Flow - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3986,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_7v",
+      "description": "Cash Flow from Ops - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4133,
+      "userCount": 22,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_8v",
+      "description": "Cash Flow from Ops - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4022,
+      "userCount": 5,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_91v",
+      "description": "Excess Cash Margin (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4041,
+      "userCount": 5,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_cfsv421_9v",
+      "description": "Cash Flow from Investing - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4103,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_history_01v",
+      "description": "Earnings Quality Raw Current",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9797,
+      "userCount": 30,
+      "alphaCount": 178,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_history_11v",
+      "description": "Earnings Quality Region Rank Current",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.98,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_history_21v",
+      "description": "Accruals Component Current",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9347,
+      "userCount": 50,
+      "alphaCount": 77,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_history_31v",
+      "description": "Cash Flow Component Current",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9746,
+      "userCount": 12,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_history_9v",
+      "description": "Earnings Quality Region",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9797,
+      "userCount": 12,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_01v",
+      "description": "EBITDA - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3982,
+      "userCount": 21,
+      "alphaCount": 114,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_03v",
+      "description": "Diff from Average Hist EPS Growth 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8259,
+      "userCount": 15,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_11v",
+      "description": "Average Historical EBITDA Growth 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9098,
+      "userCount": 14,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_13v",
+      "description": "Basic EPS from Continuing Ops - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4676,
+      "userCount": 16,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_21v",
+      "description": "Diff from Average Hist EBITDA Growth 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9082,
+      "userCount": 14,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_23v",
+      "description": "Basic EPS from Continuing Ops - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3939,
+      "userCount": 7,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_31v",
+      "description": "Operating Expenses - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3983,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_33v",
+      "description": "Basic EPS from Continuing Ops - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3939,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_41v",
+      "description": "EBIT - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.475,
+      "userCount": 21,
+      "alphaCount": 74,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_42v",
+      "description": "Net Income - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4925,
+      "userCount": 16,
+      "alphaCount": 79,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_43v",
+      "description": "Basic EPS from Disc Ops & XO - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4666,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_51v",
+      "description": "EBIT - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3986,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_52v",
+      "description": "Net Income - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4079,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_53v",
+      "description": "Basic EPS from Disc Ops & XO - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3939,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_5v",
+      "description": "Revenue - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6049,
+      "userCount": 37,
+      "alphaCount": 92,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_61v",
+      "description": "NI from Cont. Ops - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4811,
+      "userCount": 13,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_62v",
+      "description": "Dividends Per Share - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5253,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_6v",
+      "description": "Revenue - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4113,
+      "userCount": 6,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_71v",
+      "description": "NI from Cont. Ops - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4071,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_72v",
+      "description": "Dividends Per Share - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3691,
+      "userCount": 8,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_7v",
+      "description": "Average Historical Revenue Growth 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9499,
+      "userCount": 9,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_81v",
+      "description": "Special Items - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2666,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_8v",
+      "description": "Diff from Average Hist Revenue Growth 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9481,
+      "userCount": 11,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_92v",
+      "description": "Average Historical EPS Growth 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.827,
+      "userCount": 31,
+      "alphaCount": 181,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_isv421_9v",
+      "description": "EBITDA - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4738,
+      "userCount": 18,
+      "alphaCount": 44,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_01v",
+      "description": "Change Relative to Industry Benchmark (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 27,
+      "alphaCount": 219,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_02v",
+      "description": "Change Relative to JSE All Share (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 12,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_03v",
+      "description": "Change Relative to Russell Midcap (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 9,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_11v",
+      "description": "Change Relative to Country Benchmark (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 9,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_12v",
+      "description": "Change Relative to MSCI EAFE (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 13,
+      "alphaCount": 42,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_13v",
+      "description": "Change Relative to S&P 400 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 9,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_21v",
+      "description": "Change Relative to ASX 100 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 7,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_22v",
+      "description": "Change Relative to MSCI EMF (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_23v",
+      "description": "Change Relative to S&P 500 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 12,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_31v",
+      "description": "Change Relative to ASX 200 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 27,
+      "alphaCount": 121,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_32v",
+      "description": "Change Relative to MSCI Europe (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_33v",
+      "description": "Change Relative to S&P 600 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 14,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_41v",
+      "description": "Change Relative to ASX 300 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 8,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_42v",
+      "description": "Change Relative to MSCI Pac ex JP (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 10,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_43v",
+      "description": "Change Relative to TOPIX (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 24,
+      "alphaCount": 76,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_51v",
+      "description": "Change Relative to ASX All Ord (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 13,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_52v",
+      "description": "Change Relative to MSCI World (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_53v",
+      "description": "Change Relative to TSX Composite (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_5v",
+      "description": "Price Change (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 15,
+      "alphaCount": 56,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_61v",
+      "description": "Change Relative to CAC 40 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 15,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_62v",
+      "description": "Change Relative to R1000 Growth (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 16,
+      "alphaCount": 72,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_6v",
+      "description": "Change from 52-week High Price (ratio)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 58,
+      "alphaCount": 115,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_71v",
+      "description": "Change Relative to DJ STOXX 600 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 17,
+      "alphaCount": 50,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_72v",
+      "description": "Change Relative to R1000 Value (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 12,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_7v",
+      "description": "Change from 52-week Low Price (ratio)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 26,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_81v",
+      "description": "Change Relative to FTSE 100 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 6,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_82v",
+      "description": "Change Relative to Russell 1000 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 10,
+      "alphaCount": 40,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_8v",
+      "description": "Diff from 50-day Moving Average (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 34,
+      "alphaCount": 75,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_91v",
+      "description": "Change Relative to Hang Seng (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_92v",
+      "description": "Change Relative to Russell 2000 (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 11,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_pcv421_9v",
+      "description": "Diff from 200-day Moving Average (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 32,
+      "alphaCount": 53,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_01v",
+      "description": "Pretax ROA (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3966,
+      "userCount": 7,
+      "alphaCount": 85,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_02v",
+      "description": "Reinvestment Rate (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3039,
+      "userCount": 5,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_11v",
+      "description": "Leverage (Assets/Equity) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6266,
+      "userCount": 12,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_21v",
+      "description": "Leverage (Assets/Equity) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.461,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_31v",
+      "description": "Pretax ROE (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.474,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_41v",
+      "description": "Pretax ROE (%) - Chg 1 Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4024,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_51v",
+      "description": "ROE (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4493,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_5v",
+      "description": "Asset Turnover - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4447,
+      "userCount": 22,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_61v",
+      "description": "ROE (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3982,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_6v",
+      "description": "Asset Turnover - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3965,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_71v",
+      "description": "Earnings Retention - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3965,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_7v",
+      "description": "Pretax Margin (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.49,
+      "userCount": 11,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_81v",
+      "description": "Earnings Retention - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3117,
+      "userCount": 2,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_8v",
+      "description": "Pretax Margin (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4063,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_91v",
+      "description": "Reinvestment Rate (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3669,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rdv421_9v",
+      "description": "Pretax ROA (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4444,
+      "userCount": 13,
+      "alphaCount": 36,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rlevv421_01v",
+      "description": "% Long-Term Debt to Total Capital - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4591,
+      "userCount": 8,
+      "alphaCount": 73,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rlevv421_11v",
+      "description": "(Total Debt - Cash) / EBITDA - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4709,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rlevv421_21v",
+      "description": "(Total Debt - Cash) / EBITDA - Chg 1 Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3977,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rlevv421_5v",
+      "description": "Assets to Equity - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6266,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rlevv421_6v",
+      "description": "Assets to Equity - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.461,
+      "userCount": 5,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rlevv421_7v",
+      "description": "Debt to Equity - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6274,
+      "userCount": 11,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rlevv421_8v",
+      "description": "Debt to Equity - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4622,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rlevv421_9v",
+      "description": "Long-Term Debt to Total Capital - Last Qtr (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6266,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rliqv421_11v",
+      "description": "Cash Cycle - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3915,
+      "userCount": 6,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rliqv421_21v",
+      "description": "Cash Cycle - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3518,
+      "userCount": 4,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rliqv421_5v",
+      "description": "Quick Ratio - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4728,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rliqv421_6v",
+      "description": "Quick Ratio - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.331,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rliqv421_7v",
+      "description": "Current Ratio - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.5625,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rliqv421_8v",
+      "description": "Current Ratio - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4018,
+      "userCount": 8,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rliqv421_9v",
+      "description": "Times Interest Earned - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2618,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_01v",
+      "description": "Inv Turnover - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3057,
+      "userCount": 8,
+      "alphaCount": 90,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_02v",
+      "description": "Return on Net Operating Assets (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.382,
+      "userCount": 13,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_11v",
+      "description": "Inv Turnover - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2799,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_12v",
+      "description": "Return on Adj. Net Op. Assets (%) - Last Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9698,
+      "userCount": 14,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_21v",
+      "description": "Avg Inventory Days - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3057,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_22v",
+      "description": "Return on Adj. Net Op. Assets (%) - 1 FY Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9633,
+      "userCount": 11,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_31v",
+      "description": "Avg Inventory Days - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2799,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_41v",
+      "description": "WC/Sales - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.388,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_51v",
+      "description": "WC/Sales - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 7,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_5v",
+      "description": "Net Op. Asset Turnover - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3847,
+      "userCount": 7,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_61v",
+      "description": "Net Op. Asset Turnover - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4607,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_6v",
+      "description": "A/R Turnover - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3861,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_71v",
+      "description": "Adj. Net Op. Asset Turnover - Last Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9772,
+      "userCount": 17,
+      "alphaCount": 114,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_7v",
+      "description": "A/R Turnover - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3473,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_81v",
+      "description": "Adj. Net Op. Asset Turnover - 1 FY Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9738,
+      "userCount": 10,
+      "alphaCount": 31,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_8v",
+      "description": "Avg. A/R Days - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3849,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_91v",
+      "description": "Return on Net Op. Assets (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4504,
+      "userCount": 32,
+      "alphaCount": 124,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rov421_9v",
+      "description": "Avg. A/R Days - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3461,
+      "userCount": 5,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_01v",
+      "description": "EBITDA Margin (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3966,
+      "userCount": 9,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_02v",
+      "description": "Net Margin (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4052,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_11v",
+      "description": "Operating Margin (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4721,
+      "userCount": 26,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_21v",
+      "description": "Operating Margin (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3969,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_31v",
+      "description": "Average Historical Operating Margin 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9659,
+      "userCount": 38,
+      "alphaCount": 47,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_41v",
+      "description": "Diff from Average Hist Operating Margin 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9599,
+      "userCount": 16,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_51v",
+      "description": "Pretax Margin (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.49,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_5v",
+      "description": "Gross Margin (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4264,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_61v",
+      "description": "Pretax Margin (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4063,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_6v",
+      "description": "Gross Margin (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3604,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_71v",
+      "description": "Effective Tax Rate (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4823,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_7v",
+      "description": "Average Historical Gross Margin - 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8568,
+      "userCount": 8,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_81v",
+      "description": "Effective Tax Rate (%) - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4058,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_8v",
+      "description": "Diff from Average Hist Gross Margin - 5-Year",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8482,
+      "userCount": 11,
+      "alphaCount": 43,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_91v",
+      "description": "Net Margin (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4782,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_rpv421_9v",
+      "description": "EBITDA Margin (%) - Last Qtr",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4705,
+      "userCount": 17,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_01v",
+      "description": "Price/Sales - 1 FY Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9288,
+      "userCount": 10,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_11v",
+      "description": "Price/CFO",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8952,
+      "userCount": 56,
+      "alphaCount": 146,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_21v",
+      "description": "Price/FCF",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8152,
+      "userCount": 89,
+      "alphaCount": 257,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_31v",
+      "description": "Enterprise Value (EV)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9789,
+      "userCount": 33,
+      "alphaCount": 151,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_41v",
+      "description": "EV/EBITDA",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9353,
+      "userCount": 23,
+      "alphaCount": 43,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_51v",
+      "description": "EV/EBITDA - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4262,
+      "userCount": 16,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_5v",
+      "description": "Price/Book",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9712,
+      "userCount": 17,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_61v",
+      "description": "EV/Sales",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9717,
+      "userCount": 24,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_6v",
+      "description": "Price/Book - 1 Qtr Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6188,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_71v",
+      "description": "FCF Yield (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 352,
+      "alphaCount": 1341,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_7v",
+      "description": "Price/Book - 1 Qtr Difference (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6188,
+      "userCount": 14,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_81v",
+      "description": "FCF/EV (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9386,
+      "userCount": 253,
+      "alphaCount": 672,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_8v",
+      "description": "Price/Sales",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9739,
+      "userCount": 16,
+      "alphaCount": 54,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_91v",
+      "description": "CFO/EV (%)",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9425,
+      "userCount": 182,
+      "alphaCount": 455,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl25_vrv421_9v",
+      "description": "Price/Sales - 1 FY Difference",
+      "dataset": {
+        "id": "model25",
+        "name": "Earnings Quality"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-revisions-models",
+        "name": "Revisions Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9288,
+      "userCount": 15,
+      "alphaCount": 78,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

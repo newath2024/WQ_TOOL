@@ -1,0 +1,4452 @@
+{
+  "exported_at": "2026-03-29T04:51:18.060Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model50?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 168,
+  "row_count": 168,
+  "page_count": 9,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model50"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model50"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model50"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=model50"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=EUR&universe=TOP2500&dataset.id=model50"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=EUR&universe=TOP2500&dataset.id=model50"
+    },
+    {
+      "page": 7,
+      "offset": 120,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=120&region=EUR&universe=TOP2500&dataset.id=model50"
+    },
+    {
+      "page": 8,
+      "offset": 140,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=140&region=EUR&universe=TOP2500&dataset.id=model50"
+    },
+    {
+      "page": 9,
+      "offset": 160,
+      "item_count": 8,
+      "new_item_count": 8,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=160&region=EUR&universe=TOP2500&dataset.id=model50"
+    }
+  ],
+  "rows": [
+    {
+      "id": "aggregate_downside_risk_score_2",
+      "description": "Combined score assessing probability of underperformance.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7953,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "aggregate_downside_risk_score_backfill",
+      "description": "Combined score assessing probability of underperformance (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "analyst_count_fy1_forecasts",
+      "description": "Number of analysts providing forecasts for the next fiscal year.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8119,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "analyst_count_fy1_forecasts_backfill",
+      "description": "Number of analysts providing forecasts for the next fiscal year (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "analyst_forecast_dispersion_score",
+      "description": "Score indicating the level of disagreement among analyst forecasts.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "analyst_forecast_revision_score_3",
+      "description": "Score for changes in analyst forecasts compared to peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7859,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "analyst_forecast_revision_score_4",
+      "description": "Score ranking stocks by changes in analyst forecasts relative to the universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "avg_daily_volume",
+      "description": "Average number of shares traded per day.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.816,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "beta_relative_to_country",
+      "description": "Beta value of the stock compared to its country index.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.815,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "beta_relative_to_country_backfill",
+      "description": "Beta value of the stock compared to its country index (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "beta_relative_to_global_index",
+      "description": "Beta value measuring stock volatility compared to a global equity index excluding US.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "beta_vs_global_ex_us",
+      "description": "Beta value of the stock compared to the global index excluding US.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.816,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "capital_investment_score",
+      "description": "Score based on recent capital and R&D expenditures.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7835,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "capital_investment_score_2",
+      "description": "Score ranking stocks by recent capital and R&D expenditures relative to the universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "closing_share_price",
+      "description": "Latest closing price of the stock.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.816,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "closing_stock_price",
+      "description": "Closing price of the stock for the given period.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 9,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_analyst_forecast_revision_score",
+      "description": "Score for changes in analyst forecasts within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7854,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_capital_investment_score",
+      "description": "Score for recent capital and R&D expenditures within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.783,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_capital_investment_score_backfill",
+      "description": "Score for recent capital and R&D expenditures within the country (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_earnings_quality_score",
+      "description": "Score for quality of reported earnings within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7932,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_earnings_valuation_score",
+      "description": "Score for forecasted earnings yield relative to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.79,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_external_financing_score",
+      "description": "Score for recent issuance of debt or equity within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7932,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_financial_leverage_score",
+      "description": "Score for changes in debt levels relative to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7933,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_forecast_dispersion_score",
+      "description": "Score for dispersion in analyst forecasts within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7983,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_free_cash_flow_yield_score",
+      "description": "Score for free cash flow yield within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7927,
+      "userCount": 12,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_fundamental_growth_score",
+      "description": "Score for earnings and dividend growth within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7717,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_fundamental_growth_score_backfill",
+      "description": "Score for earnings and dividend growth within the country (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_fundamental_stability_score",
+      "description": "Score for variability in revenues and cash flows within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7717,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_analyst_forecast_dispersion_score",
+      "description": "Score indicating analyst forecast dispersion compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_analyst_forecast_revision_score",
+      "description": "Score ranking stocks by analyst forecast changes compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_earnings_quality_score",
+      "description": "Score reflecting the quality of reported earnings compared to peers in the same country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_earnings_valuation_score",
+      "description": "Score ranking stocks by forecasted earnings yield compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_enterprise_valuation_score",
+      "description": "Score ranking stocks by operating income yield compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_external_financing_score",
+      "description": "Score ranking stocks by recent issuance of debt or equity compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_financial_leverage_score",
+      "description": "Score indicating the financial leverage of a company relative to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_free_cash_flow_valuation_score",
+      "description": "Score ranking stocks by free cash flow yield compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_fundamental_stability_score",
+      "description": "Score measuring the stability of a company's fundamentals compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_price_volatility_score",
+      "description": "Score indicating price volatility compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_profitability_score",
+      "description": "Score reflecting the profitability of a company compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_shareholder_yield_score",
+      "description": "Score ranking stocks by shareholder yield compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_level_stock_price_momentum_score",
+      "description": "Score ranking stocks by recent price momentum compared to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_operating_income_yield_score",
+      "description": "Score for operating income yield relative to country peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7946,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_price_momentum_score",
+      "description": "Score for recent price momentum within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7492,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_price_volatility_score",
+      "description": "Score for price volatility within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.795,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_profitability_consistency_score",
+      "description": "Score for stability of cash flow return on assets within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7486,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_profitability_consistency_score_backfill",
+      "description": "Score for stability of cash flow return on assets within the country (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_profitability_level_score",
+      "description": "Score for cash flow return on investment within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7934,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "country_shareholder_yield_score",
+      "description": "Score for shareholder yield within the country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7925,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "debt_equity_ratio_2",
+      "description": "Ratio of total debt to total equity for the company.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8157,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "debt_equity_ratio_backfill",
+      "description": "Ratio of total debt to total equity for the company (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "dividend_yield_forecast",
+      "description": "Forecasted dividend yield ratio.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.816,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "dividend_yield_ratio_4",
+      "description": "Ratio showing annual dividends paid relative to the share price.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "downside_risk_decile_rank",
+      "description": "Decile ranking of downside risk scores across the entire universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "downside_risk_score_change_13w_2",
+      "description": "Change in downside risk score over the past 13 weeks.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "earnings_quality_score",
+      "description": "Score based on the quality of reported earnings.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7937,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "earnings_quality_score_2",
+      "description": "Score ranking stocks by the quality of reported earnings relative to the universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "earnings_valuation_score",
+      "description": "Score based on forecasted earnings yield compared to peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7906,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "earnings_valuation_score_2",
+      "description": "Score ranking stocks by forecasted earnings yield relative to the universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "enterprise_valuation_score",
+      "description": "Score ranking stocks by operating income yield relative to the universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "external_financing_score",
+      "description": "Score based on recent issuance of debt or equity.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7937,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "external_financing_score_backfill",
+      "description": "Score based on recent issuance of debt or equity (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "financial_leverage_score_2",
+      "description": "Score based on changes in debt levels.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7938,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "financial_leverage_score_3",
+      "description": "Score ranking stocks by changes in debt levels relative to the universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "five_year_eps_growth_forecast",
+      "description": "Forecasted earnings per share growth over five years.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.6061,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "five_year_eps_growth_forecast_backfill",
+      "description": "Forecasted earnings per share growth over five years (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 4,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "forecast_dispersion_score",
+      "description": "Score reflecting the level of disagreement among analyst forecasts.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7989,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "forward_dividend_yield_ratio",
+      "description": "Forward-looking ratio of annual dividends to share price.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "forward_pe_ratio_trailing",
+      "description": "Forward-looking price-to-earnings ratio based on trailing earnings.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "free_cash_flow_yield_score",
+      "description": "Score based on free cash flow yield compared to peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7932,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "free_cash_flow_yield_score_backfill",
+      "description": "Score based on free cash flow yield compared to peers (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fundamental_growth_score_3",
+      "description": "Score based on earnings and dividend growth.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7722,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fundamental_growth_score_backfill",
+      "description": "Score based on earnings and dividend growth (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fundamental_stability_score",
+      "description": "Score based on variability in revenues and cash flows.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7722,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fundamental_stability_score_backfill",
+      "description": "Score based on variability in revenues and cash flows (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "latest_quarterly_eps_surprise",
+      "description": "Difference between actual and expected EPS for the most recent quarter.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.3705,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "latest_quarterly_eps_surprise_backfill",
+      "description": "Difference between actual and expected EPS for the most recent quarter (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_adr_ticker",
+      "description": "ticker",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8079,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_analyst_revisn",
+      "description": "High score indicates more positive revisions by analysts",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7921,
+      "userCount": 28,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_analyst_uncertainty",
+      "description": "high score indicates low forecast dispersion",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8048,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_average_vol",
+      "description": "Average daily trading volume",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8187,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_beta_vs_acwi_ex_us",
+      "description": "Beta vs MSCI ACWI Index ex US",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8187,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_beta_vs_country",
+      "description": "Beta vs country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8177,
+      "userCount": 12,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_capital_inv",
+      "description": "Higher value indicates lower recent capital and RnD expenses",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7896,
+      "userCount": 7,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_analyst_revisn",
+      "description": "Analyst revision score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7916,
+      "userCount": 38,
+      "alphaCount": 46,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_analyst_uncertainty",
+      "description": "Analyst uncertainty score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8043,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_capital_inv",
+      "description": "Capital inv score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7891,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_earn_qual",
+      "description": "Earnings quality score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7992,
+      "userCount": 3,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_earn_valu",
+      "description": "Earnings value score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7961,
+      "userCount": 6,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_entrpris_valu",
+      "description": "Enterprise value score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8006,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_ext_finance",
+      "description": "External financing score realtive to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7992,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_fcf_valu",
+      "description": "FCF value score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7987,
+      "userCount": 22,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_fund_gth",
+      "description": "Fundamental growth score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7781,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_fund_stab",
+      "description": "Fundamental stability score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7775,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_leverage",
+      "description": "Leverage score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7993,
+      "userCount": 6,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_profitabil_cons",
+      "description": "Profitability consistency score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7542,
+      "userCount": 2,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_profitability",
+      "description": "Profitability score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7994,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_stk_pric_mom",
+      "description": "Stock price momentum score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7545,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_cn_stk_pric_volatil",
+      "description": "Stock price volatility score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8008,
+      "userCount": 2,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_company_name",
+      "description": "Company name",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8079,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_debt_to_equity",
+      "description": "Debt to Equity ratio",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8184,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_dividend_yield",
+      "description": "Dividend yield",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8079,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_dividend_yield_f",
+      "description": "Dividend yield (floating point)",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8187,
+      "userCount": 16,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_dly_rdlhrhs",
+      "description": "Higher value indicates higher shareholder yield",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7991,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_dly_rdlhrhs_nc",
+      "description": "Shareholder yield score relative to country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7986,
+      "userCount": 3,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_drai_decile",
+      "description": "Decile in which stock falls when ranked based on overall score ranging from 1 (top) to 10 (bottom)",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8013,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_drai_decile_country",
+      "description": "Decile in which stock falls when ranked in own country based on overall score ranging from 1 (top) to 10 (bottom)",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8007,
+      "userCount": 8,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_drai_decile_sector",
+      "description": "Decile in which stock falls when ranked realtive to sector based on overall score ranging from 1 (top) to 10 (bottom)",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8013,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_drai_score",
+      "description": "Overall score. Hgiher score indicates higher chance of outperformance",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8013,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_drai_score_chg_13w",
+      "description": "Change in overall score over 13 weeks",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8093,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_drai_score_chg_1w",
+      "description": "Change in overall score in 1 week",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8168,
+      "userCount": 10,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_earn_qual",
+      "description": "Higher value indicates higher earnings quality",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7997,
+      "userCount": 3,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_earn_valu",
+      "description": "Higher score indicates higher earnings yield forecast",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7966,
+      "userCount": 16,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_entrpris_valu",
+      "description": "Higher value indicates higher operating income yield",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8011,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_eps_growth_f_5year",
+      "description": "5 year eps growth forecast",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.6094,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_exchange_country",
+      "description": "Country",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8079,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_ext_finance",
+      "description": "Higher value indicates lower external financing and debt",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7997,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_fcf_valu",
+      "description": "Higher value indicates higher free cash flow yields",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7993,
+      "userCount": 12,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_fund_gth",
+      "description": "Higher value indicates higher earnings and dividend growth",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7786,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_fund_stab",
+      "description": "Higher value indicates lower variability in fundamentals",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.778,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_geographic_region",
+      "description": "Geographic region",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8079,
+      "userCount": 5,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_leverage",
+      "description": "Lower value indicates increasing debt",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7999,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_market_cap",
+      "description": "Market cap",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8187,
+      "userCount": 2,
+      "alphaCount": 13,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_msci_acwi_member",
+      "description": "Is stock member of msci acwi",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8187,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_msci_eafe_member",
+      "description": "Is stock member of msci eafe",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8187,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_num_of_analysts_fy1",
+      "description": "Indicates number of analysts covering the stock",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8146,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_periods",
+      "description": "period",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8079,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_pric_volatil",
+      "description": "Price volatility",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8186,
+      "userCount": 3,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_price_change_6m",
+      "description": "Last 6 month stock price change",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8165,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_profitabil_cons",
+      "description": "Higher value indicates more consistent profitability",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7547,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_profitability",
+      "description": "Higher value indicates higher cash flow ROI",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7999,
+      "userCount": 7,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_recent_eps_sur",
+      "description": "Most recent quarter eps surprise",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.3726,
+      "userCount": 35,
+      "alphaCount": 44,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_return_on_equity",
+      "description": "ROE",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8038,
+      "userCount": 8,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_stk_pric_mom",
+      "description": "Higher value indicates higher stock price momentum",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.755,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_stk_pric_volatil",
+      "description": "Higher value indicates lower stock price volatility",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8013,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_stock_price",
+      "description": "Stock price",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8187,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_ticker",
+      "description": "Ticker",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8079,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_trailing_price",
+      "description": "Trailing p/e ratio",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8079,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl50_bk_trailing_price__f",
+      "description": "Trailing p/e ratio (floating point)",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.818,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mean_daily_trading_volume",
+      "description": "Average number of shares traded per day over a specified period.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "operating_income_yield_score",
+      "description": "Relative score based on operating income yield compared to peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7951,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "pe_ratio_trailing",
+      "description": "Price-to-earnings ratio calculated using trailing earnings.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "price_momentum_score",
+      "description": "Score for recent price momentum compared to peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7498,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "price_volatility_metric",
+      "description": "Metric representing the degree of variation in stock price.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8159,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "price_volatility_score",
+      "description": "Score for price volatility compared to peers.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7955,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "price_volatility_score_2",
+      "description": "Score indicating the volatility of a stock's price over a period.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "price_volatility_score_backfill",
+      "description": "Score for price volatility compared to peers (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "profitability_consistency_score",
+      "description": "Score for stability of cash flow return on assets.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7491,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "profitability_consistency_score_backfill",
+      "description": "Score for stability of cash flow return on assets (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "profitability_level_score",
+      "description": "Score based on cash flow return on investment.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7939,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "profitability_level_score_2",
+      "description": "Score ranking stocks by cash flow return on investment relative to the universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "risk_decile_country_rank",
+      "description": "Decile ranking of risk score within each country.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7948,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "risk_decile_country_rank_backfill",
+      "description": "Decile ranking of risk score within each country (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "risk_decile_sector_rank",
+      "description": "Decile ranking of risk score within each sector.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7953,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "risk_decile_sector_rank_backfill",
+      "description": "Decile ranking of risk score within each sector (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 4,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "risk_decile_universe_rank",
+      "description": "Decile ranking of risk score across the entire universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7953,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "risk_score_change_13w",
+      "description": "Change in downside risk score over the past 13 weeks.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8066,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "risk_score_change_1w",
+      "description": "Change in downside risk score over the past week.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8141,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "risk_score_change_1w_backfill",
+      "description": "Change in downside risk score over the past week (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "roe_ratio",
+      "description": "Return on equity ratio for the company.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8008,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "roe_ratio_backfill",
+      "description": "Return on equity ratio for the company (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "shareholder_yield_score",
+      "description": "Score based on dividends, buybacks, and debt reduction returned to shareholders.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7931,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "shareholder_yield_score_backfill",
+      "description": "Score based on dividends, buybacks, and debt reduction returned to shareholders (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "six_month_price_change",
+      "description": "Percentage change in stock price over the last six months.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8138,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "six_month_price_change_backfill",
+      "description": "Percentage change in stock price over the last six months (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "stock_price_momentum_score",
+      "description": "Score ranking stocks by recent price momentum relative to the universe.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "total_market_capitalization",
+      "description": "Total value of a company's outstanding shares.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.816,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "total_market_capitalization_backfill",
+      "description": "Total value of a company's outstanding shares (backfill data).",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 15,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "trailing_pe_ratio_forecast",
+      "description": "Forecasted trailing price-to-earnings ratio.",
+      "dataset": {
+        "id": "model50",
+        "name": "International Scorings Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 0.5991,
+      "coverage": 0.8152,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

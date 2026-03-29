@@ -1,0 +1,4 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+idiosyncratic_return_fraction,"The portion of asset return not explained by risk model factors, expressed as a fraction.",pv47,Specific Return Dataset,pv,Price Volume,pv-price-volume,Price Volume,IND,1,TOP500,MATRIX,1,1,62,83,1.2,[]
+pv47_for_statssimple_only_spret,specific return,pv47,Specific Return Dataset,pv,Price Volume,pv-price-volume,Price Volume,IND,1,TOP500,MATRIX,1,0.9993,298,1445,1.2,[]
+pv47_spret,specific return,pv47,Specific Return Dataset,pv,Price Volume,pv-price-volume,Price Volume,IND,1,TOP500,MATRIX,1,0.9997,151,306,1.2,[]

@@ -1,0 +1,46 @@
+{
+  "exported_at": "2026-03-29T04:34:39.868Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/fundamental4?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 1,
+  "row_count": 1,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 1,
+      "new_item_count": 1,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=fundamental4"
+    }
+  ],
+  "rows": [
+    {
+      "id": "fnd4_chinascope_secmap",
+      "description": "Secmap",
+      "dataset": {
+        "id": "fundamental4",
+        "name": "Hong Kong Fundamental Data"
+      },
+      "category": {
+        "id": "fundamental",
+        "name": "Fundamental"
+      },
+      "subcategory": {
+        "id": "fundamental-fundamental-data",
+        "name": "Fundamental Data"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4675,
+      "userCount": 30,
+      "alphaCount": 167,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

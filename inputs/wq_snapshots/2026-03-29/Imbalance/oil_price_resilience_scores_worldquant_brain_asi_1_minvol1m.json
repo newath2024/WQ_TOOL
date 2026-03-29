@@ -1,0 +1,72 @@
+{
+  "exported_at": "2026-03-29T04:37:57.408Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/imbalance5?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 2,
+  "row_count": 2,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 2,
+      "new_item_count": 2,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=imbalance5"
+    }
+  ],
+  "rows": [
+    {
+      "id": "imb5_mktcap",
+      "description": "Market Cap",
+      "dataset": {
+        "id": "imbalance5",
+        "name": "Oil Price Resilience Scores"
+      },
+      "category": {
+        "id": "imbalance",
+        "name": "Imbalance"
+      },
+      "subcategory": {
+        "id": "imbalance-imbalance-models",
+        "name": "Imbalance Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8698,
+      "userCount": 373,
+      "alphaCount": 723,
+      "pyramidMultiplier": 1,
+      "themes": []
+    },
+    {
+      "id": "imb5_score",
+      "description": "SHIELD OIL Composite Score between 0 and 1",
+      "dataset": {
+        "id": "imbalance5",
+        "name": "Oil Price Resilience Scores"
+      },
+      "category": {
+        "id": "imbalance",
+        "name": "Imbalance"
+      },
+      "subcategory": {
+        "id": "imbalance-imbalance-models",
+        "name": "Imbalance Models"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8698,
+      "userCount": 1546,
+      "alphaCount": 12077,
+      "pyramidMultiplier": 1,
+      "themes": []
+    }
+  ]
+}

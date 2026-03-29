@@ -1,0 +1,306 @@
+{
+  "exported_at": "2026-03-29T05:01:33.227Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other323?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 11,
+  "row_count": 11,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 11,
+      "new_item_count": 11,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=other323"
+    }
+  ],
+  "rows": [
+    {
+      "id": "actual_shares_outstanding",
+      "description": "Actual number of shares outstanding for the security.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 74,
+      "alphaCount": 103,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth323_esod",
+      "description": "Date of the Current Shares Outstanding figure for shares outstanding as reported by the source, whether through reports or feeds.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 37,
+      "alphaCount": 54,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth323_esor",
+      "description": "Total current number of shares outstanding. This data may have been obtained from annual, semi-annual, and quarterly reports, filings, press releases, or stock exchanges.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 82,
+      "alphaCount": 205,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth323_ibc",
+      "description": "A Bloomberg number that is assigned to all companies that issue securities.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 22,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth323_ibs",
+      "description": "A Bloomberg number that is assigned to a specific security type.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 14,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth323_par_amt",
+      "description": "Count of unique IDs of industry participants. Industry stands for an aggregate view of all  equity clearance activity for the date, symbol, and transaction type in question.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 26,
+      "alphaCount": 29,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth323_pxrls",
+      "description": "Minimum number of shares of stock that can be purchased without incurring a larger fee. Also known as board lot. Anything other than the round lot size is considered an odd lot.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 17,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth323_pxtls",
+      "description": "The minimum number of shares that can be purchased, as regulated by an exchange.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 19,
+      "alphaCount": 25,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "par_value_amount",
+      "description": "Nominal value of the security per unit.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 52,
+      "alphaCount": 127,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "round_lot_size_value",
+      "description": "Standardized quantity of units for trading the security.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 31,
+      "alphaCount": 36,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "trade_lot_size_value",
+      "description": "Standardized quantity of units for trading the security in a single transaction.",
+      "dataset": {
+        "id": "other323",
+        "name": "Global Equity Premarket Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-dividend-models",
+        "name": "Dividend Models"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9996,
+      "userCount": 32,
+      "alphaCount": 44,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

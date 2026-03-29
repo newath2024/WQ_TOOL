@@ -1,0 +1,6 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,coverage,userCount,alphaCount,pyramidMultiplier,themes
+anl46_alphadecay,Contribution of idea age,analyst46,Analyst Investment insight Data,analyst,Analyst,analyst-crowdsourced-estimates,Crowdsourced Estimates,GLB,1,TOP3000,MATRIX,0.7301,4,8,1.5,[]
+anl46_experts,Contribution of author historical performance,analyst46,Analyst Investment insight Data,analyst,Analyst,analyst-crowdsourced-estimates,Crowdsourced Estimates,GLB,1,TOP3000,MATRIX,0.6776,4,9,1.5,[]
+anl46_indicator,Sentiment deciled by region {1-10},analyst46,Analyst Investment insight Data,analyst,Analyst,analyst-crowdsourced-estimates,Crowdsourced Estimates,GLB,1,TOP3000,MATRIX,0.775,5,10,1.5,[]
+anl46_performancepercentile,A value from 1 to 100 expressing how well the Indicator has predicted price movement on the stock in the last 12 months,analyst46,Analyst Investment insight Data,analyst,Analyst,analyst-crowdsourced-estimates,Crowdsourced Estimates,GLB,1,TOP3000,MATRIX,0.9386,15,21,1.5,[]
+anl46_sentiment,Score estimated as a sum of 4 components: decay + experts + earnings + (long/short idea count & open/closed status),analyst46,Analyst Investment insight Data,analyst,Analyst,analyst-crowdsourced-estimates,Crowdsourced Estimates,GLB,1,TOP3000,MATRIX,0.7301,11,26,1.5,[]

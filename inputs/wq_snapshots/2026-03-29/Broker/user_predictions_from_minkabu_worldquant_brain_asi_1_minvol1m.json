@@ -1,0 +1,332 @@
+{
+  "exported_at": "2026-03-29T04:24:54.333Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/broker1?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M",
+  "total_count": 12,
+  "row_count": 12,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 12,
+      "new_item_count": 12,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=ASI&universe=MINVOL1M&dataset.id=broker1"
+    }
+  ],
+  "rows": [
+    {
+      "id": "brk1_active",
+      "description": "Prediction/Stock Price Status",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 101,
+      "alphaCount": 130,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_buy_sell_flag",
+      "description": "Flag for buy or sell prediction (BUY or SELL)",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 617,
+      "alphaCount": 1253,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_conviction_flag",
+      "description": "Rationale underlying prediction",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 113,
+      "alphaCount": 167,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_end_stock_price",
+      "description": "Stock price at the time of prediction started",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 0.5635,
+      "coverage": 0.333,
+      "userCount": 142,
+      "alphaCount": 280,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_number_of_comments",
+      "description": "Stock price at the time of prediction closed",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 42,
+      "alphaCount": 52,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_prediction_horizon",
+      "description": "Target price",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 110,
+      "alphaCount": 129,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_prediction_reason",
+      "description": "Prediction status flag [true (active prediction), False (terminated prediction)]",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 40,
+      "alphaCount": 54,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_prediction_status",
+      "description": "Investment Horizon associated with prediction",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 66,
+      "alphaCount": 87,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_predictionswqreceivetime",
+      "description": "This field represents the user's conviction in their forecast. For example, if a user sets the conviction flag in their forecast and they also specify that they are a seller via the 'buy-sell-flag,' they are indicating that they are strongly convicted to their sell forecast.",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 59,
+      "alphaCount": 72,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_start_stock_price",
+      "description": "Time prediction started (in UTC time zone)",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4356,
+      "userCount": 168,
+      "alphaCount": 226,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_start_time",
+      "description": "It is WQ receive time",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 48,
+      "alphaCount": 58,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    },
+    {
+      "id": "brk1_target_price",
+      "description": "Number of comments for this prediction",
+      "dataset": {
+        "id": "broker1",
+        "name": "user predictions from Minkabu"
+      },
+      "category": {
+        "id": "broker",
+        "name": "Broker"
+      },
+      "subcategory": {
+        "id": "broker-broker-estimates",
+        "name": "Broker Estimates"
+      },
+      "region": "ASI",
+      "delay": 1,
+      "universe": "MINVOL1M",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4519,
+      "userCount": 110,
+      "alphaCount": 129,
+      "pyramidMultiplier": 1.1,
+      "themes": []
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+rsk68_beta,Beta,risk68,Forecast Data,risk,Risk,risk-risk-models,Risk Models,IND,1,TOP500,MATRIX,1,0.9589,373,682,1,[]
+rsk68_residual_return,Residual return,risk68,Forecast Data,risk,Risk,risk-risk-models,Risk Models,IND,1,TOP500,MATRIX,1,0.9587,729,1949,1,[]
+rsk68_weight_dadv,Dollar average daily volume,risk68,Forecast Data,risk,Risk,risk-risk-models,Risk Models,IND,1,TOP500,MATRIX,1,0.9884,236,382,1,[]
+rsk68_weight_edadv,Exponential decay dollar average daily volume,risk68,Forecast Data,risk,Risk,risk-risk-models,Risk Models,IND,1,TOP500,MATRIX,1,0.989,240,383,1,[]
+rsk68_weight_volatility_short,Short-term volatility,risk68,Forecast Data,risk,Risk,risk-risk-models,Risk Models,IND,1,TOP500,MATRIX,1,0.998,372,754,1,[]

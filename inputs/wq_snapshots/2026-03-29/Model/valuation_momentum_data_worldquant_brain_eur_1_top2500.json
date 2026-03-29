@@ -1,0 +1,642 @@
+{
+  "exported_at": "2026-03-29T04:50:48.363Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model39?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 24,
+  "row_count": 24,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model39"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 4,
+      "new_item_count": 4,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model39"
+    }
+  ],
+  "rows": [
+    {
+      "id": "global_price_momentum_percentile_2",
+      "description": "Percentile rank of price momentum compared to the global universe.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7671,
+      "userCount": 9,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "global_value_momentum_rank",
+      "description": "Global-relative ranking of a security's value-momentum score.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7769,
+      "userCount": 34,
+      "alphaCount": 53,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "global_value_momentum_rank_float",
+      "description": "Precise global-relative value-momentum ranking as a floating-point value.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7769,
+      "userCount": 24,
+      "alphaCount": 30,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_price_momentum_score_2",
+      "description": "Score for price momentum relative to the security's industry group.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7819,
+      "userCount": 10,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_value_momentum_rank",
+      "description": "Industry-relative ranking of a security's value-momentum score.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7682,
+      "userCount": 43,
+      "alphaCount": 72,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "industry_value_momentum_rank_float",
+      "description": "Precise industry-relative value-momentum ranking as a floating-point value.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7682,
+      "userCount": 31,
+      "alphaCount": 41,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "long_term_price_momentum_score_2",
+      "description": "Score for price momentum over a long-term period, such as 12 months.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7673,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_price_mo_global_rank",
+      "description": "Global-relative 1-100 ranking of the Price Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8316,
+      "userCount": 13,
+      "alphaCount": 37,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_price_mo_industry_component",
+      "description": "Global 1-100 ranking of the Industry Price Momentum Component of the Price Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8567,
+      "userCount": 30,
+      "alphaCount": 52,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_price_mo_long_term_component",
+      "description": "Global 1-100 ranking of the Long-Term Price Momentum Component of the Price Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8318,
+      "userCount": 6,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_price_mo_mid_term_component",
+      "description": "Global 1-100 ranking of the Mid-Term Price Momentum Component of the Price Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8477,
+      "userCount": 17,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_price_mo_region_rank",
+      "description": "Region-relative 1-100 ranking of the Price Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8316,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_price_mo_short_term_component",
+      "description": "Global 1-100 ranking of the Short-Term Price Momentum Component of the Price Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8517,
+      "userCount": 25,
+      "alphaCount": 38,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_val_mo_global_rank",
+      "description": "Global-relative 1-100 ranking of the Val-Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8543,
+      "userCount": 92,
+      "alphaCount": 172,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_val_mo_industry_rank",
+      "description": "Industry-relative 1-100 ranking of the Val-Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8473,
+      "userCount": 131,
+      "alphaCount": 284,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_val_mo_region_rank",
+      "description": "Region-relative 1-100 ranking of the Val-Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8543,
+      "userCount": 51,
+      "alphaCount": 74,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl39_d1_val_mo_sector_rank",
+      "description": "Sector-relative 1-100 ranking of the Val-Mo model",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "coverage": 0.8543,
+      "userCount": 81,
+      "alphaCount": 178,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mid_term_price_momentum_score_2",
+      "description": "Score for price momentum over a medium-term period, such as 6 months.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7813,
+      "userCount": 13,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_value_momentum_rank",
+      "description": "Region-relative ranking of a security's value-momentum score.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7769,
+      "userCount": 16,
+      "alphaCount": 35,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "region_value_momentum_rank_float",
+      "description": "Precise region-relative value-momentum ranking as a floating-point value.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7769,
+      "userCount": 13,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "regional_price_momentum_percentile_2",
+      "description": "Percentile rank of price momentum within the security's region.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7671,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_value_momentum_rank",
+      "description": "Sector-relative ranking of a security's value-momentum score.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7769,
+      "userCount": 45,
+      "alphaCount": 64,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "sector_value_momentum_rank_float",
+      "description": "Precise sector-relative value-momentum ranking as a floating-point value.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7769,
+      "userCount": 34,
+      "alphaCount": 57,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "short_term_price_momentum_score_2",
+      "description": "Score for price momentum over a short-term period, such as 3 months or 1 week.",
+      "dataset": {
+        "id": "model39",
+        "name": "Valuation Momentum Data"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-valuation-models",
+        "name": "Valuation Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7825,
+      "userCount": 21,
+      "alphaCount": 39,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

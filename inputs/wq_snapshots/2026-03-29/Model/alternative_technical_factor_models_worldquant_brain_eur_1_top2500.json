@@ -1,0 +1,3630 @@
+{
+  "exported_at": "2026-03-29T04:43:09.055Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model135?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 137,
+  "row_count": 137,
+  "page_count": 7,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model135"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model135"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model135"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=EUR&universe=TOP2500&dataset.id=model135"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=EUR&universe=TOP2500&dataset.id=model135"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=EUR&universe=TOP2500&dataset.id=model135"
+    },
+    {
+      "page": 7,
+      "offset": 120,
+      "item_count": 17,
+      "new_item_count": 17,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=120&region=EUR&universe=TOP2500&dataset.id=model135"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mdl135_d01_bb",
+      "description": "Bollinger Bands for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 28,
+      "alphaCount": 32,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_fmc",
+      "description": "Chaikin Money Flow indicator for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 18,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_icc",
+      "description": "Commodity Channel Index for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_if",
+      "description": "Force Index for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 16,
+      "alphaCount": 24,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_ifm",
+      "description": "Money Flow Index for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_isr",
+      "description": "Relative Strength Index for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 15,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_isrs",
+      "description": "Sell Relative Strength Index for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 16,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_iv",
+      "description": "Vortex indicator for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_ivn",
+      "description": "Negative Volume Index  for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_lda",
+      "description": "Accumulation Distribution Indicator for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 15,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_oa",
+      "description": "Awesome Oscillator for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_os",
+      "description": "Stochastic Oscillator for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_rta",
+      "description": "Average True Range for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_tpv",
+      "description": "Volume price trend for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_vbo",
+      "description": "On-balance volume for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_vme",
+      "description": "Ease of Movement for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01_xda",
+      "description": "Average Directional Movement Index for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d01ntr",
+      "description": "Real -Time news indicator for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_bb",
+      "description": "Bollinger Bands for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 14,
+      "alphaCount": 19,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_fmc",
+      "description": "Chaikin Money Flow indicator for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 8,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_icc",
+      "description": "Commodity Channel Index for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_if",
+      "description": "Force Index for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_ifm",
+      "description": "Money Flow Index for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_isr",
+      "description": "Relative Strength Index for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_isrs",
+      "description": "Sell Relative Strength Index for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_iv",
+      "description": "Vortex indicator for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_ivn",
+      "description": "Negative Volume Index  for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_lda",
+      "description": "Accumulation Distribution Indicator for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_oa",
+      "description": "Awesome Oscillator for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_os",
+      "description": "Stochastic Oscillator for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 8,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_rta",
+      "description": "Average True Range for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_tpv",
+      "description": "Volume price trend for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_vbo",
+      "description": "On-balance volume for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_vme",
+      "description": "Ease of Movement for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02_xda",
+      "description": "Average Directional Movement Index for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d02ntr",
+      "description": "Real -Time news indicator for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_bb",
+      "description": "Bollinger Bands for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_fmc",
+      "description": "Chaikin Money Flow indicator for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 37,
+      "alphaCount": 68,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_icc",
+      "description": "Commodity Channel Index for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 10,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_if",
+      "description": "Force Index for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 8,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_ifm",
+      "description": "Money Flow Index for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_isr",
+      "description": "Relative Strength Index for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 13,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_isrs",
+      "description": "Sell Relative Strength Index for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_iv",
+      "description": "Vortex indicator for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_ivn",
+      "description": "Negative Volume Index  for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_lda",
+      "description": "Accumulation Distribution Indicator for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 8,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_oa",
+      "description": "Awesome Oscillator for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_os",
+      "description": "Stochastic Oscillator for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_rta",
+      "description": "Average True Range for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_tpv",
+      "description": "Volume price trend for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_vbo",
+      "description": "On-balance volume for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_vme",
+      "description": "Ease of Movement for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04_xda",
+      "description": "Average Directional Movement Index for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d04ntr",
+      "description": "Real -Time news indicator for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d21_opd",
+      "description": "Detrended Price Oscillator for 12 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d2_im",
+      "description": "Mass index for 2 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 6,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d2_ist",
+      "description": "True Strength Index for 2 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d2_oc",
+      "description": "Coincident indicators for 2 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d2_ou",
+      "description": "Ultimate Oscillator for 2 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 22,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d2_ovp",
+      "description": "Percentage Volume Oscillator for 2 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_bb",
+      "description": "Bollinger Bands for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_fmc",
+      "description": "Chaikin Money Flow indicator for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 14,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_icc",
+      "description": "Commodity Channel Index for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 6,
+      "alphaCount": 36,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_if",
+      "description": "Force Index for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 6,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_ifm",
+      "description": "Money Flow Index for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_im",
+      "description": "Mass index for 3 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_isr",
+      "description": "Relative Strength Index for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_isrs",
+      "description": "Sell Relative Strength Index for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_ist",
+      "description": "True Strength Index for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_iv",
+      "description": "Vortex indicator for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_ivn",
+      "description": "Negative Volume Index  for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_lda",
+      "description": "Accumulation Distribution Indicator for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_oa",
+      "description": "Awesome Oscillator for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_oc",
+      "description": "Coincident indicators for 3 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_os",
+      "description": "Stochastic Oscillator for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_ou",
+      "description": "Ultimate Oscillator for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_ovp",
+      "description": "Percentage Volume Oscillator for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_rta",
+      "description": "Average True Range for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_tpv",
+      "description": "Volume price trend for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_vbo",
+      "description": "On-balance volume for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_vme",
+      "description": "Ease of Movement for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3_xda",
+      "description": "Average Directional Movement Index for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d3ntr",
+      "description": "Real -Time news indicator for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d4_im",
+      "description": "Mass index for 4 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d4_oc",
+      "description": "Coincident indicators for 4 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d4_ovp",
+      "description": "Percentage Volume Oscillator for 4 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_bb",
+      "description": "Bollinger Bands for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_fmc",
+      "description": "Chaikin Money Flow indicator for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_icc",
+      "description": "Commodity Channel Index for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_if",
+      "description": "Force Index for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_ifm",
+      "description": "Money Flow Index for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_im",
+      "description": "Mass index for 5 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_isr",
+      "description": "Relative Strength Index for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_isrs",
+      "description": "Sell Relative Strength Index for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_iv",
+      "description": "Vortex indicator for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_ivn",
+      "description": "Negative Volume Index  for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_lda",
+      "description": "Accumulation Distribution Indicator for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_oa",
+      "description": "Awesome Oscillator for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_oc",
+      "description": "Coincident indicators for 5 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_os",
+      "description": "Stochastic Oscillator for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_ovp",
+      "description": "Percentage Volume Oscillator for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_rta",
+      "description": "Average True Range for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_tpv",
+      "description": "Volume price trend for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_vbo",
+      "description": "On-balance volume for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_vme",
+      "description": "Ease of Movement for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5_xda",
+      "description": "Average Directional Movement Index for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d5ntr",
+      "description": "Real -Time news indicator for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d62_opd",
+      "description": "Detrended Price Oscillator for 26 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d63_opd",
+      "description": "Detrended Price Oscillator for 36 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d6_oc",
+      "description": "Coincident indicators for 6 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d6_ovp",
+      "description": "Percentage Volume Oscillator for 6 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 10,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d7_oc",
+      "description": "Coincident indicators for 7 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d81_opd",
+      "description": "Detrended Price Oscillator for 18 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d8_oc",
+      "description": "Coincident indicators for 8 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_d8_opd",
+      "description": "Detrended Price Oscillator for 8 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_gsubind",
+      "description": "GSUBIND",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_im",
+      "description": "Mass index for 1 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_ist",
+      "description": "True Strength Index for 1 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_macd_1d",
+      "description": "Moving average convergence/divergence for 1 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_macd_2d",
+      "description": "Moving average convergence/divergence for 2 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_macd_3d",
+      "description": "Moving average convergence/divergence for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_macd_4d",
+      "description": "Moving average convergence/divergence for 4 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 5,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_mktcap",
+      "description": "Market cap in USD?",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 8,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_oc",
+      "description": "Coincident indicators for 1 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_ou",
+      "description": "Ultimate Oscillator for 1 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 24,
+      "alphaCount": 57,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_ovp",
+      "description": "Percentage Volume Oscillator for 1 day",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_vlc",
+      "description": "Close location value",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 33,
+      "alphaCount": 46,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_willimsr_10d",
+      "description": "Williams Percent Range for 10 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_willimsr_20d",
+      "description": "Williams Percent Range for 20 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 7,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_willimsr_3d",
+      "description": "Williams Percent Range for 3 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 14,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_willimsr_40d",
+      "description": "Williams Percent Range for 40 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 10,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl135_willimsr_5d",
+      "description": "Williams Percent Range for 5 days",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 34,
+      "alphaCount": 50,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "triple_ema_rate_change_10d",
+      "description": "Rate of change of triple-smoothed exponential moving average over 10 days.",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "triple_ema_rate_change_20d",
+      "description": "Rate of change of triple-smoothed exponential moving average over 20 days.",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "triple_ema_rate_change_3d",
+      "description": "Rate of change of triple-smoothed exponential moving average over 3 days.",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "triple_ema_rate_change_40d",
+      "description": "Rate of change of triple-smoothed exponential moving average over 40 days.",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "triple_ema_rate_change_5d",
+      "description": "Rate of change of triple-smoothed exponential moving average over 5 days.",
+      "dataset": {
+        "id": "model135",
+        "name": "Alternative technical factor models"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-technical-models",
+        "name": "Technical Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5525,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

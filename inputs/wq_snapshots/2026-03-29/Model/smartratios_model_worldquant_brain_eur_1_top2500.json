@@ -1,0 +1,1154 @@
+{
+  "exported_at": "2026-03-29T04:49:43.394Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model36?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 43,
+  "row_count": 43,
+  "page_count": 3,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model36"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model36"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 3,
+      "new_item_count": 3,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=EUR&universe=TOP2500&dataset.id=model36"
+    }
+  ],
+  "rows": [
+    {
+      "id": "credit_risk_coverage_score_d1",
+      "description": "Percentile score reflecting coverage factors in credit risk assessment (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9373,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_coverage_score_main",
+      "description": "Percentile score reflecting coverage factors in credit risk assessment (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7612,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_growth_score_d1",
+      "description": "Percentile score reflecting growth and stability factors in credit risk (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9379,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_growth_score_main",
+      "description": "Percentile score reflecting growth and stability factors in credit risk (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7609,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_leverage_score_d1",
+      "description": "Percentile score reflecting leverage factors in credit risk assessment (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_leverage_score_main",
+      "description": "Percentile score reflecting leverage factors in credit risk assessment (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_liquidity_score_d1",
+      "description": "Percentile score reflecting liquidity factors in credit risk assessment (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9385,
+      "userCount": 1,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_liquidity_score_main",
+      "description": "Percentile score reflecting liquidity factors in credit risk assessment (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7625,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_profitability_score_d1",
+      "description": "Percentile score reflecting profitability factors in credit risk assessment (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "credit_risk_profitability_score_main",
+      "description": "Percentile score reflecting profitability factors in credit risk assessment (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "creditworthiness_letter_rating_numeric_d1",
+      "description": "Numeric representation of the company's credit rating based on financial analysis (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "creditworthiness_letter_rating_numeric_main",
+      "description": "Numeric representation of the company's credit rating based on financial analysis (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_country_percentile_d1_2",
+      "description": "Percentile rank of default risk among companies in the same country (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_country_percentile_main",
+      "description": "Percentile rank of default risk among companies in the same country (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_global_percentile_d1_2",
+      "description": "Percentile rank of default risk compared to all companies worldwide (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_global_percentile_main",
+      "description": "Percentile rank of default risk compared to all companies worldwide (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_industry_percentile_d1_2",
+      "description": "Percentile rank of default risk among companies in the same industry (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9345,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_industry_percentile_main",
+      "description": "Percentile rank of default risk among companies in the same industry (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7589,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_region_percentile_d1_2",
+      "description": "Percentile rank of default risk within the company's geographic region (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_region_percentile_main",
+      "description": "Percentile rank of default risk within the company's geographic region (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_sector_percentile_d1_2",
+      "description": "Percentile rank of default risk among companies in the same sector (daily version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9393,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "default_risk_sector_percentile_main",
+      "description": "Percentile rank of default risk among companies in the same sector (main version).",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7632,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl36_index_rating",
+      "description": "Financial health rating",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.8364,
+      "userCount": 11,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_country_rank",
+      "description": "The current 1-100 percentile rank, by country, of a company's 1-year default probability based on the SmartRatios Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 10,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_country_rank_d1",
+      "description": "The current 1-100 percentile rank, by country, of a company's 1-year default probability based on the SmartRatios Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_coverage",
+      "description": "A percentile rank that reflects only the coverage factors of the SmartRatios Credit Risk Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7612,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_coverage_d1",
+      "description": "A percentile rank that reflects only the coverage factors of the SmartRatios Credit Risk Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9373,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_global_rank",
+      "description": "The current global 1-100 percentile rank of a company's 1- year default probability based on the SmartRatios Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_global_rank_d1",
+      "description": "The current global 1-100 percentile rank of a company's 1- year default probability based on the SmartRatios Credit Risk Model. Higher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_growth",
+      "description": "A percentile rank that reflects only the growth and stability factors of the SmartRatios Credit Risk Model. Scores of\r\n100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7609,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_growth_d1",
+      "description": "A percentile rank that reflects only the growth and stability factors of the SmartRatios Credit Risk Model. Scores of\r\n100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9379,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_industr_rank",
+      "description": "The current 1-100 percentile rank, among other firms in the same region and industry, of a company's 1-year default probability based on the SmartRatios Credit Risk Model.\r\nHigher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7589,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_industr_rank_d1",
+      "description": "The current 1-100 percentile rank, among other firms in the same region and industry, of a company's 1-year default probability based on the SmartRatios Credit Risk Model.\r\nHigher scores indicate companies that are less likely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9345,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_leverage",
+      "description": "A percentile rank that reflects only the leverage factors of the SmartRatios Credit Risk Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_leverage_d1",
+      "description": "A percentile rank that reflects only the leverage factors of the SmartRatios Credit Risk Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_liquidity",
+      "description": "A percentile rank that reflects only the liquidity factors of the SmartRatios Credit Risk Model. Scores of 100 indicate\r\nthe highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7625,
+      "userCount": 6,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_liquidity_d1",
+      "description": "A percentile rank that reflects only the liquidity factors of the SmartRatios Credit Risk Model. Scores of 100 indicate\r\nthe highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9385,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_profitability",
+      "description": "A percentile rank that reflects only the profitability factors of the SmartRatios Credit Risk Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 9,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_profitability_d1",
+      "description": "A percentile rank that reflects only the profitability factors of the SmartRatios Credit Risk Model. Scores of 100 indicate the highest rated stocks; scores of 1 indicate the lowest rated stocks.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_region_rank",
+      "description": "The current regional 1-100 percentile rank of a company's 1-year default probability based on the SmartRatios Credit Risk Model. Higher scores indicate companies that are\r\nless likely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_region_rank_d1",
+      "description": "The current regional 1-100 percentile rank of a company's 1-year default probability based on the SmartRatios Credit Risk Model. Higher scores indicate companies that are\r\nless likely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9412,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_sector_rank",
+      "description": "The current 1-100 percentile rank, among other firms in the same region and industrial sector, of a company's 1-year default probability based on the SmartRatios Credit Risk Model. Higher scores indicate companies that are less\r\nlikely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7632,
+      "userCount": 11,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_sr_sector_rank_d1",
+      "description": "The current 1-100 percentile rank, among other firms in the same region and industrial sector, of a company's 1-year default probability based on the SmartRatios Credit Risk Model. Higher scores indicate companies that are less\r\nlikely to go bankrupt, or default on their debt obligations, within the next 1-year period.",
+      "dataset": {
+        "id": "model36",
+        "name": "SmartRatios Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-risk-based-models",
+        "name": "Risk Based Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9393,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

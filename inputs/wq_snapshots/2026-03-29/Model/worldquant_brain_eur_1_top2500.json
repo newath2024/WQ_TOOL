@@ -1,0 +1,124 @@
+{
+  "exported_at": "2026-03-29T04:51:25.975Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model68?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 4,
+  "row_count": 4,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 4,
+      "new_item_count": 4,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model68"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mdl68_mktcap",
+      "description": "Market Cap",
+      "dataset": {
+        "id": "model68",
+        "name": "Risk-Alleviated Momentum Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5515,
+      "userCount": 16,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl68_ram",
+      "description": "Risk Adjusted Momentum Score",
+      "dataset": {
+        "id": "model68",
+        "name": "Risk-Alleviated Momentum Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5515,
+      "userCount": 12,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl68_raw",
+      "description": "Raw Score",
+      "dataset": {
+        "id": "model68",
+        "name": "Risk-Alleviated Momentum Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5515,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl68_score",
+      "description": "Final DREAM SCORE",
+      "dataset": {
+        "id": "model68",
+        "name": "Risk-Alleviated Momentum Scores"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-sentiment",
+        "name": "Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5515,
+      "userCount": 23,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+Field,Description,Type,Coverage,Date Coverage,Alphas,__page
+anl10_bpspast_det_analyst_6402,Analyst ID for book value per share estimates,Vector,1.5,100%,100%,1
+anl10_bpspast_det_anntime_6403,Announce time for book value per share estimates,Vector,1.5,100%,100%,1
+anl10_bpspast_det_estage_6399,Age of book value per share estimates in days,Vector,1.5,100%,100%,1
+anl10_bpspast_det_estflag_6404,Estimate flag for book value per share,Vector,1.5,100%,100%,1
+anl10_bpspast_det_estvalue_6397,Estimate value for book value per share,Vector,1.5,100%,100%,1
+anl10_bpspast_det_excflag_6398,Exclusion flag for book value per share estimates,Vector,1.5,100%,100%,1
+anl10_bpspast_det_indicator_6405,"Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for book value per share estimates",Vector,1.5,100%,100%,1
+anl10_cpsff_6268,Ff 6268 for cash per share,Matrix,1.5,100%,100%,1
+anl10_cpsfq1_consensus_6279,Consensus estimate value for cash per share Q1,Matrix,1.5,97%,100%,1
+anl10_cpsfq1_pred_surps_v0_6305,Predicted surprise version 0 for cash per share for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,97%,100%,1
+anl10_cpsfq1_pred_surps_v1_6289,Predicted surprise version 1 for cash per share for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,97%,100%,1
+anl10_cpsfq1_pred_surps_v2_6306,Predicted surprise version 2 for cash per share for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,97%,100%,1
+anl10_cpsfq1_smart_ests_v0_6280,Smart estimates version 0 value for cash per share for Q1,Matrix,1.5,97%,100%,1
+anl10_cpsfq1_smart_ests_v1_6275,Smart estimates version 1 value for cash per share for Q1,Matrix,1.5,97%,100%,1
+anl10_cpsfq1_smart_ests_v2_6288,Smart estimates version 2 value for cash per share for Q1,Matrix,1.5,97%,100%,1
+anl10_cpsfq2_consensus_6300,Consensus estimate value for cash per share Q2,Matrix,1.5,84%,100%,1
+anl10_cpsfq2_pred_surps_v0_6298,Predicted surprise version 0 for cash per share for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,84%,100%,1
+anl10_cpsfq2_pred_surps_v1_6301,Predicted surprise version 1 for cash per share for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,84%,100%,1
+anl10_cpsfq2_pred_surps_v2_6277,Predicted surprise version 2 for cash per share for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,84%,100%,1
+anl10_cpsfq2_smart_ests_v0_6287,Smart estimates version 0 value for cash per share for Q2,Matrix,1.5,84%,100%,1
+anl10_cpsfq2_smart_ests_v1_6299,Smart estimates version 1 value for cash per share for Q2,Matrix,1.5,84%,100%,2
+anl10_cpsfq2_smart_ests_v2_6302,Smart estimates version 2 value for cash per share for Q2,Matrix,1.5,84%,100%,2
+anl10_cpsfy1_consensus_6271,Consensus estimate value for cash per share FY1,Matrix,1.5,100%,100%,2
+anl10_cpsfy1_pred_surps_v0_6272,Predicted surprise version 0 for cash per share for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,2
+anl10_cpsfy1_pred_surps_v1_6285,Predicted surprise version 1 for cash per share for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,2
+anl10_cpsfy1_pred_surps_v2_6281,Predicted surprise version 2 for cash per share for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,2
+anl10_cpsfy1_smart_ests_v0_6291,Smart estimates version 0 value for cash per share for FY1,Matrix,1.5,100%,100%,2
+anl10_cpsfy1_smart_ests_v1_6276,Smart estimates version 1 value for cash per share for FY1,Matrix,1.5,100%,100%,2
+anl10_cpsfy1_smart_ests_v2_6267,Smart estimates version 2 value for cash per share for FY1,Matrix,1.5,100%,100%,2
+anl10_cpsfy2_consensus_6282,Consensus estimate value for cash per share FY2,Matrix,1.5,100%,100%,2
+anl10_cpsfy2_pred_surps_v0_6297,Predicted surprise version 0 for cash per share for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,2
+anl10_cpsfy2_pred_surps_v1_6286,Predicted surprise version 1 for cash per share for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,2
+anl10_cpsfy2_pred_surps_v2_6294,Predicted surprise version 2 for cash per share for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,2
+anl10_cpsfy2_smart_ests_v0_6269,Smart estimates version 0 value for cash per share for FY2,Matrix,1.5,100%,100%,2
+anl10_cpsfy2_smart_ests_v1_6270,Smart estimates version 1 value for cash per share for FY2,Matrix,1.5,100%,100%,2
+anl10_cpsfy2_smart_ests_v2_6304,Smart estimates version 2 value for cash per share for FY2,Matrix,1.5,100%,100%,2
+anl10_cpspast_det_analyst_6350,Analyst ID for cash per share estimates,Vector,1.5,100%,100%,2
+anl10_cpspast_det_anntime_6354,Announce time for cash per share estimates,Vector,1.5,100%,100%,2
+anl10_cpspast_det_estage_6349,Age of cash per share estimates in days,Vector,1.5,100%,100%,2
+anl10_cpspast_det_estflag_6355,Estimate flag for cash per share,Vector,1.5,100%,100%,2
+anl10_cpspast_det_estvalue_6352,Estimate value for cash per share,Vector,1.5,100%,100%,3
+anl10_cpspast_det_excflag_6356,Exclusion flag for cash per share estimates,Vector,1.5,100%,100%,3
+anl10_cpspast_det_indicator_6348,"Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for cash per share estimates",Vector,1.5,100%,100%,3
+anl10_cpssmun_1qf_6278,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for cash per share,Matrix,1.5,100%,100%,3
+anl10_cpssmun_1yf_6295,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for cash per share,Matrix,1.5,100%,100%,3
+anl10_cpssmun_2qf_6303,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for cash per share,Matrix,1.5,100%,100%,3
+anl10_cpssmun_2yf_6284,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for cash per share,Matrix,1.5,100%,100%,3
+anl10_dpspast_det_analyst_6222,Analyst ID for dividends per share estimates,Vector,1.5,100%,100%,3
+anl10_dpspast_det_anntime_6225,Announce time for dividends per share estimates,Vector,1.5,100%,100%,3
+anl10_dpspast_det_estage_6223,Age of dividends per share estimates in days,Vector,1.5,100%,100%,3
+anl10_dpspast_det_estflag_6221,Estimate flag for dividends per share,Vector,1.5,100%,100%,3
+anl10_dpspast_det_estvalue_6217,Estimate value for dividends per share,Vector,1.5,100%,100%,3
+anl10_dpspast_det_excflag_6226,Exclusion flag for dividends per share estimates,Vector,1.5,100%,100%,3
+anl10_dpspast_det_indicator_6220,"Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for dividends per share estimates",Vector,1.5,100%,100%,3
+anl10_ebspast_det_analyst_6215,Analyst ID for earnings before others estimates,Vector,1.5,100%,100%,3
+anl10_ebspast_det_anntime_6209,Announce time for earnings before others estimates,Vector,1.5,100%,100%,3
+anl10_ebspast_det_estage_6210,Age of earnings before others estimates in days,Vector,1.5,100%,100%,3
+anl10_ebspast_det_estflag_6211,Estimate flag for earnings before others,Vector,1.5,100%,100%,3
+anl10_ebspast_det_estvalue_6216,Estimate value for earnings before others,Vector,1.5,100%,100%,3
+anl10_ebspast_det_excflag_6213,Exclusion flag for earnings before others estimates,Vector,1.5,100%,100%,3
+anl10_ebspast_det_indicator_6212,"Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for earnings before others estimates",Vector,1.5,100%,100%,4
+anl10_entff_6479,Ff 6479 for earnings net taxes,Matrix,1.5,100%,100%,4
+anl10_entfy1_consensus_6473,Consensus estimate value for earnings net taxes FY1,Matrix,1.5,100%,100%,4
+anl10_entfy1_pred_surps_v0_6466,Predicted surprise version 0 for earnings net taxes for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,4
+anl10_entfy1_pred_surps_v1_6484,Predicted surprise version 1 for earnings net taxes for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,4
+anl10_entfy1_pred_surps_v2_6465,Predicted surprise version 2 for earnings net taxes for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,4
+anl10_entfy1_smart_ests_v0_6491,Smart estimates version 0 value for earnings net taxes for FY1,Matrix,1.5,100%,100%,4
+anl10_entfy1_smart_ests_v1_6493,Smart estimates version 1 value for earnings net taxes for FY1,Matrix,1.5,100%,100%,4
+anl10_entfy1_smart_ests_v2_6489,Smart estimates version 2 value for earnings net taxes for FY1,Matrix,1.5,100%,100%,4
+anl10_entfy2_consensus_6492,Consensus estimate value for earnings net taxes FY2,Matrix,1.5,100%,100%,4
+anl10_entfy2_pred_surps_v0_6487,Predicted surprise version 0 for earnings net taxes for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,4
+anl10_entfy2_pred_surps_v1_6476,Predicted surprise version 1 for earnings net taxes for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,4
+anl10_entfy2_pred_surps_v2_6481,Predicted surprise version 2 for earnings net taxes for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,4
+anl10_entfy2_smart_ests_v0_6468,Smart estimates version 0 value for earnings net taxes for FY2,Matrix,1.5,100%,100%,4
+anl10_entfy2_smart_ests_v1_6488,Smart estimates version 1 value for earnings net taxes for FY2,Matrix,1.5,100%,100%,4
+anl10_entfy2_smart_ests_v2_6457,Smart estimates version 2 value for earnings net taxes for FY2,Matrix,1.5,100%,100%,4
+anl10_entpast_det_analyst_6309,Analyst ID for earnings net taxes estimates,Vector,1.5,100%,100%,4
+anl10_entpast_det_anntime_6312,Announce time for earnings net taxes estimates,Vector,1.5,100%,100%,4
+anl10_entpast_det_estage_6314,Age of earnings net taxes estimates in days,Vector,1.5,100%,100%,4
+anl10_entpast_det_estflag_6311,Estimate flag for earnings net taxes,Vector,1.5,100%,100%,4
+anl10_entpast_det_estvalue_6307,Estimate value for earnings net taxes,Vector,1.5,100%,100%,5
+anl10_entpast_det_excflag_6310,Exclusion flag for earnings net taxes estimates,Vector,1.5,100%,100%,5
+anl10_entpast_det_indicator_6315,"Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for earnings net taxes estimates",Vector,1.5,100%,100%,5
+anl10_entsmun_1qf_6470,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for earnings net taxes,Matrix,1.5,100%,100%,5
+anl10_entsmun_1yf_6458,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for earnings net taxes,Matrix,1.5,100%,100%,5
+anl10_entsmun_2qf_6464,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for earnings net taxes,Matrix,1.5,100%,100%,5
+anl10_entsmun_2yf_6480,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for earnings net taxes,Matrix,1.5,100%,100%,5
+anl10_fcfff_6440,Ff 6440 for free cash flow,Matrix,1.5,100%,100%,5
+anl10_fcffq1_consensus_6421,Consensus estimate value for free cash flow Q1,Matrix,1.5,53%,100%,5
+anl10_fcffq1_pred_surps_v0_6418,Predicted surprise version 0 for free cash flow for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,53%,100%,5
+anl10_fcffq1_pred_surps_v1_6425,Predicted surprise version 1 for free cash flow for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,53%,100%,5
+anl10_fcffq1_pred_surps_v2_6408,Predicted surprise version 2 for free cash flow for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,53%,100%,5
+anl10_fcffq1_smart_ests_v0_6434,Smart estimates version 0 value for free cash flow for Q1,Matrix,1.5,53%,100%,5
+anl10_fcffq1_smart_ests_v1_6435,Smart estimates version 1 value for free cash flow for Q1,Matrix,1.5,53%,100%,5
+anl10_fcffq1_smart_ests_v2_6410,Smart estimates version 2 value for free cash flow for Q1,Matrix,1.5,53%,100%,5
+anl10_fcffq2_consensus_6415,Consensus estimate value for free cash flow Q2,Matrix,1.5,42%,100%,5
+anl10_fcffq2_pred_surps_v0_6445,Predicted surprise version 0 for free cash flow for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,42%,100%,5
+anl10_fcffq2_pred_surps_v1_6428,Predicted surprise version 1 for free cash flow for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,42%,100%,5
+anl10_fcffq2_pred_surps_v2_6443,Predicted surprise version 2 for free cash flow for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,42%,100%,5
+anl10_fcffq2_smart_ests_v0_6432,Smart estimates version 0 value for free cash flow for Q2,Matrix,1.5,42%,100%,5
+anl10_fcffq2_smart_ests_v1_6431,Smart estimates version 1 value for free cash flow for Q2,Matrix,1.5,42%,100%,6
+anl10_fcffq2_smart_ests_v2_6424,Smart estimates version 2 value for free cash flow for Q2,Matrix,1.5,42%,100%,6
+anl10_fcffy1_consensus_6439,Consensus estimate value for free cash flow FY1,Matrix,1.5,100%,100%,6
+anl10_fcffy1_pred_surps_v0_6412,Predicted surprise version 0 for free cash flow for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,6
+anl10_fcffy1_pred_surps_v1_6437,Predicted surprise version 1 for free cash flow for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,6
+anl10_fcffy1_pred_surps_v2_6446,Predicted surprise version 2 for free cash flow for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,6
+anl10_fcffy1_smart_ests_v0_6422,Smart estimates version 0 value for free cash flow for FY1,Matrix,1.5,100%,100%,6
+anl10_fcffy1_smart_ests_v1_6416,Smart estimates version 1 value for free cash flow for FY1,Matrix,1.5,100%,100%,6
+anl10_fcffy1_smart_ests_v2_6419,Smart estimates version 2 value for free cash flow for FY1,Matrix,1.5,100%,100%,6
+anl10_fcffy2_consensus_6407,Consensus estimate value for free cash flow FY2,Matrix,1.5,100%,100%,6
+anl10_fcffy2_pred_surps_v0_6436,Predicted surprise version 0 for free cash flow for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,6
+anl10_fcffy2_pred_surps_v1_6420,Predicted surprise version 1 for free cash flow for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,6
+anl10_fcffy2_pred_surps_v2_6411,Predicted surprise version 2 for free cash flow for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,6
+anl10_fcffy2_smart_ests_v0_6441,Smart estimates version 0 value for free cash flow for FY2,Matrix,1.5,100%,100%,6
+anl10_fcffy2_smart_ests_v1_6414,Smart estimates version 1 value for free cash flow for FY2,Matrix,1.5,100%,100%,6
+anl10_fcffy2_smart_ests_v2_6426,Smart estimates version 2 value for free cash flow for FY2,Matrix,1.5,100%,100%,6
+anl10_fcfpast_det_analyst_6379,Analyst ID for free cash flow estimates,Vector,1.5,100%,100%,6
+anl10_fcfpast_det_anntime_6382,Announce time for free cash flow estimates,Vector,1.5,100%,100%,6
+anl10_fcfpast_det_estage_6380,Age of free cash flow estimates in days,Vector,1.5,100%,100%,6
+anl10_fcfpast_det_estflag_6383,Estimate flag for free cash flow,Vector,1.5,100%,100%,6
+anl10_fcfpast_det_estvalue_6385,Estimate value for free cash flow,Vector,1.5,100%,100%,7
+anl10_fcfpast_det_excflag_6386,Exclusion flag for free cash flow estimates,Vector,1.5,100%,100%,7
+anl10_fcfpast_det_indicator_6377,"Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for free cash flow estimates",Vector,1.5,100%,100%,7
+anl10_fcfsmun_1qf_6438,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for free cash flow,Matrix,1.5,100%,100%,7
+anl10_fcfsmun_1yf_6427,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for free cash flow,Matrix,1.5,100%,100%,7
+anl10_fcfsmun_2qf_6417,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for free cash flow,Matrix,1.5,100%,100%,7
+anl10_fcfsmun_2yf_6430,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for free cash flow,Matrix,1.5,100%,100%,7
+anl10_grmff_6248,Ff 6248 for gross margin,Matrix,1.5,100%,100%,7
+anl10_grmfq1_consensus_6261,Consensus estimate value for gross margin Q1,Matrix,1.5,100%,100%,7
+anl10_grmfq1_pred_surps_v0_6232,Predicted surprise version 0 for gross margin for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,7
+anl10_grmfq1_pred_surps_v1_6234,Predicted surprise version 1 for gross margin for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,7
+anl10_grmfq1_pred_surps_v2_6264,Predicted surprise version 2 for gross margin for Q1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,7
+anl10_grmfq1_smart_ests_v0_6238,Smart estimates version 0 value for gross margin for Q1,Matrix,1.5,100%,100%,7
+anl10_grmfq1_smart_ests_v1_6245,Smart estimates version 1 value for gross margin for Q1,Matrix,1.5,100%,100%,7
+anl10_grmfq1_smart_ests_v2_6250,Smart estimates version 2 value for gross margin for Q1,Matrix,1.5,100%,100%,7
+anl10_grmfq2_consensus_6233,Consensus estimate value for gross margin Q2,Matrix,1.5,100%,100%,7
+anl10_grmfq2_pred_surps_v0_6241,Predicted surprise version 0 for gross margin for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,7
+anl10_grmfq2_pred_surps_v1_6235,Predicted surprise version 1 for gross margin for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,7
+anl10_grmfq2_pred_surps_v2_6266,Predicted surprise version 2 for gross margin for Q2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,7
+anl10_grmfq2_smart_ests_v0_6260,Smart estimates version 0 value for gross margin for Q2,Matrix,1.5,100%,100%,7
+anl10_grmfq2_smart_ests_v1_6246,Smart estimates version 1 value for gross margin for Q2,Matrix,1.5,100%,100%,8
+anl10_grmfq2_smart_ests_v2_6231,Smart estimates version 2 value for gross margin for Q2,Matrix,1.5,100%,100%,8
+anl10_grmfy1_consensus_6249,Consensus estimate value for gross margin FY1,Matrix,1.5,100%,100%,8
+anl10_grmfy1_pred_surps_v0_6259,Predicted surprise version 0 for gross margin for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,8
+anl10_grmfy1_pred_surps_v1_6253,Predicted surprise version 1 for gross margin for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,8
+anl10_grmfy1_pred_surps_v2_6243,Predicted surprise version 2 for gross margin for FY1 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,8
+anl10_grmfy1_smart_ests_v0_6242,Smart estimates version 0 value for gross margin for FY1,Matrix,1.5,100%,100%,8
+anl10_grmfy1_smart_ests_v1_6254,Smart estimates version 1 value for gross margin for FY1,Matrix,1.5,100%,100%,8
+anl10_grmfy1_smart_ests_v2_6262,Smart estimates version 2 value for gross margin for FY1,Matrix,1.5,100%,100%,8
+anl10_grmfy2_consensus_6236,Consensus estimate value for gross margin FY2,Matrix,1.5,100%,100%,8
+anl10_grmfy2_pred_surps_v0_6263,Predicted surprise version 0 for gross margin for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,8
+anl10_grmfy2_pred_surps_v1_6255,Predicted surprise version 1 for gross margin for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,8
+anl10_grmfy2_pred_surps_v2_6258,Predicted surprise version 2 for gross margin for FY2 (calculated as (smart_ests - consensus)/consensus),Matrix,1.5,100%,100%,8
+anl10_grmfy2_smart_ests_v0_6229,Smart estimates version 0 value for gross margin for FY2,Matrix,1.5,100%,100%,8
+anl10_grmfy2_smart_ests_v1_6227,Smart estimates version 1 value for gross margin for FY2,Matrix,1.5,100%,100%,8
+anl10_grmfy2_smart_ests_v2_6247,Smart estimates version 2 value for gross margin for FY2,Matrix,1.5,100%,100%,8
+anl10_grmpast_det_analyst_6324,Analyst ID for gross margin estimates,Vector,1.5,100%,100%,8
+anl10_grmpast_det_anntime_6325,Announce time for gross margin estimates,Vector,1.5,100%,100%,8
+anl10_grmpast_det_estage_6320,Age of gross margin estimates in days,Vector,1.5,100%,100%,8
+anl10_grmpast_det_estflag_6319,Estimate flag for gross margin,Vector,1.5,100%,100%,8
+anl10_grmpast_det_estvalue_6318,Estimate value for gross margin,Vector,1.5,100%,100%,9
+anl10_grmpast_det_excflag_6317,Exclusion flag for gross margin estimates,Vector,1.5,100%,100%,9
+anl10_grmpast_det_indicator_6322,"Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for gross margin estimates",Vector,1.5,100%,100%,9
+anl10_grmsmun_1qf_6228,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for gross margin,Matrix,1.5,100%,100%,9
+anl10_grmsmun_1yf_6257,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for gross margin,Matrix,1.5,100%,100%,9
+anl10_grmsmun_2qf_6265,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for gross margin,Matrix,1.5,100%,100%,9
+anl10_grmsmun_2yf_6237,Sample/analyst number - indicating how many analysts contributed to that particular estimate or forecast for gross margin,Matrix,1.5,100%,100%,9
+anl10_roapast_det_analyst_6329,Analyst ID for return on assets estimates,Vector,1.5,100%,100%,9
+anl10_roapast_det_anntime_6334,Announce time for return on assets estimates,Vector,1.5,100%,100%,9
+anl10_roapast_det_estage_6330,Age of return on assets estimates in days,Vector,1.5,100%,100%,9
+anl10_roapast_det_estflag_6336,Estimate flag for return on assets,Vector,1.5,100%,100%,9
+anl10_roapast_det_estvalue_6335,Estimate value for return on assets,Vector,1.5,100%,100%,9
+anl10_roapast_det_excflag_6333,Exclusion flag for return on assets estimates,Vector,1.5,100%,100%,9
+anl10_roapast_det_indicator_6332,"Indicator for fiscal periods in ASCII values (54=fq1, 55=fq2, 49=fy1, 50=fy2) for return on assets estimates",Vector,1.5,100%,100%,9

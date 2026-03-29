@@ -1,0 +1,990 @@
+{
+  "exported_at": "2026-03-29T04:48:57.139Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/model33?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 37,
+  "row_count": 37,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=model33"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 17,
+      "new_item_count": 17,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=model33"
+    }
+  ],
+  "rows": [
+    {
+      "id": "fiscal_q1_period_end_date",
+      "description": "Date when the first fiscal quarter ends.",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.9452,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fiscal_q2_period_end_date",
+      "description": "Date when the second fiscal quarter ends.",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.945,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fiscal_year_one_period_end_date_2",
+      "description": "Date when the first fiscal year ends.",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.9599,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "fiscal_year_two_period_end_date_2",
+      "description": "Date when the second fiscal year ends.",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "SYMBOL",
+      "dateCoverage": 1,
+      "coverage": 0.9598,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl33_smartestimate_f12m_revenue",
+      "description": "Analyst predicted revenue forward 12 months",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9993,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl33_smartestimate_fq1_revenue",
+      "description": "Analyst predicted revenue forward 1 quarter",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4709,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl33_smartestimate_fq2_revenue",
+      "description": "Analyst predicted revenue forward 2 quarters",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3838,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl33_smartestimate_fy1_revenue",
+      "description": "Analyst predicted revenue forward 1 year",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 17,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "mdl33_smartestimate_fy2_revenue",
+      "description": "Analyst predicted revenue forward 2 years",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_analyst_number_fq1",
+      "description": "FQ1 Number of SE Analysts",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_analyst_number_fq1_d1",
+      "description": "FQ1 Number of SE Analysts",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_analyst_number_fq2",
+      "description": "FQ2 Number of SE Analysts",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_analyst_number_fq2_d1",
+      "description": "FQ2 Number of SE Analysts",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_analyst_number_fy1",
+      "description": "FY1 Number of SE Analysts",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_analyst_number_fy1_d1",
+      "description": "FY1 Number of SE Analysts",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_analyst_number_fy2",
+      "description": "FY2 Number of SE Analysts",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7507,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_analyst_number_fy2_d1",
+      "description": "FY2 Number of SE Analysts",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9607,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_12m",
+      "description": "F12M SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7258,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_12m_d1",
+      "description": "F12M SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9437,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_fq1",
+      "description": "FQ1 SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3188,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_fq1_d1",
+      "description": "FQ1 SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4629,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_fq2",
+      "description": "FQ2 SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2563,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_fq2_d1",
+      "description": "FQ2 SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.387,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_fy1",
+      "description": "FY1 SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7288,
+      "userCount": 13,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_fy1_d1",
+      "description": "FY1 SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9453,
+      "userCount": 14,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_fy2",
+      "description": "FY2 SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7289,
+      "userCount": 7,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_smart_estimate_fy2_d1",
+      "description": "FY2 SmartEstimate",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9457,
+      "userCount": 8,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_12m",
+      "description": "Revenue predicted surprise pct - forward 12 months",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7258,
+      "userCount": 26,
+      "alphaCount": 27,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_12m_d1",
+      "description": "Revenue predicted surprise pct - forward 12 months",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9437,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_fq1",
+      "description": "Revenue predicted surprise pct - forward 1 quarter",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.3188,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_fq1_d1",
+      "description": "Revenue predicted surprise pct - forward 1 quarter",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.4629,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_fq2",
+      "description": "Revenue predicted surprise pct - forward 2 quarters",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.2563,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_fq2_d1",
+      "description": "Revenue predicted surprise pct - forward 2 quarters",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.387,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_fy1",
+      "description": "Revenue predicted surprise pct - forward 1 year",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7288,
+      "userCount": 55,
+      "alphaCount": 94,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_fy1_d1",
+      "description": "Revenue predicted surprise pct - forward 1 year",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9453,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_fy2",
+      "description": "Revenue predicted surprise pct - forward 2 years",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.7289,
+      "userCount": 15,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "star_rev_surprise_prediction_fy2_d1",
+      "description": "Revenue predicted surprise pct - forward 2 years",
+      "dataset": {
+        "id": "model33",
+        "name": "Revenue Estimate Model"
+      },
+      "category": {
+        "id": "model",
+        "name": "Model"
+      },
+      "subcategory": {
+        "id": "model-estimates-models",
+        "name": "Estimates Models"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9457,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

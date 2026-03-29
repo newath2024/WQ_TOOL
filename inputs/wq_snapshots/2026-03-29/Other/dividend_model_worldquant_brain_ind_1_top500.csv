@@ -1,0 +1,4 @@
+id,description,dataset.id,dataset.name,category.id,category.name,subcategory.id,subcategory.name,region,delay,universe,type,dateCoverage,coverage,userCount,alphaCount,pyramidMultiplier,themes
+oth436_disc,DISC score,other436,Dividend model,other,Other,other-analyst-models,Analyst Models,IND,1,TOP500,VECTOR,1,0.6363,14,14,1.4,[]
+oth436_divyld,Dividend yield (only available for updates),other436,Dividend model,other,Other,other-analyst-models,Analyst Models,IND,1,TOP500,VECTOR,1,0.6363,76,107,1.4,[]
+oth436_mktcap,Market cap,other436,Dividend model,other,Other,other-analyst-models,Analyst Models,IND,1,TOP500,VECTOR,1,0.6363,38,49,1.4,[]

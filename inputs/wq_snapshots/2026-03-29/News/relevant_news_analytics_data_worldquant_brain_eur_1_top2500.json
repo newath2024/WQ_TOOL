@@ -1,0 +1,808 @@
+{
+  "exported_at": "2026-03-29T04:56:21.776Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/news46?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500",
+  "total_count": 30,
+  "row_count": 30,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=EUR&universe=TOP2500&dataset.id=news46"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 10,
+      "new_item_count": 10,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=EUR&universe=TOP2500&dataset.id=news46"
+    }
+  ],
+  "rows": [
+    {
+      "id": "mws46_elw",
+      "description": "Word and phrase detection score",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ens",
+      "description": "A score between 0 and 100 that represents how \"new\" or novel a news story is within a 24-hour time window across all news stories in a particular package",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ens_elapsed",
+      "description": "The number of milliseconds between the first story and the current story in an event novelty chain. The first story in a chain will always be given a value of zero milliseconds.",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ens_key",
+      "description": "An alphanumeric identifier that provides a way to chain or relate stories about the same categorized event for the same entities.",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ens_key_off",
+      "description": "An alphanumeric identifier that provides a way to chain or relate stories about the same categorized event for the same entities.",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ess",
+      "description": "A granular score between 0 and 100 that represents the news sentiment for a given entity by measuring various proxies sampled from the news. The score is determined by systematically matching stories typically categorized by financial experts as having short-term positive or negative financial or economic impact. Their ratings are encapsulated in an algorithm that generates a score range between 0-100 where higher values indicate more positive sentiment while values below 50 show negative sentiment.",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_g_ens",
+      "description": "A score between 0 and 100 that represents how \"new\" or novel a news story is within a 24-hour time window across all news providers",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_g_ens_elapsed",
+      "description": "The number of milliseconds between the first story and the current story in an event novelty chain across all news providers",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_mce",
+      "description": "Event information",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 13,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_mcp",
+      "description": "Projections, corporate news score",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_mcr",
+      "description": "Reports on corporate actions score",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_mcv",
+      "description": "Venture, corporate, mergers and acquisitions score",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_news_type",
+      "description": "Classifies the type of news story",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 12,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_nip",
+      "description": "A score taking values between 0 and 100 that represents the degree of impact a news flash has on the market over the following two-hour period Whether something is considered high or low depends on the time of day when the story arrived",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_mean_ens",
+      "description": "A score between 0 and 100 that represents how \"new\" or novel a news story is within a 24-hour time window across all news stories in a particular package",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6975,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_mean_ess",
+      "description": "A granular score between 0 and 100 that represents the news sentiment for a given entity by measuring various proxies sampled from the news. The score is determined by systematically matching stories typically categorized by financial experts as having short-term positive or negative financial or economic impact. Their ratings are encapsulated in an algorithm that generates a score range between 0-100 where higher values indicate more positive sentiment while values below 50 show negative sentiment.",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6975,
+      "userCount": 21,
+      "alphaCount": 28,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_mean_nip",
+      "description": "A score taking values between 0 and 100 that represents the degree of impact a news flash has on the market over the following two-hour period Whether something is considered high or low depends on the time of day when the story arrived",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9081,
+      "userCount": 10,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_mean_relevance",
+      "description": "A score between 0-100 that indicates how strongly related the entity is to the underlying newsstory, with higher values indicating greater relevance Specifically, a value of 100 indicates that the entity identified plays a key role in the news story and is considered highly relevant",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9081,
+      "userCount": 26,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_mean_ssc",
+      "description": "A sentiment score between 0 and 100 that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9081,
+      "userCount": 18,
+      "alphaCount": 23,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_sum_ens",
+      "description": "A score between 0 and 100 that represents how \"new\" or novel a news story is within a 24-hour time window across all news stories in a particular package",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6975,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_sum_ess",
+      "description": "A granular score between 0 and 100 that represents the news sentiment for a given entity by measuring various proxies sampled from the news. The score is determined by systematically matching stories typically categorized by financial experts as having short-term positive or negative financial or economic impact. Their ratings are encapsulated in an algorithm that generates a score range between 0-100 where higher values indicate more positive sentiment while values below 50 show negative sentiment.",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.6975,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_sum_nip",
+      "description": "A score taking values between 0 and 100 that represents the degree of impact a news flash has on the market over the following two-hour period Whether something is considered high or low depends on the time of day when the story arrived",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9081,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_sum_relevance",
+      "description": "A score between 0-100 that indicates how strongly related the entity is to the underlying newsstory, with higher values indicating greater relevance Specifically, a value of 100 indicates that the entity identified plays a key role in the news story and is considered highly relevant",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9081,
+      "userCount": 8,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_sum_ssc",
+      "description": "A sentiment score between 0 and 100 that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9081,
+      "userCount": 15,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ravenpack_sum_story_count",
+      "description": "Story count",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9081,
+      "userCount": 43,
+      "alphaCount": 58,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_relevance",
+      "description": "A score between 0-100 that indicates how strongly related the entity is to the underlying newsstory, with higher values indicating greater relevance Specifically, a value of 100 indicates that the entity identified plays a key role in the news story and is considered highly relevant",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_ssc",
+      "description": "A sentiment score between 0 and 100 that represents the news sentiment of a given story by combining various sentiment analysis techniques",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_story_count",
+      "description": "Story count",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 23,
+      "alphaCount": 33,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_story_index",
+      "description": "Story index",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 7,
+      "alphaCount": 11,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "mws46_time",
+      "description": "Time",
+      "dataset": {
+        "id": "news46",
+        "name": "Relevant News Analytics Data"
+      },
+      "category": {
+        "id": "news",
+        "name": "News"
+      },
+      "subcategory": {
+        "id": "news-news-sentiment",
+        "name": "News Sentiment"
+      },
+      "region": "EUR",
+      "delay": 1,
+      "universe": "TOP2500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 1,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

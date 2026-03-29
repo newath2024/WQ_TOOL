@@ -1,0 +1,514 @@
+{
+  "exported_at": "2026-03-29T05:01:15.441Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other296?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 19,
+  "row_count": 19,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 19,
+      "new_item_count": 19,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=other296"
+    }
+  ],
+  "rows": [
+    {
+      "id": "oth296_call_time",
+      "description": "The date and time of the earnings call in UTC (universal time code)",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 11,
+      "alphaCount": 16,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_confidence",
+      "description": "A normalization of the 'Prob_' fields showing overall match to known sentiment state alone: 0.000 = zero probability, 1.000 is absolute probability. Calculation is [max Prob_]-0.333'/0.666'",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 23,
+      "alphaCount": 26,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_call_time",
+      "description": "The date and time of the earnings call in UTC (universal time code)",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_confidence",
+      "description": "A normalization of the 'Prob_' fields showing overall match to known sentiment state alone: 0.000 = zero probability, 1.000 is absolute probability. Calculation is [max Prob_]-0.333'/0.666'",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_prob_neg",
+      "description": "Sentiment probability: The raw probability that the topic sentiment is negative expressed as a decimal with all three probabilities summing to 1",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_prob_ntr",
+      "description": "Sentiment probability: The raw probability that the topic sentiment is neutral expressed as a decimal with all three probabilities summing to 1",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_prob_pos",
+      "description": "Sentiment probability: The raw probability that the topic sentiment is positive expressed as a decimal with all three probabilities summing to 1",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_received_time",
+      "description": "The date and time Alexandria receives the transcript text, always shown in UTC (universal time code)",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_sentiment",
+      "description": "A trinary score for sentiment of the topic identified for this transcript section, derived from the the highest probable state of sentiment, 1 = positive, 0 = neutral, and -1 = negative.",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_topic_count",
+      "description": "The number of times the identified topic is discussed in the particular section of text",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_daily_word_count",
+      "description": "The count of words in that Section",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3509,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_prob_neg",
+      "description": "Sentiment probability: The raw probability that the topic sentiment is negative expressed as a decimal with all three probabilities summing to 1",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_prob_ntr",
+      "description": "Sentiment probability: The raw probability that the topic sentiment is neutral expressed as a decimal with all three probabilities summing to 1",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_prob_pos",
+      "description": "Sentiment probability: The raw probability that the topic sentiment is positive expressed as a decimal with all three probabilities summing to 1",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_received_time",
+      "description": "The date and time Alexandria receives the transcript text, always shown in UTC (universal time code)",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_sentiment",
+      "description": "A trinary score for sentiment of the topic identified for this transcript section, derived from the the highest probable state of sentiment, 1 = positive, 0 = neutral, and -1 = negative.",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 11,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_topic_count",
+      "description": "The number of times the identified topic is discussed in the particular section of text",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_word_count",
+      "description": "The count of words in that Section",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 8,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth296_wqreceivetime",
+      "description": "Epoch time added by WQ.",
+      "dataset": {
+        "id": "other296",
+        "name": "Corporate Earnings Call Sentiment Data"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-event-data",
+        "name": "Event Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.347,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}

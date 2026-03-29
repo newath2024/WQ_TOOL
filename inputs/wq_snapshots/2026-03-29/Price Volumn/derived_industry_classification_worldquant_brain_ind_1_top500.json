@@ -1,0 +1,808 @@
+{
+  "exported_at": "2026-03-29T05:06:23.606Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/pv29?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 30,
+  "row_count": 30,
+  "page_count": 2,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=pv29"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 10,
+      "new_item_count": 10,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=IND&universe=TOP500&dataset.id=pv29"
+    }
+  ],
+  "rows": [
+    {
+      "id": "industry_grouping_level10_all_instruments_variant513",
+      "description": "Industry classification at level 10 for all instruments in variant 513.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9426,
+      "userCount": 140,
+      "alphaCount": 258,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level10_india500_xjp513",
+      "description": "Industry classification group at level 10 for the top 500 Indian instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9261,
+      "userCount": 74,
+      "alphaCount": 134,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level10_top800_xjp513",
+      "description": "Industry classification group at level 10 for the top 800 instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.1674,
+      "userCount": 9,
+      "alphaCount": 9,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level20_all_instruments_variant513",
+      "description": "Industry classification at level 20 for all instruments in variant 513.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9426,
+      "userCount": 79,
+      "alphaCount": 149,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level20_india500_xjp513",
+      "description": "Industry classification group at level 20 for the top 500 Indian instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9261,
+      "userCount": 62,
+      "alphaCount": 108,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level20_top800_xjp513",
+      "description": "Industry classification group at level 20 for the top 800 instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.1674,
+      "userCount": 9,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level2_all_instruments_variant513",
+      "description": "Industry classification at level 2 for all instruments in variant 513.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9426,
+      "userCount": 48,
+      "alphaCount": 71,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level2_india500_xjp513",
+      "description": "Industry classification group at level 2 for the top 500 Indian instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9261,
+      "userCount": 96,
+      "alphaCount": 296,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level2_top800_xjp513",
+      "description": "Industry classification group at level 2 for the top 800 instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.1674,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level50_all_instruments_variant513",
+      "description": "Industry classification at level 50 for all instruments in variant 513.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9426,
+      "userCount": 97,
+      "alphaCount": 232,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level50_india500_xjp513",
+      "description": "Industry classification group at level 50 for the top 500 Indian instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9261,
+      "userCount": 53,
+      "alphaCount": 76,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level50_top800_xjp513",
+      "description": "Industry classification group at level 50 for the top 800 instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.1674,
+      "userCount": 7,
+      "alphaCount": 7,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level5_all_instruments_variant513",
+      "description": "Industry classification at level 5 for all instruments in variant 513.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9426,
+      "userCount": 57,
+      "alphaCount": 109,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level5_india500_xjp513",
+      "description": "Industry classification group at level 5 for the top 500 Indian instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.9261,
+      "userCount": 52,
+      "alphaCount": 85,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "industry_grouping_level5_top800_xjp513",
+      "description": "Industry classification group at level 5 for the top 800 instruments in the XJP513 universe.",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "MATRIX",
+      "dateCoverage": 1,
+      "coverage": 0.1674,
+      "userCount": 7,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_allxjp_513_c10",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9394,
+      "userCount": 56,
+      "alphaCount": 88,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_allxjp_513_c2",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9394,
+      "userCount": 29,
+      "alphaCount": 38,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_allxjp_513_c20",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9394,
+      "userCount": 94,
+      "alphaCount": 199,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_allxjp_513_c5",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9394,
+      "userCount": 25,
+      "alphaCount": 34,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_allxjp_513_c50",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9394,
+      "userCount": 75,
+      "alphaCount": 143,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top1200xjp_513_c10",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.3582,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top1200xjp_513_c2",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.3582,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top1200xjp_513_c20",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.3582,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top1200xjp_513_c5",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.3582,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top1200xjp_513_c50",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.3582,
+      "userCount": 4,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top2000xjp_513_c10",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9259,
+      "userCount": 28,
+      "alphaCount": 49,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top2000xjp_513_c2",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9259,
+      "userCount": 14,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top2000xjp_513_c20",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9259,
+      "userCount": 35,
+      "alphaCount": 99,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top2000xjp_513_c5",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9259,
+      "userCount": 18,
+      "alphaCount": 20,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    },
+    {
+      "id": "sta1_top2000xjp_513_c50",
+      "description": "statistical industry classification",
+      "dataset": {
+        "id": "pv29",
+        "name": "Derived Industry Classification"
+      },
+      "category": {
+        "id": "pv",
+        "name": "Price Volume"
+      },
+      "subcategory": {
+        "id": "pv-price-volume",
+        "name": "Price Volume"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "GROUP",
+      "dateCoverage": 1,
+      "coverage": 0.9259,
+      "userCount": 69,
+      "alphaCount": 242,
+      "pyramidMultiplier": 1.2,
+      "themes": []
+    }
+  ]
+}

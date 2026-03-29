@@ -1,0 +1,3656 @@
+{
+  "exported_at": "2026-03-29T04:16:37.458Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/analyst44?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=GLB&universe=TOP3000",
+  "total_count": 138,
+  "row_count": 138,
+  "page_count": 7,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=GLB&universe=TOP3000&dataset.id=analyst44"
+    },
+    {
+      "page": 2,
+      "offset": 20,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=20&region=GLB&universe=TOP3000&dataset.id=analyst44"
+    },
+    {
+      "page": 3,
+      "offset": 40,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=40&region=GLB&universe=TOP3000&dataset.id=analyst44"
+    },
+    {
+      "page": 4,
+      "offset": 60,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=60&region=GLB&universe=TOP3000&dataset.id=analyst44"
+    },
+    {
+      "page": 5,
+      "offset": 80,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=80&region=GLB&universe=TOP3000&dataset.id=analyst44"
+    },
+    {
+      "page": 6,
+      "offset": 100,
+      "item_count": 20,
+      "new_item_count": 20,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=100&region=GLB&universe=TOP3000&dataset.id=analyst44"
+    },
+    {
+      "page": 7,
+      "offset": 120,
+      "item_count": 18,
+      "new_item_count": 18,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=120&region=GLB&universe=TOP3000&dataset.id=analyst44"
+    }
+  ],
+  "rows": [
+    {
+      "id": "anl44_2_bps_coveredby",
+      "description": "bps coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6921,
+      "userCount": 18,
+      "alphaCount": 42,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_bps_lastactccy",
+      "description": "bps lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6725,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_bps_lastactvalue",
+      "description": "bps lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6347,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_bps_prevalue",
+      "description": "bps prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6673,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_bps_value",
+      "description": "bps value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6921,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_capex_coveredby",
+      "description": "capex coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6711,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_capex_lastactccy",
+      "description": "capex lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6512,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_capex_lastactvalue",
+      "description": "capex lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6102,
+      "userCount": 5,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_capex_prevalue",
+      "description": "capex prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6383,
+      "userCount": 2,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_capex_value",
+      "description": "capex value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6711,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_cfps_coveredby",
+      "description": "cfps coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5735,
+      "userCount": 6,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_cfps_lastactccy",
+      "description": "cfps lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5554,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_cfps_lastactvalue",
+      "description": "cfps lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5009,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_cfps_prevalue",
+      "description": "cfps prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.549,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_cfps_value",
+      "description": "cfps value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5735,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_csh_coveredby",
+      "description": "csh coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.269,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_csh_lastactccy",
+      "description": "csh lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2168,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_csh_lastactvalue",
+      "description": "csh lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.162,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_csh_prevalue",
+      "description": "csh prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.1749,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_csh_value",
+      "description": "csh value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.269,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_dps_coveredby",
+      "description": "dps coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7141,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_dps_lastactccy",
+      "description": "dps lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.696,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_dps_lastactvalue",
+      "description": "dps lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.636,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_dps_prevalue",
+      "description": "dps prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6303,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_dps_value",
+      "description": "dps value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7141,
+      "userCount": 1,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebit_coveredby",
+      "description": "ebit coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7697,
+      "userCount": 6,
+      "alphaCount": 10,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebit_lastactccy",
+      "description": "ebit lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7113,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebit_lastactvalue",
+      "description": "ebit lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6589,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebit_prevalue",
+      "description": "ebit prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7526,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebit_value",
+      "description": "ebit value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7697,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitda_coveredby",
+      "description": "ebitda coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6943,
+      "userCount": 3,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitda_lastactccy",
+      "description": "ebitda lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6753,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitda_lastactvalue",
+      "description": "ebitda lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6268,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitda_prevalue",
+      "description": "ebitda prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6748,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitda_value",
+      "description": "ebitda value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6943,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitdaps_coveredby",
+      "description": "ebitdaps coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3134,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitdaps_lastactccy",
+      "description": "ebitdaps lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3134,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitdaps_lastactvalue",
+      "description": "ebitdaps lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.251,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitdaps_prevalue",
+      "description": "ebitdaps prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2941,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_ebitdaps_value",
+      "description": "ebitdaps value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3134,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_eps_coveredby",
+      "description": "eps coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7884,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_eps_lastactccy",
+      "description": "eps lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.77,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_eps_lastactvalue",
+      "description": "eps lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7522,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_eps_prevalue",
+      "description": "eps prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.774,
+      "userCount": 5,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_eps_value",
+      "description": "eps value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7884,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_epsr_coveredby",
+      "description": "epsr coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7468,
+      "userCount": 5,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_epsr_lastactccy",
+      "description": "epsr lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.734,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_epsr_lastactvalue",
+      "description": "epsr lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7201,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_epsr_prevalue",
+      "description": "epsr prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7315,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_epsr_value",
+      "description": "epsr value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7468,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_fcfps_coveredby",
+      "description": "fcfps coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3797,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_fcfps_lastactccy",
+      "description": "fcfps lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3527,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_fcfps_lastactvalue",
+      "description": "fcfps lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2887,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_fcfps_prevalue",
+      "description": "fcfps prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.359,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_fcfps_value",
+      "description": "fcfps value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3797,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_grossmargin_coveredby",
+      "description": "grossmargin coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6189,
+      "userCount": 2,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_grossmargin_lastactccy",
+      "description": "grossmargin lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5809,
+      "userCount": 9,
+      "alphaCount": 14,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_grossmargin_lastactvalue",
+      "description": "grossmargin lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5049,
+      "userCount": 4,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_grossmargin_prevalue",
+      "description": "grossmargin prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.4917,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_grossmargin_value",
+      "description": "grossmargin value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6189,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_nav_coveredby",
+      "description": "nav coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6692,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_nav_lastactccy",
+      "description": "nav lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6658,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_nav_lastactvalue",
+      "description": "nav lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6364,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_nav_prevalue",
+      "description": "nav prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6177,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_nav_value",
+      "description": "nav value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6692,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netdebt_coveredby",
+      "description": "netdebt coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.613,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netdebt_lastactccy",
+      "description": "netdebt lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.588,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netdebt_lastactvalue",
+      "description": "netdebt lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5406,
+      "userCount": 4,
+      "alphaCount": 8,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netdebt_prevalue",
+      "description": "netdebt prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5711,
+      "userCount": 1,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netdebt_value",
+      "description": "netdebt value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.613,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_coveredby",
+      "description": "netprofit coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7828,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_lastactccy",
+      "description": "netprofit lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7645,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_lastactvalue",
+      "description": "netprofit lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7495,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_prevalue",
+      "description": "netprofit prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7665,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_rep_coveredby",
+      "description": "netprofit rep coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7449,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_rep_lastactccy",
+      "description": "netprofit rep lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7305,
+      "userCount": 4,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_rep_lastactvalue",
+      "description": "netprofit rep lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7165,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_rep_prevalue",
+      "description": "netprofit rep prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7284,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_rep_value",
+      "description": "netprofit rep value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7449,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_netprofit_value",
+      "description": "netprofit value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7828,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_operatingprofit_coveredby",
+      "description": "operatingprofit coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3531,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_operatingprofit_lastactccy",
+      "description": "operatingprofit lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3514,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_operatingprofit_lastactvalue",
+      "description": "operatingprofit lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2022,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_operatingprofit_prevalue",
+      "description": "operatingprofit prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2799,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_operatingprofit_value",
+      "description": "operatingprofit value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3531,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_coveredby",
+      "description": "pretaxprofit coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7705,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_lastactccy",
+      "description": "pretaxprofit lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7563,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_lastactvalue",
+      "description": "pretaxprofit lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7243,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_prevalue",
+      "description": "pretaxprofit prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7607,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_rep_coveredby",
+      "description": "pretaxprofit rep coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7066,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_rep_lastactccy",
+      "description": "pretaxprofit rep lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6985,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_rep_lastactvalue",
+      "description": "pretaxprofit rep lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6795,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_rep_prevalue",
+      "description": "pretaxprofit rep prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6826,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_rep_value",
+      "description": "pretaxprofit rep value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7066,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_pretaxprofit_value",
+      "description": "pretaxprofit value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7705,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roa_coveredby",
+      "description": "roa coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6041,
+      "userCount": 5,
+      "alphaCount": 5,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roa_lastactccy",
+      "description": "roa lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5934,
+      "userCount": 2,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roa_lastactvalue",
+      "description": "roa lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5289,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roa_prevalue",
+      "description": "roa prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5459,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roa_value",
+      "description": "roa value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6041,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roe_coveredby",
+      "description": "roe coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6903,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roe_lastactccy",
+      "description": "roe lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.679,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roe_lastactvalue",
+      "description": "roe lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.613,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roe_prevalue",
+      "description": "roe prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6344,
+      "userCount": 4,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_roe_value",
+      "description": "roe value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6903,
+      "userCount": 3,
+      "alphaCount": 4,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_sales_coveredby",
+      "description": "sales coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7852,
+      "userCount": 1,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_sales_lastactccy",
+      "description": "sales lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7667,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_sales_lastactvalue",
+      "description": "sales lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7536,
+      "userCount": 1,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_sales_prevalue",
+      "description": "sales prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7703,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_sales_value",
+      "description": "sales value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7852,
+      "userCount": 6,
+      "alphaCount": 12,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_tbvps_coveredby",
+      "description": "tbvps coveredby",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3026,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_tbvps_lastactccy",
+      "description": "tbvps lastactccy",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2922,
+      "userCount": 2,
+      "alphaCount": 2,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_tbvps_lastactvalue",
+      "description": "tbvps lastactvalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.235,
+      "userCount": 3,
+      "alphaCount": 3,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_tbvps_prevalue",
+      "description": "tbvps prevalue",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2842,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "anl44_2_tbvps_value",
+      "description": "tbvps value",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3026,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "capex_currency_code",
+      "description": "Currency code in which the capital expenditure forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.671,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "cash_eps_currency_code_2",
+      "description": "Currency code in which the cash earnings per share value is reported.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2674,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "cfps_currency_code",
+      "description": "Currency in which the cash flow per share forecast is reported.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5734,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "ebit_currency_code",
+      "description": "Currency in which the EBIT forecast is reported.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7697,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "ebitda_currency_code",
+      "description": "Currency code in which the EBITDA forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6942,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "ebitdaps_currency_code",
+      "description": "Currency code in which the EBITDA per share forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3134,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "eps_currency_code_2",
+      "description": "Currency in which the earnings per share forecast is reported.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7884,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "epsr_currency_code",
+      "description": "Currency code in which the reported EPS forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7468,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_book_value_per_share",
+      "description": "Currency in which the book value per share forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.692,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_code_2",
+      "description": "Currency code in which the net profit forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7449,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_dps",
+      "description": "Currency in which the DPS forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7137,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_fcfps",
+      "description": "Currency in which the FCFPS forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3797,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_netprofit",
+      "description": "Currency in which the net profit forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7828,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_roa",
+      "description": "Currency in which the ROA forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.572,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_roe",
+      "description": "Currency in which the ROE forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6572,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_sales",
+      "description": "Currency in which the sales forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7852,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "forecast_currency_tangible_book_value_per_share",
+      "description": "Currency in which the tangible book value per share forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3026,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "grossmargin_currency_code",
+      "description": "Currency code in which the gross margin forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.5429,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "nav_currency_code_3",
+      "description": "Currency in which the net asset value forecast is reported.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6692,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "netdebt_currency_code",
+      "description": "Currency in which the net debt forecast is reported.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.6128,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "operatingprofit_currency_code",
+      "description": "Currency in which the operating profit forecast is reported.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.3531,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "pretaxprofit_currency_code",
+      "description": "Currency code in which the pre-tax profit forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7705,
+      "userCount": 0,
+      "alphaCount": 0,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    },
+    {
+      "id": "pretaxprofitrep_currency_code",
+      "description": "Currency in which the reported pretax profit forecast is denominated.",
+      "dataset": {
+        "id": "analyst44",
+        "name": "Integrated Broker Estimates"
+      },
+      "category": {
+        "id": "analyst",
+        "name": "Analyst"
+      },
+      "subcategory": {
+        "id": "analyst-crowdsourced-estimates",
+        "name": "Crowdsourced Estimates"
+      },
+      "region": "GLB",
+      "delay": 1,
+      "universe": "TOP3000",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.7066,
+      "userCount": 1,
+      "alphaCount": 1,
+      "pyramidMultiplier": 1.5,
+      "themes": []
+    }
+  ]
+}

@@ -1,0 +1,176 @@
+{
+  "exported_at": "2026-03-29T05:03:08.774Z",
+  "source": "api",
+  "page_url": "https://platform.worldquantbrain.com/data/data-sets/other635?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500",
+  "total_count": 6,
+  "row_count": 6,
+  "page_count": 1,
+  "pages": [
+    {
+      "page": 1,
+      "offset": 0,
+      "item_count": 6,
+      "new_item_count": 6,
+      "item_path": "results",
+      "api_url": "https://api.worldquantbrain.com/data-fields?delay=1&instrumentType=EQUITY&limit=20&offset=0&region=IND&universe=TOP500&dataset.id=other635"
+    }
+  ],
+  "rows": [
+    {
+      "id": "headline_character_count",
+      "description": "Number of characters in the news headline, excluding spaces.",
+      "dataset": {
+        "id": "other635",
+        "name": "Thomson Reuters News Analytics Equities"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9681,
+      "userCount": 11,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "headline_sentiment_score",
+      "description": "Numerical sentiment score for the news headline, typically ranging from negative to positive.",
+      "dataset": {
+        "id": "other635",
+        "name": "Thomson Reuters News Analytics Equities"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9681,
+      "userCount": 17,
+      "alphaCount": 17,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "headline_word_count",
+      "description": "Number of words in the news headline or title.",
+      "dataset": {
+        "id": "other635",
+        "name": "Thomson Reuters News Analytics Equities"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.9681,
+      "userCount": 21,
+      "alphaCount": 21,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth635_char_count",
+      "description": "Number of characters in news",
+      "dataset": {
+        "id": "other635",
+        "name": "Thomson Reuters News Analytics Equities"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2859,
+      "userCount": 6,
+      "alphaCount": 6,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth635_sentiment",
+      "description": "entiment Score of news",
+      "dataset": {
+        "id": "other635",
+        "name": "Thomson Reuters News Analytics Equities"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2859,
+      "userCount": 17,
+      "alphaCount": 18,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    },
+    {
+      "id": "oth635_words_count",
+      "description": "Number of words in news",
+      "dataset": {
+        "id": "other635",
+        "name": "Thomson Reuters News Analytics Equities"
+      },
+      "category": {
+        "id": "other",
+        "name": "Other"
+      },
+      "subcategory": {
+        "id": "other-employee-data",
+        "name": "Employee Data"
+      },
+      "region": "IND",
+      "delay": 1,
+      "universe": "TOP500",
+      "type": "VECTOR",
+      "dateCoverage": 1,
+      "coverage": 0.2859,
+      "userCount": 14,
+      "alphaCount": 15,
+      "pyramidMultiplier": 1.4,
+      "themes": []
+    }
+  ]
+}
