@@ -320,6 +320,12 @@ class BrainConfig:
     rate_limit_per_minute: int = 60
 
     def __post_init__(self) -> None:
+        self.backend = str(self.backend).strip().lower()
+        self.region = str(self.region).strip().upper()
+        self.universe = str(self.universe).strip().upper()
+        self.neutralization = _normalize_brain_enum(self.neutralization, true_value="ON", false_value="OFF")
+        self.unit_handling = _normalize_brain_enum(self.unit_handling, true_value="VERIFY", false_value="IGNORE")
+        self.nan_handling = _normalize_brain_enum(self.nan_handling, true_value="ON", false_value="OFF")
         allowed_backends = {"manual", "api"}
         if self.backend not in allowed_backends:
             raise ValueError(f"brain.backend must be one of {sorted(allowed_backends)}")
@@ -373,6 +379,53 @@ class LoopConfig:
 
 
 @dataclass(slots=True)
+class ServiceConfig:
+    enabled: bool = False
+    tick_interval_seconds: int = 5
+    idle_sleep_seconds: int = 30
+    poll_interval_seconds: int = 15
+    max_pending_jobs: int = 20
+    max_consecutive_failures: int = 5
+    cooldown_seconds: int = 300
+    heartbeat_interval_seconds: int = 30
+    lock_name: str = "brain-service"
+    lock_lease_seconds: int = 60
+    resume_incomplete_jobs: bool = True
+    shutdown_grace_period_seconds: int = 30
+    stuck_job_after_seconds: int = 1800
+    persona_retry_interval_seconds: int = 300
+    persona_email_cooldown_seconds: int = 900
+
+    def __post_init__(self) -> None:
+        if self.tick_interval_seconds <= 0:
+            raise ValueError("service.tick_interval_seconds must be > 0")
+        if self.idle_sleep_seconds <= 0:
+            raise ValueError("service.idle_sleep_seconds must be > 0")
+        if self.poll_interval_seconds <= 0:
+            raise ValueError("service.poll_interval_seconds must be > 0")
+        if self.max_pending_jobs <= 0:
+            raise ValueError("service.max_pending_jobs must be > 0")
+        if self.max_consecutive_failures <= 0:
+            raise ValueError("service.max_consecutive_failures must be > 0")
+        if self.cooldown_seconds <= 0:
+            raise ValueError("service.cooldown_seconds must be > 0")
+        if self.heartbeat_interval_seconds <= 0:
+            raise ValueError("service.heartbeat_interval_seconds must be > 0")
+        if not self.lock_name.strip():
+            raise ValueError("service.lock_name must not be empty")
+        if self.lock_lease_seconds <= 0:
+            raise ValueError("service.lock_lease_seconds must be > 0")
+        if self.shutdown_grace_period_seconds <= 0:
+            raise ValueError("service.shutdown_grace_period_seconds must be > 0")
+        if self.stuck_job_after_seconds <= 0:
+            raise ValueError("service.stuck_job_after_seconds must be > 0")
+        if self.persona_retry_interval_seconds <= 0:
+            raise ValueError("service.persona_retry_interval_seconds must be > 0")
+        if self.persona_email_cooldown_seconds <= 0:
+            raise ValueError("service.persona_email_cooldown_seconds must be > 0")
+
+
+@dataclass(slots=True)
 class RuntimeConfig:
     log_level: str = "INFO"
     fail_fast: bool = False
@@ -394,6 +447,7 @@ class AppConfig:
     runtime: RuntimeConfig
     brain: BrainConfig = field(default_factory=BrainConfig)
     loop: LoopConfig = field(default_factory=LoopConfig)
+    service: ServiceConfig = field(default_factory=ServiceConfig)
 
     def to_dict(self) -> dict[str, Any]:
         """Return the config as a plain nested mapping."""
@@ -485,6 +539,20 @@ def _build_brain_config(payload: dict[str, Any] | None) -> BrainConfig:
     return BrainConfig(**(payload or {}))
 
 
+def _normalize_brain_enum(value: Any, *, true_value: str, false_value: str) -> str:
+    if isinstance(value, bool):
+        return true_value if value else false_value
+    normalized = str(value or "").strip()
+    lowered = normalized.lower()
+    truthy = {"1", "true", "yes", "y", "on"}
+    falsy = {"0", "false", "no", "n", "off"}
+    if lowered in truthy:
+        return true_value
+    if lowered in falsy:
+        return false_value
+    return normalized.upper()
+
+
 def _build_loop_config(payload: dict[str, Any] | None, brain: BrainConfig) -> LoopConfig:
     defaults = {
         "poll_interval_seconds": brain.poll_interval_seconds,
@@ -494,6 +562,16 @@ def _build_loop_config(payload: dict[str, Any] | None, brain: BrainConfig) -> Lo
     merged = dict(defaults)
     merged.update(payload or {})
     return LoopConfig(**merged)
+
+
+def _build_service_config(payload: dict[str, Any] | None, brain: BrainConfig) -> ServiceConfig:
+    defaults = {
+        "poll_interval_seconds": brain.poll_interval_seconds,
+        "max_pending_jobs": brain.batch_size,
+    }
+    merged = dict(defaults)
+    merged.update(payload or {})
+    return ServiceConfig(**merged)
 
 
 def load_config(path: str | Path) -> AppConfig:
@@ -521,6 +599,7 @@ def load_config(path: str | Path) -> AppConfig:
             storage=StorageConfig(**payload["storage"]),
             brain=brain,
             loop=_build_loop_config(payload.get("loop"), brain),
+            service=_build_service_config(payload.get("service"), brain),
             runtime=_build_runtime_config(payload.get("runtime"), config_path),
         )
     except KeyError as exc:

@@ -86,6 +86,11 @@ class NeverCompletesAdapter(FakeCompletedAdapter):
         return {"job_id": job_id, "status": "running"}
 
 
+class SubmitFailsAdapter(FakeCompletedAdapter):
+    def submit_simulation(self, expression: str, sim_config: dict) -> dict:
+        raise RuntimeError('BRAIN API request failed with status 400: {"settings":{"nanHandling":["\\"FALSE\\" is not a valid choice."]}}')
+
+
 def test_manual_adapter_export_and_import_round_trip(tmp_path: Path) -> None:
     adapter = BrainManualAdapter(export_root=tmp_path)
     sim_config = {
@@ -363,6 +368,29 @@ def test_brain_service_marks_timeout_when_jobs_never_finish(tmp_path: Path) -> N
 
     assert batch.results[0].status == "timeout"
     assert batch.results[0].rejection_reason == "poll_timeout"
+
+
+def test_brain_service_marks_batch_failed_when_submit_fails_before_any_job(tmp_path: Path) -> None:
+    config = load_config("config/dev.yaml")
+    config.storage.path = ":memory:"
+    repository = SQLiteRepository(":memory:")
+    try:
+        environment = _init_environment(repository, config, "run-brain-sim")
+        service = BrainService(repository, config.brain, adapter=SubmitFailsAdapter())
+        candidate = _candidate("alpha-1", "rank(close)")
+        try:
+            service.submit_candidates([candidate], config=config, environment=environment, round_index=1, batch_size=1)
+        except RuntimeError as exc:
+            assert "nanHandling" in str(exc)
+        else:
+            raise AssertionError("Expected submit failure")
+        batch = repository.submissions.get_latest_batch(environment.context.run_id)
+    finally:
+        repository.close()
+
+    assert batch is not None
+    assert batch.status == "failed"
+    assert batch.service_status_reason == "submission_failed:RuntimeError"
 
 
 def test_closed_loop_service_runs_with_mocked_adapter(tmp_path: Path) -> None:

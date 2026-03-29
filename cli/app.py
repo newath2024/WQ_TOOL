@@ -19,6 +19,7 @@ from cli.commands import (
     report,
     run_brain_sim,
     run_closed_loop,
+    run_service,
     sync_field_catalog,
 )
 from core.config import load_config
@@ -42,6 +43,7 @@ _SUBCOMMANDS = {
     "import-brain-results",
     "run-brain-sim",
     "run-closed-loop",
+    "run-service",
     "brain-login",
 }
 _GLOBAL_OPTIONS_WITH_VALUES = {"--config", "--run-id", "--seed", "--log-level"}
@@ -97,6 +99,7 @@ def build_parser() -> argparse.ArgumentParser:
     import_brain_results.register(subparsers, common)
     run_brain_sim.register(subparsers, common)
     run_closed_loop.register(subparsers, common)
+    run_service.register(subparsers, common)
     brain_login.register(subparsers, common)
     return parser
 

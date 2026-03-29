@@ -34,6 +34,12 @@ class ApiEndpointConfig:
     recordsets_path_template: str = "/alphas/{alpha_id}/recordsets"
 
 
+class PersonaVerificationRequired(RuntimeError):
+    def __init__(self, persona_url: str) -> None:
+        super().__init__("BRAIN Persona verification is required before API work can continue.")
+        self.persona_url = persona_url
+
+
 class BrainApiAdapter(SimulationAdapter):
     """
     BRAIN API adapter with interactive authentication support.
@@ -152,7 +158,13 @@ class BrainApiAdapter(SimulationAdapter):
         # a dedicated parent multi-simulation handler.
         return [self.submit_simulation(expression, sim_config) for expression in expressions]
 
-    def ensure_authenticated(self, *, force: bool = False, show_password: bool = False) -> dict:
+    def ensure_authenticated(
+        self,
+        *,
+        force: bool = False,
+        show_password: bool = False,
+        interactive: bool = True,
+    ) -> dict:
         token = self.auth_token or os.getenv(self.auth_env)
         if token:
             return {"mode": "bearer_token", "status": "ready"}
@@ -169,24 +181,36 @@ class BrainApiAdapter(SimulationAdapter):
 
         email = os.getenv(self.email_env) or self._credential_value("brain", "email")
         if not email:
+            if not interactive:
+                raise RuntimeError(
+                    "BRAIN non-interactive authentication requires credentials in env vars or credentials_file."
+                )
             email = input("BRAIN email: ").strip()
         if not email:
             raise ValueError("BRAIN email is required for interactive authentication.")
 
         password = os.getenv(self.password_env) or self._credential_value("brain", "password")
         if not password:
+            if not interactive:
+                raise RuntimeError(
+                    "BRAIN non-interactive authentication requires credentials in env vars or credentials_file."
+                )
             password = self._prompt_password_interactive(show_password=show_password)
         if not password:
             raise ValueError("BRAIN password is required for interactive authentication.")
 
-        self.authenticate_with_credentials(email=email, password=password)
+        self.authenticate_with_credentials(email=email, password=password, interactive=interactive)
         state = self._authentication_state()
         if not state.get("authenticated"):
             raise RuntimeError("BRAIN authentication did not complete successfully.")
         self._save_session_to_disk()
-        return {"mode": "interactive", "status": "ready", "session_path": str(self.session_path)}
+        return {
+            "mode": "interactive" if interactive else "non_interactive",
+            "status": "ready",
+            "session_path": str(self.session_path),
+        }
 
-    def authenticate_with_credentials(self, *, email: str, password: str) -> None:
+    def authenticate_with_credentials(self, *, email: str, password: str, interactive: bool = True) -> None:
         response = self._request(
             "POST",
             self._resolve_authentication_url(),
@@ -200,6 +224,8 @@ class BrainApiAdapter(SimulationAdapter):
             persona_url = urljoin(response.url, response.headers.get("Location", ""))
             if not persona_url:
                 raise RuntimeError("BRAIN requested Persona authentication but did not provide a Location URL.")
+            if not interactive:
+                raise PersonaVerificationRequired(persona_url)
             print("BRAIN requires biometric authentication.")
             print(f"Open this URL to complete face scan: {persona_url}")
             if self.open_browser_for_persona:
@@ -217,6 +243,13 @@ class BrainApiAdapter(SimulationAdapter):
         raise RuntimeError(
             f"BRAIN authentication failed with status {response.status_code}: {response.text}"
         )
+
+    def send_persona_notification(self, persona_url: str) -> bool:
+        smtp_config = self._smtp_notification_config()
+        if smtp_config is None:
+            return False
+        self.email_service.send_persona_link(persona_url=persona_url, smtp_config=smtp_config)
+        return True
 
     @staticmethod
     def _prompt_password_interactive(show_password: bool = False) -> str:

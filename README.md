@@ -5,6 +5,7 @@ He thong nay hien co 2 lop ro rang:
 
 - local research layer: field registry, operator registry, structured generation, validation, mutation, memory, storage
 - BRAIN integration layer: submit alpha vao BRAIN, lay ket qua that, hoc tu outcome that, va chay closed-loop
+- service layer: giu service loop 24/7, resume job dang chay, heartbeat, lock, notification, va safe shutdown
 
 Quan trong:
 
@@ -23,6 +24,7 @@ Quan trong:
 - submit candidate vao BRAIN qua `manual` hoac `api` adapter
 - normalize ket qua BRAIN, luu rejection reason, submission eligibility, raw payload
 - chay `generate -> simulate -> learn -> mutate -> repeat`
+- chay `run-service` 24/7 de lien tuc poll pending jobs va tao batch moi an toan
 
 ## Cau truc muc cao
 
@@ -63,6 +65,7 @@ python main.py export-brain-candidates --config config/dev.yaml
 python main.py import-brain-results --config config/dev.yaml --path outputs/brain_manual/manual_results.csv
 python main.py run-brain-sim --config config/dev.yaml
 python main.py run-closed-loop --config config/dev.yaml
+python main.py run-service --config config/dev.yaml
 ```
 
 Closed-loop BRAIN:
@@ -75,6 +78,43 @@ Closed-loop BRAIN:
 6. cap nhat memory
 7. mutate candidate manh
 8. lap lai theo so round
+
+### Service mode 24/7
+
+```bash
+python main.py run-service --config config/dev.yaml
+```
+
+`run-service` la foreground process de chay duoi Task Scheduler, NSSM, systemd, hoac supervisor tuong tu.
+
+Moi service tick:
+
+1. renew/acquire DB lease lock
+2. kiem tra session/auth
+3. resume va poll pending jobs neu co
+4. persist ket qua + cap nhat memory khi batch hoan tat
+5. neu khong con pending jobs thi tao batch moi va submit len BRAIN
+6. ghi heartbeat/counters vao `service_runtime`
+7. sleep theo service scheduler
+
+Resume sau restart:
+
+- service doc `service_runtime` + `submissions` + `submission_batches`
+- neu con job `submitted/running` thi chi poll tiep, khong submit batch moi
+- neu batch dang `submitting` ma DB khong du `job_id` de biet da submit toi dau, batch bi `paused_quarantine`
+
+Lock behavior:
+
+- chi cho phep 1 service instance tren moi DB/profile
+- DB lease lock tu dong het han neu process chet
+- instance khac co the takeover sau khi lease cu het han
+
+Persona behavior:
+
+- service mode dung non-interactive auth
+- neu BRAIN doi Persona, service pause viec submit batch moi
+- in URL ra terminal va gui mail neu SMTP da cau hinh
+- retry auth cham theo `service.persona_retry_interval_seconds`, khong spam lien tuc
 
 ## Manual backend
 
@@ -142,6 +182,7 @@ Ngoai cac bang local cu, repo da co them:
 - `manual_imports`
 - `closed_loop_runs`
 - `closed_loop_rounds`
+- `service_runtime`
 
 Moi candidate co the truy vet duoc:
 
@@ -182,6 +223,15 @@ loop:
   timeout_seconds: 600
   mutate_top_k: 10
   max_children_per_parent: 5
+
+service:
+  enabled: false
+  tick_interval_seconds: 5
+  idle_sleep_seconds: 30
+  poll_interval_seconds: 10
+  max_pending_jobs: 20
+  cooldown_seconds: 300
+  lock_name: brain-service
 ```
 
 Config cu van load duoc. Command local cu khong doi nghia.
@@ -206,6 +256,8 @@ pytest -q
 - manual backend can buoc import ket qua thu cong truoc khi closed-loop tiep tuc hoc day du
 - API backend moi la scaffold va chua duoc bind vao endpoint BRAIN that
 - local evaluation van ton tai cho workflow cu, nhung khong duoc xem la truth trong BRAIN closed-loop
+- `run-service` v1 la single-machine foreground service, chua huong toi distributed coordination
+- batch `paused_quarantine` can operator xem va xu ly thu cong truoc khi service tiep tuc submit batch moi
 
 ## Tai lieu
 

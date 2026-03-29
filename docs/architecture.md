@@ -32,8 +32,16 @@ Nguyen tac quan trong:
 - `services/brain_service.py`: submit, poll, normalize, persist
 - `services/candidate_selection_service.py`: pre-rank, diversity, select-for-simulate, select-for-mutate
 - `services/closed_loop_service.py`: vong lap generate -> BRAIN -> learn -> mutate
+- `services/session_manager.py`: non-interactive auth/session refresh cho service mode
+- `services/notification_manager.py`: Persona terminal + email notification
+- `services/runtime_lock.py`: DB lease lock cho single-instance service
+- `services/heartbeat_reporter.py`: heartbeat, counters, last success/error
+- `services/service_scheduler.py`: quyet dinh sleep interval theo state
+- `services/service_worker.py`: xu ly mot service tick end-to-end
+- `services/service_runner.py`: vong doi process + signal handling + restart-safe orchestration
 - `workflows/run_brain_simulation.py`: workflow submit 1 batch
 - `workflows/run_closed_loop.py`: workflow nhieu round
+- `workflows/run_service.py`: workflow foreground service mode
 
 ### Persistence
 
@@ -121,6 +129,7 @@ Bang lien quan:
 - `closed_loop_runs`
 - `closed_loop_rounds`
 - `alpha_history`
+- `service_runtime`
 
 ## Closed-loop lifecycle
 
@@ -138,6 +147,26 @@ Neu backend la `manual`:
 
 - round se dung o trang thai `waiting_manual_results` neu chua co file ket qua import vao
 - he thong khong doan/fake result de di tiep
+
+## Service mode lifecycle
+
+`run-service` khong goi `run-closed-loop` trong vong lap. No dung continuous batch mode:
+
+1. boot va resolve `service_run_id`
+2. acquire DB lease lock
+3. ensure session qua `SessionManager`
+4. recover batch `submitting`
+5. neu co pending jobs thi chi poll/update/persist/learn
+6. neu khong co pending jobs thi tao batch moi, submit, persist ngay tung job
+7. ghi heartbeat vao `service_runtime`
+8. sleep theo `ServiceScheduler`
+
+Restart safety:
+
+- service co the resume pending jobs tu `submissions`
+- batch `submitting` du metadata se duoc recover thanh `submitted`
+- batch `submitting` mo ho se bi `paused_quarantine`
+- service khong auto-resubmit batch mo ho de tranh duplicate submission
 
 ## Memory hoc tu BRAIN
 

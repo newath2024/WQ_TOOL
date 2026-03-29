@@ -23,6 +23,9 @@ def test_parser_registers_new_brain_commands() -> None:
 
     assert args.command == "run-closed-loop"
     assert args.command_handler.__module__ == "cli.commands.run_closed_loop"
+    service_args = parser.parse_args(["run-service"])
+    assert service_args.command == "run-service"
+    assert service_args.command_handler.__module__ == "cli.commands.run_service"
     login_args = parser.parse_args(["brain-login"])
     assert login_args.command == "brain-login"
     login_visible_args = parser.parse_args(["brain-login", "--show-password"])

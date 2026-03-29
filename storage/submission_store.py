@@ -5,6 +5,8 @@ from collections.abc import Iterable
 
 from storage.models import ManualImportRecord, SubmissionBatchRecord, SubmissionRecord
 
+_UNSET = object()
+
 
 class SubmissionStore:
     def __init__(self, connection: sqlite3.Connection) -> None:
@@ -15,14 +17,17 @@ class SubmissionStore:
             """
             INSERT INTO submission_batches
             (batch_id, run_id, round_index, backend, status, candidate_count, sim_config_snapshot,
-             export_path, notes_json, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             export_path, notes_json, service_status_reason, last_polled_at, quarantined_at, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(batch_id) DO UPDATE SET
                 status = excluded.status,
                 candidate_count = excluded.candidate_count,
                 sim_config_snapshot = excluded.sim_config_snapshot,
                 export_path = excluded.export_path,
                 notes_json = excluded.notes_json,
+                service_status_reason = excluded.service_status_reason,
+                last_polled_at = excluded.last_polled_at,
+                quarantined_at = excluded.quarantined_at,
                 updated_at = excluded.updated_at
             """,
             (
@@ -35,6 +40,9 @@ class SubmissionStore:
                 record.sim_config_snapshot,
                 record.export_path,
                 record.notes_json,
+                record.service_status_reason,
+                record.last_polled_at,
+                record.quarantined_at,
                 record.created_at,
                 record.updated_at,
             ),
@@ -48,8 +56,9 @@ class SubmissionStore:
                 INSERT INTO submissions
                 (job_id, batch_id, run_id, round_index, candidate_id, expression, backend, status,
                  sim_config_snapshot, submitted_at, updated_at, completed_at, export_path,
-                 raw_submission_json, error_message)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 raw_submission_json, error_message, retry_count, last_polled_at, next_poll_after,
+                 stuck_since, service_failure_reason)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(job_id) DO UPDATE SET
                     batch_id = excluded.batch_id,
                     status = excluded.status,
@@ -57,7 +66,12 @@ class SubmissionStore:
                     completed_at = excluded.completed_at,
                     export_path = excluded.export_path,
                     raw_submission_json = excluded.raw_submission_json,
-                    error_message = excluded.error_message
+                    error_message = excluded.error_message,
+                    retry_count = excluded.retry_count,
+                    last_polled_at = excluded.last_polled_at,
+                    next_poll_after = excluded.next_poll_after,
+                    stuck_since = excluded.stuck_since,
+                    service_failure_reason = excluded.service_failure_reason
                 """,
                 (
                     record.job_id,
@@ -75,6 +89,11 @@ class SubmissionStore:
                     record.export_path,
                     record.raw_submission_json,
                     record.error_message,
+                    record.retry_count,
+                    record.last_polled_at,
+                    record.next_poll_after,
+                    record.stuck_since,
+                    record.service_failure_reason,
                 ),
             )
         self.connection.commit()
@@ -101,25 +120,73 @@ class SubmissionStore:
         )
         self.connection.commit()
 
+    def update_submission_runtime(
+        self,
+        job_id: str,
+        *,
+        updated_at: str,
+        status: str | object = _UNSET,
+        completed_at: str | None | object = _UNSET,
+        error_message: str | None | object = _UNSET,
+        retry_count: int | object = _UNSET,
+        last_polled_at: str | None | object = _UNSET,
+        next_poll_after: str | None | object = _UNSET,
+        stuck_since: str | None | object = _UNSET,
+        service_failure_reason: str | None | object = _UNSET,
+    ) -> None:
+        updates: dict[str, object] = {"updated_at": updated_at}
+        if status is not _UNSET:
+            updates["status"] = status
+        if completed_at is not _UNSET:
+            updates["completed_at"] = completed_at
+        if error_message is not _UNSET:
+            updates["error_message"] = error_message
+        if retry_count is not _UNSET:
+            updates["retry_count"] = retry_count
+        if last_polled_at is not _UNSET:
+            updates["last_polled_at"] = last_polled_at
+        if next_poll_after is not _UNSET:
+            updates["next_poll_after"] = next_poll_after
+        if stuck_since is not _UNSET:
+            updates["stuck_since"] = stuck_since
+        if service_failure_reason is not _UNSET:
+            updates["service_failure_reason"] = service_failure_reason
+        assignments = ", ".join(f"{name} = ?" for name in updates)
+        params = list(updates.values()) + [job_id]
+        self.connection.execute(
+            f"UPDATE submissions SET {assignments} WHERE job_id = ?",
+            tuple(params),
+        )
+        self.connection.commit()
+
     def update_batch_status(
         self,
         batch_id: str,
         *,
         status: str,
         updated_at: str,
-        export_path: str | None = None,
-        notes_json: str | None = None,
+        export_path: str | None | object = _UNSET,
+        notes_json: str | None | object = _UNSET,
+        service_status_reason: str | None | object = _UNSET,
+        last_polled_at: str | None | object = _UNSET,
+        quarantined_at: str | None | object = _UNSET,
     ) -> None:
+        updates: dict[str, object] = {"status": status, "updated_at": updated_at}
+        if export_path is not _UNSET:
+            updates["export_path"] = export_path
+        if notes_json is not _UNSET:
+            updates["notes_json"] = notes_json
+        if service_status_reason is not _UNSET:
+            updates["service_status_reason"] = service_status_reason
+        if last_polled_at is not _UNSET:
+            updates["last_polled_at"] = last_polled_at
+        if quarantined_at is not _UNSET:
+            updates["quarantined_at"] = quarantined_at
+        assignments = ", ".join(f"{name} = ?" for name in updates)
+        params = list(updates.values()) + [batch_id]
         self.connection.execute(
-            """
-            UPDATE submission_batches
-            SET status = ?,
-                updated_at = ?,
-                export_path = COALESCE(?, export_path),
-                notes_json = COALESCE(?, notes_json)
-            WHERE batch_id = ?
-            """,
-            (status, updated_at, export_path, notes_json, batch_id),
+            f"UPDATE submission_batches SET {assignments} WHERE batch_id = ?",
+            tuple(params),
         )
         self.connection.commit()
 
@@ -161,6 +228,28 @@ class SubmissionStore:
             tuple(params),
         ).fetchall()
         return [SubmissionRecord(**dict(row)) for row in rows]
+
+    def list_pending_submissions(self, run_id: str) -> list[SubmissionRecord]:
+        return self.list_submissions(run_id=run_id, statuses=("submitted", "running"))
+
+    def list_batches_by_status(
+        self,
+        *,
+        run_id: str,
+        statuses: Iterable[str],
+    ) -> list[SubmissionBatchRecord]:
+        status_list = list(statuses)
+        placeholders = ", ".join("?" for _ in status_list)
+        rows = self.connection.execute(
+            f"""
+            SELECT *
+            FROM submission_batches
+            WHERE run_id = ? AND status IN ({placeholders})
+            ORDER BY created_at ASC, batch_id ASC
+            """,
+            (run_id, *status_list),
+        ).fetchall()
+        return [SubmissionBatchRecord(**dict(row)) for row in rows]
 
     def get_batch(self, batch_id: str) -> SubmissionBatchRecord | None:
         row = self.connection.execute(

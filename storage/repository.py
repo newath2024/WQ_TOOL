@@ -20,6 +20,7 @@ from storage.models import (
     SimulationCacheRecord,
     SubmissionTestRecord,
 )
+from storage.service_runtime_store import ServiceRuntimeStore
 from storage.sqlite import connect_sqlite
 from storage.submission_store import SubmissionStore
 
@@ -30,6 +31,7 @@ class SQLiteRepository:
         self.alpha_history = AlphaHistoryStore(self.connection, PatternMemoryService())
         self.submissions = SubmissionStore(self.connection)
         self.brain_results = BrainResultStore(self.connection)
+        self.service_runtime = ServiceRuntimeStore(self.connection)
 
     def close(self) -> None:
         self.connection.close()

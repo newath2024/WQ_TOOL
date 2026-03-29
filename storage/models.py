@@ -210,6 +210,9 @@ class SubmissionBatchRecord:
     notes_json: str
     created_at: str
     updated_at: str
+    service_status_reason: str | None = None
+    last_polled_at: str | None = None
+    quarantined_at: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -229,6 +232,11 @@ class SubmissionRecord:
     export_path: str | None
     raw_submission_json: str
     error_message: str | None
+    retry_count: int = 0
+    last_polled_at: str | None = None
+    next_poll_after: str | None = None
+    stuck_since: str | None = None
+    service_failure_reason: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -294,4 +302,29 @@ class ClosedLoopRoundRecord:
     mutated_children_count: int
     summary_json: str
     created_at: str
+    updated_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class ServiceRuntimeRecord:
+    service_name: str
+    service_run_id: str
+    owner_token: str
+    pid: int
+    hostname: str
+    status: str
+    tick_id: int
+    active_batch_id: str | None
+    pending_job_count: int
+    consecutive_failures: int
+    cooldown_until: str | None
+    last_heartbeat_at: str | None
+    last_success_at: str | None
+    last_error: str | None
+    persona_url: str | None
+    persona_wait_started_at: str | None
+    persona_last_notification_at: str | None
+    counters_json: str
+    lock_expires_at: str | None
+    started_at: str
     updated_at: str

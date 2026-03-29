@@ -53,5 +53,14 @@ Nen cover cac nhom sau:
 - submission/result store persistence
 - retry/timeout behavior
 - closed-loop round orchestration
+- service mode: lock, resume, backoff, shutdown, quarantine
 - memory update tu external outcomes
 - regression: local `evaluate` va `run-full-pipeline` van chay
+
+## Luu y cho `run-service`
+
+- `run-service` la foreground process, khong tu daemonize
+- dung supervisor ben ngoai de restart process khi may reboot
+- test service mode nen dung fake `BrainApiAdapter` thay vi external API that
+- neu them state moi cho service, uu tien persist vao `service_runtime` hoac `submissions`
+- bat ky batch `submitting` mo ho nao cung phai duoc quarantine thay vi auto-resubmit

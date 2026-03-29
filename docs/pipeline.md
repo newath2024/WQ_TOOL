@@ -71,7 +71,39 @@ Neu backend la `manual` va chua import result:
 - round se ket thuc voi `waiting_manual_results`
 - he thong khong tu dong gia lap result de chay tiep
 
-## 4. Candidate selection policy
+## 4. Service pipeline 24/7
+
+`run-service` la foreground service mode cho API backend:
+
+```bash
+python main.py run-service --config config/dev.yaml
+```
+
+Moi tick:
+
+1. acquire/renew single-instance DB lease
+2. ensure session va refresh auth neu can
+3. neu co pending jobs thi poll, normalize, persist
+4. khi batch hoan tat thi update `alpha_history` va memory tu external result
+5. neu khong co pending jobs thi prepare batch moi, submit, persist ngay tung job
+6. ghi heartbeat vao `service_runtime`
+7. sleep theo service scheduler
+
+Resume sau restart:
+
+- pending jobs trong `submissions` duoc poll tiep
+- batch `submitting` day du metadata duoc recover thanh `submitted`
+- batch `submitting` mo ho bi `paused_quarantine`
+- service khong submit batch moi khi con `paused_quarantine`
+
+Persona:
+
+- service mode dung non-interactive auth
+- neu BRAIN doi quet mat, service pause submit batch moi
+- link Persona duoc in ra terminal va gui mail neu SMTP da cau hinh
+- service retry auth cham, khong prompt block trong terminal
+
+## 5. Candidate selection policy
 
 Truoc BRAIN:
 
@@ -89,7 +121,7 @@ Sau BRAIN:
 - rank theo `fitness`, `sharpe`, turnover chap nhan duoc
 - tranh mutate qua nhieu candidate cung family
 
-## 5. Memory update
+## 6. Memory update
 
 Closed-loop update memory dua tren ket qua BRAIN that:
 
@@ -114,7 +146,7 @@ Update nay anh huong:
 - field/operator preference
 - mutation priority
 
-## 6. Outputs
+## 7. Outputs
 
 Outputs local cu:
 
@@ -132,3 +164,4 @@ SQLite la source traceability chinh cho:
 - normalized BRAIN results
 - closed-loop rounds
 - external memory updates
+- service heartbeat / active batch / cooldown / persona wait state

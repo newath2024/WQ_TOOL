@@ -228,6 +228,9 @@ CREATE TABLE IF NOT EXISTS submission_batches (
     sim_config_snapshot TEXT NOT NULL DEFAULT '{}',
     export_path TEXT,
     notes_json TEXT NOT NULL DEFAULT '{}',
+    service_status_reason TEXT,
+    last_polled_at TEXT,
+    quarantined_at TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
     FOREIGN KEY (run_id) REFERENCES runs(run_id)
@@ -249,6 +252,11 @@ CREATE TABLE IF NOT EXISTS submissions (
     export_path TEXT,
     raw_submission_json TEXT NOT NULL DEFAULT '{}',
     error_message TEXT,
+    retry_count INTEGER NOT NULL DEFAULT 0,
+    last_polled_at TEXT,
+    next_poll_after TEXT,
+    stuck_since TEXT,
+    service_failure_reason TEXT,
     FOREIGN KEY (run_id) REFERENCES runs(run_id),
     FOREIGN KEY (batch_id) REFERENCES submission_batches(batch_id)
 );
@@ -328,6 +336,30 @@ CREATE TABLE IF NOT EXISTS closed_loop_rounds (
     PRIMARY KEY (run_id, round_index),
     FOREIGN KEY (run_id) REFERENCES runs(run_id)
 );
+
+CREATE TABLE IF NOT EXISTS service_runtime (
+    service_name TEXT PRIMARY KEY,
+    service_run_id TEXT NOT NULL DEFAULT '',
+    owner_token TEXT NOT NULL DEFAULT '',
+    pid INTEGER NOT NULL DEFAULT 0,
+    hostname TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'stopped',
+    tick_id INTEGER NOT NULL DEFAULT 0,
+    active_batch_id TEXT,
+    pending_job_count INTEGER NOT NULL DEFAULT 0,
+    consecutive_failures INTEGER NOT NULL DEFAULT 0,
+    cooldown_until TEXT,
+    last_heartbeat_at TEXT,
+    last_success_at TEXT,
+    last_error TEXT,
+    persona_url TEXT,
+    persona_wait_started_at TEXT,
+    persona_last_notification_at TEXT,
+    counters_json TEXT NOT NULL DEFAULT '{}',
+    lock_expires_at TEXT,
+    started_at TEXT NOT NULL DEFAULT '',
+    updated_at TEXT NOT NULL DEFAULT ''
+);
 """
 
 
@@ -369,6 +401,9 @@ REQUIRED_COLUMNS = {
         "round_index": "INTEGER NOT NULL DEFAULT 0",
         "export_path": "TEXT",
         "notes_json": "TEXT NOT NULL DEFAULT '{}'",
+        "service_status_reason": "TEXT",
+        "last_polled_at": "TEXT",
+        "quarantined_at": "TEXT",
     },
     "submissions": {
         "round_index": "INTEGER NOT NULL DEFAULT 0",
@@ -376,6 +411,11 @@ REQUIRED_COLUMNS = {
         "export_path": "TEXT",
         "raw_submission_json": "TEXT NOT NULL DEFAULT '{}'",
         "error_message": "TEXT",
+        "retry_count": "INTEGER NOT NULL DEFAULT 0",
+        "last_polled_at": "TEXT",
+        "next_poll_after": "TEXT",
+        "stuck_since": "TEXT",
+        "service_failure_reason": "TEXT",
     },
     "brain_results": {
         "round_index": "INTEGER NOT NULL DEFAULT 0",
@@ -388,6 +428,28 @@ REQUIRED_COLUMNS = {
     },
     "closed_loop_rounds": {
         "summary_json": "TEXT NOT NULL DEFAULT '{}'",
+        "updated_at": "TEXT NOT NULL DEFAULT ''",
+    },
+    "service_runtime": {
+        "service_run_id": "TEXT NOT NULL DEFAULT ''",
+        "owner_token": "TEXT NOT NULL DEFAULT ''",
+        "pid": "INTEGER NOT NULL DEFAULT 0",
+        "hostname": "TEXT NOT NULL DEFAULT ''",
+        "status": "TEXT NOT NULL DEFAULT 'stopped'",
+        "tick_id": "INTEGER NOT NULL DEFAULT 0",
+        "active_batch_id": "TEXT",
+        "pending_job_count": "INTEGER NOT NULL DEFAULT 0",
+        "consecutive_failures": "INTEGER NOT NULL DEFAULT 0",
+        "cooldown_until": "TEXT",
+        "last_heartbeat_at": "TEXT",
+        "last_success_at": "TEXT",
+        "last_error": "TEXT",
+        "persona_url": "TEXT",
+        "persona_wait_started_at": "TEXT",
+        "persona_last_notification_at": "TEXT",
+        "counters_json": "TEXT NOT NULL DEFAULT '{}'",
+        "lock_expires_at": "TEXT",
+        "started_at": "TEXT NOT NULL DEFAULT ''",
         "updated_at": "TEXT NOT NULL DEFAULT ''",
     },
 }

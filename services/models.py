@@ -208,3 +208,37 @@ class ClosedLoopRunSummary:
     backend: str
     status: str
     rounds: tuple[ClosedLoopRoundSummary, ...]
+
+
+@dataclass(slots=True, frozen=True)
+class ServiceCounters:
+    generated: int = 0
+    submitted: int = 0
+    completed: int = 0
+    failed: int = 0
+    quarantined: int = 0
+
+
+@dataclass(slots=True, frozen=True)
+class ServiceTickOutcome:
+    status: str
+    pending_job_count: int = 0
+    active_batch_id: str | None = None
+    next_sleep_seconds: int = 0
+    generated_count: int = 0
+    submitted_count: int = 0
+    completed_count: int = 0
+    failed_count: int = 0
+    quarantined_count: int = 0
+    last_error: str | None = None
+    persona_url: str | None = None
+    cooldown_until: str | None = None
+
+
+@dataclass(slots=True, frozen=True)
+class ServiceRunSummary:
+    run_id: str
+    service_name: str
+    status: str
+    ticks_executed: int
+    pending_job_count: int
