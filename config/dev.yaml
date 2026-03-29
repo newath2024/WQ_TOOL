@@ -192,7 +192,7 @@ brain:
   poll_interval_seconds: 5
   timeout_seconds: 120
   max_retries: 2
-  batch_size: 10
+  batch_size: 3
   manual_export_dir: outputs/brain_manual
   api_base_url: "https://api.worldquantbrain.com"
   api_auth_env: BRAIN_API_TOKEN
@@ -209,7 +209,7 @@ brain:
 loop:
   rounds: 3
   generation_batch_size: 40
-  simulation_batch_size: 10
+  simulation_batch_size: 3
   poll_interval_seconds: 5
   timeout_seconds: 120
   mutate_top_k: 5
@@ -222,7 +222,7 @@ service:
   tick_interval_seconds: 5
   idle_sleep_seconds: 15
   poll_interval_seconds: 5
-  max_pending_jobs: 10
+  max_pending_jobs: 3
   max_consecutive_failures: 5
   cooldown_seconds: 120
   heartbeat_interval_seconds: 15
