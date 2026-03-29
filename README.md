@@ -111,19 +111,24 @@ Export CSV co:
 - status/result polling hooks
 - interactive login bang email/password
 - support Persona/face-scan khi BRAIN yeu cau
+- doc credential tu `secrets/brain_credentials.json`
+- gui link Persona qua mail neu SMTP da cau hinh
+- tu dong polling Persona trong che do headless
 - local session-cookie cache de tai su dung giua cac command
 
 Khuyen nghi:
 
 1. dat `brain.backend: api`
 2. chay `python main.py brain-login --config <config>.yaml`
-3. nhap email/password trong terminal
+3. nhap email/password trong terminal, hoac luu trong `secrets/brain_credentials.json`
 4. neu BRAIN yeu cau Persona, mo URL va quet mat
-5. session cookie se duoc luu vao `brain.session_path`
+5. neu da cau hinh SMTP, tool gui link Persona qua mail va tu dong doi ban xac thuc
+6. session cookie se duoc luu vao `brain.session_path`
 
 Luu y bao mat:
 
 - tool khong luu password
+- neu ban muon chay 24/7, hay luu BRAIN credential + SMTP app password trong `secrets/brain_credentials.json`
 - tool co the luu session cookie cuc bo de tai su dung
 - mac dinh file session nam trong `outputs/`, da duoc `.gitignore`
 

@@ -34,9 +34,11 @@ Nhung no KHONG thay the BRAIN simulation trong closed-loop moi.
 Neu backend la `api` va chua co session:
 
 1. chay `brain-login`, hoac
-2. de `run-brain-sim` / `run-closed-loop` tu prompt email/password
+2. de `run-brain-sim` / `run-closed-loop` tu doc `secrets/brain_credentials.json`
 3. neu BRAIN yeu cau Persona, tool se dua URL de ban quet mat
-4. sau khi xac thuc xong, session cookie duoc tai su dung cho cac command sau
+4. neu credentials file co SMTP config, tool se gui link Persona qua mail
+5. tool tu dong polling cho den khi ban quet mat xong
+6. sau khi xac thuc xong, session cookie duoc tai su dung cho cac command sau
 
 `export-brain-candidates`:
 

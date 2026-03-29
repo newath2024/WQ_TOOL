@@ -76,9 +76,12 @@ brain:
   api_auth_env: BRAIN_API_TOKEN
   email_env: BRAIN_API_EMAIL
   password_env: BRAIN_API_PASSWORD
+  credentials_file: secrets/brain_credentials.json
   session_path: outputs/brain_api_session.json
   auth_expiry_seconds: 14400
   open_browser_for_persona: true
+  persona_poll_interval_seconds: 15
+  persona_timeout_seconds: 1800
   rate_limit_per_minute: 60
 ```
 
@@ -88,9 +91,44 @@ Y nghia:
 - `manual_export_dir`: noi ghi CSV de submit thu cong
 - `api_base_url`/`api_auth_env`: de san cho backend API
 - `email_env`/`password_env`: bien moi truong tuy chon; neu khong co, tool se prompt trong terminal
+- `credentials_file`: file JSON local de luu `brain.email`, `brain.password`, va SMTP config cho Persona mail
 - `session_path`: file luu session cookie sau khi login thanh cong
 - `auth_expiry_seconds`: xin session toi da 14400 giay theo tai lieu BRAIN
 - `open_browser_for_persona`: tu mo URL neu BRAIN yeu cau quet mat
+- `persona_poll_interval_seconds`: tan suat polling link Persona trong che do headless
+- `persona_timeout_seconds`: thoi gian cho toi da de doi ban quet mat
+
+## File credentials local
+
+Tool mac dinh doc file `secrets/brain_credentials.json`; mau tham khao nam o `secrets/brain_credentials.example.json`.
+
+File nay da duoc them vao `.gitignore`, nen ban co the luu credential local ma khong bi commit.
+
+Mau JSON:
+
+```json
+{
+  "brain": {
+    "email": "your-brain-email@example.com",
+    "password": "your-brain-password"
+  },
+  "persona_notification": {
+    "smtp_host": "smtp.gmail.com",
+    "smtp_port": 587,
+    "smtp_username": "your-mail@gmail.com",
+    "smtp_password": "your-app-password",
+    "from_email": "your-mail@gmail.com",
+    "to_email": "your-mail@gmail.com",
+    "use_tls": true
+  }
+}
+```
+
+Neu ban muon chay 24/7:
+
+1. dien `brain.email` va `brain.password`
+2. dien SMTP credential de gui mail
+3. khi BRAIN tra ve `persona`, tool se gui link qua mail va tu dong polling cho den khi ban quet mat xong
 
 ## Dang nhap API tu terminal
 
@@ -107,8 +145,9 @@ Tool se:
 1. prompt email
 2. prompt password bang `getpass`
 3. neu BRAIN tra ve `persona`, in URL va co the mo browser
-4. cho ban quet mat
-5. luu session cookie vao `brain.session_path`
+4. neu `credentials_file` co SMTP config, gui link Persona qua mail
+5. tu dong polling cho den khi ban quet mat xong hoac het timeout
+6. luu session cookie vao `brain.session_path`
 
 ### Cach 2: dung bien moi truong
 
