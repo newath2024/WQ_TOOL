@@ -5,7 +5,7 @@
 The local BRAIN API documentation bundled in this repo documents `/authentication`, `/simulations`, and `/alphas`, but it does not document stable public endpoints for the Data Explorer tables. Because of that, the safest approach is:
 
 1. Sign in to WorldQuant BRAIN in your normal browser session.
-2. Open the exact `Datasets` or dataset `Fields` page you want.
+2. Open the exact `Datasets`, dataset `Fields`, or `Learn -> Operators` page you want.
 3. Set `region`, `delay`, `universe`, search filters, and page size in the UI first.
 4. Run the browser-side exporter script from this repo.
 
@@ -101,6 +101,14 @@ For dataset catalog pages:
 For dataset field pages:
 
 - export one file per dataset id and settings combination
+
+For operator catalog pages:
+
+- open `Learn -> Operators`
+- optionally filter by `Scope`
+- run the exporter on the rendered table
+- the script will use DOM mode automatically for this page type
+- the script will also expand visible `Show more` panels before scraping so the exported `Description` includes the detailed explanation and examples when available
 
 Suggested naming is automatic. For committed public metadata snapshots in this repo, move them into a dated folder such as:
 

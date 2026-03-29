@@ -8,7 +8,8 @@
  * 4. Fall back to DOM scraping if API access is unavailable.
  *
  * Usage:
- * - Open a datasets page or a dataset fields page in WorldQuant BRAIN.
+ * - Open a datasets page, dataset fields page, or learn/operators page in
+ *   WorldQuant BRAIN.
  * - Set region/delay/universe/search filters first.
  * - Open DevTools -> Console.
  * - Paste this script and press Enter.
@@ -33,6 +34,8 @@
   const MAX_API_RETRIES = 6;
   const MAX_DOM_NEXT_RETRIES = 4;
   const DOM_SETTLE_MS = 1800;
+  const OPERATOR_EXPAND_SETTLE_MS = 350;
+  const MAX_OPERATOR_EXPAND_CLICKS = 200;
   const DEFAULT_DATASET_HEADERS = [
     "Dataset",
     "Fields",
@@ -51,6 +54,7 @@
     "Date Coverage",
     "Alphas",
   ];
+  const DEFAULT_OPERATOR_HEADERS = ["Operator", "Scope", "Description"];
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const nowIso = () => new Date().toISOString();
@@ -59,6 +63,43 @@
     String(value || "")
       .replace(/\s+/g, " ")
       .trim();
+
+  const cleanCellText = (cell) => {
+    if (!cell) {
+      return "";
+    }
+    const clone = cell.cloneNode(true);
+    for (const button of clone.querySelectorAll("button, [role='button'], a")) {
+      const text = normalizeText(button.textContent);
+      if (/^show\s+(more|less)$/i.test(text)) {
+        button.remove();
+      }
+    }
+    return normalizeText(clone.textContent);
+  };
+
+  const isVisibleElement = (element) => {
+    if (!element || !(element instanceof Element)) {
+      return false;
+    }
+    const style = window.getComputedStyle(element);
+    if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity || "1") === 0) {
+      return false;
+    }
+    const rect = element.getBoundingClientRect();
+    return rect.width > 0 && rect.height > 0;
+  };
+
+  const getDirectCells = (row) => {
+    if (!row) {
+      return [];
+    }
+    const scoped = row.querySelectorAll(":scope > td, :scope > th");
+    if (scoped.length) {
+      return [...scoped];
+    }
+    return [...row.children].filter((child) => /^(TD|TH)$/i.test(child.tagName));
+  };
 
   const slugify = (value) =>
     String(value || "wq_export")
@@ -192,6 +233,9 @@
 
   const inferPageTypeFromUrl = () => {
     const current = new URL(window.location.href);
+    if (/^\/learn\/operators\/?$/.test(current.pathname)) {
+      return "operators";
+    }
     return /^\/data\/data-sets\/([^/?#]+)/.test(current.pathname) ? "dataset_fields" : "datasets";
   };
 
@@ -288,6 +332,16 @@
     const current = new URL(window.location.href);
     const query = new URLSearchParams(current.search);
     const fieldPageMatch = current.pathname.match(/^\/data\/data-sets\/([^/?#]+)/);
+    const operatorPageMatch = current.pathname.match(/^\/learn\/operators\/?$/);
+
+    if (operatorPageMatch) {
+      return {
+        endpoint: "",
+        query,
+        pageType: "operators",
+        datasetId: "",
+      };
+    }
 
     if (fieldPageMatch) {
       query.set("dataset.id", fieldPageMatch[1]);
@@ -360,6 +414,9 @@
   const exportViaApi = async (baseName) => {
     const current = new URL(window.location.href);
     const requestSpec = resolveApiRequestSpec();
+    if (requestSpec.pageType === "operators") {
+      throw new Error("[WQ export] Operators page does not have a verified API export path. Use DOM mode.");
+    }
     const limit = Number(requestSpec.query.get("limit") || current.searchParams.get("limit") || DEFAULT_LIMIT);
     let offset = Number(requestSpec.query.get("offset") || current.searchParams.get("offset") || "0");
     let totalCount = null;
@@ -443,6 +500,7 @@
   };
 
   const getDomHeaderRow = () => {
+    const pageType = inferPageTypeFromUrl();
     const candidates = [
       ...document.querySelectorAll(".rt-thead .rt-tr"),
       ...document.querySelectorAll(".rt-table .rt-tr"),
@@ -453,22 +511,72 @@
     return (
       candidates.find((row) => {
         const text = normalizeText(row.textContent);
+        if (pageType === "operators") {
+          return /\boperator\b/i.test(text) && /\bscope\b/i.test(text) && /\bdescription\b/i.test(text);
+        }
         return /\b(field|dataset)\b/i.test(text) && /\b(description|coverage|alphas)\b/i.test(text);
       }) || null
     );
   };
 
   const getDomHeaders = (headerRow) => {
-    const cells = [
-      ...headerRow.querySelectorAll(".rt-th"),
-      ...headerRow.querySelectorAll('[role="columnheader"]'),
-      ...headerRow.querySelectorAll("th"),
-      ...headerRow.children,
-    ];
+    const directCells = getDirectCells(headerRow);
+    const cells = directCells.length
+      ? directCells
+      : [
+          ...headerRow.querySelectorAll(".rt-th"),
+          ...headerRow.querySelectorAll('[role="columnheader"]'),
+          ...headerRow.querySelectorAll("th"),
+          ...headerRow.children,
+        ];
     return cells.map((cell, index) => normalizeText(cell.textContent) || `column_${index + 1}`);
   };
 
+  const getOperatorsMainTable = () => {
+    const tables = [...document.querySelectorAll("table")];
+    return (
+      tables.find((table) => {
+        const headerRow = table.querySelector("thead tr");
+        const headerText = normalizeText(headerRow?.textContent || "");
+        return /\boperator\b/i.test(headerText) && /\bscope\b/i.test(headerText) && /\bdescription\b/i.test(headerText);
+      }) || null
+    );
+  };
+
+  const getOperatorsContentRoot = () => {
+    const heading =
+      [...document.querySelectorAll("h1, h2, h3, [role='heading']")]
+        .find((node) => /^operators$/i.test(normalizeText(node.textContent))) || null;
+    return (
+      heading?.closest("main, section, article, div") ||
+      document.querySelector("main") ||
+      document.body
+    );
+  };
+
+  const getOperatorDomRows = () => {
+    const mainTable = getOperatorsMainTable();
+    const bodyRows = [...(mainTable?.querySelector("tbody")?.children || [])].filter((row) => {
+      const cells = getDirectCells(row);
+      return cells.length >= 3;
+    });
+    if (bodyRows.length) {
+      return bodyRows;
+    }
+
+    const roleRows = [...document.querySelectorAll('[role="row"]')].filter((row) => {
+      const cells = row.querySelectorAll(":scope > [role='gridcell'], :scope > [role='cell']");
+      return cells.length >= 3 && !/\boperator\b\s*\bscope\b\s*\bdescription\b/i.test(normalizeText(row.textContent));
+    });
+    return roleRows;
+  };
+
   const getDomBodyRows = (headers) => {
+    const pageType = inferPageTypeFromUrl();
+    if (pageType === "operators") {
+      return getOperatorDomRows();
+    }
+
     const reactTableGroups = [...document.querySelectorAll(".rt-tbody .rt-tr-group")];
     if (reactTableGroups.length) {
       return reactTableGroups
@@ -537,10 +645,70 @@
 
   const clickElement = (element) => {
     element.scrollIntoView({ block: "center", inline: "center" });
+    if (typeof element.focus === "function") {
+      element.focus();
+    }
+    if (typeof element.click === "function") {
+      element.click();
+    }
     element.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
     element.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
     element.dispatchEvent(new MouseEvent("mouseup", { bubbles: true }));
     element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+  };
+
+  const getOperatorShowMoreButtons = () => {
+    const roots = [getOperatorsMainTable(), getOperatorsContentRoot(), document.body].filter(Boolean);
+    const seen = new Set();
+    const buttons = [];
+
+    for (const root of roots) {
+      for (const node of root.querySelectorAll("button, [role='button'], a, span, div")) {
+        const text = normalizeText(node.textContent);
+        if (!/show more/i.test(text)) {
+          continue;
+        }
+        const clickable = node.closest("button, [role='button'], a") || node;
+        if (!isVisibleElement(clickable) || seen.has(clickable)) {
+          continue;
+        }
+        seen.add(clickable);
+        buttons.push(clickable);
+      }
+      if (buttons.length) {
+        break;
+      }
+    }
+
+    return buttons;
+  };
+
+  const expandOperatorDetails = async () => {
+    let expanded = 0;
+    let pass = 0;
+    while (expanded < MAX_OPERATOR_EXPAND_CLICKS) {
+      const buttons = getOperatorShowMoreButtons();
+      if (!buttons.length) {
+        if (!expanded) {
+          console.log("[WQ export] No visible Show more buttons found on operators page.");
+        }
+        break;
+      }
+      pass += 1;
+      console.log(`[WQ export] Operator expand pass ${pass}: found ${buttons.length} Show more button(s).`);
+      for (const button of buttons) {
+        if (expanded >= MAX_OPERATOR_EXPAND_CLICKS) {
+          break;
+        }
+        clickElement(button);
+        expanded += 1;
+        await sleep(OPERATOR_EXPAND_SETTLE_MS);
+      }
+    }
+    if (expanded) {
+      console.log(`[WQ export] Expanded ${expanded} operator detail panel(s).`);
+      await sleep(DOM_SETTLE_MS);
+    }
   };
 
   const exportViaDom = async (baseName) => {
@@ -550,6 +718,8 @@
       ? getDomHeaders(headerRow)
       : pageType === "dataset_fields"
         ? DEFAULT_FIELD_HEADERS
+        : pageType === "operators"
+          ? DEFAULT_OPERATOR_HEADERS
         : DEFAULT_DATASET_HEADERS;
     const exportHeaders = [...headers, "__page"];
     const collectedRows = [];
@@ -565,19 +735,26 @@
     }
 
     while (true) {
+      if (pageType === "operators") {
+        await expandOperatorDetails();
+      }
+
       const rows = getDomBodyRows(headers);
       if (!rows.length) {
         throw new Error("[WQ export] No body rows found in DOM fallback mode.");
       }
 
       const pageRows = rows.map((row) => {
-        const cells = [
-          ...row.querySelectorAll(".rt-td"),
-          ...row.querySelectorAll('[role="gridcell"],[role="cell"]'),
-          ...row.querySelectorAll("td"),
-        ];
+        const directCells = getDirectCells(row);
+        const cells = directCells.length
+          ? directCells
+          : [
+              ...row.querySelectorAll(".rt-td"),
+              ...row.querySelectorAll('[role="gridcell"],[role="cell"]'),
+              ...row.querySelectorAll("td"),
+            ];
         const payload = Object.fromEntries(
-          headers.map((header, index) => [header, normalizeText(cells[index]?.textContent || "")]),
+          headers.map((header, index) => [header, cleanCellText(cells[index])]),
         );
         payload.__page = currentPage;
         return payload;
