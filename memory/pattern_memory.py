@@ -47,11 +47,17 @@ class GeneObservation:
 class StructuralSignature:
     operators: tuple[str, ...]
     operator_families: tuple[str, ...]
+    operator_path: tuple[str, ...]
     fields: tuple[str, ...]
+    field_families: tuple[str, ...]
     lookbacks: tuple[int, ...]
     wrappers: tuple[str, ...]
     depth: int
     complexity: int
+    complexity_bucket: str
+    horizon_bucket: str
+    turnover_bucket: str
+    motif: str
     family_signature: str
     subexpressions: tuple[str, ...]
 
@@ -88,6 +94,7 @@ class MemoryParent:
     fail_tags: tuple[str, ...]
     success_tags: tuple[str, ...]
     mutation_hints: tuple[str, ...]
+    structural_signature: StructuralSignature | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -117,25 +124,58 @@ class PatternMemoryService:
             }
         )
 
-    def extract_signature(self, expression: str) -> StructuralSignature:
+    def extract_signature(
+        self,
+        expression: str,
+        *,
+        generation_metadata: dict | None = None,
+        field_categories: dict[str, str] | None = None,
+    ) -> StructuralSignature:
         node = parse_expression(expression)
-        operators = tuple(sorted(set(self._collect_operators(node))))
+        operator_path = tuple(self._collect_operators(node))
+        operators = tuple(sorted(set(operator_path)))
         operator_families = tuple(sorted({self._operator_family(operator) for operator in operators}))
         fields = tuple(sorted(set(self._collect_fields(node))))
+        field_families = self._resolve_field_families(
+            fields,
+            generation_metadata=generation_metadata,
+            field_categories=field_categories,
+        )
         lookbacks = tuple(sorted(set(self._collect_lookbacks(node))))
         wrappers = tuple(self._collect_wrappers(node))
         depth = node_depth(node)
         complexity = node_complexity(node)
+        complexity_bucket = self._complexity_bucket(complexity)
+        horizon_bucket = self._horizon_bucket(lookbacks)
+        motif = str((generation_metadata or {}).get("motif") or (generation_metadata or {}).get("template_name") or "")
+        turnover_bucket = str((generation_metadata or {}).get("turnover_bucket") or self._estimate_turnover_bucket(operators))
         subexpressions = tuple(sorted(set(self._collect_subexpressions(node))))
-        family_signature = self._build_family_signature(operators, fields, lookbacks, wrappers, depth)
+        family_signature = self._build_family_signature(
+            operators,
+            fields,
+            lookbacks,
+            wrappers,
+            depth,
+            field_families=field_families,
+            motif=motif,
+            horizon_bucket=horizon_bucket,
+            turnover_bucket=turnover_bucket,
+            complexity_bucket=complexity_bucket,
+        )
         return StructuralSignature(
             operators=operators,
             operator_families=operator_families,
+            operator_path=operator_path,
             fields=fields,
+            field_families=field_families,
             lookbacks=lookbacks,
             wrappers=wrappers,
             depth=depth,
             complexity=complexity,
+            complexity_bucket=complexity_bucket,
+            horizon_bucket=horizon_bucket,
+            turnover_bucket=turnover_bucket,
+            motif=motif,
             family_signature=family_signature,
             subexpressions=subexpressions,
         )
@@ -146,25 +186,50 @@ class PatternMemoryService:
         *,
         template_name: str | None = None,
         rejection_reasons: Iterable[str] | None = None,
+        generation_metadata: dict | None = None,
+        success_tags: Iterable[str] | None = None,
+        fail_tags: Iterable[str] | None = None,
     ) -> list[GeneObservation]:
         observations: list[GeneObservation] = []
         observations.append(self._make_observation("family", signature.family_signature))
+        if signature.motif:
+            observations.append(self._make_observation("motif", signature.motif))
         for operator in signature.operators:
             observations.append(self._make_observation("operator", operator))
         for operator_family in signature.operator_families:
             observations.append(self._make_observation("operator_family", operator_family))
+        if signature.operator_path:
+            observations.append(self._make_observation("operator_path", ">".join(signature.operator_path)))
         for field in signature.fields:
             observations.append(self._make_observation("field", field))
+        for field_family in signature.field_families:
+            observations.append(self._make_observation("field_family", field_family))
         for lookback in signature.lookbacks:
             observations.append(self._make_observation("lookback", str(lookback)))
         for wrapper in signature.wrappers:
             observations.append(self._make_observation("wrapper", wrapper))
+        if signature.complexity_bucket:
+            observations.append(self._make_observation("complexity_bucket", signature.complexity_bucket))
+        if signature.horizon_bucket:
+            observations.append(self._make_observation("horizon_bucket", signature.horizon_bucket))
+        if signature.turnover_bucket:
+            observations.append(self._make_observation("turnover_bucket", signature.turnover_bucket))
         for subexpression in signature.subexpressions:
             observations.append(self._make_observation("subexpression", subexpression))
-        if template_name:
-            observations.append(self._make_observation("template", template_name))
+        resolved_template = str((generation_metadata or {}).get("motif") or template_name or "")
+        if resolved_template:
+            observations.append(self._make_observation("template", resolved_template))
+        mutation_mode = str((generation_metadata or {}).get("mutation_mode") or "")
+        if mutation_mode:
+            observations.append(self._make_observation("mutation_mode", mutation_mode))
+        for tag in (generation_metadata or {}).get("operator_semantic_tags", []) or []:
+            observations.append(self._make_observation("operator_semantic_tag", str(tag)))
         for reason in rejection_reasons or []:
             observations.append(self._make_observation("rejection_reason", reason))
+        for tag in success_tags or []:
+            observations.append(self._make_observation("success_tag", tag))
+        for tag in fail_tags or []:
+            observations.append(self._make_observation("fail_tag", tag))
         deduped = {(item.pattern_kind, item.pattern_value): item for item in observations}
         return list(deduped.values())
 
@@ -229,9 +294,16 @@ class PatternMemoryService:
         expression: str,
         snapshot: PatternMemorySnapshot,
         min_pattern_support: int,
+        *,
+        generation_metadata: dict | None = None,
+        field_categories: dict[str, str] | None = None,
     ) -> tuple[float, float, StructuralSignature, list[GeneObservation]]:
-        signature = self.extract_signature(expression)
-        observations = self.build_observations(signature)
+        signature = self.extract_signature(
+            expression,
+            generation_metadata=generation_metadata,
+            field_categories=field_categories,
+        )
+        observations = self.build_observations(signature, generation_metadata=generation_metadata)
         scores: list[float] = []
         novelty_scores: list[float] = []
         for observation in observations:
@@ -315,13 +387,24 @@ class PatternMemoryService:
         lookbacks: tuple[int, ...],
         wrappers: tuple[str, ...],
         depth: int,
+        *,
+        field_families: tuple[str, ...],
+        motif: str,
+        horizon_bucket: str,
+        turnover_bucket: str,
+        complexity_bucket: str,
     ) -> str:
         payload = {
             "operators": operators,
             "fields": fields,
+            "field_families": field_families,
             "lookbacks": lookbacks,
             "wrappers": wrappers[:3],
             "depth_bucket": min(depth, 6),
+            "motif": motif,
+            "horizon_bucket": horizon_bucket,
+            "turnover_bucket": turnover_bucket,
+            "complexity_bucket": complexity_bucket,
         }
         return json.dumps(payload, sort_keys=True, separators=(",", ":"))
 
@@ -331,3 +414,59 @@ class PatternMemoryService:
         if self.registry.contains(operator_name):
             return self.registry.family_for(operator_name)
         return "other"
+
+    def _resolve_field_families(
+        self,
+        fields: tuple[str, ...],
+        *,
+        generation_metadata: dict | None,
+        field_categories: dict[str, str] | None,
+    ) -> tuple[str, ...]:
+        metadata = generation_metadata or {}
+        payload = metadata.get("field_families")
+        if isinstance(payload, list) and payload:
+            return tuple(sorted({str(item) for item in payload if str(item)}))
+        categories = field_categories or {}
+        resolved = {
+            str(categories.get(field) or ("group" if field in {"sector", "industry", "country", "subindustry"} else "other"))
+            for field in fields
+        }
+        return tuple(sorted(item for item in resolved if item))
+
+    def _complexity_bucket(self, complexity: int) -> str:
+        if complexity <= 5:
+            return "simple"
+        if complexity <= 10:
+            return "moderate"
+        if complexity <= 16:
+            return "layered"
+        return "complex"
+
+    def _horizon_bucket(self, lookbacks: tuple[int, ...]) -> str:
+        if not lookbacks:
+            return "unknown"
+        max_window = max(lookbacks)
+        if max_window <= 3:
+            return "very_short"
+        if max_window <= 10:
+            return "short"
+        if max_window <= 20:
+            return "medium"
+        return "long"
+
+    def _estimate_turnover_bucket(self, operators: tuple[str, ...]) -> str:
+        hints = [
+            self.registry.get(operator).turnover_hint
+            for operator in operators
+            if self.registry.contains(operator)
+        ]
+        if not hints:
+            return "balanced"
+        average_hint = sum(hints) / len(hints)
+        if average_hint <= -0.15:
+            return "low"
+        if average_hint <= 0.15:
+            return "balanced"
+        if average_hint <= 0.50:
+            return "active"
+        return "very_active"

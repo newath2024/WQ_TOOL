@@ -8,8 +8,10 @@ from io import StringIO
 import pandas as pd
 
 from evaluation.critic import AlphaDiagnosis
-from memory.pattern_memory import MemoryParent, PatternMemoryService, PatternMemorySnapshot, PatternScore
+from memory.case_memory import CaseMemoryService, ObjectiveVector
+from memory.pattern_memory import MemoryParent, PatternMemoryService, PatternMemorySnapshot, PatternScore, StructuralSignature
 from storage.models import (
+    AlphaCaseRecord,
     AlphaDiagnosisRecord,
     AlphaHistoryRecord,
     AlphaPatternMembershipRecord,
@@ -21,6 +23,7 @@ class AlphaHistoryStore:
     def __init__(self, connection: sqlite3.Connection, memory_service: PatternMemoryService) -> None:
         self.connection = connection
         self.memory_service = memory_service
+        self.case_memory_service = CaseMemoryService()
 
     def persist_evaluations(
         self,
@@ -34,6 +37,7 @@ class AlphaHistoryStore:
         history_records: list[AlphaHistoryRecord] = []
         diagnosis_records: list[AlphaDiagnosisRecord] = []
         membership_records: list[AlphaPatternMembershipRecord] = []
+        case_records: list[AlphaCaseRecord] = []
 
         for evaluation in evaluations:
             self.connection.execute(
@@ -56,6 +60,9 @@ class AlphaHistoryStore:
                     evaluation.structural_signature,
                     template_name=evaluation.candidate.template_name,
                     rejection_reasons=evaluation.rejection_reasons,
+                    generation_metadata=evaluation.candidate.generation_metadata,
+                    success_tags=diagnosis.success_tags,
+                    fail_tags=diagnosis.fail_tags,
                 )
                 if evaluation.structural_signature
                 else []
@@ -136,10 +143,35 @@ class AlphaHistoryStore:
                         created_at=created_at,
                     )
                 )
+            if evaluation.structural_signature:
+                case_records.append(
+                    self._build_case_record(
+                        run_id=run_id,
+                        regime_key=regime_key,
+                        candidate=evaluation.candidate,
+                        structural_signature=evaluation.structural_signature,
+                        metric_source="local_backtest",
+                        fail_tags=diagnosis.fail_tags,
+                        success_tags=diagnosis.success_tags,
+                        objective_vector=ObjectiveVector(
+                            fitness=float(evaluation.split_metrics["validation"].fitness),
+                            sharpe=float(evaluation.split_metrics["validation"].sharpe),
+                            eligibility=1.0 if evaluation.submission_passes > 0 else 0.0,
+                            robustness=float(evaluation.stability_score),
+                            novelty=float(evaluation.behavioral_novelty_score),
+                            diversity=float(evaluation.behavioral_novelty_score),
+                            turnover_cost=min(1.0, max(0.0, float(evaluation.split_metrics["validation"].turnover) / 3.0)),
+                            complexity_cost=min(1.0, max(0.0, float(evaluation.candidate.complexity) / 20.0)),
+                        ),
+                        outcome_score=float(evaluation.outcome_score),
+                        created_at=created_at,
+                    )
+                )
 
         self._upsert_history(history_records)
         self._replace_diagnoses(diagnosis_records)
         self._replace_memberships(membership_records)
+        self._upsert_cases(case_records)
         self._rebuild_pattern_scores(regime_key=regime_key, pattern_decay=pattern_decay, prior_weight=prior_weight)
         self.connection.commit()
 
@@ -155,6 +187,7 @@ class AlphaHistoryStore:
         history_records: list[AlphaHistoryRecord] = []
         diagnosis_records: list[AlphaDiagnosisRecord] = []
         membership_records: list[AlphaPatternMembershipRecord] = []
+        case_records: list[AlphaCaseRecord] = []
         empty_signal_json = pd.DataFrame().to_json(orient="split", date_format="iso")
         empty_returns_json = pd.Series(dtype=float).to_json(orient="split", date_format="iso")
 
@@ -174,6 +207,9 @@ class AlphaHistoryStore:
                 structural_signature,
                 template_name=candidate.template_name,
                 rejection_reasons=rejection_reasons,
+                generation_metadata=candidate.generation_metadata,
+                success_tags=diagnosis.success_tags,
+                fail_tags=diagnosis.fail_tags,
             )
             metrics_payload = {
                 "sharpe": result.metrics.get("sharpe"),
@@ -255,10 +291,34 @@ class AlphaHistoryStore:
                         created_at=created_at,
                     )
                 )
+            case_records.append(
+                self._build_case_record(
+                    run_id=run_id,
+                    regime_key=regime_key,
+                    candidate=candidate,
+                    structural_signature=structural_signature,
+                    metric_source=str(entry.get("metric_source") or "external_brain"),
+                    fail_tags=diagnosis.fail_tags,
+                    success_tags=diagnosis.success_tags,
+                    objective_vector=ObjectiveVector(
+                        fitness=float(result.metrics.get("fitness") or 0.0),
+                        sharpe=float(result.metrics.get("sharpe") or 0.0),
+                        eligibility=1.0 if result.submission_eligible else 0.0,
+                        robustness=1.0 if not result.rejection_reason else 0.0,
+                        novelty=float(entry.get("behavioral_novelty_score", 0.5)),
+                        diversity=float(entry.get("behavioral_novelty_score", 0.5)),
+                        turnover_cost=min(1.0, max(0.0, float(result.metrics.get("turnover") or 0.0) / 2.0)),
+                        complexity_cost=min(1.0, max(0.0, float(candidate.complexity) / 20.0)),
+                    ),
+                    outcome_score=float(entry["outcome_score"]),
+                    created_at=created_at,
+                )
+            )
 
         self._upsert_history(history_records)
         self._replace_diagnoses(diagnosis_records)
         self._replace_memberships(membership_records)
+        self._upsert_cases(case_records)
         self._rebuild_pattern_scores(regime_key=regime_key, pattern_decay=pattern_decay, prior_weight=prior_weight)
         self.connection.commit()
 
@@ -312,6 +372,26 @@ class AlphaHistoryStore:
             top_parents=top_parents,
             fail_tag_counts=fail_tag_counts,
         )
+
+    def load_case_snapshot(self, regime_key: str, limit: int = 500):
+        rows = self.connection.execute(
+            """
+            SELECT *
+            FROM alpha_cases
+            WHERE regime_key = ?
+            ORDER BY created_at DESC, outcome_score DESC
+            LIMIT ?
+            """,
+            (regime_key, limit),
+        ).fetchall()
+        records = [
+            self.case_memory_service.record_from_persisted_payload(
+                row=dict(row),
+                structural_signature=self._structural_signature_from_json(row["structural_signature_json"]),
+            )
+            for row in rows
+        ]
+        return self.case_memory_service.build_snapshot(regime_key, records)
 
     def get_novelty_references(self, regime_key: str, limit: int) -> list[dict]:
         rows = self.connection.execute(
@@ -519,6 +599,60 @@ class AlphaHistoryStore:
                 ),
             )
 
+    def _upsert_cases(self, records: list[AlphaCaseRecord]) -> None:
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO alpha_cases
+                (run_id, alpha_id, regime_key, metric_source, family_signature, structural_signature_json, genome_hash, genome_json,
+                 motif, field_families_json, operator_path_json, complexity_bucket, turnover_bucket, horizon_bucket, mutation_mode,
+                 parent_family_signatures_json, fail_tags_json, success_tags_json, objective_vector_json, outcome_score, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(run_id, alpha_id, metric_source) DO UPDATE SET
+                    regime_key = excluded.regime_key,
+                    family_signature = excluded.family_signature,
+                    structural_signature_json = excluded.structural_signature_json,
+                    genome_hash = excluded.genome_hash,
+                    genome_json = excluded.genome_json,
+                    motif = excluded.motif,
+                    field_families_json = excluded.field_families_json,
+                    operator_path_json = excluded.operator_path_json,
+                    complexity_bucket = excluded.complexity_bucket,
+                    turnover_bucket = excluded.turnover_bucket,
+                    horizon_bucket = excluded.horizon_bucket,
+                    mutation_mode = excluded.mutation_mode,
+                    parent_family_signatures_json = excluded.parent_family_signatures_json,
+                    fail_tags_json = excluded.fail_tags_json,
+                    success_tags_json = excluded.success_tags_json,
+                    objective_vector_json = excluded.objective_vector_json,
+                    outcome_score = excluded.outcome_score,
+                    created_at = excluded.created_at
+                """,
+                (
+                    record.run_id,
+                    record.alpha_id,
+                    record.regime_key,
+                    record.metric_source,
+                    record.family_signature,
+                    record.structural_signature_json,
+                    record.genome_hash,
+                    record.genome_json,
+                    record.motif,
+                    record.field_families_json,
+                    record.operator_path_json,
+                    record.complexity_bucket,
+                    record.turnover_bucket,
+                    record.horizon_bucket,
+                    record.mutation_mode,
+                    record.parent_family_signatures_json,
+                    record.fail_tags_json,
+                    record.success_tags_json,
+                    record.objective_vector_json,
+                    record.outcome_score,
+                    record.created_at,
+                ),
+            )
+
     def _rebuild_pattern_scores(self, regime_key: str, pattern_decay: float, prior_weight: float) -> None:
         rows = self.connection.execute(
             """
@@ -604,6 +738,7 @@ class AlphaHistoryStore:
 
     def _memory_parent_from_row(self, row: sqlite3.Row) -> MemoryParent:
         summary = json.loads(row["diagnosis_summary_json"])
+        structural_signature = self._structural_signature_from_json(row["structural_signature_json"])
         return MemoryParent(
             run_id=row["run_id"],
             alpha_id=row["alpha_id"],
@@ -612,12 +747,99 @@ class AlphaHistoryStore:
             generation_mode=row["generation_mode"],
             generation_metadata=json.loads(row["generation_metadata_json"]),
             parent_refs=tuple(json.loads(row["parent_refs_json"])),
-            family_signature=json.loads(row["structural_signature_json"]).get("family_signature", ""),
+            family_signature=structural_signature.family_signature,
             outcome_score=float(row["outcome_score"]),
             behavioral_novelty_score=float(row["behavioral_novelty_score"]),
             fail_tags=tuple(summary.get("fail_tags", [])),
             success_tags=tuple(summary.get("success_tags", [])),
             mutation_hints=tuple(hint["hint"] for hint in summary.get("mutation_hints", [])),
+            structural_signature=structural_signature,
+        )
+
+    def _build_case_record(
+        self,
+        *,
+        run_id: str,
+        regime_key: str,
+        candidate,
+        structural_signature,
+        metric_source: str,
+        fail_tags: list[str] | tuple[str, ...],
+        success_tags: list[str] | tuple[str, ...],
+        objective_vector: ObjectiveVector,
+        outcome_score: float,
+        created_at: str,
+    ) -> AlphaCaseRecord:
+        metadata = dict(candidate.generation_metadata)
+        genome_payload = metadata.get("genome") if isinstance(metadata.get("genome"), dict) else {}
+        parent_family_signatures = [
+            str(parent.get("family_signature") or "")
+            for parent in metadata.get("parent_refs", [])
+            if parent.get("family_signature")
+        ]
+        return AlphaCaseRecord(
+            run_id=run_id,
+            alpha_id=candidate.alpha_id,
+            regime_key=regime_key,
+            metric_source=metric_source,
+            family_signature=structural_signature.family_signature,
+            structural_signature_json=json.dumps(structural_signature.to_dict(), sort_keys=True),
+            genome_hash=str(metadata.get("genome_hash") or ""),
+            genome_json=json.dumps(genome_payload, sort_keys=True),
+            motif=str(metadata.get("motif") or structural_signature.motif or candidate.template_name or ""),
+            field_families_json=json.dumps(list(structural_signature.field_families), sort_keys=True),
+            operator_path_json=json.dumps(list(structural_signature.operator_path), sort_keys=True),
+            complexity_bucket=structural_signature.complexity_bucket,
+            turnover_bucket=structural_signature.turnover_bucket,
+            horizon_bucket=structural_signature.horizon_bucket,
+            mutation_mode=str(metadata.get("mutation_mode") or candidate.generation_mode or ""),
+            parent_family_signatures_json=json.dumps(parent_family_signatures, sort_keys=True),
+            fail_tags_json=json.dumps(list(fail_tags), sort_keys=True),
+            success_tags_json=json.dumps(list(success_tags), sort_keys=True),
+            objective_vector_json=json.dumps(objective_vector.to_dict(), sort_keys=True),
+            outcome_score=float(outcome_score),
+            created_at=created_at,
+        )
+
+    def _structural_signature_from_json(self, payload: str) -> StructuralSignature:
+        values = json.loads(payload or "{}")
+        if not values.get("operators"):
+            return StructuralSignature(
+                operators=(),
+                operator_families=(),
+                operator_path=(),
+                fields=(),
+                field_families=(),
+                lookbacks=(),
+                wrappers=(),
+                depth=0,
+                complexity=0,
+                complexity_bucket="",
+                horizon_bucket="",
+                turnover_bucket="",
+                motif="",
+                family_signature="",
+                subexpressions=(),
+            )
+        return self._signature_from_payload(values)
+
+    def _signature_from_payload(self, payload: dict) -> StructuralSignature:
+        return StructuralSignature(
+            operators=tuple(payload.get("operators", ())),
+            operator_families=tuple(payload.get("operator_families", ())),
+            operator_path=tuple(payload.get("operator_path", ())),
+            fields=tuple(payload.get("fields", ())),
+            field_families=tuple(payload.get("field_families", ())),
+            lookbacks=tuple(payload.get("lookbacks", ())),
+            wrappers=tuple(payload.get("wrappers", ())),
+            depth=int(payload.get("depth", 0) or 0),
+            complexity=int(payload.get("complexity", 0) or 0),
+            complexity_bucket=str(payload.get("complexity_bucket", "")),
+            horizon_bucket=str(payload.get("horizon_bucket", "")),
+            turnover_bucket=str(payload.get("turnover_bucket", "")),
+            motif=str(payload.get("motif", "")),
+            family_signature=str(payload.get("family_signature", "")),
+            subexpressions=tuple(payload.get("subexpressions", ())),
         )
 
     def _metrics_to_dict(self, metrics) -> dict:

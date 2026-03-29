@@ -185,6 +185,34 @@ CREATE TABLE IF NOT EXISTS alpha_pattern_membership (
 CREATE INDEX IF NOT EXISTS idx_alpha_pattern_membership_regime
     ON alpha_pattern_membership(regime_key, pattern_kind, pattern_id);
 
+CREATE TABLE IF NOT EXISTS alpha_cases (
+    run_id TEXT NOT NULL,
+    alpha_id TEXT NOT NULL,
+    regime_key TEXT NOT NULL,
+    metric_source TEXT NOT NULL DEFAULT 'local_backtest',
+    family_signature TEXT NOT NULL DEFAULT '',
+    structural_signature_json TEXT NOT NULL DEFAULT '{}',
+    genome_hash TEXT NOT NULL DEFAULT '',
+    genome_json TEXT NOT NULL DEFAULT '{}',
+    motif TEXT NOT NULL DEFAULT '',
+    field_families_json TEXT NOT NULL DEFAULT '[]',
+    operator_path_json TEXT NOT NULL DEFAULT '[]',
+    complexity_bucket TEXT NOT NULL DEFAULT '',
+    turnover_bucket TEXT NOT NULL DEFAULT '',
+    horizon_bucket TEXT NOT NULL DEFAULT '',
+    mutation_mode TEXT NOT NULL DEFAULT '',
+    parent_family_signatures_json TEXT NOT NULL DEFAULT '[]',
+    fail_tags_json TEXT NOT NULL DEFAULT '[]',
+    success_tags_json TEXT NOT NULL DEFAULT '[]',
+    objective_vector_json TEXT NOT NULL DEFAULT '{}',
+    outcome_score REAL NOT NULL DEFAULT 0.0,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, alpha_id, metric_source)
+);
+
+CREATE INDEX IF NOT EXISTS idx_alpha_cases_regime_outcome
+    ON alpha_cases(regime_key, metric_source, outcome_score DESC);
+
 CREATE TABLE IF NOT EXISTS field_catalog (
     field_name TEXT PRIMARY KEY,
     dataset TEXT NOT NULL DEFAULT '',
@@ -396,6 +424,25 @@ REQUIRED_COLUMNS = {
     "alpha_history": {
         "rejection_reasons_json": "TEXT NOT NULL DEFAULT '[]'",
         "metric_source": "TEXT NOT NULL DEFAULT 'local_backtest'",
+    },
+    "alpha_cases": {
+        "metric_source": "TEXT NOT NULL DEFAULT 'local_backtest'",
+        "family_signature": "TEXT NOT NULL DEFAULT ''",
+        "structural_signature_json": "TEXT NOT NULL DEFAULT '{}'",
+        "genome_hash": "TEXT NOT NULL DEFAULT ''",
+        "genome_json": "TEXT NOT NULL DEFAULT '{}'",
+        "motif": "TEXT NOT NULL DEFAULT ''",
+        "field_families_json": "TEXT NOT NULL DEFAULT '[]'",
+        "operator_path_json": "TEXT NOT NULL DEFAULT '[]'",
+        "complexity_bucket": "TEXT NOT NULL DEFAULT ''",
+        "turnover_bucket": "TEXT NOT NULL DEFAULT ''",
+        "horizon_bucket": "TEXT NOT NULL DEFAULT ''",
+        "mutation_mode": "TEXT NOT NULL DEFAULT ''",
+        "parent_family_signatures_json": "TEXT NOT NULL DEFAULT '[]'",
+        "fail_tags_json": "TEXT NOT NULL DEFAULT '[]'",
+        "success_tags_json": "TEXT NOT NULL DEFAULT '[]'",
+        "objective_vector_json": "TEXT NOT NULL DEFAULT '{}'",
+        "outcome_score": "REAL NOT NULL DEFAULT 0.0",
     },
     "submission_batches": {
         "round_index": "INTEGER NOT NULL DEFAULT 0",

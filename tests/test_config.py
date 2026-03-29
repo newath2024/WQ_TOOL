@@ -105,3 +105,4 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert "ts_std_dev" in default_config.generation.allowed_operators
     assert "delta" not in default_config.generation.allowed_operators
     assert "correlation" not in default_config.generation.allowed_operators
+    assert default_config.generation.operator_catalog_paths

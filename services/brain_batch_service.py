@@ -48,11 +48,15 @@ class BrainBatchService:
         research_context = load_research_context(config, environment, stage="brain-sim-data")
         persist_research_metadata(self.repository, config, environment, research_context)
         field_registry = resolve_field_registry(config, research_context)
-        registry = build_registry(config.generation.allowed_operators)
+        registry = build_registry(
+            config.generation.allowed_operators,
+            operator_catalog_paths=config.generation.operator_catalog_paths,
+        )
         snapshot = self.repository.alpha_history.load_snapshot(
             regime_key=research_context.regime_key,
             parent_pool_size=config.adaptive_generation.parent_pool_size,
         )
+        case_snapshot = self.repository.alpha_history.load_case_snapshot(research_context.regime_key)
         existing_normalized = self.repository.list_existing_normalized_expressions(environment.context.run_id)
         generation_count = count or config.loop.generation_batch_size
         mutation_candidates = self._generate_mutation_candidates(
@@ -60,6 +64,7 @@ class BrainBatchService:
             registry=registry,
             field_registry=field_registry,
             snapshot=snapshot,
+            case_snapshot=case_snapshot,
             run_id=environment.context.run_id,
             mutation_parent_ids=mutation_parent_ids or set(),
             existing_normalized=existing_normalized,
@@ -70,6 +75,7 @@ class BrainBatchService:
             registry=registry,
             field_registry=field_registry,
             snapshot=snapshot,
+            case_snapshot=case_snapshot,
             count=fresh_budget,
             existing_normalized=existing_normalized
             | {candidate.normalized_expression for candidate in mutation_candidates},
@@ -85,6 +91,8 @@ class BrainBatchService:
             batch_size=config.loop.simulation_batch_size,
             min_pattern_support=config.adaptive_generation.min_pattern_support,
             rejection_filters=config.loop.rejection_filters,
+            case_snapshot=case_snapshot,
+            diversity_config=config.adaptive_generation.diversity,
         )
         return candidates, selected, research_context.regime_key
 
@@ -95,6 +103,7 @@ class BrainBatchService:
         registry,
         field_registry,
         snapshot: PatternMemorySnapshot,
+        case_snapshot,
         count: int,
         existing_normalized: set[str],
         memory_service,
@@ -113,9 +122,15 @@ class BrainBatchService:
                 count=count,
                 snapshot=snapshot,
                 existing_normalized=existing_normalized,
+                case_snapshot=case_snapshot,
             )
-        engine = AlphaGenerationEngine(config=config.generation, registry=registry, field_registry=field_registry)
-        return engine.generate(count=count, existing_normalized=existing_normalized)
+        engine = AlphaGenerationEngine(
+            config=config.generation,
+            adaptive_config=config.adaptive_generation,
+            registry=registry,
+            field_registry=field_registry,
+        )
+        return engine.generate(count=count, existing_normalized=existing_normalized, case_snapshot=case_snapshot)
 
     def _generate_mutation_candidates(
         self,
@@ -124,6 +139,7 @@ class BrainBatchService:
         registry,
         field_registry,
         snapshot: PatternMemorySnapshot,
+        case_snapshot,
         run_id: str,
         mutation_parent_ids: set[str],
         existing_normalized: set[str],
@@ -153,6 +169,7 @@ class BrainBatchService:
                 snapshot=snapshot,
                 parent_pool=parent_pool,
                 existing_normalized=existing_normalized,
+                case_snapshot=case_snapshot,
             )
 
         parent_refs_map = self.repository.get_parent_refs(run_id)
@@ -164,9 +181,15 @@ class BrainBatchService:
         parents = [alpha_candidate_from_record(record, parent_refs=parent_refs_map.get(record.alpha_id)) for record in parent_records]
         if not parents:
             return []
-        engine = AlphaGenerationEngine(config=config.generation, registry=registry, field_registry=field_registry)
+        engine = AlphaGenerationEngine(
+            config=config.generation,
+            adaptive_config=config.adaptive_generation,
+            registry=registry,
+            field_registry=field_registry,
+        )
         return engine.generate_mutations(
             parents=parents,
             count=mutation_budget,
             existing_normalized=existing_normalized,
+            case_snapshot=case_snapshot,
         )

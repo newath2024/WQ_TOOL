@@ -8,11 +8,15 @@ from typing import Any, Iterable, Sequence
 from alpha.ast_nodes import to_expression
 from alpha.parser import parse_expression
 from alpha.validator import validate_expression
-from core.config import GenerationConfig
+from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import OperatorRegistry
-from generator.mutator import mutate_expressions
-from generator.templates import TemplateInstance, generate_template_expressions
+from generator.genome import GenomeRenderResult
+from generator.genome_builder import GenomeBuilder
+from generator.grammar import MotifGrammar
+from generator.mutation_policy import MutationPolicy
+from generator.repair_policy import RepairPolicy
+from memory.case_memory import CaseMemorySnapshot
 from memory.pattern_memory import PatternMemoryService
 
 
@@ -38,70 +42,106 @@ class AlphaGenerationEngine:
         config: GenerationConfig,
         registry: OperatorRegistry,
         field_registry: FieldRegistry | None = None,
+        adaptive_config: AdaptiveGenerationConfig | None = None,
     ) -> None:
         self.config = config
         self.registry = registry
+        self.adaptive_config = adaptive_config or AdaptiveGenerationConfig()
         self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
         self.memory_service = PatternMemoryService()
+        self.grammar = MotifGrammar()
+        self.genome_builder = GenomeBuilder(
+            generation_config=config,
+            adaptive_config=self.adaptive_config,
+            registry=registry,
+            field_registry=self.field_registry,
+            seed=config.random_seed,
+        )
+        self.repair_policy = RepairPolicy(
+            generation_config=config,
+            repair_config=self.adaptive_config.repair_policy,
+            field_registry=self.field_registry,
+            registry=self.registry,
+        )
+        self.mutation_policy = MutationPolicy(
+            config=config,
+            adaptive_config=self.adaptive_config,
+            memory_service=self.memory_service,
+            randomizer_seed=config.random_seed + 17,
+            field_registry=self.field_registry,
+            registry=self.registry,
+        )
 
     def generate(
         self,
         count: int | None = None,
         existing_normalized: set[str] | None = None,
+        case_snapshot: CaseMemorySnapshot | None = None,
     ) -> list[AlphaCandidate]:
-        target = count or max(self.config.template_count, self.config.template_pool_size)
-        allowed_runtime_fields = self.field_registry.allowed_runtime_fields(self.config.allowed_fields) | {
-            spec.name for spec in self.field_registry.runtime_group_fields()
-        }
-        instances = generate_template_expressions(
-            field_registry=self.field_registry,
-            allowed_fields=allowed_runtime_fields,
-            lookbacks=self.config.lookbacks,
-            template_weights=self.config.template_weights,
-            template_pool_size=max(target * 3, self.config.template_pool_size),
-            max_turnover_bias=self.config.max_turnover_bias,
-            seed=self.config.random_seed,
-            registry=self.registry,
-        )
-        payload = [
-            (
-                instance.expression,
-                "template",
-                (),
-                {
-                    "template_name": instance.template_name,
-                    "fields_used": list(instance.fields_used),
-                    "template_params": instance.parameters,
-                },
+        target = count or max(self.config.template_count + self.config.grammar_count, self.config.template_pool_size)
+        existing = set(existing_normalized or set())
+        candidates: list[AlphaCandidate] = []
+        attempts = 0
+        max_attempts = max(target * 25, 80)
+        while len(candidates) < target and attempts < max_attempts:
+            attempts += 1
+            novelty_bias = (len(candidates) / max(1, target)) >= (1.0 - self.adaptive_config.exploration_ratio)
+            genome = self.genome_builder.build_random_genome(
+                source_mode="genome_novelty" if novelty_bias else "genome_random",
+                novelty_bias=novelty_bias,
+                case_snapshot=case_snapshot,
             )
-            for instance in instances[:target]
-        ]
-        return self._build_candidates(payload, existing_normalized=existing_normalized)
+            repaired_genome, repair_actions = self.repair_policy.repair(genome)
+            render = self.grammar.render(repaired_genome)
+            candidate = self.build_candidate(
+                expression=render.expression,
+                mode="novelty" if novelty_bias else "genome",
+                parent_ids=(),
+                generation_metadata=self._render_metadata(
+                    render,
+                    mutation_mode="novelty" if novelty_bias else "exploit_local",
+                    repair_actions=repair_actions,
+                ),
+            )
+            if candidate is None or candidate.normalized_expression in existing:
+                continue
+            existing.add(candidate.normalized_expression)
+            candidates.append(candidate)
+        return candidates
 
     def generate_mutations(
         self,
         parents: Sequence[AlphaCandidate],
         count: int | None = None,
         existing_normalized: set[str] | None = None,
+        case_snapshot: CaseMemorySnapshot | None = None,
     ) -> list[AlphaCandidate]:
         target = count or self.config.mutation_count
-        payload = [
-            (
-                expression,
-                "mutation",
-                parent_ids,
-                metadata,
+        existing = set(existing_normalized or set())
+        candidates: list[AlphaCandidate] = []
+        attempts = 0
+        max_attempts = max(target * 12, 24)
+        while len(candidates) < target and attempts < max_attempts:
+            attempts += 1
+            payload = self.mutation_policy.generate_from_candidates(
+                parents=list(parents),
+                target_count=1,
+                case_snapshot=case_snapshot,
             )
-            for expression, parent_ids, metadata in mutate_expressions(
-                parents=parents,
-                count=target,
-                field_registry=self.field_registry,
-                lookbacks=self.config.lookbacks,
-                normalization_wrappers=self.config.normalization_wrappers,
-                seed=self.config.random_seed + len(parents),
+            if not payload:
+                continue
+            expression, mode, parent_ids, metadata = payload[0]
+            candidate = self.build_candidate(
+                expression=expression,
+                mode=mode,
+                parent_ids=parent_ids,
+                generation_metadata=metadata,
             )
-        ]
-        return self._build_candidates(payload, existing_normalized=existing_normalized)
+            if candidate is None or candidate.normalized_expression in existing:
+                continue
+            existing.add(candidate.normalized_expression)
+            candidates.append(candidate)
+        return candidates
 
     def _build_candidates(
         self,
@@ -151,8 +191,16 @@ class AlphaGenerationEngine:
         if not validation.is_valid:
             return None
 
-        signature = self.memory_service.extract_signature(expression)
         normalized_expression = to_expression(node)
+        field_categories = {
+            name: self.field_registry.get(name).category
+            for name in self.field_registry.fields
+        }
+        signature = self.memory_service.extract_signature(
+            normalized_expression,
+            generation_metadata=metadata,
+            field_categories=field_categories,
+        )
         complexity = signature.complexity
         if complexity > self.config.complexity_limit or self._is_redundant(signature.fields):
             return None
@@ -160,7 +208,7 @@ class AlphaGenerationEngine:
         alpha_id = hashlib.sha1(normalized_expression.encode("utf-8")).hexdigest()[:16]
         fields_used = tuple(metadata.get("fields_used") or signature.fields)
         operators_used = tuple(metadata.get("operators_used") or signature.operators)
-        template_name = str(metadata.get("template_name") or "")
+        template_name = str(metadata.get("template_name") or metadata.get("motif") or "")
         return AlphaCandidate(
             alpha_id=alpha_id,
             expression=expression.strip(),
@@ -176,26 +224,45 @@ class AlphaGenerationEngine:
             generation_metadata=metadata,
         )
 
-    def build_candidate_from_template(
-        self,
-        instance: TemplateInstance,
-        mode: str,
-        parent_ids: tuple[str, ...] = (),
-        generation_metadata: dict[str, Any] | None = None,
-    ) -> AlphaCandidate | None:
-        metadata = dict(generation_metadata or {})
-        metadata.setdefault("template_name", instance.template_name)
-        metadata.setdefault("fields_used", list(instance.fields_used))
-        metadata.setdefault("template_params", instance.parameters)
-        return self.build_candidate(
-            expression=instance.expression,
-            mode=mode,
-            parent_ids=parent_ids,
-            generation_metadata=metadata,
-        )
-
     def _is_redundant(self, fields: tuple[str, ...]) -> bool:
         return len(fields) == 0
+
+    def _render_metadata(
+        self,
+        render: GenomeRenderResult,
+        *,
+        mutation_mode: str,
+        repair_actions: tuple[str, ...] = (),
+        parent_refs: list[dict[str, str]] | None = None,
+        selection_objectives: dict[str, float] | None = None,
+    ) -> dict[str, Any]:
+        return {
+            "template_name": render.genome.motif,
+            "motif": render.genome.motif,
+            "genome": render.genome.to_dict(),
+            "genome_hash": render.genome.stable_hash,
+            "family_signature": render.family_signature,
+            "fields_used": list(render.field_names),
+            "field_families": list(render.field_families),
+            "operators_used": list(dict.fromkeys(render.operator_path)),
+            "operator_path": list(render.operator_path),
+            "operator_semantic_tags": self._operator_semantic_tags(render.operator_path),
+            "turnover_bucket": render.turnover_bucket,
+            "horizon_bucket": render.horizon_bucket,
+            "complexity_bucket": render.complexity_bucket,
+            "mutation_mode": mutation_mode,
+            "repair_actions": list(repair_actions),
+            "parent_refs": list(parent_refs or []),
+            "selection_objectives": dict(selection_objectives or {}),
+        }
+
+    def _operator_semantic_tags(self, operator_path: tuple[str, ...]) -> list[str]:
+        tags: set[str] = set()
+        for name in operator_path:
+            if not self.registry.contains(name):
+                continue
+            tags.update(self.registry.get(name).semantic_tags)
+        return sorted(tags)
 
     def _fallback_field_registry(self, allowed_fields: list[str]) -> FieldRegistry:
         fields = {

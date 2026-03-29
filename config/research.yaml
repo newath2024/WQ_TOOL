@@ -66,6 +66,8 @@ generation:
   mutation_count: 20
   normalization_wrappers: ["rank", "zscore", "sign"]
   random_seed: 7
+  operator_catalog_paths:
+    - inputs/wq_snapshots/2026-03-29/operators/brain_operator_catalog.json
 
 adaptive_generation:
   enabled: true
@@ -83,6 +85,29 @@ adaptive_generation:
   novelty_reference_top_k: 20
   min_pattern_support: 3
   pattern_decay: 0.98
+  exploration_ratio: 0.35
+  novelty_weight: 0.25
+  mutation_mode_weights:
+    exploit_local: 0.35
+    structural: 0.25
+    crossover: 0.15
+    novelty: 0.15
+    repair: 0.10
+  crossover_rate: 0.15
+  diversity:
+    max_family_fraction: 0.25
+    max_field_category_fraction: 0.50
+    max_horizon_bucket_fraction: 0.40
+    max_operator_path_fraction: 0.40
+    exploration_quota_fraction: 0.20
+    min_structural_distance: 0.08
+  repair_policy:
+    enabled: true
+    max_attempts: 3
+    allow_complexity_reduction: true
+    allow_turnover_reduction: true
+    allow_wrapper_cleanup: true
+    allow_group_fixups: true
   critic_thresholds:
     turnover_warning_fraction: 0.85
     overfit_gap_threshold: 0.35

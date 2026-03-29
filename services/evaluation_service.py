@@ -226,7 +226,10 @@ def evaluate_run(
 ) -> EvaluationServiceResult:
     """Evaluate stored alpha candidates for the active run."""
     logger = get_logger(__name__, run_id=environment.context.run_id, stage="evaluate")
-    registry = build_registry(config.generation.allowed_operators)
+    registry = build_registry(
+        config.generation.allowed_operators,
+        operator_catalog_paths=config.generation.operator_catalog_paths,
+    )
     research_context = load_research_context(config, environment, stage="evaluate-data")
     bundle = research_context.bundle
     matrices = research_context.matrices
@@ -251,6 +254,7 @@ def evaluate_run(
     }
     group_fields = {spec.name for spec in field_registry.runtime_group_fields()}
     field_types = field_registry.field_types(allowed=allowed_fields)
+    field_categories = {name: spec.category for name, spec in field_registry.fields.items()}
     fail_fast = config.runtime.fail_fast
     timestamp = datetime.now(timezone.utc).isoformat()
     parent_refs_map = repository.get_parent_refs(environment.context.run_id)
@@ -272,8 +276,15 @@ def evaluate_run(
     for index, record in enumerate(alpha_records, start=1):
         candidate = alpha_candidate_from_record(record, parent_refs=parent_refs_map.get(record.alpha_id))
         signature = build_alpha_simulation_signature(candidate, bundle, config)
-        structural_signature = memory_service.extract_signature(record.expression)
-        observations = memory_service.build_observations(structural_signature)
+        structural_signature = memory_service.extract_signature(
+            record.expression,
+            generation_metadata=candidate.generation_metadata,
+            field_categories=field_categories,
+        )
+        observations = memory_service.build_observations(
+            structural_signature,
+            generation_metadata=candidate.generation_metadata,
+        )
         gene_ids = [observation.pattern_id for observation in observations if observation.pattern_kind == "subexpression"]
         logger.info("Evaluating alpha %s/%s: %s", index, len(alpha_records), record.alpha_id)
         try:
@@ -469,6 +480,16 @@ def evaluate_run(
                     "validation_sharpe": evaluation.split_metrics["validation"].sharpe,
                     "behavioral_novelty_score": evaluation.behavioral_novelty_score,
                     "complexity": evaluation.candidate.complexity,
+                    "selection_objectives": {
+                        "fitness": evaluation.split_metrics["validation"].fitness,
+                        "sharpe": evaluation.split_metrics["validation"].sharpe,
+                        "eligibility": 1.0 if evaluation.submission_passes > 0 else 0.0,
+                        "robustness": evaluation.stability_score,
+                        "novelty": evaluation.behavioral_novelty_score,
+                        "diversity": evaluation.behavioral_novelty_score,
+                        "turnover_cost": min(1.0, max(0.0, evaluation.split_metrics["validation"].turnover / 3.0)),
+                        "complexity_cost": min(1.0, max(0.0, evaluation.candidate.complexity / 20.0)),
+                    },
                 },
                 sort_keys=True,
             ),

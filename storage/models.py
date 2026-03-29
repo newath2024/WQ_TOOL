@@ -165,6 +165,31 @@ class AlphaPatternMembershipRecord:
 
 
 @dataclass(frozen=True, slots=True)
+class AlphaCaseRecord:
+    run_id: str
+    alpha_id: str
+    regime_key: str
+    metric_source: str
+    family_signature: str
+    structural_signature_json: str
+    genome_hash: str
+    genome_json: str
+    motif: str
+    field_families_json: str
+    operator_path_json: str
+    complexity_bucket: str
+    turnover_bucket: str
+    horizon_bucket: str
+    mutation_mode: str
+    parent_family_signatures_json: str
+    fail_tags_json: str
+    success_tags_json: str
+    objective_vector_json: str
+    outcome_score: float
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
 class FieldCatalogRecord:
     field_name: str
     dataset: str

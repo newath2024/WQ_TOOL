@@ -8,6 +8,7 @@ from data.schema import MarketDataBundle
 from evaluation.filtering import EvaluatedAlpha
 from features.transforms import ResearchMatrices
 from generator.engine import AlphaCandidate
+from memory.case_memory import ObjectiveVector
 from memory.pattern_memory import PatternMemoryService, StructuralSignature
 from storage.models import MetricRecord, RunRecord, SelectionRecord
 
@@ -176,15 +177,23 @@ class BrainSimulationBatch:
 @dataclass(slots=True, frozen=True)
 class CandidateScore:
     candidate: AlphaCandidate
+    objective_vector: ObjectiveVector
     local_heuristic_score: float
     novelty_score: float
     family_score: float
     structural_signature: StructuralSignature
+    diversity_score: float = 0.0
     archive_reason: str | None = None
+    ranking_rationale: dict[str, object] = field(default_factory=dict)
 
     @property
     def total_score(self) -> float:
-        return self.local_heuristic_score + 0.15 * self.novelty_score + 0.25 * self.family_score
+        return (
+            self.local_heuristic_score
+            + 0.15 * self.novelty_score
+            + 0.20 * self.family_score
+            + 0.20 * self.diversity_score
+        )
 
 
 @dataclass(slots=True, frozen=True)

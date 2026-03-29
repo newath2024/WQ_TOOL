@@ -59,6 +59,7 @@ class GenerationConfig:
     normalization_wrappers: list[str]
     random_seed: int = 7
     field_catalog_paths: list[str] = field(default_factory=list)
+    operator_catalog_paths: list[str] = field(default_factory=list)
     field_value_paths: list[str] = field(default_factory=list)
     field_score_weights: dict[str, float] = field(
         default_factory=lambda: {"coverage": 0.50, "usage": 0.30, "category": 0.20}
@@ -91,6 +92,35 @@ class StrategyMixConfig:
 
 
 @dataclass(slots=True)
+class MutationModeWeightsConfig:
+    exploit_local: float = 0.35
+    structural: float = 0.25
+    crossover: float = 0.15
+    novelty: float = 0.15
+    repair: float = 0.10
+
+
+@dataclass(slots=True)
+class DiversityThresholdConfig:
+    max_family_fraction: float = 0.25
+    max_field_category_fraction: float = 0.50
+    max_horizon_bucket_fraction: float = 0.40
+    max_operator_path_fraction: float = 0.40
+    exploration_quota_fraction: float = 0.20
+    min_structural_distance: float = 0.08
+
+
+@dataclass(slots=True)
+class RepairPolicyConfig:
+    enabled: bool = True
+    max_attempts: int = 3
+    allow_complexity_reduction: bool = True
+    allow_turnover_reduction: bool = True
+    allow_wrapper_cleanup: bool = True
+    allow_group_fixups: bool = True
+
+
+@dataclass(slots=True)
 class CriticThresholdConfig:
     turnover_warning_fraction: float = 0.85
     overfit_gap_threshold: float = 0.35
@@ -106,6 +136,12 @@ class AdaptiveGenerationConfig:
     memory_scope: str = "regime"
     success_rule: str = "validation_first"
     strategy_mix: StrategyMixConfig = field(default_factory=StrategyMixConfig)
+    exploration_ratio: float = 0.35
+    novelty_weight: float = 0.25
+    mutation_mode_weights: MutationModeWeightsConfig = field(default_factory=MutationModeWeightsConfig)
+    crossover_rate: float = 0.15
+    diversity: DiversityThresholdConfig = field(default_factory=DiversityThresholdConfig)
+    repair_policy: RepairPolicyConfig = field(default_factory=RepairPolicyConfig)
     exploration_epsilon: float = 0.10
     sampling_temperature: float = 0.75
     family_cap_fraction: float = 0.25
@@ -488,6 +524,11 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
         return AdaptiveGenerationConfig()
     adaptive_payload = dict(payload)
     adaptive_payload["strategy_mix"] = StrategyMixConfig(**adaptive_payload.get("strategy_mix", {}))
+    adaptive_payload["mutation_mode_weights"] = MutationModeWeightsConfig(
+        **adaptive_payload.get("mutation_mode_weights", {})
+    )
+    adaptive_payload["diversity"] = DiversityThresholdConfig(**adaptive_payload.get("diversity", {}))
+    adaptive_payload["repair_policy"] = RepairPolicyConfig(**adaptive_payload.get("repair_policy", {}))
     adaptive_payload["critic_thresholds"] = CriticThresholdConfig(**adaptive_payload.get("critic_thresholds", {}))
     return AdaptiveGenerationConfig(**adaptive_payload)
 

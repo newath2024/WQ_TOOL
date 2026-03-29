@@ -190,6 +190,7 @@ def test_adaptive_memory_pipeline_learns_across_rounds(tmp_path: Path) -> None:
         diagnosis_count = connection.execute("SELECT COUNT(*) FROM alpha_diagnoses").fetchone()[0]
         pattern_count = connection.execute("SELECT COUNT(*) FROM alpha_patterns").fetchone()[0]
         membership_count = connection.execute("SELECT COUNT(*) FROM alpha_pattern_membership").fetchone()[0]
+        case_count = connection.execute("SELECT COUNT(*) FROM alpha_cases").fetchone()[0]
         adaptive_modes = {
             row[0]
             for row in connection.execute(
@@ -201,7 +202,8 @@ def test_adaptive_memory_pipeline_learns_across_rounds(tmp_path: Path) -> None:
             """
             SELECT alpha_id
             FROM alphas
-            WHERE run_id = ? AND generation_mode = 'guided_mutation'
+            WHERE run_id = ?
+              AND generation_mode IN ('exploit_local', 'structural', 'novelty', 'repair', 'crossover')
             ORDER BY created_at ASC
             LIMIT 1
             """,
@@ -218,7 +220,8 @@ def test_adaptive_memory_pipeline_learns_across_rounds(tmp_path: Path) -> None:
     assert diagnosis_count > 0
     assert pattern_count > 0
     assert membership_count > 0
-    assert adaptive_modes & {"guided_mutation", "memory_template", "novelty_search"}
+    assert case_count > 0
+    assert adaptive_modes & {"guided_exploit", "guided_explore", "exploit_local", "structural", "novelty", "repair"}
     assert parent_links > 0
     assert guided_child is not None
     assert main(["--config", str(config_path), "--run-id", second_run, "lineage", "--alpha-id", guided_child[0]]) == 0

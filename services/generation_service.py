@@ -20,7 +20,10 @@ def generate_and_persist(
 ) -> GenerationServiceResult:
     """Generate alpha candidates and persist them for the active run."""
     logger = get_logger(__name__, run_id=environment.context.run_id, stage="generate")
-    registry = build_registry(config.generation.allowed_operators)
+    registry = build_registry(
+        config.generation.allowed_operators,
+        operator_catalog_paths=config.generation.operator_catalog_paths,
+    )
     existing = repository.list_existing_normalized_expressions(environment.context.run_id)
     total_count = count or (config.generation.template_count + config.generation.grammar_count)
     research_context = load_research_context(config, environment, stage="generate-data")
@@ -34,6 +37,7 @@ def generate_and_persist(
             regime_key=research_context.regime_key,
             parent_pool_size=config.adaptive_generation.parent_pool_size,
         )
+        case_snapshot = repository.alpha_history.load_case_snapshot(research_context.regime_key)
         engine = GuidedGenerator(
             generation_config=config.generation,
             adaptive_config=config.adaptive_generation,
@@ -41,13 +45,24 @@ def generate_and_persist(
             memory_service=PatternMemoryService(),
             field_registry=field_registry,
         )
-        candidates = engine.generate(count=total_count, snapshot=snapshot, existing_normalized=existing)
+        candidates = engine.generate(
+            count=total_count,
+            snapshot=snapshot,
+            existing_normalized=existing,
+            case_snapshot=case_snapshot,
+        )
         regime_key = research_context.regime_key
         pattern_count = len(snapshot.patterns)
         logger.info("Adaptive generation used regime %s with %s learned patterns.", regime_key[:12], pattern_count)
     else:
-        engine = AlphaGenerationEngine(config=config.generation, registry=registry, field_registry=field_registry)
-        candidates = engine.generate(count=total_count, existing_normalized=existing)
+        case_snapshot = repository.alpha_history.load_case_snapshot(research_context.regime_key)
+        engine = AlphaGenerationEngine(
+            config=config.generation,
+            adaptive_config=config.adaptive_generation,
+            registry=registry,
+            field_registry=field_registry,
+        )
+        candidates = engine.generate(count=total_count, existing_normalized=existing, case_snapshot=case_snapshot)
 
     inserted = repository.save_alpha_candidates(environment.context.run_id, candidates)
     export_paths = export_generated_alphas(repository, environment)

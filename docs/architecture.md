@@ -2,10 +2,11 @@
 
 ## Muc tieu
 
-Repo nay duoc chia thanh 2 lop:
+Repo nay duoc chia thanh 3 lop:
 
-- local research layer: xay search space, validate, dedup, xep hang so bo, memory support
+- local research layer: xay genome search space, render expression, validate, dedup, xep hang so bo, memory support
 - BRAIN integration layer: submit/simulate/collect result that, luu traceability, hoc tu outcome that
+- orchestration layer: multi-objective selection, diversity preservation, service loop, va closed-loop control
 
 Nguyen tac quan trong:
 
@@ -21,8 +22,15 @@ Nguyen tac quan trong:
 - `data/field_registry.py`: field metadata, runtime fields, field score
 - `features/registry.py`: typed operator registry
 - `alpha/`: parser, AST, validator, evaluator
-- `generator/`: template generation, mutation, guided generation
-- `memory/pattern_memory.py`: structural signature, pattern score, outcome learning
+- `generator/genome.py`: genome dataclass cho feature/transform/horizon/wrapper/regime/turnover/complexity genes
+- `generator/grammar.py`: motif grammar render `Genome -> AST -> expression`
+- `generator/genome_builder.py`: random, exploit, novelty, memory-guided genome construction
+- `generator/mutation_policy.py`: 5 mutation modes `exploit_local`, `structural`, `crossover`, `novelty`, `repair`
+- `generator/crossover.py`: homologous gene-level crossover
+- `generator/novelty.py`: novelty scoring tren structural distance
+- `generator/repair_policy.py`: bounded repair pass cho invalid/high-cost candidates
+- `memory/pattern_memory.py`: structural signature, pattern score, low-level outcome learning
+- `memory/case_memory.py`: richer case memory theo regime/family/mutation-path/objectives
 
 ### BRAIN integration
 
@@ -30,7 +38,9 @@ Nguyen tac quan trong:
 - `adapters/brain_manual_adapter.py`: export/import cho workflow thu cong
 - `adapters/brain_api_adapter.py`: scaffold san sang noi API that
 - `services/brain_service.py`: submit, poll, normalize, persist
-- `services/candidate_selection_service.py`: pre-rank, diversity, select-for-simulate, select-for-mutate
+- `services/candidate_selection_service.py`: objective prediction, diversity filtering, select-for-simulate, select-for-mutate
+- `services/multi_objective_selection.py`: non-dominated sorting + crowding distance
+- `services/diversity_manager.py`: anti-collapse caps va exploration quota
 - `services/closed_loop_service.py`: vong lap generate -> BRAIN -> learn -> mutate
 - `services/session_manager.py`: non-interactive auth/session refresh cho service mode
 - `services/notification_manager.py`: Persona terminal + email notification
@@ -49,7 +59,7 @@ Nguyen tac quan trong:
 - `storage/repository.py`: main repository boundary
 - `storage/submission_store.py`: submission batches + submission records + manual imports
 - `storage/brain_result_store.py`: normalized BRAIN results + closed-loop summaries
-- `storage/alpha_history.py`: pattern memory/history cho ca local va external outcomes
+- `storage/alpha_history.py`: pattern memory/history + case memory cho ca local va external outcomes
 
 ### CLI
 
@@ -122,6 +132,7 @@ Bang lien quan:
 
 - `alphas`
 - `alpha_parents`
+- `alpha_cases`
 - `submission_batches`
 - `submissions`
 - `brain_results`
@@ -133,15 +144,18 @@ Bang lien quan:
 
 ## Closed-loop lifecycle
 
-1. generate candidate co cau truc
-2. local validate va dedup
-3. candidate selection policy chon top-N da dang
-4. `BrainService` submit len BRAIN
-5. poll/import ket qua
-6. normalize va persist metrics/rejection/raw_result
-7. cap nhat `alpha_history` voi `metric_source=external_brain`
-8. chon parent manh dua tren BRAIN outcome
-9. sinh mutation cho round tiep theo
+1. genome builder tao genome moi hoac genome-guided tu memory
+2. motif grammar render `Genome -> AST -> normalized expression`
+3. validator/prefilter/repair loai hoac sua candidate khong hop le
+4. candidate selection policy xep hang bang multi-objective scoring
+5. diversity manager ap hard caps theo family, field category, horizon, operator path, va exploration quota
+6. `BrainService` submit len BRAIN
+7. poll/import ket qua
+8. normalize va persist metrics/rejection/raw_result
+9. cap nhat `alpha_history` voi `metric_source=external_brain`
+10. cap nhat `alpha_cases` va pattern membership theo motif/family/path/mutation mode/regime
+11. chon parent manh dua tren BRAIN outcome + diversity
+12. sinh mutation/crossover/repair cho round tiep theo
 
 Neu backend la `manual`:
 
@@ -170,16 +184,22 @@ Restart safety:
 
 ## Memory hoc tu BRAIN
 
-Pattern memory da hoc tren:
+Pattern memory va case memory hoc tren:
 
-- template
+- family signature
+- structural signature
 - field
+- field family
 - operator
-- operator family
+- operator family/path
 - lookback
 - wrapper
-- subexpression
+- motif
+- complexity bucket
+- turnover bucket
+- mutation mode
 - rejection reason
+- regime-conditioned tags
 
 Positive signal:
 
@@ -187,6 +207,8 @@ Positive signal:
 - fitness tot
 - turnover chap nhan duoc
 - submission eligible
+- robustness on dinh
+- mutation mode thuc su cai thien family do
 
 Negative signal:
 
@@ -195,5 +217,7 @@ Negative signal:
 - poor fitness
 - duplicate family khong cai thien
 - excessive complexity
+- motif/path combination fail lap lai
+- mutation mode thuong xuyen lam xau family/regime do
 
 Logic nay chu y giai thich duoc, khong phai black-box model.

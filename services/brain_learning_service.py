@@ -36,10 +36,16 @@ class BrainLearningService:
             candidate = candidates_by_id.get(result.candidate_id)
             if candidate is None:
                 continue
-            structural_signature = self.memory_service.extract_signature(candidate.expression)
+            structural_signature = self.memory_service.extract_signature(
+                candidate.expression,
+                generation_metadata=candidate.generation_metadata,
+            )
             gene_ids = [
                 observation.pattern_id
-                for observation in self.memory_service.build_observations(structural_signature)
+                for observation in self.memory_service.build_observations(
+                    structural_signature,
+                    generation_metadata=candidate.generation_metadata,
+                )
                 if observation.pattern_kind == "subexpression"
             ]
             diagnosis = self.assess_result(
@@ -63,7 +69,9 @@ class BrainLearningService:
                     "structural_signature": structural_signature,
                     "gene_ids": gene_ids,
                     "outcome_score": outcome_score,
-                    "behavioral_novelty_score": 0.5,
+                    "behavioral_novelty_score": float(
+                        candidate.generation_metadata.get("selection_objectives", {}).get("novelty", 0.5)
+                    ),
                     "passed_filters": passed_filters,
                     "selected": candidate.alpha_id in selected,
                     "metric_source": result.metric_source,
@@ -91,7 +99,10 @@ class BrainLearningService:
         fitness = result.metrics.get("fitness")
         sharpe = result.metrics.get("sharpe")
         turnover = result.metrics.get("turnover")
-        signature = self.memory_service.extract_signature(candidate.expression)
+        signature = self.memory_service.extract_signature(
+            candidate.expression,
+            generation_metadata=candidate.generation_metadata,
+        )
         family_observation = self.memory_service.build_observations(signature)[0]
         prior_pattern = snapshot.patterns.get(family_observation.pattern_id)
 

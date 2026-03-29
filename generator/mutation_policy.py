@@ -1,45 +1,59 @@
 from __future__ import annotations
 
 import random
-from typing import Iterable
+from dataclasses import replace
+from typing import Any, Iterable, Sequence
 
-from alpha.ast_nodes import BinaryOpNode, FunctionCallNode, UnaryOpNode, to_expression
-from alpha.parser import parse_expression
-from core.config import GenerationConfig
+from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
-from generator.mutator import _swap_field, _swap_lookback, _swap_operator, _swap_wrapper
+from features.registry import OperatorRegistry, build_default_registry
+from generator.crossover import GenomeCrossover
+from generator.genome import Genome
+from generator.genome_builder import GenomeBuilder
+from generator.grammar import MOTIF_LIBRARY, MotifGrammar
+from generator.novelty import NoveltySearch
+from generator.repair_policy import RepairPolicy
+from memory.case_memory import CaseMemoryService, CaseMemorySnapshot
 from memory.pattern_memory import MemoryParent, PatternMemoryService, PatternMemorySnapshot
 
 
 class MutationPolicy:
+    MODES = ("exploit_local", "structural", "crossover", "novelty", "repair")
+
     def __init__(
         self,
+        *,
         config: GenerationConfig,
+        adaptive_config: AdaptiveGenerationConfig | None = None,
         memory_service: PatternMemoryService,
-        randomizer: random.Random,
+        randomizer_seed: int | None = None,
+        randomizer: random.Random | None = None,
         field_registry: FieldRegistry | None = None,
+        registry: OperatorRegistry | None = None,
     ) -> None:
         self.config = config
+        self.adaptive_config = adaptive_config or AdaptiveGenerationConfig()
         self.memory_service = memory_service
-        self.randomizer = randomizer
+        self.case_memory_service = CaseMemoryService()
+        self.randomizer = randomizer or random.Random(randomizer_seed if randomizer_seed is not None else config.random_seed)
         self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
-        self.operator_swaps = {
-            "ts_mean": ["ts_std_dev", "rolling_mean", "ts_decay_linear"],
-            "ts_std_dev": ["ts_mean", "rolling_std"],
-            "ts_delta": ["ts_delay", "ts_mean"],
-            "ts_returns": ["ts_delay", "ts_mean"],
-            "ts_corr": ["ts_covariance"],
-            "ts_covariance": ["ts_corr"],
-            "delta": ["ts_delay", "ts_mean"],
-            "returns": ["ts_delay", "ts_mean"],
-            "correlation": ["ts_covariance"],
-            "covariance": ["ts_corr"],
-            "decay_linear": ["ts_mean", "ts_std_dev"],
-            "rank": ["zscore", "sign"],
-            "zscore": ["rank", "sign"],
-            "group_rank": ["group_zscore", "group_neutralize"],
-            "group_zscore": ["group_rank", "group_neutralize"],
-        }
+        self.registry = registry or build_default_registry()
+        self.genome_builder = GenomeBuilder(
+            generation_config=config,
+            adaptive_config=self.adaptive_config,
+            registry=self.registry,
+            field_registry=self.field_registry,
+            seed=(randomizer_seed if randomizer_seed is not None else config.random_seed) + 13,
+        )
+        self.grammar = MotifGrammar()
+        self.repair_policy = RepairPolicy(
+            generation_config=config,
+            repair_config=self.adaptive_config.repair_policy,
+            field_registry=self.field_registry,
+            registry=self.registry,
+        )
+        self.crossover = GenomeCrossover(self.randomizer)
+        self.novelty_search = NoveltySearch()
 
     def generate(
         self,
@@ -47,116 +61,195 @@ class MutationPolicy:
         snapshot: PatternMemorySnapshot,
         target_count: int,
         force_novelty: bool = False,
+        case_snapshot: CaseMemorySnapshot | None = None,
     ) -> list[tuple[str, dict]]:
-        hints = list(parent.mutation_hints)
-        if force_novelty and "diversify_feature_family" not in hints:
-            hints.append("diversify_feature_family")
+        parent_candidate = self._memory_parent_to_candidate(parent)
+        payload = self.generate_from_candidates(
+            parents=[parent_candidate],
+            target_count=target_count,
+            case_snapshot=case_snapshot,
+            pattern_snapshot=snapshot,
+            force_novelty=force_novelty,
+        )
+        return [(expression, metadata) for expression, _, _, metadata in payload]
 
-        candidates: list[tuple[str, dict]] = []
-        strategies = self._strategies_from_hints(hints)
+    def generate_from_candidates(
+        self,
+        *,
+        parents: Sequence,
+        target_count: int,
+        case_snapshot: CaseMemorySnapshot | None,
+        pattern_snapshot: PatternMemorySnapshot | None = None,
+        force_novelty: bool = False,
+    ) -> list[tuple[str, str, tuple[str, ...], dict[str, Any]]]:
+        payload: list[tuple[str, str, tuple[str, ...], dict[str, Any]]] = []
+        if not parents or target_count <= 0:
+            return payload
         attempts = 0
-        max_attempts = max(target_count * 10, 20)
-        while len(candidates) < target_count and strategies and attempts < max_attempts:
+        max_attempts = max(target_count * 12, 24)
+        parent_refs = {getattr(parent, "alpha_id"): parent for parent in parents if getattr(parent, "alpha_id", "")}
+        while len(payload) < target_count and attempts < max_attempts:
             attempts += 1
-            strategy = self.randomizer.choice(strategies)
-            expression = strategy(parent.expression, snapshot)
-            if expression and expression != parent.expression:
-                candidates.append(
-                    (
-                        expression,
-                        {
-                            "template_name": parent.generation_metadata.get("template_name", ""),
-                            "fields_used": parent.generation_metadata.get("fields_used", []),
-                            "parent_refs": [{"run_id": parent.run_id, "alpha_id": parent.alpha_id}],
-                            "source_pattern_ids": [],
-                            "source_gene_ids": [],
-                            "mutation_hint_tags": list(hints),
-                            "target_novelty": force_novelty,
-                        },
-                    )
+            primary_parent = self.randomizer.choice(list(parents))
+            parent_genome = self._extract_parent_genome(primary_parent)
+            mutation_mode = self._choose_mode(primary_parent, case_snapshot=case_snapshot, force_novelty=force_novelty)
+            mutated = self._mutate_genome(
+                parent_genome,
+                mutation_mode=mutation_mode,
+                parents=list(parents),
+                case_snapshot=case_snapshot,
+            )
+            repaired, repair_actions = self.repair_policy.repair(
+                mutated,
+                fail_tags=tuple(getattr(primary_parent, "fail_tags", ()) or ()),
+            )
+            render = self.grammar.render(repaired)
+            metadata = {
+                "template_name": repaired.motif,
+                "motif": repaired.motif,
+                "genome": repaired.to_dict(),
+                "genome_hash": repaired.stable_hash,
+                "fields_used": list(render.field_names),
+                "field_families": list(render.field_families),
+                "operators_used": list(dict.fromkeys(render.operator_path)),
+                "operator_path": list(render.operator_path),
+                "operator_semantic_tags": self._operator_semantic_tags(render.operator_path),
+                "turnover_bucket": render.turnover_bucket,
+                "horizon_bucket": render.horizon_bucket,
+                "complexity_bucket": render.complexity_bucket,
+                "mutation_mode": mutation_mode,
+                "repair_actions": list(repair_actions),
+                "parent_refs": self._build_parent_refs(primary_parent, parent_refs, mutation_mode),
+                "mutation_hint_tags": list(getattr(primary_parent, "mutation_hints", ()) or ()),
+            }
+            payload.append((render.expression, mutation_mode, tuple(ref["alpha_id"] for ref in metadata["parent_refs"]), metadata))
+        return payload
+
+    def _choose_mode(self, parent, *, case_snapshot: CaseMemorySnapshot | None, force_novelty: bool) -> str:
+        if force_novelty:
+            return "novelty"
+        family_signature = str(getattr(parent, "family_signature", "") or "")
+        fail_tags = tuple(getattr(parent, "fail_tags", ()) or ())
+        weights = self.case_memory_service.mutation_mode_preferences(
+            family_signature=family_signature,
+            fail_tags=fail_tags,
+            snapshot=case_snapshot,
+        )
+        config_weights = self.adaptive_config.mutation_mode_weights
+        weights = {
+            "exploit_local": weights["exploit_local"] * config_weights.exploit_local,
+            "structural": weights["structural"] * config_weights.structural,
+            "crossover": weights["crossover"] * (config_weights.crossover if self.randomizer.random() < self.adaptive_config.crossover_rate else 0.01),
+            "novelty": weights["novelty"] * config_weights.novelty,
+            "repair": weights["repair"] * config_weights.repair,
+        }
+        return self.randomizer.choices(list(weights.keys()), weights=[max(value, 1e-6) for value in weights.values()], k=1)[0]
+
+    def _mutate_genome(
+        self,
+        parent_genome: Genome,
+        *,
+        mutation_mode: str,
+        parents: list,
+        case_snapshot: CaseMemorySnapshot | None,
+    ) -> Genome:
+        if mutation_mode == "exploit_local":
+            return self._exploit_local(parent_genome)
+        if mutation_mode == "structural":
+            return self._structural(parent_genome, case_snapshot=case_snapshot)
+        if mutation_mode == "crossover" and len(parents) > 1:
+            partner = self._extract_parent_genome(self.randomizer.choice([item for item in parents if item is not parents[0]] or parents))
+            return self.crossover.crossover(parent_genome, partner)
+        if mutation_mode == "novelty":
+            return self._novelty(parent_genome, case_snapshot=case_snapshot)
+        return self._repair_seed(parent_genome)
+
+    def _exploit_local(self, genome: Genome) -> Genome:
+        ordered = sorted(set(self.config.lookbacks))
+        slower_choices = [value for value in ordered if value >= genome.horizon_gene.fast_window] or ordered
+        next_window = self.randomizer.choice(slower_choices)
+        wrappers = genome.wrapper_gene.post_wrappers or tuple(self.config.normalization_wrappers[:1])
+        return replace(
+            genome,
+            horizon_gene=replace(genome.horizon_gene, slow_window=next_window, context_window=max(next_window, genome.horizon_gene.context_window)),
+            wrapper_gene=replace(genome.wrapper_gene, post_wrappers=wrappers[:1]),
+            source_mode="exploit_local",
+        )
+
+    def _structural(self, genome: Genome, *, case_snapshot: CaseMemorySnapshot | None) -> Genome:
+        motif_choices = [motif for motif in MOTIF_LIBRARY if motif != genome.motif] or [genome.motif]
+        seeded = self.genome_builder.build_parent_seeded_genome(
+            motif=self.randomizer.choice(motif_choices),
+            primary_family=genome.feature_gene.primary_family,
+            source_mode="structural",
+            case_snapshot=case_snapshot,
+        )
+        return replace(seeded, feature_gene=replace(seeded.feature_gene, primary_field=genome.feature_gene.primary_field, primary_family=genome.feature_gene.primary_family))
+
+    def _novelty(self, genome: Genome, *, case_snapshot: CaseMemorySnapshot | None) -> Genome:
+        novel = self.genome_builder.build_guided_genome(case_snapshot=case_snapshot, explore=True)
+        return replace(
+            novel,
+            feature_gene=replace(
+                novel.feature_gene,
+                primary_field=novel.feature_gene.primary_field,
+                primary_family=novel.feature_gene.primary_family,
+            ),
+            source_mode="novelty",
+        )
+
+    def _repair_seed(self, genome: Genome) -> Genome:
+        repaired, _ = self.repair_policy.repair(genome, fail_tags=("high_turnover", "excessive_complexity"))
+        return replace(repaired, source_mode="repair")
+
+    def _extract_parent_genome(self, parent) -> Genome:
+        metadata = dict(getattr(parent, "generation_metadata", {}) or {})
+        genome = self.case_memory_service.genome_from_metadata(metadata)
+        if genome is not None:
+            return genome
+        motif = str(metadata.get("motif") or metadata.get("template_name") or "momentum")
+        fields_used = tuple(metadata.get("fields_used") or ())
+        primary_field = fields_used[0] if fields_used else getattr(parent, "fields_used", ("close",))[0] if getattr(parent, "fields_used", ()) else "close"
+        primary_family = self.field_registry.get(primary_field).category if self.field_registry.contains(primary_field) else "other"
+        return self.genome_builder.build_parent_seeded_genome(
+            motif=motif,
+            primary_family=primary_family,
+            source_mode="inferred_parent",
+        )
+
+    def _build_parent_refs(self, primary_parent, parent_refs: dict[str, Any], mutation_mode: str) -> list[dict[str, str]]:
+        refs = [
+            {
+                "run_id": str(getattr(primary_parent, "run_id", "") or ""),
+                "alpha_id": str(getattr(primary_parent, "alpha_id", "") or ""),
+                "family_signature": str(getattr(primary_parent, "family_signature", "") or ""),
+            }
+        ]
+        if mutation_mode == "crossover":
+            other_ids = [alpha_id for alpha_id in parent_refs if alpha_id != getattr(primary_parent, "alpha_id", "")]
+            if other_ids:
+                partner = parent_refs[self.randomizer.choice(other_ids)]
+                refs.append(
+                    {
+                        "run_id": str(getattr(partner, "run_id", "") or ""),
+                        "alpha_id": str(getattr(partner, "alpha_id", "") or ""),
+                        "family_signature": str(getattr(partner, "family_signature", "") or ""),
+                    }
                 )
-        return candidates
+        return [ref for ref in refs if ref["alpha_id"]]
 
-    def _strategies_from_hints(self, hints: Iterable[str]) -> list:
-        strategies = [self._swap_operator_family, self._swap_wrapper]
-        if "smoothen_and_slow_down" in hints or "lengthen_lookbacks" in hints:
-            strategies.extend([self._lengthen_lookbacks, self._smoothen_expression])
-        if "simplify_and_stabilize" in hints or "reduce_complexity" in hints:
-            strategies.extend([self._simplify_expression, self._lengthen_lookbacks])
-        if "diversify_feature_family" in hints:
-            strategies.extend([self._swap_field_family, self._novel_wrapper])
-        if "favor_robust_windows" in hints or "prefer_stable_genes" in hints:
-            strategies.extend([self._lengthen_lookbacks, self._stable_wrapper])
-        return strategies
+    def _memory_parent_to_candidate(self, parent: MemoryParent):
+        class CandidateLike:
+            def __init__(self) -> None:
+                self.alpha_id = parent.alpha_id
+                self.run_id = parent.run_id
+                self.generation_metadata = parent.generation_metadata
+                self.fail_tags = parent.fail_tags
+                self.family_signature = parent.family_signature
+                self.fields_used = tuple(parent.generation_metadata.get("fields_used", ()))
+                self.expression = parent.expression
 
-    def _lengthen_lookbacks(self, expression: str, _: PatternMemorySnapshot) -> str | None:
-        larger = sorted(self.config.lookbacks)[-max(1, min(2, len(self.config.lookbacks))) :]
-        if not larger:
-            return None
-        return _swap_lookback(expression, larger, self.randomizer)
-
-    def _smoothen_expression(self, expression: str, _: PatternMemorySnapshot) -> str:
-        window = max(self.config.lookbacks)
-        wrapper = self.randomizer.choice(["ts_mean", "ts_decay_linear"])
-        return f"{wrapper}(({expression}), {window})"
-
-    def _simplify_expression(self, expression: str, _: PatternMemorySnapshot) -> str | None:
-        try:
-            node = parse_expression(expression)
-        except ValueError:
-            return None
-        if isinstance(node, FunctionCallNode) and len(node.args) == 1:
-            return to_expression(node.args[0])
-        if isinstance(node, UnaryOpNode):
-            return to_expression(node.operand)
-        if isinstance(node, BinaryOpNode):
-            return to_expression(self.randomizer.choice([node.left, node.right]))
-        return None
-
-    def _swap_field_family(self, expression: str, snapshot: PatternMemorySnapshot) -> str | None:
-        registry = self._preferred_field_registry(snapshot, mode="novel")
-        return _swap_field(expression, registry, self.randomizer)
-
-    def _swap_operator_family(self, expression: str, _: PatternMemorySnapshot) -> str | None:
-        return _swap_operator(expression, self.operator_swaps, self.randomizer)
-
-    def _swap_wrapper(self, expression: str, _: PatternMemorySnapshot) -> str:
-        return _swap_wrapper(expression, self.config.normalization_wrappers, self.randomizer)
-
-    def _stable_wrapper(self, expression: str, snapshot: PatternMemorySnapshot) -> str:
-        wrappers = self._preferred_wrappers(snapshot, mode="stable")
-        return _swap_wrapper(expression, wrappers or self.config.normalization_wrappers, self.randomizer)
-
-    def _novel_wrapper(self, expression: str, snapshot: PatternMemorySnapshot) -> str:
-        wrappers = self._preferred_wrappers(snapshot, mode="novel")
-        return _swap_wrapper(expression, wrappers or self.config.normalization_wrappers, self.randomizer)
-
-    def _preferred_field_registry(self, snapshot: PatternMemorySnapshot, mode: str) -> FieldRegistry:
-        field_patterns = snapshot.by_kind("field")
-        if mode == "novel":
-            ranked = sorted(
-                field_patterns,
-                key=lambda item: (item.avg_behavioral_novelty, -item.support, item.pattern_value),
-                reverse=True,
-            )
-        else:
-            ranked = sorted(field_patterns, key=lambda item: (item.pattern_score, item.support), reverse=True)
-        preferred = {item.pattern_value for item in ranked[: max(3, len(self.config.allowed_fields))]}
-        if not preferred:
-            return self.field_registry
-        return FieldRegistry(fields={name: spec for name, spec in self.field_registry.fields.items() if name in preferred})
-
-    def _preferred_wrappers(self, snapshot: PatternMemorySnapshot, mode: str) -> list[str]:
-        wrapper_patterns = snapshot.by_kind("wrapper")
-        if mode == "novel":
-            ranked = sorted(
-                wrapper_patterns,
-                key=lambda item: (item.avg_behavioral_novelty, -item.support, item.pattern_value),
-                reverse=True,
-            )
-        else:
-            ranked = sorted(wrapper_patterns, key=lambda item: (item.pattern_score, item.support), reverse=True)
-        return [item.pattern_value for item in ranked[: max(3, len(self.config.normalization_wrappers))]]
+        return CandidateLike()
 
     def _fallback_field_registry(self, allowed_fields: list[str]) -> FieldRegistry:
         return FieldRegistry(
@@ -175,3 +268,11 @@ class MutationPolicy:
                 for name in allowed_fields
             }
         )
+
+    def _operator_semantic_tags(self, operator_path: tuple[str, ...]) -> list[str]:
+        tags: set[str] = set()
+        for name in operator_path:
+            if not self.registry.contains(name):
+                continue
+            tags.update(self.registry.get(name).semantic_tags)
+        return sorted(tags)

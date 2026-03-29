@@ -1,9 +1,9 @@
 # WQ Tool
 
 `WQ Tool` la mot alpha research framework theo huong WorldQuant/BRAIN.
-He thong nay hien co 2 lop ro rang:
+He thong nay hien co 3 lop ro rang:
 
-- local research layer: field registry, operator registry, structured generation, validation, mutation, memory, storage
+- local research layer: field registry, operator registry, genome-based generation, validation, mutation, memory, storage
 - BRAIN integration layer: submit alpha vao BRAIN, lay ket qua that, hoc tu outcome that, va chay closed-loop
 - service layer: giu service loop 24/7, resume job dang chay, heartbeat, lock, notification, va safe shutdown
 
@@ -18,13 +18,50 @@ Quan trong:
 
 - nap OHLCV local + metadata group/factor/mask
 - nap field catalog tu snapshot BRAIN va field values tu long CSV
-- sinh alpha theo template co cau truc, type-safe, co memory
+- sinh alpha tu `Genome -> AST -> expression`, co motif grammar, wrapper stack, va metadata traceability
+- enrich operator registry tu BRAIN operator catalog de dung `summary/details` cho mutation, repair, va motif selection
 - validate expression truoc khi evaluate/simulate
-- persist lineage, pattern memory, field scores, va metadata traceability
+- mutate bang 5 che do: `exploit_local`, `structural`, `crossover`, `novelty`, `repair`
+- chon candidate bang multi-objective + diversity-preserving selection
+- persist lineage, pattern memory, rich case memory, field scores, va metadata traceability
 - submit candidate vao BRAIN qua `manual` hoac `api` adapter
 - normalize ket qua BRAIN, luu rejection reason, submission eligibility, raw payload
 - chay `generate -> simulate -> learn -> mutate -> repeat`
 - chay `run-service` 24/7 de lien tuc poll pending jobs va tao batch moi an toan
+
+## Genome Evolution Engine
+
+Generator mac dinh khong con dua tren template string phang. Moi alpha moi duoc bieu dien boi genome gom:
+
+- feature genes
+- transform/motif genes
+- horizon/lookback genes
+- wrapper genes
+- regime/conditioning genes
+- turnover-control genes
+- complexity genes
+
+Genome duoc render qua AST roi moi normalize thanh expression string de giu nguyen external contract voi validator, evaluator, CLI, va BRAIN adapter.
+
+Motif grammar ban dau gom:
+
+- momentum
+- mean reversion
+- volatility-adjusted momentum
+- spread
+- ratio
+- residualized signal
+- regime-conditioned signal
+- group-relative signal
+- liquidity-conditioned signal
+
+Bo may search moi cung them:
+
+- gene-level crossover giua parent manh
+- novelty search dua tren structural distance
+- repair policy de sua candidate loi truoc khi loai
+- case memory forward-only trong bang `alpha_cases`
+- hard diversity caps theo family, field category, horizon, va operator path
 
 ## Cau truc muc cao
 
@@ -34,9 +71,9 @@ alpha/       Parser / AST / validator / evaluator
 cli/         Argparse wiring
 data/        Data loader + field registry
 features/    Operator registry + transforms
-generator/   Template generator + mutation + guided generation
-memory/      Pattern memory + structural signatures
-services/    Brain service / closed loop / candidate selection / local services
+generator/   Genome + motif grammar + mutation + crossover + novelty + repair
+memory/      Pattern memory + case memory + structural signatures
+services/    Brain service / closed loop / multi-objective selection / diversity
 storage/     SQLite schema + repository + result stores
 workflows/   Thin workflow wrappers cho CLI
 docs/        Architecture / pipeline / config / development notes
@@ -70,14 +107,15 @@ python main.py run-service --config config/dev.yaml
 
 Closed-loop BRAIN:
 
-1. generate candidate co cau truc
+1. build genome va render expression
 2. validate/prefilter local
-3. submit top-N vao BRAIN
-4. thu ket qua that tu BRAIN
-5. luu metrics + rejection reasons + lineage
-6. cap nhat memory
-7. mutate candidate manh
-8. lap lai theo so round
+3. multi-objective selection + diversity-preserving filtering
+4. submit top-N vao BRAIN
+5. thu ket qua that tu BRAIN
+6. luu metrics + rejection reasons + lineage
+7. cap nhat pattern memory + case memory
+8. mutate/crossover/repair candidate manh
+9. lap lai theo so round
 
 ### Service mode 24/7
 
@@ -179,6 +217,7 @@ Ngoai cac bang local cu, repo da co them:
 - `submission_batches`
 - `submissions`
 - `brain_results`
+- `alpha_cases`
 - `manual_imports`
 - `closed_loop_runs`
 - `closed_loop_rounds`
@@ -198,6 +237,7 @@ Moi candidate co the truy vet duoc:
 ## Config moi
 
 `brain` block tach rieng khoi `generation`, `simulation`, `loop`.
+`adaptive_generation` gio co them config cho exploration/exploitation, novelty, mutation modes, crossover, diversity caps, va repair policy.
 
 Vi du:
 

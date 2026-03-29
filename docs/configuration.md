@@ -5,6 +5,7 @@
 Config hien tai tach thanh 4 nhom ro rang:
 
 - `generation`: local alpha search space
+- `adaptive_generation`: genome evolution policy, memory-guided mutation, novelty, diversity, repair
 - `simulation`: local evaluation/backtest cu
 - `brain`: external BRAIN simulation settings
 - `loop`: closed-loop orchestration settings
@@ -28,6 +29,8 @@ generation:
   normalization_wrappers: ["rank", "zscore", "sign"]
   random_seed: 7
   field_catalog_paths: []
+  operator_catalog_paths:
+    - inputs/wq_snapshots/2026-03-29/operators/brain_operator_catalog.json
   field_value_paths: []
   field_score_weights:
     coverage: 0.50
@@ -52,9 +55,75 @@ generation:
 Ghi chu:
 
 - `grammar_count` van duoc chap nhan de backward compatibility
-- generator mac dinh hien tai la template-driven, khong grammar-random-first
+- generator mac dinh hien tai la genome-based. Expression string van la external contract, nhung duoc render tu `Genome -> AST -> normalized expression`
+- `operator_catalog_paths` cho phep load operator catalog da export tu BRAIN de enrich registry bang `summary/details/tags/constraints`
 - config/sample moi uu tien ten operator chuan cua BRAIN nhu `ts_delta`, `ts_corr`, `ts_covariance`, `ts_decay_linear`, `ts_std_dev`
 - alias local cu nhu `delta`, `correlation`, `covariance`, `decay_linear`, `ts_std` van duoc registry chap nhan de backward compatibility, nhung khong con la mac dinh de submit BRAIN
+
+## Adaptive generation
+
+```yaml
+adaptive_generation:
+  enabled: true
+  memory_scope: regime
+  success_rule: validation_first
+  strategy_mix:
+    guided_mutation: 0.40
+    memory_templates: 0.30
+    random_exploration: 0.20
+    novelty_behavior: 0.10
+  exploration_epsilon: 0.10
+  sampling_temperature: 0.75
+  family_cap_fraction: 0.25
+  parent_pool_size: 30
+  novelty_reference_top_k: 20
+  min_pattern_support: 3
+  pattern_decay: 0.98
+  exploration_ratio: 0.35
+  novelty_weight: 0.25
+  mutation_mode_weights:
+    exploit_local: 0.35
+    structural: 0.25
+    crossover: 0.15
+    novelty: 0.15
+    repair: 0.10
+  crossover_rate: 0.15
+  diversity:
+    max_family_fraction: 0.25
+    max_field_category_fraction: 0.50
+    max_horizon_bucket_fraction: 0.40
+    max_operator_path_fraction: 0.40
+    exploration_quota_fraction: 0.20
+    min_structural_distance: 0.08
+  repair_policy:
+    enabled: true
+    max_attempts: 3
+    allow_complexity_reduction: true
+    allow_turnover_reduction: true
+    allow_wrapper_cleanup: true
+    allow_group_fixups: true
+```
+
+Y nghia:
+
+- `exploration_ratio`: ti le quota danh cho genome moi/novel candidates truoc khi mutation-heavy pool chiem het budget
+- `novelty_weight`: trong so novelty trong objective prediction va ranking
+- `mutation_mode_weights`: xac suat co ban cho 5 mutation modes. He thong van co the dieu chinh theo case memory va failure tags
+- `crossover_rate`: gioi han tan suat child lai tu 2 parent thay vi mutation 1 parent
+- `diversity.max_family_fraction`: tran ti le candidate cung family signature trong top set
+- `diversity.max_field_category_fraction`: tran ti le candidate tap trung vao cung field category
+- `diversity.max_horizon_bucket_fraction`: tran ti le candidate tap trung vao cung bucket horizon/lookback
+- `diversity.max_operator_path_fraction`: tran ti le candidate co operator path qua giong nhau
+- `diversity.exploration_quota_fraction`: quota rieng cho exploration/novelty ma exploit candidate khong duoc an het
+- `diversity.min_structural_distance`: khoang cach toi thieu de 2 genome khong bi xem la near-clone
+- `repair_policy.enabled`: bat/tat bounded repair pass sau render/mutation
+- `repair_policy.max_attempts`: so lan sua toi da truoc khi discard candidate
+- `repair_policy.allow_complexity_reduction`: cho phep tu dong giam complexity neu gene vuot budget
+- `repair_policy.allow_turnover_reduction`: cho phep thay gene/wrapper de ha turnover pressure
+- `repair_policy.allow_wrapper_cleanup`: cho phep cat wrapper lap/thua
+- `repair_policy.allow_group_fixups`: cho phep sua group/operator combination sai
+
+Case memory moi se persist vao bang `alpha_cases` va duoc dung de du doan objective cho fresh candidates, chon mutation mode, va tron exploit/explore theo regime.
 
 ## Brain config
 
@@ -180,7 +249,7 @@ loop:
 Y nghia:
 
 - `rounds`: so vong closed-loop
-- `generation_batch_size`: so candidate generate moi round
+- `generation_batch_size`: so candidate generate moi round, bao gom fresh genome, novelty candidate, va mutation/crossover children
 - `simulation_batch_size`: top-N gui BRAIN
 - `mutate_top_k`: so parent lay tu BRAIN result
 - `max_children_per_parent`: budget mutation cho round sau
@@ -282,3 +351,4 @@ Neu `brain` hoac `loop` khong co trong YAML:
 
 - config se duoc fill bang default an toan
 - workflow local cu van khong bi anh huong
+- `adaptive_generation` moi se duoc fill bang default de giu backward compatibility voi YAML cu

@@ -314,6 +314,7 @@ class ServiceWorker:
                 [self._simulation_result_from_record(result) for result in results],
                 candidates_by_id=candidates_by_id,
                 top_k=self.config.loop.mutate_top_k,
+                diversity_config=self.config.adaptive_generation.diversity,
             )
         }
         self.learning_service.persist_results(
@@ -347,6 +348,7 @@ class ServiceWorker:
             [self._simulation_result_from_record(result) for result in latest_results],
             candidates_by_id=candidates_by_id,
             top_k=self.config.loop.mutate_top_k,
+            diversity_config=self.config.adaptive_generation.diversity,
         )
         return {result.candidate_id for result in selected}
 

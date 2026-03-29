@@ -95,7 +95,7 @@ class ExpressionValidator:
                     f"Operator '{node.name}' is incompatible with input types {tuple(arg_types)}."
                 )
                 return None
-            self._validate_operator_parameters(node, errors)
+            self._validate_operator_parameters(node, spec, errors)
             return spec.resolve_output_type(tuple(arg_types))
         errors.append(f"Unsupported node type: {type(node)!r}")
         return None
@@ -115,7 +115,7 @@ class ExpressionValidator:
         errors.append(f"Binary operator '{node.operator}' received incompatible types {(left_type, right_type)}.")
         return None
 
-    def _validate_operator_parameters(self, node: FunctionCallNode, errors: list[str]) -> None:
+    def _validate_operator_parameters(self, node: FunctionCallNode, spec, errors: list[str]) -> None:
         if node.name in WINDOWED_OPERATORS and len(node.args) >= 2:
             window_node = node.args[-1]
             if not isinstance(window_node, NumberNode) or int(window_node.value) != window_node.value:
@@ -128,6 +128,10 @@ class ExpressionValidator:
                 errors.append("Clip bounds must be numeric literals.")
             elif lower.value >= upper.value:
                 errors.append("Clip lower bound must be less than upper bound.")
+        if spec.has_tag("requires_positive_input") and node.args:
+            literal_value = _literal_numeric_value(node.args[0])
+            if literal_value is not None and literal_value <= 0:
+                errors.append(f"Operator '{node.name}' requires a positive input.")
 
     def _validate_redundancy(self, node: ExprNode, errors: list[str]) -> None:
         if isinstance(node, BinaryOpNode):
@@ -181,3 +185,11 @@ def _iter_children(node: ExprNode) -> tuple[ExprNode, ...]:
     if isinstance(node, FunctionCallNode):
         return node.args
     return ()
+
+
+def _literal_numeric_value(node: ExprNode) -> float | None:
+    if isinstance(node, NumberNode):
+        return float(node.value)
+    if isinstance(node, UnaryOpNode) and node.operator == "-" and isinstance(node.operand, NumberNode):
+        return -float(node.operand.value)
+    return None

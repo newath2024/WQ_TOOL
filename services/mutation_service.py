@@ -27,7 +27,10 @@ def mutate_and_persist(
         return GenerationServiceResult(generated_count=0, inserted_count=0, exit_code=1)
 
     existing = repository.list_existing_normalized_expressions(environment.context.run_id)
-    registry = build_registry(config.generation.allowed_operators)
+    registry = build_registry(
+        config.generation.allowed_operators,
+        operator_catalog_paths=config.generation.operator_catalog_paths,
+    )
     research_context = load_research_context(config, environment, stage="mutate-data")
     field_registry = resolve_field_registry(config, research_context)
     persist_research_metadata(repository, config, environment, research_context)
@@ -38,6 +41,7 @@ def mutate_and_persist(
             regime_key=research_context.regime_key,
             parent_pool_size=max(config.adaptive_generation.parent_pool_size, from_top * 2),
         )
+        case_snapshot = repository.alpha_history.load_case_snapshot(research_context.regime_key)
         selected_parent_ids = {record.alpha_id for record in parent_records}
         parent_pool = [
             parent
@@ -58,12 +62,24 @@ def mutate_and_persist(
             snapshot=snapshot,
             parent_pool=parent_pool,
             existing_normalized=existing,
+            case_snapshot=case_snapshot,
         )
         regime_key = research_context.regime_key
     else:
-        engine = AlphaGenerationEngine(config=config.generation, registry=registry, field_registry=field_registry)
+        case_snapshot = repository.alpha_history.load_case_snapshot(research_context.regime_key)
+        engine = AlphaGenerationEngine(
+            config=config.generation,
+            adaptive_config=config.adaptive_generation,
+            registry=registry,
+            field_registry=field_registry,
+        )
         parents = [alpha_candidate_from_record(record) for record in parent_records]
-        candidates = engine.generate_mutations(parents=parents, count=count, existing_normalized=existing)
+        candidates = engine.generate_mutations(
+            parents=parents,
+            count=count,
+            existing_normalized=existing,
+            case_snapshot=case_snapshot,
+        )
 
     inserted = repository.save_alpha_candidates(environment.context.run_id, candidates)
     repository.update_run_status(environment.context.run_id, "mutated")
