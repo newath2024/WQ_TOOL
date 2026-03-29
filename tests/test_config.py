@@ -106,3 +106,66 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert "delta" not in default_config.generation.allowed_operators
     assert "correlation" not in default_config.generation.allowed_operators
     assert default_config.generation.operator_catalog_paths
+    assert default_config.adaptive_generation.region_learning.enabled is True
+    assert default_config.adaptive_generation.region_learning.local_scope == "region_regime"
+    assert default_config.adaptive_generation.region_learning.global_prior_scope == "match_non_region_regime"
+    assert default_config.adaptive_generation.region_learning.blend_mode == "linear_ramp"
+
+
+def test_region_learning_config_loads_and_legacy_yaml_keeps_defaults(tmp_path: Path) -> None:
+    config_path = tmp_path / "region_learning.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "data": {"path": "examples/sample_data/daily_ohlcv.csv"},
+                "splits": {
+                    "train": {"start": "2021-01-01", "end": "2021-02-01"},
+                    "validation": {"start": "2021-02-02", "end": "2021-03-01"},
+                    "test": {"start": "2021-03-02", "end": "2021-03-31"},
+                },
+                "generation": {
+                    "allowed_fields": ["close", "volume", "returns"],
+                    "allowed_operators": ["rank", "ts_delta"],
+                    "lookbacks": [2, 5],
+                    "max_depth": 4,
+                    "complexity_limit": 10,
+                    "template_count": 2,
+                    "grammar_count": 2,
+                    "mutation_count": 1,
+                    "normalization_wrappers": ["rank"],
+                },
+                "adaptive_generation": {
+                    "region_learning": {
+                        "enabled": True,
+                        "local_scope": "region_regime",
+                        "global_prior_scope": "match_non_region_regime",
+                        "blend_mode": "linear_ramp",
+                        "min_local_pattern_samples": 5,
+                        "full_local_pattern_samples": 25,
+                        "min_local_case_samples": 3,
+                        "full_local_case_samples": 12,
+                        "allow_global_parent_fallback": False,
+                    }
+                },
+                "backtest": {"timeframe": "1d"},
+                "evaluation": {
+                    "hard_filters": {},
+                    "data_requirements": {},
+                    "diversity": {},
+                    "ranking": {},
+                    "robustness": {},
+                },
+                "storage": {"path": str(tmp_path / "out.sqlite3")},
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert config.adaptive_generation.region_learning.min_local_pattern_samples == 5
+    assert config.adaptive_generation.region_learning.full_local_pattern_samples == 25
+    assert config.adaptive_generation.region_learning.min_local_case_samples == 3
+    assert config.adaptive_generation.region_learning.full_local_case_samples == 12
+    assert config.adaptive_generation.region_learning.allow_global_parent_fallback is False

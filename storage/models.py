@@ -17,6 +17,8 @@ class RunRecord:
     dataset_fingerprint: str | None = None
     selected_timeframe: str | None = None
     regime_key: str | None = None
+    global_regime_key: str | None = None
+    region: str | None = None
     entry_command: str | None = None
 
 
@@ -103,7 +105,9 @@ class SimulationCacheRecord:
 class AlphaHistoryRecord:
     run_id: str
     alpha_id: str
+    region: str
     regime_key: str
+    global_regime_key: str
     expression: str
     normalized_expression: str
     generation_mode: str
@@ -157,7 +161,9 @@ class AlphaPatternRecord:
 class AlphaPatternMembershipRecord:
     run_id: str
     alpha_id: str
+    region: str
     regime_key: str
+    global_regime_key: str
     pattern_id: str
     pattern_kind: str
     pattern_value: str
@@ -168,7 +174,9 @@ class AlphaPatternMembershipRecord:
 class AlphaCaseRecord:
     run_id: str
     alpha_id: str
+    region: str
     regime_key: str
+    global_regime_key: str
     metric_source: str
     family_signature: str
     structural_signature_json: str

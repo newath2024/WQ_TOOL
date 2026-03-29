@@ -27,7 +27,7 @@ class ServiceScheduler:
             remaining = max(int((cooldown_until - current).total_seconds()), 0)
             if remaining > 0:
                 return max(1, min(remaining, self.config.heartbeat_interval_seconds))
-        if outcome.status == "waiting_persona":
+        if outcome.status in {"waiting_persona", "auth_throttled"}:
             return self.config.persona_retry_interval_seconds
         if outcome.status == "paused_quarantine":
             return self.config.heartbeat_interval_seconds

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
-from adapters.brain_api_adapter import BrainApiAdapter, PersonaVerificationRequired
+from adapters.brain_api_adapter import BiometricsThrottled, BrainApiAdapter, PersonaVerificationRequired
 from core.config import load_config
 from core.run_context import RunContext
 from generator.engine import AlphaCandidate
@@ -158,6 +159,118 @@ def test_service_worker_waits_for_persona_and_throttles_notifications() -> None:
     assert adapter.persona_notifications == ["https://persona.example/scan"]
 
 
+def test_service_worker_resends_notification_when_persona_url_changes() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        environment = _environment("run-persona-refresh")
+        runtime = _runtime_record(run_id="run-persona-refresh")
+        runtime = replace(
+            runtime,
+            persona_url="https://persona.example/scan-old",
+            persona_last_notification_at=_timestamp(),
+        )
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter(
+            auth_plan=[
+                PersonaVerificationRequired("https://persona.example/scan-new"),
+            ]
+        )
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=environment,
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=999999),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert outcome.status == "waiting_persona"
+    assert adapter.persona_notifications == ["https://persona.example/scan-new"]
+    assert refreshed is not None
+    assert refreshed.persona_url == "https://persona.example/scan-new"
+
+
+def test_session_manager_reports_biometrics_throttle_without_failing_service() -> None:
+    adapter = FakeApiAdapter(auth_plan=[BiometricsThrottled("BIOMETRICS_THROTTLED", retry_after_seconds=45)])
+    manager = SessionManager(adapter)
+
+    state = manager.ensure_session(runtime=_runtime_record(run_id="run-throttled"))
+
+    assert state.status == "auth_throttled"
+    assert state.retry_after_seconds == 45
+
+
+def test_service_worker_waits_when_biometrics_are_throttled() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        environment = _environment("run-throttled")
+        runtime = _runtime_record(run_id="run-throttled")
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter(auth_plan=[BiometricsThrottled("BIOMETRICS_THROTTLED", retry_after_seconds=45)])
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=environment,
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert outcome.status == "auth_throttled"
+    assert outcome.next_sleep_seconds == 45
+    assert refreshed is not None
+    assert refreshed.status == "auth_throttled"
+    assert refreshed.persona_wait_started_at is not None
+
+
+def test_service_worker_rechecks_auth_during_auth_related_cooldown() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        run_id = "run-auth-cooldown"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        adapter = FakeApiAdapter(
+            auth_plan=[{"mode": "session_cookie", "status": "ready"}],
+            status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]},
+        )
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+        now = datetime.now(UTC)
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            status="cooldown",
+            cooldown_until=(now + timedelta(seconds=60)).isoformat(),
+            last_error='BRAIN authentication failed with status 429: {"detail":"BIOMETRICS_THROTTLED"}',
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.status == "idle"
+    assert outcome.completed_count == 1
+
+
 def test_service_runner_resumes_pending_jobs_without_duplicate_submission() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -246,6 +359,29 @@ def test_service_runner_releases_lock_on_graceful_shutdown() -> None:
     assert runtime is not None
     assert runtime.owner_token == ""
     assert runtime.status == "service_stopped"
+
+
+def test_service_runner_interruptible_sleep_stops_without_waiting_full_interval() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        runner = ServiceRunner(
+            repository,
+            config=config,
+            environment=_environment("run-sleep-stop"),
+            brain_service=BrainService(repository, config.brain, adapter=FakeApiAdapter()),
+            sleep_fn=lambda seconds: sleep_calls.append(seconds) or runner.request_shutdown(),
+            install_signal_handlers=False,
+        )
+        sleep_calls: list[float] = []
+
+        runner._sleep_interruptibly(120.0)
+    finally:
+        repository.close()
+
+    assert sleep_calls
+    assert sleep_calls[0] <= 1.0
+    assert len(sleep_calls) == 1
 
 
 def test_service_quarantines_ambiguous_submitting_batch_without_duplicate_submission() -> None:

@@ -151,8 +151,10 @@ def _run_to_dict(run: RunRecord | None) -> dict[str, Any] | None:
         "started_at": run.started_at,
         "finished_at": run.finished_at,
         "profile_name": run.profile_name,
+        "region": run.region,
         "selected_timeframe": run.selected_timeframe,
         "regime_key": run.regime_key,
+        "global_regime_key": run.global_regime_key,
         "entry_command": run.entry_command,
     }
 

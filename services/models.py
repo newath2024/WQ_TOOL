@@ -9,7 +9,7 @@ from evaluation.filtering import EvaluatedAlpha
 from features.transforms import ResearchMatrices
 from generator.engine import AlphaCandidate
 from memory.case_memory import ObjectiveVector
-from memory.pattern_memory import PatternMemoryService, StructuralSignature
+from memory.pattern_memory import BlendDiagnostics, PatternMemoryService, RegionLearningContext, StructuralSignature
 from storage.models import MetricRecord, RunRecord, SelectionRecord
 
 
@@ -28,7 +28,10 @@ class ResearchContext:
 
     bundle: MarketDataBundle
     matrices: ResearchMatrices
+    region: str
     regime_key: str
+    global_regime_key: str
+    region_learning_context: RegionLearningContext
     memory_service: PatternMemoryService
     field_registry: FieldRegistry
 
@@ -40,7 +43,9 @@ class GenerationServiceResult:
     generated_count: int
     inserted_count: int
     exit_code: int = 0
+    region: str = ""
     regime_key: str | None = None
+    global_regime_key: str | None = None
     pattern_count: int = 0
     export_paths: dict[str, str] = field(default_factory=dict)
 
@@ -52,8 +57,10 @@ class EvaluationServiceResult:
     evaluations: list[EvaluatedAlpha]
     metric_records: list[MetricRecord]
     selection_records: list[SelectionRecord]
-    regime_key: str
-    evaluation_timestamp: str
+    region: str = ""
+    regime_key: str = ""
+    global_regime_key: str = ""
+    evaluation_timestamp: str = ""
     export_paths: dict[str, str] = field(default_factory=dict)
 
 
@@ -77,11 +84,15 @@ class ReportSummary:
 
     run: RunRecord
     profile_name: str
+    region: str
     dataset_fingerprint: str
     regime_key: str
+    global_regime_key: str
     selected_timeframe: str
     cache_hits: int
     validation_rows: int
+    pattern_blend: BlendDiagnostics | None = None
+    case_blend: BlendDiagnostics | None = None
     top_alphas: list[TopAlphaRow] = field(default_factory=list)
     submission_summary: dict[str, dict[str, int]] = field(default_factory=dict)
     top_gene: dict | None = None

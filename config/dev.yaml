@@ -115,6 +115,16 @@ adaptive_generation:
     noisy_short_horizon_max_lookback: 3
     novelty_success_threshold: 0.70
     score_prior_weight: 3.0
+  region_learning:
+    enabled: true
+    local_scope: region_regime
+    global_prior_scope: match_non_region_regime
+    blend_mode: linear_ramp
+    min_local_pattern_samples: 20
+    full_local_pattern_samples: 100
+    min_local_case_samples: 10
+    full_local_case_samples: 50
+    allow_global_parent_fallback: false
 
 simulation:
   delay_mode: fast_d1
@@ -231,7 +241,7 @@ service:
   resume_incomplete_jobs: true
   shutdown_grace_period_seconds: 30
   stuck_job_after_seconds: 600
-  persona_retry_interval_seconds: 120
+  persona_retry_interval_seconds: 30
   persona_email_cooldown_seconds: 600
 
 runtime:

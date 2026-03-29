@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from core.config import AppConfig
-from services.data_service import resolve_regime_key
+from services.data_service import resolve_region_learning_context
 from services.models import CommandEnvironment, ReportSummary, TopAlphaRow
 from storage.repository import SQLiteRepository
 
@@ -40,7 +40,22 @@ def build_report_summary(
     run = repository.get_run(environment.context.run_id)
     if run is None:
         return None
-    regime_key = run.regime_key or resolve_regime_key(repository, config, environment, stage="report-data")
+    learning_context = resolve_region_learning_context(repository, config, environment, stage="report-data")
+    snapshot = repository.alpha_history.load_snapshot(
+        regime_key=learning_context.regime_key,
+        region=learning_context.region,
+        global_regime_key=learning_context.global_regime_key,
+        parent_pool_size=config.adaptive_generation.parent_pool_size,
+        region_learning_config=config.adaptive_generation.region_learning,
+        pattern_decay=config.adaptive_generation.pattern_decay,
+        prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+    )
+    case_snapshot = repository.alpha_history.load_case_snapshot(
+        learning_context.regime_key,
+        region=learning_context.region,
+        global_regime_key=learning_context.global_regime_key,
+        region_learning_config=config.adaptive_generation.region_learning,
+    )
     cache_stats = repository.get_cache_stats(environment.context.run_id)
     submission_rows = repository.get_submission_tests_for_run(environment.context.run_id)
     summary: dict[str, dict[str, int]] = {}
@@ -63,14 +78,31 @@ def build_report_summary(
     return ReportSummary(
         run=run,
         profile_name=run.profile_name or config.runtime.profile_name,
+        region=learning_context.region,
         dataset_fingerprint=run.dataset_fingerprint or "",
-        regime_key=regime_key,
+        regime_key=learning_context.regime_key,
+        global_regime_key=learning_context.global_regime_key,
         selected_timeframe=run.selected_timeframe or config.backtest.timeframe,
         cache_hits=cache_stats["cache_hits"],
         validation_rows=cache_stats["validation_rows"],
+        pattern_blend=snapshot.blend,
+        case_blend=case_snapshot.blend,
         top_alphas=list_top_alphas(repository, environment, limit),
         submission_summary=summary,
-        top_gene=(repository.alpha_history.get_top_genes(regime_key, limit=1) or [None])[0],
+        top_gene=(
+            [
+                {
+                    "pattern_kind": row.pattern_kind,
+                    "pattern_value": row.pattern_value,
+                    "pattern_score": row.pattern_score,
+                    "support": row.support,
+                    "success_count": row.success_count,
+                    "failure_count": row.failure_count,
+                }
+                for row in snapshot.ordered_patterns(scope="blended", kind="subexpression", limit=1)
+            ]
+            or [None]
+        )[0],
         fail_tags=repository.alpha_history.get_run_fail_tag_summary(environment.context.run_id),
         rejection_reasons=repository.alpha_history.get_run_rejection_reason_summary(environment.context.run_id, limit),
         generation_mix=repository.get_generation_mix(environment.context.run_id),

@@ -90,6 +90,7 @@ def init_run(
         started_at=environment.context.started_at,
         profile_name=config.runtime.profile_name,
         selected_timeframe=config.backtest.timeframe,
+        region=config.brain.region,
         entry_command=environment.command_name,
     )
 

@@ -10,12 +10,14 @@ from adapters.simulation_adapter import SimulationAdapter
 from core.config import load_config
 from core.run_context import RunContext
 from data.field_registry import FieldRegistry, FieldSpec
+from evaluation.critic import AlphaDiagnosis
 from generator.engine import AlphaCandidate
-from memory.pattern_memory import PatternMemorySnapshot
+from memory.case_memory import CaseMemoryService
+from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.brain_service import BrainService
 from services.candidate_selection_service import CandidateSelectionService
 from services.closed_loop_service import ClosedLoopService
-from services.models import CommandEnvironment, SimulationJob
+from services.models import CommandEnvironment, SimulationJob, SimulationResult
 from services.runtime_service import init_run
 from storage.models import BrainResultRecord, SubmissionBatchRecord, SubmissionRecord
 from storage.repository import SQLiteRepository
@@ -438,6 +440,98 @@ def test_closed_loop_service_runs_with_mocked_adapter(tmp_path: Path) -> None:
     assert history >= 1
 
 
+def test_region_specific_memory_isolated_and_cold_region_can_fall_back_to_global_priors(tmp_path: Path) -> None:
+    repository = SQLiteRepository(":memory:")
+    memory_service = PatternMemoryService()
+    case_memory_service = CaseMemoryService()
+    try:
+        usa_config = load_config("config/dev.yaml")
+        usa_config.storage.path = ":memory:"
+        usa_config.brain.region = "USA"
+        eur_config = load_config("config/dev.yaml")
+        eur_config.storage.path = ":memory:"
+        eur_config.brain.region = "EUR"
+        asi_config = load_config("config/dev.yaml")
+        asi_config.storage.path = ":memory:"
+        asi_config.brain.region = "ASI"
+
+        usa_context = memory_service.build_learning_context("shared-dataset", usa_config)
+        eur_context = memory_service.build_learning_context("shared-dataset", eur_config)
+        asi_context = memory_service.build_learning_context("shared-dataset", asi_config)
+
+        _persist_brain_learning_record(
+            repository,
+            config=usa_config,
+            learning_context=usa_context,
+            candidate=_candidate("alpha-usa", "rank(ts_mean(close, 5))", template_name="momentum"),
+            outcome_region="USA",
+        )
+        _persist_brain_learning_record(
+            repository,
+            config=eur_config,
+            learning_context=eur_context,
+            candidate=_candidate("alpha-eur", "zscore(ts_delta(close, 2))", template_name="mean_reversion"),
+            outcome_region="EUR",
+        )
+
+        usa_snapshot = repository.alpha_history.load_snapshot(
+            regime_key=usa_context.regime_key,
+            region=usa_context.region,
+            global_regime_key=usa_context.global_regime_key,
+            parent_pool_size=10,
+            region_learning_config=usa_config.adaptive_generation.region_learning,
+            pattern_decay=usa_config.adaptive_generation.pattern_decay,
+            prior_weight=usa_config.adaptive_generation.critic_thresholds.score_prior_weight,
+        )
+        cold_snapshot = repository.alpha_history.load_snapshot(
+            regime_key=asi_context.regime_key,
+            region=asi_context.region,
+            global_regime_key=asi_context.global_regime_key,
+            parent_pool_size=10,
+            region_learning_config=asi_config.adaptive_generation.region_learning,
+            pattern_decay=asi_config.adaptive_generation.pattern_decay,
+            prior_weight=asi_config.adaptive_generation.critic_thresholds.score_prior_weight,
+        )
+        cold_case_snapshot = repository.alpha_history.load_case_snapshot(
+            asi_context.regime_key,
+            region=asi_context.region,
+            global_regime_key=asi_context.global_regime_key,
+            region_learning_config=asi_config.adaptive_generation.region_learning,
+        )
+
+        usa_parent_ids = {parent.alpha_id for parent in usa_snapshot.top_parents}
+        local_family_values = {pattern.pattern_value for pattern in usa_snapshot.ordered_patterns(scope="local", kind="family")}
+        global_family_values = {pattern.pattern_value for pattern in usa_snapshot.ordered_patterns(scope="global", kind="family")}
+        cold_score, _, signature, _ = memory_service.score_expression(
+            "rank(ts_mean(close, 5))",
+            cold_snapshot,
+            min_pattern_support=1,
+        )
+        predicted = case_memory_service.predict_objectives(
+            generation_metadata={"motif": "momentum", "mutation_mode": "exploit_local"},
+            signature=signature,
+            snapshot=cold_case_snapshot,
+            novelty_score=0.5,
+            diversity_score=0.5,
+        )
+    finally:
+        repository.close()
+
+    assert usa_parent_ids == {"alpha-usa"}
+    assert usa_snapshot.global_sample_count == 1
+    assert local_family_values
+    assert global_family_values
+    assert local_family_values != global_family_values
+    assert not cold_snapshot.top_parents
+    assert cold_snapshot.sample_count == 0
+    assert cold_snapshot.global_sample_count == 2
+    assert cold_snapshot.blend is not None and cold_snapshot.blend.global_weight == 1.0
+    assert cold_case_snapshot.sample_count == 0
+    assert cold_case_snapshot.global_sample_count == 2
+    assert predicted.fitness > 0.0
+    assert cold_score > 0.0
+
+
 def _candidate(
     alpha_id: str,
     expression: str,
@@ -459,6 +553,77 @@ def _candidate(
         operators_used=operators_used,
         depth=2,
         generation_metadata={},
+    )
+
+
+def _persist_brain_learning_record(
+    repository: SQLiteRepository,
+    *,
+    config,
+    learning_context,
+    candidate: AlphaCandidate,
+    outcome_region: str,
+) -> None:
+    environment = _init_environment(repository, config, "run-brain-sim")
+    repository.save_dataset_summary(
+        environment.context.run_id,
+        summary={},
+        dataset_fingerprint="shared-dataset",
+        selected_timeframe=config.backtest.timeframe,
+        regime_key=learning_context.regime_key,
+        global_regime_key=learning_context.global_regime_key,
+        region=learning_context.region,
+    )
+    structural_signature = PatternMemoryService().extract_signature(candidate.expression)
+    result = SimulationResult(
+        expression=candidate.expression,
+        job_id=f"job-{candidate.alpha_id}",
+        status="completed",
+        region=outcome_region,
+        universe="TOP3000",
+        delay=1,
+        neutralization="sector",
+        decay=0,
+        metrics={
+            "sharpe": 1.2,
+            "fitness": 1.1,
+            "turnover": 0.4,
+            "drawdown": 0.2,
+            "returns": 0.08,
+            "margin": 0.04,
+        },
+        submission_eligible=True,
+        rejection_reason=None,
+        raw_result={},
+        simulated_at="2026-01-01T00:05:00+00:00",
+        candidate_id=candidate.alpha_id,
+        batch_id=f"batch-{candidate.alpha_id}",
+        run_id=environment.context.run_id,
+        round_index=1,
+        backend="manual",
+    )
+    repository.alpha_history.persist_brain_outcomes(
+        run_id=environment.context.run_id,
+        regime_key=learning_context.regime_key,
+        region=learning_context.region,
+        global_regime_key=learning_context.global_regime_key,
+        entries=[
+            {
+                "candidate": candidate,
+                "result": result,
+                "diagnosis": AlphaDiagnosis(success_tags=["selected_top_alpha"], fail_tags=[]),
+                "structural_signature": structural_signature,
+                "gene_ids": [],
+                "outcome_score": 0.9,
+                "behavioral_novelty_score": 0.7,
+                "passed_filters": True,
+                "selected": True,
+                "metric_source": "external_brain",
+            }
+        ],
+        pattern_decay=config.adaptive_generation.pattern_decay,
+        prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+        created_at="2026-01-01T00:10:00+00:00",
     )
 
 

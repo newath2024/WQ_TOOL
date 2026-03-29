@@ -12,7 +12,7 @@ from generator.grammar import MotifGrammar
 from generator.mutation_policy import MutationPolicy
 from generator.repair_policy import RepairPolicy
 from memory.case_memory import CaseMemorySnapshot, CaseMemoryService
-from memory.pattern_memory import MemoryParent, PatternMemoryService, PatternMemorySnapshot
+from memory.pattern_memory import MemoryParent, PatternMemoryService, PatternMemorySnapshot, RegionLearningContext
 
 
 class GuidedGenerator:
@@ -23,6 +23,7 @@ class GuidedGenerator:
         registry: OperatorRegistry,
         memory_service: PatternMemoryService,
         field_registry: FieldRegistry,
+        region_learning_context: RegionLearningContext | None = None,
     ) -> None:
         self.generation_config = generation_config
         self.adaptive_config = adaptive_config
@@ -35,6 +36,7 @@ class GuidedGenerator:
             adaptive_config=adaptive_config,
             registry=registry,
             field_registry=field_registry,
+            region_learning_context=region_learning_context,
         )
         self.random = random.Random(generation_config.random_seed)
         self.genome_builder = GenomeBuilder(
@@ -93,6 +95,10 @@ class GuidedGenerator:
                     render,
                     mutation_mode="exploit_local",
                     repair_actions=repair_actions,
+                    memory_context=self.base_engine._memory_context_metadata(  # noqa: SLF001
+                        pattern_snapshot=snapshot,
+                        case_snapshot=case_snapshot,
+                    ),
                 ),
             )
             if candidate is None or candidate.normalized_expression in existing:
@@ -113,6 +119,10 @@ class GuidedGenerator:
                     render,
                     mutation_mode="novelty",
                     repair_actions=repair_actions,
+                    memory_context=self.base_engine._memory_context_metadata(  # noqa: SLF001
+                        pattern_snapshot=snapshot,
+                        case_snapshot=case_snapshot,
+                    ),
                 ),
             )
             if candidate is None or candidate.normalized_expression in existing:
@@ -148,6 +158,13 @@ class GuidedGenerator:
             if not variants:
                 continue
             expression, metadata = variants[0]
+            metadata.setdefault(
+                "memory_context",
+                self.base_engine._memory_context_metadata(  # noqa: SLF001
+                    pattern_snapshot=snapshot,
+                    case_snapshot=case_snapshot,
+                ),
+            )
             parent_ids = tuple(ref["alpha_id"] for ref in metadata.get("parent_refs", []) if ref.get("alpha_id"))
             candidate = self.base_engine.build_candidate(
                 expression=expression,

@@ -14,6 +14,11 @@ DEFAULT_OUTPUT_DIR = Path("outputs")
 _GENERATED_COLUMNS = [
     "run_id",
     "alpha_id",
+    "region",
+    "regime_key",
+    "global_regime_key",
+    "pattern_local_weight",
+    "case_local_weight",
     "expression",
     "normalized_expression",
     "generation_mode",
@@ -33,6 +38,11 @@ _GENERATED_COLUMNS = [
 _EVALUATED_COLUMNS = [
     "run_id",
     "alpha_id",
+    "region",
+    "regime_key",
+    "global_regime_key",
+    "pattern_local_weight",
+    "case_local_weight",
     "expression",
     "normalized_expression",
     "generation_mode",
@@ -60,7 +70,6 @@ _EVALUATED_COLUMNS = [
     "delay_mode",
     "neutralization",
     "simulation_signature",
-    "regime_key",
     "fail_tags",
     "success_tags",
     "mutation_hints",
@@ -73,6 +82,11 @@ _SELECTED_COLUMNS = [
     "run_id",
     "rank",
     "alpha_id",
+    "region",
+    "regime_key",
+    "global_regime_key",
+    "pattern_local_weight",
+    "case_local_weight",
     "expression",
     "generation_mode",
     "template",
@@ -103,10 +117,19 @@ def export_generated_alphas(
     rows: list[dict[str, Any]] = []
     for record in records:
         parents = parent_refs.get(record.alpha_id, [])
+        metadata = _parse_json(record.generation_metadata)
+        memory_context = metadata.get("memory_context", {}) if isinstance(metadata, dict) else {}
+        pattern_blend = memory_context.get("pattern_blend", {}) if isinstance(memory_context, dict) else {}
+        case_blend = memory_context.get("case_blend", {}) if isinstance(memory_context, dict) else {}
         rows.append(
             {
                 "run_id": record.run_id,
                 "alpha_id": record.alpha_id,
+                "region": str(metadata.get("region") or ""),
+                "regime_key": str(metadata.get("regime_key") or ""),
+                "global_regime_key": str(metadata.get("global_regime_key") or ""),
+                "pattern_local_weight": pattern_blend.get("local_weight", ""),
+                "case_local_weight": case_blend.get("local_weight", ""),
                 "expression": record.expression,
                 "normalized_expression": record.normalized_expression,
                 "generation_mode": record.generation_mode,
@@ -150,11 +173,19 @@ def export_evaluated_alphas(
         delay_mode = str(evaluation.simulation_profile.get("delay_mode", ""))
         neutralization = str(evaluation.simulation_profile.get("neutralization", ""))
         mutation_hints = _pipe_join(hint.hint for hint in evaluation.diagnosis.mutation_hints)
+        memory_context = evaluation.candidate.generation_metadata.get("memory_context", {})
+        pattern_blend = memory_context.get("pattern_blend", {}) if isinstance(memory_context, dict) else {}
+        case_blend = memory_context.get("case_blend", {}) if isinstance(memory_context, dict) else {}
 
         evaluated_rows.append(
             {
                 "run_id": environment.context.run_id,
                 "alpha_id": evaluation.candidate.alpha_id,
+                "region": result.region,
+                "regime_key": result.regime_key,
+                "global_regime_key": result.global_regime_key,
+                "pattern_local_weight": pattern_blend.get("local_weight", ""),
+                "case_local_weight": case_blend.get("local_weight", ""),
                 "expression": evaluation.candidate.expression,
                 "normalized_expression": evaluation.candidate.normalized_expression,
                 "generation_mode": evaluation.candidate.generation_mode,
@@ -182,7 +213,6 @@ def export_evaluated_alphas(
                 "delay_mode": delay_mode,
                 "neutralization": neutralization,
                 "simulation_signature": evaluation.simulation_signature,
-                "regime_key": evaluation.regime_key,
                 "fail_tags": _pipe_join(evaluation.diagnosis.fail_tags),
                 "success_tags": _pipe_join(evaluation.diagnosis.success_tags),
                 "mutation_hints": mutation_hints,
@@ -198,6 +228,11 @@ def export_evaluated_alphas(
                     "run_id": environment.context.run_id,
                     "rank": selection.rank,
                     "alpha_id": evaluation.candidate.alpha_id,
+                    "region": result.region,
+                    "regime_key": result.regime_key,
+                    "global_regime_key": result.global_regime_key,
+                    "pattern_local_weight": pattern_blend.get("local_weight", ""),
+                    "case_local_weight": case_blend.get("local_weight", ""),
                     "expression": evaluation.candidate.expression,
                     "generation_mode": evaluation.candidate.generation_mode,
                     "template": evaluation.candidate.template_name,
@@ -290,3 +325,17 @@ def _json_or_pipe(value: Any) -> str:
     if isinstance(value, list):
         return _pipe_join(value)
     return str(value)
+
+
+def _parse_json(value: Any) -> dict[str, Any]:
+    if not value:
+        return {}
+    if isinstance(value, dict):
+        return value
+    if isinstance(value, str):
+        try:
+            parsed = json.loads(value)
+        except json.JSONDecodeError:
+            return {}
+        return parsed if isinstance(parsed, dict) else {}
+    return {}

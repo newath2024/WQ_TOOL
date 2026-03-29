@@ -38,6 +38,7 @@ class CandidateSelectionService:
                 min_pattern_support=min_pattern_support,
                 generation_metadata=candidate.generation_metadata,
                 field_categories=field_categories,
+                scope="blended",
             )
             diversity_score = max(novelty_score, 1.0 - min(1.0, signature.complexity / max(1, 2 * candidate.complexity or 1)))
             objective_vector = self.case_memory_service.predict_objectives(
@@ -47,6 +48,17 @@ class CandidateSelectionService:
                 novelty_score=novelty_score,
                 diversity_score=diversity_score,
             )
+            candidate.generation_metadata["region"] = snapshot.region
+            candidate.generation_metadata["regime_key"] = snapshot.regime_key
+            candidate.generation_metadata["global_regime_key"] = snapshot.global_regime_key
+            memory_context = candidate.generation_metadata.get("memory_context")
+            if not isinstance(memory_context, dict):
+                memory_context = {}
+                candidate.generation_metadata["memory_context"] = memory_context
+            if snapshot.blend is not None:
+                memory_context["pattern_blend"] = snapshot.blend.to_dict()
+            if case_snapshot is not None and case_snapshot.blend is not None:
+                memory_context["case_blend"] = case_snapshot.blend.to_dict()
             candidate.generation_metadata["selection_objectives"] = objective_vector.to_dict()
             field_score = self._average_field_score(candidate, field_registry)
             heuristic = 0.40 * field_score + 0.30 * family_score + 0.30 * diversity_score
@@ -58,7 +70,14 @@ class CandidateSelectionService:
                 family_score=family_score,
                 diversity_score=diversity_score,
                 structural_signature=signature,
-                ranking_rationale={"objective_vector": objective_vector.to_dict()},
+                ranking_rationale={
+                    "objective_vector": objective_vector.to_dict(),
+                    "region": snapshot.region,
+                    "regime_key": snapshot.regime_key,
+                    "global_regime_key": snapshot.global_regime_key,
+                    "pattern_blend": snapshot.blend.to_dict() if snapshot.blend is not None else {},
+                    "case_blend": case_snapshot.blend.to_dict() if case_snapshot and case_snapshot.blend is not None else {},
+                },
             )
             score_by_id[candidate.alpha_id] = candidate_score
             ranked_items.append(self._candidate_ranked_item(candidate_score, field_registry))

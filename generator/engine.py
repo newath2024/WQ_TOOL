@@ -17,7 +17,7 @@ from generator.grammar import MotifGrammar
 from generator.mutation_policy import MutationPolicy
 from generator.repair_policy import RepairPolicy
 from memory.case_memory import CaseMemorySnapshot
-from memory.pattern_memory import PatternMemoryService
+from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot, RegionLearningContext
 
 
 @dataclass(frozen=True, slots=True)
@@ -43,11 +43,13 @@ class AlphaGenerationEngine:
         registry: OperatorRegistry,
         field_registry: FieldRegistry | None = None,
         adaptive_config: AdaptiveGenerationConfig | None = None,
+        region_learning_context: RegionLearningContext | None = None,
     ) -> None:
         self.config = config
         self.registry = registry
         self.adaptive_config = adaptive_config or AdaptiveGenerationConfig()
         self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
+        self.region_learning_context = region_learning_context
         self.memory_service = PatternMemoryService()
         self.grammar = MotifGrammar()
         self.genome_builder = GenomeBuilder(
@@ -101,6 +103,7 @@ class AlphaGenerationEngine:
                     render,
                     mutation_mode="novelty" if novelty_bias else "exploit_local",
                     repair_actions=repair_actions,
+                    memory_context=self._memory_context_metadata(case_snapshot=case_snapshot),
                 ),
             )
             if candidate is None or candidate.normalized_expression in existing:
@@ -131,6 +134,7 @@ class AlphaGenerationEngine:
             if not payload:
                 continue
             expression, mode, parent_ids, metadata = payload[0]
+            metadata.setdefault("memory_context", self._memory_context_metadata(case_snapshot=case_snapshot))
             candidate = self.build_candidate(
                 expression=expression,
                 mode=mode,
@@ -171,6 +175,13 @@ class AlphaGenerationEngine:
         generation_metadata: dict[str, Any] | None = None,
     ) -> AlphaCandidate | None:
         metadata = dict(generation_metadata or {})
+        if self.region_learning_context is not None:
+            metadata.setdefault("region", self.region_learning_context.region)
+            metadata.setdefault("regime_key", self.region_learning_context.regime_key)
+            metadata.setdefault("global_regime_key", self.region_learning_context.global_regime_key)
+            memory_context = metadata.get("memory_context")
+            if not isinstance(memory_context, dict):
+                metadata["memory_context"] = self._memory_context_metadata()
         try:
             node = parse_expression(expression)
         except ValueError:
@@ -235,8 +246,9 @@ class AlphaGenerationEngine:
         repair_actions: tuple[str, ...] = (),
         parent_refs: list[dict[str, str]] | None = None,
         selection_objectives: dict[str, float] | None = None,
+        memory_context: dict[str, object] | None = None,
     ) -> dict[str, Any]:
-        return {
+        payload = {
             "template_name": render.genome.motif,
             "motif": render.genome.motif,
             "genome": render.genome.to_dict(),
@@ -255,6 +267,26 @@ class AlphaGenerationEngine:
             "parent_refs": list(parent_refs or []),
             "selection_objectives": dict(selection_objectives or {}),
         }
+        if self.region_learning_context is not None:
+            payload.update(self.region_learning_context.to_dict())
+        if memory_context:
+            payload["memory_context"] = dict(memory_context)
+        return payload
+
+    def _memory_context_metadata(
+        self,
+        *,
+        pattern_snapshot: PatternMemorySnapshot | None = None,
+        case_snapshot: CaseMemorySnapshot | None = None,
+    ) -> dict[str, object]:
+        payload: dict[str, object] = {}
+        if self.region_learning_context is not None:
+            payload.update(self.region_learning_context.to_dict())
+        if pattern_snapshot is not None and pattern_snapshot.blend is not None:
+            payload["pattern_blend"] = pattern_snapshot.blend.to_dict()
+        if case_snapshot is not None and case_snapshot.blend is not None:
+            payload["case_blend"] = case_snapshot.blend.to_dict()
+        return payload
 
     def _operator_semantic_tags(self, operator_path: tuple[str, ...]) -> list[str]:
         tags: set[str] = set()

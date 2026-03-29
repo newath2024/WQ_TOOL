@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from email.message import EmailMessage
 from typing import Protocol
 
+import requests
+
 
 class SmtpClientProtocol(Protocol):
     def ehlo(self) -> None: ...
@@ -20,6 +22,10 @@ class SmtpClientProtocol(Protocol):
     def __exit__(self, exc_type, exc, tb) -> None: ...
 
 
+class HttpSessionProtocol(Protocol):
+    def post(self, url: str, **kwargs): ...
+
+
 @dataclass(slots=True, frozen=True)
 class SmtpNotificationConfig:
     host: str
@@ -33,6 +39,18 @@ class SmtpNotificationConfig:
     def is_configured(self) -> bool:
         required = (self.host, self.username, self.password, self.from_email, self.to_email)
         return self.port > 0 and all(str(value).strip() for value in required)
+
+
+@dataclass(slots=True, frozen=True)
+class TelegramNotificationConfig:
+    bot_token: str
+    chat_id: str
+    api_base_url: str = "https://api.telegram.org"
+    disable_web_page_preview: bool = True
+
+    def is_configured(self) -> bool:
+        required = (self.bot_token, self.chat_id, self.api_base_url)
+        return all(str(value).strip() for value in required)
 
 
 class EmailService:
@@ -67,3 +85,36 @@ class EmailService:
                 client.ehlo()
             client.login(smtp_config.username, smtp_config.password)
             client.send_message(message)
+
+
+class TelegramService:
+    def __init__(self, session: HttpSessionProtocol | None = None) -> None:
+        self.session = session or requests.Session()
+
+    def send_persona_link(self, *, persona_url: str, telegram_config: TelegramNotificationConfig) -> None:
+        if not telegram_config.is_configured():
+            raise ValueError("Telegram configuration is incomplete; cannot send Persona notification.")
+
+        message = "\n".join(
+            [
+                "BRAIN yeu cau xac thuc Persona de tiep tuc session API.",
+                "",
+                "Mo link duoi day de quet mat:",
+                persona_url,
+                "",
+                "Sau khi quet mat xong, tool se tu dong polling de hoan tat dang nhap.",
+            ]
+        )
+        response = self.session.post(
+            f"{telegram_config.api_base_url.rstrip('/')}/bot{telegram_config.bot_token}/sendMessage",
+            json={
+                "chat_id": telegram_config.chat_id,
+                "text": message,
+                "disable_web_page_preview": telegram_config.disable_web_page_preview,
+            },
+            timeout=30,
+        )
+        if response.status_code >= 400:
+            raise RuntimeError(
+                f"Telegram notification failed with status {response.status_code}: {response.text}"
+            )

@@ -142,7 +142,7 @@ class ServiceRunner:
                     break
                 sleep_seconds = self.scheduler.next_sleep_seconds(runtime=runtime, outcome=self._runtime_to_outcome(runtime))
                 logger.info("Service sleeping for %ss", sleep_seconds)
-                self.sleep_fn(float(sleep_seconds))
+                self._sleep_interruptibly(float(sleep_seconds))
         finally:
             runtime = self.repository.service_runtime.get_state(self.config.service.lock_name) or runtime
             stopped_status = "service_stopped" if self.stop_requested else final_status
@@ -244,6 +244,18 @@ class ServiceRunner:
         signal.signal(signal.SIGINT, self.request_shutdown)
         if hasattr(signal, "SIGTERM"):
             signal.signal(signal.SIGTERM, self.request_shutdown)
+
+    def _sleep_interruptibly(self, seconds: float) -> None:
+        remaining = max(float(seconds), 0.0)
+        if remaining <= 0:
+            return
+        deadline = time.monotonic() + remaining
+        while not self.stop_requested:
+            now = time.monotonic()
+            remaining = deadline - now
+            if remaining <= 0:
+                return
+            self.sleep_fn(min(remaining, 1.0))
 
     @staticmethod
     def _runtime_to_outcome(runtime: ServiceRuntimeRecord):

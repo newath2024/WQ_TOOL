@@ -62,14 +62,30 @@ def handle_report(
         f"profile={summary.profile_name} timeframe={summary.selected_timeframe}"
     )
     print(
-        f"dataset_fingerprint={(summary.dataset_fingerprint or '-')[:12]} "
-        f"regime_key={(summary.regime_key or '-')[:12]}"
+        f"region={(summary.region or '-')}"
+        f" dataset_fingerprint={(summary.dataset_fingerprint or '-')[:12]} "
+        f"regime_key={(summary.regime_key or '-')[:12]} "
+        f"global_regime_key={(summary.global_regime_key or '-')[:12]}"
     )
     cache_rate = (summary.cache_hits / summary.validation_rows) if summary.validation_rows > 0 else 0.0
     print(
         f"cache_hits={summary.cache_hits} validation_rows={summary.validation_rows} "
         f"cache_hit_rate={cache_rate:.2%}"
     )
+    if summary.pattern_blend is not None:
+        print(
+            f"pattern_blend: local_weight={summary.pattern_blend.local_weight:.2f} "
+            f"global_weight={summary.pattern_blend.global_weight:.2f} "
+            f"local_samples={summary.pattern_blend.local_samples} "
+            f"global_samples={summary.pattern_blend.global_samples}"
+        )
+    if summary.case_blend is not None:
+        print(
+            f"case_blend: local_weight={summary.case_blend.local_weight:.2f} "
+            f"global_weight={summary.case_blend.global_weight:.2f} "
+            f"local_samples={summary.case_blend.local_samples} "
+            f"global_samples={summary.case_blend.global_samples}"
+        )
     print(
         "hard_filters: "
         + " ".join(f"{key}={value}" for key, value in summary.hard_filter_summary.items())

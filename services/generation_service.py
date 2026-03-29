@@ -35,15 +35,26 @@ def generate_and_persist(
     if config.adaptive_generation.enabled:
         snapshot = repository.alpha_history.load_snapshot(
             regime_key=research_context.regime_key,
+            region=research_context.region,
+            global_regime_key=research_context.global_regime_key,
             parent_pool_size=config.adaptive_generation.parent_pool_size,
+            region_learning_config=config.adaptive_generation.region_learning,
+            pattern_decay=config.adaptive_generation.pattern_decay,
+            prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
         )
-        case_snapshot = repository.alpha_history.load_case_snapshot(research_context.regime_key)
+        case_snapshot = repository.alpha_history.load_case_snapshot(
+            research_context.regime_key,
+            region=research_context.region,
+            global_regime_key=research_context.global_regime_key,
+            region_learning_config=config.adaptive_generation.region_learning,
+        )
         engine = GuidedGenerator(
             generation_config=config.generation,
             adaptive_config=config.adaptive_generation,
             registry=registry,
             memory_service=PatternMemoryService(),
             field_registry=field_registry,
+            region_learning_context=research_context.region_learning_context,
         )
         candidates = engine.generate(
             count=total_count,
@@ -55,12 +66,18 @@ def generate_and_persist(
         pattern_count = len(snapshot.patterns)
         logger.info("Adaptive generation used regime %s with %s learned patterns.", regime_key[:12], pattern_count)
     else:
-        case_snapshot = repository.alpha_history.load_case_snapshot(research_context.regime_key)
+        case_snapshot = repository.alpha_history.load_case_snapshot(
+            research_context.regime_key,
+            region=research_context.region,
+            global_regime_key=research_context.global_regime_key,
+            region_learning_config=config.adaptive_generation.region_learning,
+        )
         engine = AlphaGenerationEngine(
             config=config.generation,
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
+            region_learning_context=research_context.region_learning_context,
         )
         candidates = engine.generate(count=total_count, existing_normalized=existing, case_snapshot=case_snapshot)
 
@@ -72,7 +89,9 @@ def generate_and_persist(
     return GenerationServiceResult(
         generated_count=len(candidates),
         inserted_count=inserted,
+        region=research_context.region,
         regime_key=regime_key,
+        global_regime_key=research_context.global_regime_key,
         pattern_count=pattern_count,
         export_paths=export_paths,
     )

@@ -10,6 +10,7 @@ from storage.repository import SQLiteRepository
 
 def register(subparsers: argparse._SubParsersAction, common: argparse.ArgumentParser) -> None:
     """Register memory inspection commands."""
+    scope_help = "Which memory scope to inspect: local, global, or blended."
     patterns_parser = subparsers.add_parser(
         "memory-top-patterns",
         help="Display the highest scoring structural patterns for the current regime.",
@@ -17,6 +18,7 @@ def register(subparsers: argparse._SubParsersAction, common: argparse.ArgumentPa
     )
     patterns_parser.add_argument("--limit", type=int, default=10, help="Number of patterns to display.")
     patterns_parser.add_argument("--kind", default=None, help="Optional pattern kind filter.")
+    patterns_parser.add_argument("--scope", choices=("local", "global", "blended"), default="blended", help=scope_help)
     patterns_parser.set_defaults(command_handler=handle_top_patterns)
 
     failed_parser = subparsers.add_parser(
@@ -25,6 +27,7 @@ def register(subparsers: argparse._SubParsersAction, common: argparse.ArgumentPa
         parents=[common],
     )
     failed_parser.add_argument("--limit", type=int, default=10, help="Number of patterns to display.")
+    failed_parser.add_argument("--scope", choices=("local", "global", "blended"), default="blended", help=scope_help)
     failed_parser.set_defaults(command_handler=handle_failed_patterns)
 
     genes_parser = subparsers.add_parser(
@@ -33,6 +36,7 @@ def register(subparsers: argparse._SubParsersAction, common: argparse.ArgumentPa
         parents=[common],
     )
     genes_parser.add_argument("--limit", type=int, default=10, help="Number of genes to display.")
+    genes_parser.add_argument("--scope", choices=("local", "global", "blended"), default="blended", help=scope_help)
     genes_parser.set_defaults(command_handler=handle_top_genes)
 
 
@@ -43,7 +47,7 @@ def handle_top_patterns(
     environment: CommandEnvironment,
 ) -> int:
     """Execute the memory-top-patterns command."""
-    rows = get_top_patterns(repository, config, environment, limit=args.limit, kind=args.kind)
+    rows = get_top_patterns(repository, config, environment, limit=args.limit, kind=args.kind, scope=args.scope)
     if not rows:
         return 1
     for row in rows:
@@ -61,7 +65,7 @@ def handle_failed_patterns(
     environment: CommandEnvironment,
 ) -> int:
     """Execute the memory-failed-patterns command."""
-    rows = get_failed_patterns(repository, config, environment, limit=args.limit)
+    rows = get_failed_patterns(repository, config, environment, limit=args.limit, scope=args.scope)
     if not rows:
         return 1
     for row in rows:
@@ -79,7 +83,7 @@ def handle_top_genes(
     environment: CommandEnvironment,
 ) -> int:
     """Execute the memory-top-genes command."""
-    rows = get_top_genes(repository, config, environment, limit=args.limit)
+    rows = get_top_genes(repository, config, environment, limit=args.limit, scope=args.scope)
     if not rows:
         return 1
     for row in rows:

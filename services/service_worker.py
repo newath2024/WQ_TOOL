@@ -59,7 +59,8 @@ class ServiceWorker:
             stage="service-tick",
             tick_id=tick_id,
         )
-        if runtime.cooldown_until and runtime.cooldown_until > now:
+        should_probe_auth = self._should_probe_session_during_cooldown(runtime)
+        if runtime.cooldown_until and runtime.cooldown_until > now and not should_probe_auth:
             logger.info("Service is cooling down until %s", runtime.cooldown_until)
             return ServiceTickOutcome(
                 status="cooldown",
@@ -67,6 +68,8 @@ class ServiceWorker:
                 active_batch_id=runtime.active_batch_id,
                 cooldown_until=runtime.cooldown_until,
             )
+        if runtime.cooldown_until and runtime.cooldown_until > now and should_probe_auth:
+            logger.info("Auth-related cooldown detected; probing session state before waiting out cooldown.")
 
         session_state = self.session_manager.ensure_session(runtime=runtime)
         if session_state.status == "waiting_persona":
@@ -89,8 +92,37 @@ class ServiceWorker:
                 pending_job_count=pending_jobs,
                 active_batch_id=runtime.active_batch_id,
                 persona_url=session_state.persona_url,
+                last_error=session_state.detail,
+                next_sleep_seconds=(
+                    session_state.retry_after_seconds or self.config.service.persona_retry_interval_seconds
+                ),
+            )
+        if session_state.status == "auth_throttled":
+            self.repository.service_runtime.update_state(
+                runtime.service_name,
+                status="auth_throttled",
+                persona_wait_started_at=runtime.persona_wait_started_at or now,
+                updated_at=now,
+            )
+            pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+            logger.warning(
+                "BRAIN biometrics throttled; pending_jobs=%s retry_after=%s",
+                pending_jobs,
+                session_state.retry_after_seconds,
+            )
+            return ServiceTickOutcome(
+                status="auth_throttled",
+                pending_job_count=pending_jobs,
+                active_batch_id=runtime.active_batch_id,
+                persona_url=runtime.persona_url,
+                last_error=session_state.detail,
+                next_sleep_seconds=(
+                    session_state.retry_after_seconds or self.config.service.persona_retry_interval_seconds
+                ),
             )
 
+        if runtime.cooldown_until and runtime.cooldown_until > now and should_probe_auth:
+            logger.info("Authentication recovered during cooldown; resuming normal service work.")
         if runtime.persona_url or runtime.persona_wait_started_at:
             self.repository.service_runtime.update_state(
                 runtime.service_name,
@@ -300,13 +332,21 @@ class ServiceWorker:
         if not results:
             return
         regime_key = self._resolve_regime_key(run_id)
+        run = self.repository.get_run(run_id)
+        region = str(run.region or "") if run else ""
+        global_regime_key = str(run.global_regime_key or "") if run else ""
         candidates_by_id = self._load_candidates_by_ids(
             run_id=run_id,
             candidate_ids={result.candidate_id for result in results},
         )
         snapshot = self.repository.alpha_history.load_snapshot(
             regime_key=regime_key,
+            region=region,
+            global_regime_key=global_regime_key,
             parent_pool_size=max(self.config.adaptive_generation.parent_pool_size, self.config.loop.mutate_top_k * 2),
+            region_learning_config=self.config.adaptive_generation.region_learning,
+            pattern_decay=self.config.adaptive_generation.pattern_decay,
+            prior_weight=self.config.adaptive_generation.critic_thresholds.score_prior_weight,
         )
         selected_parent_ids = {
             result.candidate_id
@@ -320,6 +360,8 @@ class ServiceWorker:
         self.learning_service.persist_results(
             config=self.config,
             regime_key=regime_key,
+            region=region,
+            global_regime_key=global_regime_key,
             snapshot=snapshot,
             candidates_by_id=candidates_by_id,
             results=[self._simulation_result_from_record(result) for result in results],
@@ -425,3 +467,19 @@ class ServiceWorker:
         ).fetchone()
         learned_total = int(learned_rows["total"] or 0)
         return learned_total < len(candidate_ids)
+
+    @staticmethod
+    def _should_probe_session_during_cooldown(runtime: ServiceRuntimeRecord) -> bool:
+        if runtime.status in {"waiting_persona", "auth_throttled"}:
+            return True
+        if runtime.persona_url or runtime.persona_wait_started_at:
+            return True
+        last_error = str(runtime.last_error or "").upper()
+        return any(
+            token in last_error
+            for token in (
+                "BRAIN AUTHENTICATION FAILED",
+                "BIOMETRICS_THROTTLED",
+                "PERSONA",
+            )
+        )

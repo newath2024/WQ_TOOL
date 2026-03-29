@@ -24,6 +24,7 @@ Quan trong:
 - mutate bang 5 che do: `exploit_local`, `structural`, `crossover`, `novelty`, `repair`
 - chon candidate bang multi-objective + diversity-preserving selection
 - persist lineage, pattern memory, rich case memory, field scores, va metadata traceability
+- hoc theo kien truc hierarchical: local memory theo `region + compatible regime`, kem global priors theo profile khong gom region
 - submit candidate vao BRAIN qua `manual` hoac `api` adapter
 - normalize ket qua BRAIN, luu rejection reason, submission eligibility, raw payload
 - chay `generate -> simulate -> learn -> mutate -> repeat`
@@ -61,7 +62,23 @@ Bo may search moi cung them:
 - novelty search dua tren structural distance
 - repair policy de sua candidate loi truoc khi loai
 - case memory forward-only trong bang `alpha_cases`
+- region-aware pattern memory + case memory voi global fallback co cau hinh
 - hard diversity caps theo family, field category, horizon, va operator path
+
+## Region-aware learning
+
+Closed-loop learning khong con dung mot memory pool global share-toan-bo.
+He thong moi tach thanh 2 lop:
+
+- local memory theo `region + compatible regime` de parent pool, mutation stats, fail tags, template priors, diversity, turnover/complexity behavior khong bi cross-region contamination
+- global priors theo profile khong gom region de cold-start region moi hoac region co sample count thap
+
+Nguyen tac:
+
+- parser / validator / normalization / operator registry / grammar / orchestration van share chung
+- top parent history va parent selection mac dinh chi dung local region
+- scoring, motif/template priors, mutation mode priors, va duplicate-family diagnostics co the blend local + global
+- blend la explicit va configurable qua `adaptive_generation.region_learning`
 
 ## Cau truc muc cao
 
@@ -153,7 +170,7 @@ Persona behavior:
 
 - service mode dung non-interactive auth
 - neu BRAIN doi Persona, service pause viec submit batch moi
-- in URL ra terminal va gui mail neu SMTP da cau hinh
+- in URL ra terminal va gui Telegram neu bot da cau hinh, hoac fallback sang mail neu SMTP da cau hinh
 - retry auth cham theo `service.persona_retry_interval_seconds`, khong spam lien tuc
 
 ## Manual backend
@@ -192,7 +209,7 @@ Export CSV co:
 - interactive login bang email/password
 - support Persona/face-scan khi BRAIN yeu cau
 - doc credential tu `secrets/brain_credentials.json`
-- gui link Persona qua mail neu SMTP da cau hinh
+- gui link Persona qua Telegram bot neu da cau hinh, hoac fallback sang mail neu SMTP da cau hinh
 - tu dong polling Persona trong che do headless
 - local session-cookie cache de tai su dung giua cac command
 
@@ -202,13 +219,13 @@ Khuyen nghi:
 2. chay `python main.py brain-login --config <config>.yaml`
 3. nhap email/password trong terminal, hoac luu trong `secrets/brain_credentials.json`
 4. neu BRAIN yeu cau Persona, mo URL va quet mat
-5. neu da cau hinh SMTP, tool gui link Persona qua mail va tu dong doi ban xac thuc
+5. neu da cau hinh Telegram bot, tool gui link Persona qua Telegram; neu khong thi fallback sang SMTP neu co
 6. session cookie se duoc luu vao `brain.session_path`
 
 Luu y bao mat:
 
 - tool khong luu password
-- neu ban muon chay 24/7, hay luu BRAIN credential + SMTP app password trong `secrets/brain_credentials.json`
+- neu ban muon chay 24/7, hay luu BRAIN credential + Telegram bot token hoac SMTP app password trong `secrets/brain_credentials.json`
 - tool co the luu session cookie cuc bo de tai su dung
 - mac dinh file session nam trong `outputs/`, da duoc `.gitignore`
 
@@ -274,6 +291,30 @@ service:
   max_pending_jobs: 20
   cooldown_seconds: 300
   lock_name: brain-service
+```
+
+Region-aware learning:
+
+```yaml
+adaptive_generation:
+  region_learning:
+    enabled: true
+    local_scope: region_regime
+    global_prior_scope: match_non_region_regime
+    blend_mode: linear_ramp
+    min_local_pattern_samples: 20
+    full_local_pattern_samples: 100
+    min_local_case_samples: 10
+    full_local_case_samples: 50
+    allow_global_parent_fallback: false
+```
+
+Memory inspection co them 3 scope:
+
+```bash
+python main.py memory-top-patterns --config config/dev.yaml --scope local
+python main.py memory-top-patterns --config config/dev.yaml --scope global
+python main.py memory-top-patterns --config config/dev.yaml --scope blended
 ```
 
 Config cu van load duoc. Command local cu khong doi nghia.

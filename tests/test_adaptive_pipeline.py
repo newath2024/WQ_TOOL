@@ -9,7 +9,14 @@ from main import main
 from tests.conftest import write_sample_csv, write_sample_metadata_csv
 
 
-def write_adaptive_config(config_path: Path, data_path: Path, metadata_path: Path, storage_path: Path) -> None:
+def write_adaptive_config(
+    config_path: Path,
+    data_path: Path,
+    metadata_path: Path,
+    storage_path: Path,
+    *,
+    region: str = "USA",
+) -> None:
     config_payload = {
         "data": {
             "path": str(data_path),
@@ -99,6 +106,17 @@ def write_adaptive_config(config_path: Path, data_path: Path, metadata_path: Pat
                 "novelty_success_threshold": 0.60,
                 "score_prior_weight": 3.0,
             },
+            "region_learning": {
+                "enabled": True,
+                "local_scope": "region_regime",
+                "global_prior_scope": "match_non_region_regime",
+                "blend_mode": "linear_ramp",
+                "min_local_pattern_samples": 1,
+                "full_local_pattern_samples": 4,
+                "min_local_case_samples": 1,
+                "full_local_case_samples": 3,
+                "allow_global_parent_fallback": False,
+            },
         },
         "simulation": {
             "delay_mode": "d1",
@@ -149,6 +167,14 @@ def write_adaptive_config(config_path: Path, data_path: Path, metadata_path: Pat
             "subuniverse_min_sharpe": -1.0,
             "subuniverse_min_pass_fraction": 0.5,
             "robustness_min_fitness_ratio": -5.0,
+        },
+        "brain": {
+            "backend": "manual",
+            "region": region,
+            "universe": "TOP3000",
+            "delay": 1,
+            "neutralization": "sector",
+            "decay": 0,
         },
         "storage": {"path": str(storage_path)},
         "runtime": {"log_level": "WARNING", "fail_fast": False},
@@ -225,3 +251,46 @@ def test_adaptive_memory_pipeline_learns_across_rounds(tmp_path: Path) -> None:
     assert parent_links > 0
     assert guided_child is not None
     assert main(["--config", str(config_path), "--run-id", second_run, "lineage", "--alpha-id", guided_child[0]]) == 0
+
+
+def test_adaptive_pipeline_persists_region_local_and_global_learning_keys(tmp_path: Path) -> None:
+    data_path = tmp_path / "daily_ohlcv.csv"
+    metadata_path = tmp_path / "symbol_metadata.csv"
+    usa_config_path = tmp_path / "adaptive_usa.yaml"
+    eur_config_path = tmp_path / "adaptive_eur.yaml"
+    storage_path = tmp_path / "adaptive_regions.sqlite3"
+    write_sample_csv(data_path)
+    write_sample_metadata_csv(metadata_path)
+    write_adaptive_config(usa_config_path, data_path, metadata_path, storage_path, region="USA")
+    write_adaptive_config(eur_config_path, data_path, metadata_path, storage_path, region="EUR")
+
+    assert main(["--config", str(usa_config_path), "run-full-pipeline"]) == 0
+    assert main(["--config", str(eur_config_path), "run-full-pipeline"]) == 0
+
+    connection = sqlite3.connect(storage_path)
+    try:
+        runs = connection.execute(
+            """
+            SELECT run_id, region, regime_key, global_regime_key
+            FROM runs
+            ORDER BY started_at ASC
+            """
+        ).fetchall()
+        history_regions = connection.execute(
+            "SELECT DISTINCT region, global_regime_key FROM alpha_history ORDER BY region ASC"
+        ).fetchall()
+        case_regions = connection.execute(
+            "SELECT DISTINCT region, global_regime_key FROM alpha_cases ORDER BY region ASC"
+        ).fetchall()
+    finally:
+        connection.close()
+
+    assert len(runs) == 2
+    assert {row[1] for row in runs} == {"USA", "EUR"}
+    assert runs[0][2] != runs[1][2]
+    assert runs[0][3] == runs[1][3]
+    assert {row[0] for row in history_regions} == {"EUR", "USA"}
+    assert {row[0] for row in case_regions} == {"EUR", "USA"}
+    assert len({row[1] for row in history_regions}) == 1
+    assert len({row[1] for row in case_regions}) == 1
+    assert main(["--config", str(eur_config_path), "--run-id", runs[-1][0], "memory-top-patterns", "--scope", "global", "--limit", "3"]) == 0
