@@ -4,6 +4,8 @@ import json
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
+import requests
+
 from adapters.brain_api_adapter import BiometricsThrottled, BrainApiAdapter, PersonaVerificationRequired
 from core.config import load_config
 from core.run_context import RunContext
@@ -206,12 +208,30 @@ def test_session_manager_reports_biometrics_throttle_without_failing_service() -
     assert state.retry_after_seconds == 45
 
 
+def test_session_manager_reports_auth_transport_error_without_failing_service() -> None:
+    adapter = FakeApiAdapter(
+        auth_plan=[requests.ConnectionError("Remote end closed connection without response")]
+    )
+    manager = SessionManager(adapter)
+
+    state = manager.ensure_session(runtime=_runtime_record(run_id="run-auth-unavailable"))
+
+    assert state.status == "auth_unavailable"
+    assert state.detail is not None
+    assert "Remote end closed connection without response" in state.detail
+
+
 def test_service_worker_waits_when_biometrics_are_throttled() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
         environment = _environment("run-throttled")
-        runtime = _runtime_record(run_id="run-throttled")
+        runtime = replace(
+            _runtime_record(run_id="run-throttled"),
+            persona_url="https://persona.example/stale",
+            persona_wait_started_at=_timestamp(),
+            persona_last_notification_at=_timestamp(),
+        )
         repository.service_runtime.upsert_state(runtime)
         adapter = FakeApiAdapter(auth_plan=[BiometricsThrottled("BIOMETRICS_THROTTLED", retry_after_seconds=45)])
         worker = ServiceWorker(
@@ -230,9 +250,50 @@ def test_service_worker_waits_when_biometrics_are_throttled() -> None:
 
     assert outcome.status == "auth_throttled"
     assert outcome.next_sleep_seconds == 45
+    assert outcome.persona_url is None
     assert refreshed is not None
     assert refreshed.status == "auth_throttled"
+    assert refreshed.persona_url is None
     assert refreshed.persona_wait_started_at is not None
+
+
+def test_service_worker_retries_when_auth_transport_error_occurs() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        environment = _environment("run-auth-unavailable")
+        runtime = replace(
+            _runtime_record(run_id="run-auth-unavailable"),
+            persona_url="https://persona.example/stale",
+            persona_wait_started_at=_timestamp(),
+            persona_last_notification_at=_timestamp(),
+        )
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter(
+            auth_plan=[requests.ConnectionError("Remote end closed connection without response")]
+        )
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=environment,
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert outcome.status == "auth_unavailable"
+    assert outcome.next_sleep_seconds == config.service.tick_interval_seconds
+    assert outcome.persona_url is None
+    assert refreshed is not None
+    assert refreshed.status == "auth_unavailable"
+    assert refreshed.persona_url is None
+    assert refreshed.last_error is not None
+    assert "Remote end closed connection without response" in refreshed.last_error
 
 
 def test_service_worker_rechecks_auth_during_auth_related_cooldown() -> None:
@@ -340,6 +401,14 @@ def test_service_runner_releases_lock_on_graceful_shutdown() -> None:
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
         _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        repository.service_runtime.upsert_state(
+            replace(
+                _runtime_record(run_id=run_id),
+                persona_url="https://persona.example/stale",
+                persona_wait_started_at=_timestamp(),
+                persona_last_notification_at=_timestamp(),
+            )
+        )
         adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "running"}]})
         runner = ServiceRunner(
             repository,
@@ -359,6 +428,9 @@ def test_service_runner_releases_lock_on_graceful_shutdown() -> None:
     assert runtime is not None
     assert runtime.owner_token == ""
     assert runtime.status == "service_stopped"
+    assert runtime.persona_url is None
+    assert runtime.persona_wait_started_at is None
+    assert runtime.persona_last_notification_at is None
 
 
 def test_service_runner_interruptible_sleep_stops_without_waiting_full_interval() -> None:

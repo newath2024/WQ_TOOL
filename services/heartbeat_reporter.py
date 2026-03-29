@@ -75,6 +75,9 @@ class HeartbeatReporter:
         self.store.update_state(
             runtime.service_name,
             status=status,
+            persona_url=None,
+            persona_wait_started_at=None,
+            persona_last_notification_at=None,
             last_heartbeat_at=datetime.now(UTC).isoformat(),
             updated_at=datetime.now(UTC).isoformat(),
         )

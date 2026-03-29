@@ -101,6 +101,7 @@ class ServiceWorker:
             self.repository.service_runtime.update_state(
                 runtime.service_name,
                 status="auth_throttled",
+                persona_url=None,
                 persona_wait_started_at=runtime.persona_wait_started_at or now,
                 updated_at=now,
             )
@@ -114,11 +115,34 @@ class ServiceWorker:
                 status="auth_throttled",
                 pending_job_count=pending_jobs,
                 active_batch_id=runtime.active_batch_id,
-                persona_url=runtime.persona_url,
+                persona_url=None,
                 last_error=session_state.detail,
                 next_sleep_seconds=(
                     session_state.retry_after_seconds or self.config.service.persona_retry_interval_seconds
                 ),
+            )
+        if session_state.status == "auth_unavailable":
+            self.repository.service_runtime.update_state(
+                runtime.service_name,
+                status="auth_unavailable",
+                persona_url=None,
+                persona_wait_started_at=runtime.persona_wait_started_at,
+                last_error=session_state.detail,
+                updated_at=now,
+            )
+            pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+            logger.warning(
+                "BRAIN auth probe failed; pending_jobs=%s detail=%s",
+                pending_jobs,
+                session_state.detail,
+            )
+            return ServiceTickOutcome(
+                status="auth_unavailable",
+                pending_job_count=pending_jobs,
+                active_batch_id=runtime.active_batch_id,
+                persona_url=None,
+                last_error=session_state.detail,
+                next_sleep_seconds=self.config.service.tick_interval_seconds,
             )
 
         if runtime.cooldown_until and runtime.cooldown_until > now and should_probe_auth:
@@ -470,7 +494,7 @@ class ServiceWorker:
 
     @staticmethod
     def _should_probe_session_during_cooldown(runtime: ServiceRuntimeRecord) -> bool:
-        if runtime.status in {"waiting_persona", "auth_throttled"}:
+        if runtime.status in {"waiting_persona", "auth_throttled", "auth_unavailable"}:
             return True
         if runtime.persona_url or runtime.persona_wait_started_at:
             return True
@@ -479,6 +503,7 @@ class ServiceWorker:
             token in last_error
             for token in (
                 "BRAIN AUTHENTICATION FAILED",
+                "BRAIN AUTH TRANSPORT ERROR",
                 "BIOMETRICS_THROTTLED",
                 "PERSONA",
             )
