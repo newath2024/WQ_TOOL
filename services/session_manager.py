@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from adapters.brain_api_adapter import BrainApiAdapter, PersonaVerificationRequired
+from adapters.brain_api_adapter import BrainApiAdapter, BiometricsThrottled, PersonaVerificationRequired
 from storage.models import ServiceRuntimeRecord
 
 
@@ -12,6 +12,7 @@ class SessionState:
     persona_url: str | None = None
     session_path: str | None = None
     detail: str | None = None
+    retry_after_seconds: int | None = None
 
 
 class SessionManager:
@@ -24,6 +25,12 @@ class SessionManager:
             result = self.adapter.ensure_authenticated(force=force, interactive=False)
         except PersonaVerificationRequired as exc:
             return SessionState(status="waiting_persona", persona_url=exc.persona_url, detail=str(exc))
+        except BiometricsThrottled as exc:
+            return SessionState(
+                status="auth_throttled",
+                detail=str(exc),
+                retry_after_seconds=exc.retry_after_seconds,
+            )
         return SessionState(
             status="ready",
             persona_url=None,

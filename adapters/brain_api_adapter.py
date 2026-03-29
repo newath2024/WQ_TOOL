@@ -6,6 +6,8 @@ import os
 import time
 import webbrowser
 from dataclasses import dataclass
+from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Protocol
 from urllib.parse import urljoin
@@ -13,7 +15,12 @@ from urllib.parse import urljoin
 import requests
 
 from adapters.simulation_adapter import SimulationAdapter
-from services.email_service import EmailService, SmtpNotificationConfig
+from services.email_service import (
+    EmailService,
+    SmtpNotificationConfig,
+    TelegramNotificationConfig,
+    TelegramService,
+)
 
 
 class SessionProtocol(Protocol):
@@ -38,6 +45,13 @@ class PersonaVerificationRequired(RuntimeError):
     def __init__(self, persona_url: str) -> None:
         super().__init__("BRAIN Persona verification is required before API work can continue.")
         self.persona_url = persona_url
+
+
+class BiometricsThrottled(RuntimeError):
+    def __init__(self, detail: str, *, retry_after_seconds: int | None = None) -> None:
+        super().__init__(f"BRAIN biometrics throttled: {detail}")
+        self.detail = detail
+        self.retry_after_seconds = retry_after_seconds
 
 
 class BrainApiAdapter(SimulationAdapter):
@@ -70,6 +84,7 @@ class BrainApiAdapter(SimulationAdapter):
         endpoints: ApiEndpointConfig | None = None,
         session: SessionProtocol | None = None,
         email_service: EmailService | None = None,
+        telegram_service: TelegramService | None = None,
         max_retries: int = 3,
         rate_limit_per_minute: int = 60,
         verify_ssl: bool = True,
@@ -88,12 +103,13 @@ class BrainApiAdapter(SimulationAdapter):
         self.endpoints = endpoints or ApiEndpointConfig()
         self.session = session or requests.Session()
         self.email_service = email_service or EmailService()
+        self.telegram_service = telegram_service or TelegramService()
         self.max_retries = max_retries
         self.rate_limit_per_minute = rate_limit_per_minute
         self.verify_ssl = verify_ssl
         self._min_request_gap_seconds = 60.0 / float(rate_limit_per_minute)
         self._last_request_at = 0.0
-        self._loaded_session = False
+        self._loaded_session_signature: tuple[int, int] | None = None
         self._credentials_payload: dict | None = None
 
     def submit_simulation(self, expression: str, sim_config: dict) -> dict:
@@ -172,9 +188,7 @@ class BrainApiAdapter(SimulationAdapter):
         if force:
             self._clear_session_file()
 
-        if not self._loaded_session:
-            self._load_session_from_disk()
-            self._loaded_session = True
+        self._load_session_from_disk_if_changed()
 
         if not force and self._authentication_state().get("authenticated"):
             return {"mode": "session_cookie", "status": "ready", "session_path": str(self.session_path)}
@@ -199,7 +213,15 @@ class BrainApiAdapter(SimulationAdapter):
         if not password:
             raise ValueError("BRAIN password is required for interactive authentication.")
 
-        self.authenticate_with_credentials(email=email, password=password, interactive=interactive)
+        try:
+            self.authenticate_with_credentials(email=email, password=password, interactive=interactive)
+        except BiometricsThrottled:
+            # Another process may have refreshed the cookie jar while this service was running.
+            self._load_session_from_disk_if_changed()
+            if self._authentication_state().get("authenticated"):
+                self._save_session_to_disk()
+                return {"mode": "session_cookie", "status": "ready", "session_path": str(self.session_path)}
+            raise
         state = self._authentication_state()
         if not state.get("authenticated"):
             raise RuntimeError("BRAIN authentication did not complete successfully.")
@@ -220,6 +242,11 @@ class BrainApiAdapter(SimulationAdapter):
         )
         if response.status_code in {200, 201}:
             return
+        if response.status_code == 429 and self._extract_response_detail(response) == "BIOMETRICS_THROTTLED":
+            raise BiometricsThrottled(
+                "BIOMETRICS_THROTTLED",
+                retry_after_seconds=self._parse_retry_after_seconds(response.headers.get("Retry-After")),
+            )
         if response.status_code == 401 and response.headers.get("WWW-Authenticate", "").lower() == "persona":
             persona_url = urljoin(response.url, response.headers.get("Location", ""))
             if not persona_url:
@@ -245,11 +272,7 @@ class BrainApiAdapter(SimulationAdapter):
         )
 
     def send_persona_notification(self, persona_url: str) -> bool:
-        smtp_config = self._smtp_notification_config()
-        if smtp_config is None:
-            return False
-        self.email_service.send_persona_link(persona_url=persona_url, smtp_config=smtp_config)
-        return True
+        return self._deliver_persona_notification(persona_url) is not None
 
     @staticmethod
     def _prompt_password_interactive(show_password: bool = False) -> str:
@@ -442,16 +465,25 @@ class BrainApiAdapter(SimulationAdapter):
             ],
         }
         self.session_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        self._loaded_session_signature = self._session_file_signature()
 
-    def _load_session_from_disk(self) -> None:
-        if not self.session_path.exists():
-            return
+    def _load_session_from_disk_if_changed(self, *, force: bool = False) -> bool:
+        signature = self._session_file_signature()
+        if signature is None:
+            if force:
+                self._loaded_session_signature = None
+            return False
+        if not force and signature == self._loaded_session_signature:
+            return False
         try:
             payload = json.loads(self.session_path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
-            return
+            self._loaded_session_signature = signature
+            return False
         if payload.get("base_url") and str(payload["base_url"]).rstrip("/") != self.base_url:
-            return
+            self._loaded_session_signature = signature
+            return False
+        self.session.cookies.clear()
         for cookie in payload.get("cookies", []):
             self.session.cookies.set(
                 cookie["name"],
@@ -459,23 +491,32 @@ class BrainApiAdapter(SimulationAdapter):
                 domain=cookie.get("domain"),
                 path=cookie.get("path", "/"),
             )
+        self._loaded_session_signature = signature
+        return True
 
     def _clear_session_file(self) -> None:
         if self.session_path.exists():
             self.session_path.unlink()
         self.session.cookies.clear()
+        self._loaded_session_signature = None
 
     def _notify_persona_required(self, persona_url: str) -> None:
-        smtp_config = self._smtp_notification_config()
-        if smtp_config is None:
-            print("Persona email notification is not configured; skipping email alert.")
-            return
         try:
-            self.email_service.send_persona_link(persona_url=persona_url, smtp_config=smtp_config)
+            channel = self._deliver_persona_notification(persona_url)
         except Exception as exc:  # noqa: BLE001
-            print(f"Failed to send Persona notification email: {exc}")
+            print(f"Failed to send Persona notification: {exc}")
             return
-        print(f"Sent Persona verification link to {smtp_config.to_email}.")
+        if channel == "telegram":
+            telegram_config = self._telegram_notification_config()
+            destination = telegram_config.chat_id if telegram_config is not None else "configured Telegram chat"
+            print(f"Sent Persona verification link to Telegram chat {destination}.")
+            return
+        if channel == "email":
+            smtp_config = self._smtp_notification_config()
+            destination = smtp_config.to_email if smtp_config is not None else "configured email"
+            print(f"Sent Persona verification link to {destination}.")
+            return
+        print("Persona notification is not configured; skipping alert.")
 
     def _wait_for_persona_completion(self, persona_url: str):
         print(
@@ -556,6 +597,47 @@ class BrainApiAdapter(SimulationAdapter):
         )
         return smtp_config if smtp_config.is_configured() else None
 
+    def _telegram_notification_config(self) -> TelegramNotificationConfig | None:
+        payload = self._load_credentials_payload()
+        section_payload = payload.get("persona_notification")
+        if not isinstance(section_payload, dict):
+            return None
+        config = TelegramNotificationConfig(
+            bot_token=str(
+                section_payload.get("telegram_bot_token")
+                or section_payload.get("bot_token")
+                or ""
+            ).strip(),
+            chat_id=str(
+                section_payload.get("telegram_chat_id")
+                or section_payload.get("chat_id")
+                or ""
+            ).strip(),
+            api_base_url=str(
+                section_payload.get("telegram_api_base_url")
+                or section_payload.get("api_base_url")
+                or "https://api.telegram.org"
+            ).strip(),
+            disable_web_page_preview=bool(
+                section_payload.get("telegram_disable_web_page_preview", True)
+            ),
+        )
+        return config if config.is_configured() else None
+
+    def _deliver_persona_notification(self, persona_url: str) -> str | None:
+        telegram_config = self._telegram_notification_config()
+        if telegram_config is not None:
+            self.telegram_service.send_persona_link(
+                persona_url=persona_url,
+                telegram_config=telegram_config,
+            )
+            return "telegram"
+        smtp_config = self._smtp_notification_config()
+        if smtp_config is None:
+            return None
+        self.email_service.send_persona_link(persona_url=persona_url, smtp_config=smtp_config)
+        return "email"
+
     def _resolve_authentication_url(self) -> str:
         return f"{self.base_url}{self.endpoints.authentication_path}"
 
@@ -611,6 +693,40 @@ class BrainApiAdapter(SimulationAdapter):
         for target, keys in aliases.items():
             metrics[target] = _find_first_numeric(search_space, keys)
         return metrics
+
+    def _session_file_signature(self) -> tuple[int, int] | None:
+        if not self.session_path.exists():
+            return None
+        stat = self.session_path.stat()
+        return (int(stat.st_mtime_ns), int(stat.st_size))
+
+    @staticmethod
+    def _extract_response_detail(response) -> str:
+        try:
+            payload = response.json()
+        except ValueError:
+            payload = {}
+        if isinstance(payload, dict):
+            detail = payload.get("detail")
+            if detail not in (None, ""):
+                return str(detail).strip()
+        return str(response.text or "").strip()
+
+    @staticmethod
+    def _parse_retry_after_seconds(value: str | None) -> int | None:
+        if not value:
+            return None
+        try:
+            seconds = int(float(value))
+        except ValueError:
+            try:
+                retry_at = parsedate_to_datetime(value)
+            except (TypeError, ValueError):
+                return None
+            if retry_at.tzinfo is None:
+                retry_at = retry_at.replace(tzinfo=UTC)
+            seconds = int((retry_at - datetime.now(UTC)).total_seconds())
+        return max(seconds, 0)
 
 
 def _find_first_numeric(payloads: list[dict], keys: tuple[str, ...]) -> float | None:

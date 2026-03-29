@@ -20,16 +20,20 @@ class NotificationManager:
         now = datetime.now(UTC).isoformat()
         print("BRAIN requires biometric authentication for service mode.")
         print(f"Open this URL to complete face scan: {persona_url}")
-        if not self._should_send(runtime, now):
+        if not self._should_send(runtime, now, persona_url):
             return False, now
         sent = self.adapter.send_persona_notification(persona_url)
         if sent:
-            print("Sent Persona verification link via email.")
+            print("Sent Persona verification link via configured notifier.")
         else:
-            print("Persona email notification is not configured; skipping email alert.")
+            print("Persona notification is not configured; skipping alert.")
         return sent, now
 
-    def _should_send(self, runtime: ServiceRuntimeRecord, now: str) -> bool:
+    def _should_send(self, runtime: ServiceRuntimeRecord, now: str, persona_url: str) -> bool:
+        current_url = str(runtime.persona_url or "").strip()
+        next_url = str(persona_url or "").strip()
+        if next_url and next_url != current_url:
+            return True
         if not runtime.persona_last_notification_at:
             return True
         elapsed = datetime.fromisoformat(now) - datetime.fromisoformat(runtime.persona_last_notification_at)

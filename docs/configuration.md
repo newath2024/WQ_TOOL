@@ -163,7 +163,7 @@ Y nghia:
 - `manual_export_dir`: noi ghi CSV de submit thu cong
 - `api_base_url`/`api_auth_env`: de san cho backend API
 - `email_env`/`password_env`: bien moi truong tuy chon; neu khong co, tool se prompt trong terminal
-- `credentials_file`: file JSON local de luu `brain.email`, `brain.password`, va SMTP config cho Persona mail
+- `credentials_file`: file JSON local de luu `brain.email`, `brain.password`, va config thong bao Persona qua Telegram hoac SMTP
 - `session_path`: file luu session cookie sau khi login thanh cong
 - `auth_expiry_seconds`: xin session toi da 14400 giay theo tai lieu BRAIN
 - `open_browser_for_persona`: tu mo URL neu BRAIN yeu cau quet mat
@@ -185,6 +185,8 @@ Mau JSON:
     "password": "your-brain-password"
   },
   "persona_notification": {
+    "telegram_bot_token": "123456789:telegram-bot-token",
+    "telegram_chat_id": "123456789",
     "smtp_host": "smtp.gmail.com",
     "smtp_port": 587,
     "smtp_username": "your-mail@gmail.com",
@@ -199,8 +201,8 @@ Mau JSON:
 Neu ban muon chay 24/7:
 
 1. dien `brain.email` va `brain.password`
-2. dien SMTP credential de gui mail
-3. khi BRAIN tra ve `persona`, tool se gui link qua mail va tu dong polling cho den khi ban quet mat xong
+2. uu tien dien `telegram_bot_token` + `telegram_chat_id`; SMTP chi la fallback neu ban van muon gui mail
+3. khi BRAIN tra ve `persona`, tool se gui link qua Telegram neu co cau hinh, neu khong thi fallback sang mail, roi tu dong polling cho den khi ban quet mat xong
 
 ## Dang nhap API tu terminal
 
@@ -217,7 +219,7 @@ Tool se:
 1. prompt email
 2. prompt password bang `getpass`
 3. neu BRAIN tra ve `persona`, in URL va co the mo browser
-4. neu `credentials_file` co SMTP config, gui link Persona qua mail
+4. neu `credentials_file` co Telegram bot config, gui link Persona qua Telegram; neu khong thi dung SMTP neu co
 5. tu dong polling cho den khi ban quet mat xong hoac het timeout
 6. luu session cookie vao `brain.session_path`
 
@@ -290,7 +292,7 @@ Y nghia:
 - `shutdown_grace_period_seconds`: cua so de service dung an toan duoi supervisor
 - `stuck_job_after_seconds`: danh dau job bi treo de surface trong state/log
 - `persona_retry_interval_seconds`: nhan lai auth sau khi cho Persona
-- `persona_email_cooldown_seconds`: throttle email Persona
+- `persona_email_cooldown_seconds`: throttle Persona notification de tranh spam lien tuc
 
 ## Field catalog va runtime field values
 
