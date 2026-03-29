@@ -102,17 +102,24 @@ For dataset field pages:
 
 - export one file per dataset id and settings combination
 
-Suggested naming is automatic, but you can rename the downloads afterward and move them into a local folder such as:
+Suggested naming is automatic. For committed public metadata snapshots in this repo, move them into a dated folder such as:
 
 ```text
 inputs/
-  wq/
-    datasets/
-    fields/
+  wq_snapshots/
+    2026-03-29/
+      Analyst/
+      Fundamental/
+      News/
+      ...
 ```
 
 If you use directory-save mode, choose one of those folders directly in the
 picker and the exporter will write there immediately.
+
+Keep generated alpha outputs, run databases, and evaluation artifacts under
+`outputs/` or other ignored paths. Only snapshot reference metadata should go
+into `inputs/wq_snapshots/`.
 
 ## Limits
 

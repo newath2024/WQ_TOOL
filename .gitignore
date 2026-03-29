@@ -10,6 +10,5 @@ htmlcov/
 *.egg-info/
 *.sqlite3
 outputs/
-Document/
 tools/*/*.csv
 tools/*/*.json
