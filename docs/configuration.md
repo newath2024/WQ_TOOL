@@ -163,7 +163,7 @@ Y nghia:
 - `manual_export_dir`: noi ghi CSV de submit thu cong
 - `api_base_url`/`api_auth_env`: de san cho backend API
 - `email_env`/`password_env`: bien moi truong tuy chon; neu khong co, tool se prompt trong terminal
-- `credentials_file`: file JSON local de luu `brain.email`, `brain.password`, va config thong bao Persona qua Telegram hoac SMTP
+- `credentials_file`: file JSON local de luu `brain.email`, `brain.password`, va config thong bao Persona qua Telegram
 - `session_path`: file luu session cookie sau khi login thanh cong
 - `auth_expiry_seconds`: xin session toi da 14400 giay theo tai lieu BRAIN
 - `open_browser_for_persona`: tu mo URL neu BRAIN yeu cau quet mat
@@ -186,14 +186,7 @@ Mau JSON:
   },
   "persona_notification": {
     "telegram_bot_token": "123456789:telegram-bot-token",
-    "telegram_chat_id": "123456789",
-    "smtp_host": "smtp.gmail.com",
-    "smtp_port": 587,
-    "smtp_username": "your-mail@gmail.com",
-    "smtp_password": "your-app-password",
-    "from_email": "your-mail@gmail.com",
-    "to_email": "your-mail@gmail.com",
-    "use_tls": true
+    "telegram_chat_id": "123456789"
   }
 }
 ```
@@ -201,8 +194,8 @@ Mau JSON:
 Neu ban muon chay 24/7:
 
 1. dien `brain.email` va `brain.password`
-2. uu tien dien `telegram_bot_token` + `telegram_chat_id`; SMTP chi la fallback neu ban van muon gui mail
-3. khi BRAIN tra ve `persona`, tool se gui link qua Telegram neu co cau hinh, neu khong thi fallback sang mail, roi tu dong polling cho den khi ban quet mat xong
+2. dien `telegram_bot_token` + `telegram_chat_id`
+3. khi BRAIN tra ve `persona`, tool se gui link qua Telegram neu co cau hinh, roi tu dong polling cho den khi ban quet mat xong
 
 ## Dang nhap API tu terminal
 
@@ -219,7 +212,7 @@ Tool se:
 1. prompt email
 2. prompt password bang `getpass`
 3. neu BRAIN tra ve `persona`, in URL va co the mo browser
-4. neu `credentials_file` co Telegram bot config, gui link Persona qua Telegram; neu khong thi dung SMTP neu co
+4. neu `credentials_file` co Telegram bot config, gui link Persona qua Telegram
 5. tu dong polling cho den khi ban quet mat xong hoac het timeout
 6. luu session cookie vao `brain.session_path`
 
@@ -275,6 +268,10 @@ service:
   stuck_job_after_seconds: 1800
   persona_retry_interval_seconds: 300
   persona_email_cooldown_seconds: 900
+  persona_confirmation_required: true
+  persona_confirmation_poll_interval_seconds: 30
+  persona_confirmation_prompt_cooldown_seconds: 3600
+  persona_confirmation_granted_ttl_seconds: 300
 ```
 
 Y nghia:
@@ -292,7 +289,11 @@ Y nghia:
 - `shutdown_grace_period_seconds`: cua so de service dung an toan duoi supervisor
 - `stuck_job_after_seconds`: danh dau job bi treo de surface trong state/log
 - `persona_retry_interval_seconds`: nhan lai auth sau khi cho Persona
-- `persona_email_cooldown_seconds`: throttle Persona notification de tranh spam lien tuc
+- `persona_email_cooldown_seconds`: throttle Persona notification de tranh spam lien tuc; ten key nay duoc giu lai vi ly do backward-compatible
+- `persona_confirmation_required`: hoi qua Telegram xem ban co san sang xac thuc truoc khi xin Persona link moi
+- `persona_confirmation_poll_interval_seconds`: tan suat check Telegram de xem da co xac nhan chua
+- `persona_confirmation_prompt_cooldown_seconds`: khoang cach giua cac lan nhac lai prompt "ban da san sang chua"
+- `persona_confirmation_granted_ttl_seconds`: cua so ngan de approval Telegram con hieu luc truoc khi service hoi lai
 
 ## Field catalog va runtime field values
 

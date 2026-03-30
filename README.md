@@ -170,7 +170,8 @@ Persona behavior:
 
 - service mode dung non-interactive auth
 - neu BRAIN doi Persona, service pause viec submit batch moi
-- in URL ra terminal va gui Telegram neu bot da cau hinh, hoac fallback sang mail neu SMTP da cau hinh
+- neu da cau hinh Telegram bot va `service.persona_confirmation_required: true`, service se hoi ban co san sang xac thuc khong truoc khi xin link moi
+- in URL ra terminal va gui Telegram neu bot da cau hinh
 - retry auth cham theo `service.persona_retry_interval_seconds`, khong spam lien tuc
 
 ## Manual backend
@@ -209,7 +210,7 @@ Export CSV co:
 - interactive login bang email/password
 - support Persona/face-scan khi BRAIN yeu cau
 - doc credential tu `secrets/brain_credentials.json`
-- gui link Persona qua Telegram bot neu da cau hinh, hoac fallback sang mail neu SMTP da cau hinh
+- gui link Persona qua Telegram bot neu da cau hinh
 - tu dong polling Persona trong che do headless
 - local session-cookie cache de tai su dung giua cac command
 
@@ -219,13 +220,13 @@ Khuyen nghi:
 2. chay `python main.py brain-login --config <config>.yaml`
 3. nhap email/password trong terminal, hoac luu trong `secrets/brain_credentials.json`
 4. neu BRAIN yeu cau Persona, mo URL va quet mat
-5. neu da cau hinh Telegram bot, tool gui link Persona qua Telegram; neu khong thi fallback sang SMTP neu co
+5. neu da cau hinh Telegram bot, tool gui link Persona qua Telegram
 6. session cookie se duoc luu vao `brain.session_path`
 
 Luu y bao mat:
 
 - tool khong luu password
-- neu ban muon chay 24/7, hay luu BRAIN credential + Telegram bot token hoac SMTP app password trong `secrets/brain_credentials.json`
+- neu ban muon chay 24/7, hay luu BRAIN credential + Telegram bot token trong `secrets/brain_credentials.json`
 - tool co the luu session cookie cuc bo de tai su dung
 - mac dinh file session nam trong `outputs/`, da duoc `.gitignore`
 

@@ -36,7 +36,7 @@ Neu backend la `api` va chua co session:
 1. chay `brain-login`, hoac
 2. de `run-brain-sim` / `run-closed-loop` tu doc `secrets/brain_credentials.json`
 3. neu BRAIN yeu cau Persona, tool se dua URL de ban quet mat
-4. neu credentials file co SMTP config, tool se gui link Persona qua mail
+4. neu credentials file co Telegram bot config, tool se gui link Persona qua Telegram
 5. tool tu dong polling cho den khi ban quet mat xong
 6. sau khi xac thuc xong, session cookie duoc tai su dung cho cac command sau
 
@@ -103,7 +103,8 @@ Persona:
 
 - service mode dung non-interactive auth
 - neu BRAIN doi quet mat, service pause submit batch moi
-- link Persona duoc in ra terminal va gui mail neu SMTP da cau hinh
+- neu `service.persona_confirmation_required` bat va Telegram da cau hinh, service se doi ban xac nhan san sang truoc khi xin Persona link moi
+- link Persona duoc in ra terminal va gui qua Telegram neu bot da cau hinh
 - service retry auth cham, khong prompt block trong terminal
 
 ## 5. Candidate selection policy

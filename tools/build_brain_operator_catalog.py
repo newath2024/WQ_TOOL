@@ -8,7 +8,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from pypdf import PdfReader
+try:
+    from pypdf import PdfReader
+except ModuleNotFoundError:  # pragma: no cover - exercised via subprocess tests
+    PdfReader = None
 
 from features.registry import BRAIN_DEFAULT_OPERATORS
 
@@ -68,6 +71,10 @@ def _normalize_text(value: str) -> str:
 
 
 def _extract_pdf_text(pdf_path: Path) -> str:
+    if PdfReader is None:
+        raise ModuleNotFoundError(
+            "pypdf is required only when --pdf is used; install it or provide --export-json instead."
+        )
     reader = PdfReader(str(pdf_path))
     return "\n".join((page.extract_text() or "") for page in reader.pages)
 
