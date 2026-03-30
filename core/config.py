@@ -280,6 +280,10 @@ class AdaptiveGenerationConfig:
     mutation_learning: MutationLearningConfig = field(default_factory=MutationLearningConfig)
     max_generation_seconds: float = 20.0
     max_attempt_multiplier: int = 12
+    exploit_budget_ratio: float = 0.60
+    explore_budget_ratio: float = 0.40
+    min_explore_attempts: int = 50
+    min_explore_seconds: float = 2.0
     max_consecutive_failures: int = 250
     min_candidates_before_early_exit: int = 5
 

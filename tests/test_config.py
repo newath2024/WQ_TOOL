@@ -113,6 +113,10 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert default_config.generation.engine_validation_cache_enabled is True
     assert default_config.adaptive_generation.max_generation_seconds == 20.0
     assert default_config.adaptive_generation.max_attempt_multiplier == 12
+    assert default_config.adaptive_generation.exploit_budget_ratio == 0.60
+    assert default_config.adaptive_generation.explore_budget_ratio == 0.40
+    assert default_config.adaptive_generation.min_explore_attempts == 50
+    assert default_config.adaptive_generation.min_explore_seconds == 2.0
     assert default_config.adaptive_generation.max_consecutive_failures == 250
     assert default_config.adaptive_generation.min_candidates_before_early_exit == 5
     assert default_config.service.research_context_cache_enabled is True
@@ -267,6 +271,10 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.generation.engine_validation_cache_enabled is True
     assert config.adaptive_generation.max_generation_seconds == 20.0
     assert config.adaptive_generation.max_attempt_multiplier == 12
+    assert config.adaptive_generation.exploit_budget_ratio == 0.60
+    assert config.adaptive_generation.explore_budget_ratio == 0.40
+    assert config.adaptive_generation.min_explore_attempts == 50
+    assert config.adaptive_generation.min_explore_seconds == 2.0
     assert config.adaptive_generation.max_consecutive_failures == 250
     assert config.adaptive_generation.min_candidates_before_early_exit == 5
     assert config.service.research_context_cache_enabled is True

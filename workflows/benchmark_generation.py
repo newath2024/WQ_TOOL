@@ -53,6 +53,14 @@ def benchmark_generation(
                 float(baseline["measured_metrics"].get("attempt_count", 0)),
                 float(optimized["measured_metrics"].get("attempt_count", 0)),
             ),
+            "duplicate_fail_count_pct": _percent_delta(
+                float(baseline["measured_metrics"].get("duplicate_fail_count", 0)),
+                float(optimized["measured_metrics"].get("duplicate_fail_count", 0)),
+            ),
+            "pre_dedup_reject_count_pct": _percent_delta(
+                float(baseline["measured_metrics"].get("pre_dedup_reject_count", 0)),
+                float(optimized["measured_metrics"].get("pre_dedup_reject_count", 0)),
+            ),
         },
     }
 
@@ -120,6 +128,10 @@ def _build_baseline_config(config: AppConfig) -> AppConfig:
             config.adaptive_generation,
             max_generation_seconds=0.0,
             max_attempt_multiplier=25,
+            exploit_budget_ratio=1.0,
+            explore_budget_ratio=0.0,
+            min_explore_attempts=0,
+            min_explore_seconds=0.0,
             max_consecutive_failures=0,
             min_candidates_before_early_exit=max(
                 config.adaptive_generation.min_candidates_before_early_exit,
@@ -145,6 +157,10 @@ def _build_optimized_config(config: AppConfig) -> AppConfig:
             config.adaptive_generation,
             max_generation_seconds=config.adaptive_generation.max_generation_seconds,
             max_attempt_multiplier=config.adaptive_generation.max_attempt_multiplier,
+            exploit_budget_ratio=config.adaptive_generation.exploit_budget_ratio,
+            explore_budget_ratio=config.adaptive_generation.explore_budget_ratio,
+            min_explore_attempts=config.adaptive_generation.min_explore_attempts,
+            min_explore_seconds=config.adaptive_generation.min_explore_seconds,
             max_consecutive_failures=config.adaptive_generation.max_consecutive_failures,
             min_candidates_before_early_exit=config.adaptive_generation.min_candidates_before_early_exit,
         ),

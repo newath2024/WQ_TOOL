@@ -6,6 +6,7 @@ from collections import defaultdict
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import NORMALIZATION_OPERATORS, OperatorRegistry
+from generator.diversity_tracker import GenerationDiversityTracker
 from generator.genome import (
     ComplexityGene,
     FeatureGene,
@@ -73,20 +74,42 @@ class GenomeBuilder:
         source_mode: str = "random",
         novelty_bias: bool = False,
         case_snapshot: CaseMemorySnapshot | None = None,
+        diversity_tracker: GenerationDiversityTracker | None = None,
     ) -> Genome:
-        motif = self._pick_motif(novelty_bias=novelty_bias, case_snapshot=case_snapshot)
-        return self._build_genome(motif=motif, source_mode=source_mode, novelty_bias=novelty_bias, case_snapshot=case_snapshot)
+        motif = self._pick_motif(
+            novelty_bias=novelty_bias,
+            case_snapshot=case_snapshot,
+            diversity_tracker=diversity_tracker,
+        )
+        return self._build_genome(
+            motif=motif,
+            source_mode=source_mode,
+            novelty_bias=novelty_bias,
+            case_snapshot=case_snapshot,
+            diversity_tracker=diversity_tracker,
+        )
 
     def build_guided_genome(
         self,
         *,
         case_snapshot: CaseMemorySnapshot | None,
         explore: bool,
+        diversity_tracker: GenerationDiversityTracker | None = None,
     ) -> Genome:
         novelty_bias = explore
         source_mode = "guided_explore" if explore else "guided_exploit"
-        motif = self._pick_motif(novelty_bias=novelty_bias, case_snapshot=case_snapshot)
-        return self._build_genome(motif=motif, source_mode=source_mode, novelty_bias=novelty_bias, case_snapshot=case_snapshot)
+        motif = self._pick_motif(
+            novelty_bias=novelty_bias,
+            case_snapshot=case_snapshot,
+            diversity_tracker=diversity_tracker,
+        )
+        return self._build_genome(
+            motif=motif,
+            source_mode=source_mode,
+            novelty_bias=novelty_bias,
+            case_snapshot=case_snapshot,
+            diversity_tracker=diversity_tracker,
+        )
 
     def build_parent_seeded_genome(
         self,
@@ -95,6 +118,7 @@ class GenomeBuilder:
         primary_family: str,
         source_mode: str,
         case_snapshot: CaseMemorySnapshot | None = None,
+        diversity_tracker: GenerationDiversityTracker | None = None,
     ) -> Genome:
         return self._build_genome(
             motif=motif,
@@ -102,6 +126,7 @@ class GenomeBuilder:
             novelty_bias=False,
             preferred_primary_family=primary_family,
             case_snapshot=case_snapshot,
+            diversity_tracker=diversity_tracker,
         )
 
     def _build_genome(
@@ -112,9 +137,20 @@ class GenomeBuilder:
         novelty_bias: bool,
         preferred_primary_family: str = "",
         case_snapshot: CaseMemorySnapshot | None = None,
+        diversity_tracker: GenerationDiversityTracker | None = None,
     ) -> Genome:
-        primary = self._pick_numeric_field(preferred_family=preferred_primary_family, novelty_bias=novelty_bias, case_snapshot=case_snapshot)
-        secondary = self._pick_secondary_field(primary, novelty_bias=novelty_bias, case_snapshot=case_snapshot)
+        primary = self._pick_numeric_field(
+            preferred_family=preferred_primary_family,
+            novelty_bias=novelty_bias,
+            case_snapshot=case_snapshot,
+            diversity_tracker=diversity_tracker,
+        )
+        secondary = self._pick_secondary_field(
+            primary,
+            novelty_bias=novelty_bias,
+            case_snapshot=case_snapshot,
+            diversity_tracker=diversity_tracker,
+        )
         auxiliary = self._pick_auxiliary_field(primary, secondary, novelty_bias=novelty_bias)
         group_field = self._pick_group_field() if motif == "group_relative_signal" or self.random.random() < 0.20 else ""
         liquidity_field = self._pick_liquidity_field(auxiliary, secondary, primary) if motif == "liquidity_conditioned_signal" else ""
@@ -122,10 +158,14 @@ class GenomeBuilder:
             novelty_bias=novelty_bias,
             case_snapshot=case_snapshot,
         )
-        primitive = self._pick_primitive(motif)
-        secondary_transform = self._pick_secondary_transform(motif, primitive)
+        primitive = self._pick_primitive(motif, diversity_tracker=diversity_tracker)
+        secondary_transform = self._pick_secondary_transform(
+            motif,
+            primitive,
+            diversity_tracker=diversity_tracker,
+        )
         pair_operator = self.random.choice(self.pair_ops or ["ts_corr"]) if motif not in MOTIF_LIBRARY else ""
-        wrappers = self._pick_wrappers(novelty_bias=novelty_bias)
+        wrappers = self._pick_wrappers(novelty_bias=novelty_bias, diversity_tracker=diversity_tracker)
         conditioning_mode = self._pick_conditioning_mode(motif)
         turnover_hint = self._estimate_turnover_hint(primitive, secondary_transform, wrappers)
         turnover_gene = TurnoverGene(
@@ -166,7 +206,13 @@ class GenomeBuilder:
             source_mode=source_mode,
         )
 
-    def _pick_motif(self, *, novelty_bias: bool, case_snapshot: CaseMemorySnapshot | None) -> str:
+    def _pick_motif(
+        self,
+        *,
+        novelty_bias: bool,
+        case_snapshot: CaseMemorySnapshot | None,
+        diversity_tracker: GenerationDiversityTracker | None,
+    ) -> str:
         motifs = list(MOTIF_LIBRARY)
         weights: list[float] = []
         motif_support = case_snapshot.stats_for_scope("motif", scope="blended") if case_snapshot else {}
@@ -176,6 +222,8 @@ class GenomeBuilder:
                 weight = 1.0 / max(1, support.support if support else 0)
             else:
                 weight = self._motif_prior_weight(support)
+            if diversity_tracker is not None:
+                weight *= diversity_tracker.motif_weight(motif)
             weights.append(max(weight, 1e-6))
         return self.random.choices(motifs, weights=weights, k=1)[0]
 
@@ -185,6 +233,7 @@ class GenomeBuilder:
         preferred_family: str,
         novelty_bias: bool,
         case_snapshot: CaseMemorySnapshot | None,
+        diversity_tracker: GenerationDiversityTracker | None,
     ) -> FieldSpec:
         candidates = self.allowed_numeric_fields or self.field_registry.runtime_numeric_fields()
         weights: list[float] = []
@@ -197,6 +246,8 @@ class GenomeBuilder:
                 weight *= 0.75 if spec.alpha_usage_count else 1.15
             else:
                 weight *= 1.0 + min(0.5, family_support.get(spec.category, None).avg_outcome if spec.category in family_support else 0.0)
+            if diversity_tracker is not None:
+                weight *= diversity_tracker.field_family_weight(spec.category)
             weights.append(max(weight, 1e-6))
         return self.random.choices(candidates, weights=weights, k=1)[0]
 
@@ -206,6 +257,7 @@ class GenomeBuilder:
         *,
         novelty_bias: bool,
         case_snapshot: CaseMemorySnapshot | None,
+        diversity_tracker: GenerationDiversityTracker | None,
     ) -> FieldSpec | None:
         candidates = [spec for spec in self.allowed_numeric_fields if spec.name != primary.name]
         if not candidates:
@@ -218,6 +270,8 @@ class GenomeBuilder:
                 weight *= 1.25
             if novelty_bias and spec.category == primary.category:
                 weight *= 0.80
+            if diversity_tracker is not None:
+                weight *= diversity_tracker.field_family_weight(spec.category)
             weights.append(max(weight, 1e-6))
         return self.random.choices(candidates, weights=weights, k=1)[0]
 
@@ -269,7 +323,7 @@ class GenomeBuilder:
         context = self.random.choice(context_choices)
         return int(fast), int(slow), int(context)
 
-    def _pick_primitive(self, motif: str) -> str:
+    def _pick_primitive(self, motif: str, *, diversity_tracker: GenerationDiversityTracker | None) -> str:
         candidates = self.primitive_ops or ["ts_mean"]
         weights: list[float] = []
         for name in candidates:
@@ -283,10 +337,18 @@ class GenomeBuilder:
                 weight *= 1.75
             if motif == "group_relative_signal" and spec.has_tag("group_aware"):
                 weight *= 1.25
+            if diversity_tracker is not None:
+                weight *= diversity_tracker.operator_weight(name)
             weights.append(max(weight, 1e-6))
         return self.random.choices(candidates, weights=weights, k=1)[0]
 
-    def _pick_secondary_transform(self, motif: str, primitive: str) -> str:
+    def _pick_secondary_transform(
+        self,
+        motif: str,
+        primitive: str,
+        *,
+        diversity_tracker: GenerationDiversityTracker | None,
+    ) -> str:
         if motif == "volatility_adjusted_momentum" and self.registry.contains("ts_std_dev"):
             return "ts_std_dev"
         options = [name for name in self.primitive_ops if name != primitive]
@@ -308,17 +370,41 @@ class GenomeBuilder:
                 weight *= 1.35
             if motif == "group_relative_signal" and spec.has_tag("group_aware"):
                 weight *= 1.25
+            if diversity_tracker is not None:
+                weight *= diversity_tracker.operator_weight(name)
             weights.append(max(weight, 1e-6))
         return self.random.choices(options, weights=weights, k=1)[0]
 
-    def _pick_wrappers(self, *, novelty_bias: bool) -> tuple[str, ...]:
+    def _pick_wrappers(
+        self,
+        *,
+        novelty_bias: bool,
+        diversity_tracker: GenerationDiversityTracker | None,
+    ) -> tuple[str, ...]:
         if not self.wrapper_choices:
             return ()
         max_wrappers = 2 if novelty_bias else 1
         count = self.random.randint(0, max_wrappers)
         if count <= 0:
             return ()
-        return tuple(self.random.sample(self.wrapper_choices, k=min(count, len(self.wrapper_choices))))
+        if diversity_tracker is None:
+            return tuple(self.random.sample(self.wrapper_choices, k=min(count, len(self.wrapper_choices))))
+        weighted = [
+            (
+                wrapper,
+                max(1e-6, diversity_tracker.operator_weight(wrapper)),
+            )
+            for wrapper in self.wrapper_choices
+        ]
+        selected: list[str] = []
+        choices = list(weighted)
+        for _ in range(min(count, len(choices))):
+            labels = [item[0] for item in choices if item[0] not in selected]
+            weights = [item[1] for item in choices if item[0] not in selected]
+            if not labels:
+                break
+            selected.append(self.random.choices(labels, weights=weights, k=1)[0])
+        return tuple(selected)
 
     def _pick_conditioning_mode(self, motif: str) -> str:
         if motif == "group_relative_signal":

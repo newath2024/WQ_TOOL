@@ -8,6 +8,7 @@ from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import OperatorRegistry, build_default_registry
 from generator.crossover import GenomeCrossover
+from generator.diversity_tracker import GenerationDiversityTracker
 from generator.genome import Genome
 from generator.genome_builder import GenomeBuilder
 from generator.grammar import MOTIF_LIBRARY, MotifGrammar
@@ -64,6 +65,7 @@ class MutationPolicy:
         target_count: int,
         force_novelty: bool = False,
         case_snapshot: CaseMemorySnapshot | None = None,
+        diversity_tracker: GenerationDiversityTracker | None = None,
     ) -> list[tuple[str, dict]]:
         parent_candidate = self._memory_parent_to_candidate(parent)
         payload = self.generate_from_candidates(
@@ -72,6 +74,7 @@ class MutationPolicy:
             case_snapshot=case_snapshot,
             pattern_snapshot=snapshot,
             force_novelty=force_novelty,
+            diversity_tracker=diversity_tracker,
         )
         return [(expression, metadata) for expression, _, _, metadata in payload]
 
@@ -83,6 +86,7 @@ class MutationPolicy:
         case_snapshot: CaseMemorySnapshot | None,
         pattern_snapshot: PatternMemorySnapshot | None = None,
         force_novelty: bool = False,
+        diversity_tracker: GenerationDiversityTracker | None = None,
     ) -> list[tuple[str, str, tuple[str, ...], dict[str, Any]]]:
         payload: list[tuple[str, str, tuple[str, ...], dict[str, Any]]] = []
         if not parents or target_count <= 0:
@@ -92,14 +96,20 @@ class MutationPolicy:
         parent_refs = {getattr(parent, "alpha_id"): parent for parent in parents if getattr(parent, "alpha_id", "")}
         while len(payload) < target_count and attempts < max_attempts:
             attempts += 1
-            primary_parent = self.randomizer.choice(list(parents))
+            primary_parent = self._select_parent(parents, diversity_tracker=diversity_tracker)
             parent_genome = self._extract_parent_genome(primary_parent)
-            mutation_mode = self._choose_mode(primary_parent, case_snapshot=case_snapshot, force_novelty=force_novelty)
+            mutation_mode = self._choose_mode(
+                primary_parent,
+                case_snapshot=case_snapshot,
+                force_novelty=force_novelty,
+                diversity_tracker=diversity_tracker,
+            )
             mutated = self._mutate_genome(
                 parent_genome,
                 mutation_mode=mutation_mode,
                 parents=list(parents),
                 case_snapshot=case_snapshot,
+                diversity_tracker=diversity_tracker,
             )
             repaired, repair_actions = self.repair_policy.repair(
                 mutated,
@@ -115,11 +125,13 @@ class MutationPolicy:
                 "field_families": list(render.field_families),
                 "operators_used": list(dict.fromkeys(render.operator_path)),
                 "operator_path": list(render.operator_path),
+                "operator_path_key": ">".join(render.operator_path[:4]) if render.operator_path else "none",
                 "operator_semantic_tags": self._operator_semantic_tags(render.operator_path),
                 "turnover_bucket": render.turnover_bucket,
                 "horizon_bucket": render.horizon_bucket,
                 "complexity_bucket": render.complexity_bucket,
                 "mutation_mode": mutation_mode,
+                "pre_normalized_expression": render.normalized_expression,
                 "repair_actions": list(repair_actions),
                 "parent_refs": self._build_parent_refs(primary_parent, parent_refs, mutation_mode),
                 "mutation_hint_tags": list(getattr(primary_parent, "mutation_hints", ()) or ()),
@@ -127,7 +139,14 @@ class MutationPolicy:
             payload.append((render.expression, mutation_mode, tuple(ref["alpha_id"] for ref in metadata["parent_refs"]), metadata))
         return payload
 
-    def _choose_mode(self, parent, *, case_snapshot: CaseMemorySnapshot | None, force_novelty: bool) -> str:
+    def _choose_mode(
+        self,
+        parent,
+        *,
+        case_snapshot: CaseMemorySnapshot | None,
+        force_novelty: bool,
+        diversity_tracker: GenerationDiversityTracker | None = None,
+    ) -> str:
         if force_novelty:
             return "novelty"
         family_signature = str(getattr(parent, "family_signature", "") or "")
@@ -148,6 +167,9 @@ class MutationPolicy:
         outcome_multipliers = self._mutation_outcome_multipliers(family_signature=family_signature)
         for mode, multiplier in outcome_multipliers.items():
             weights[mode] = weights.get(mode, 0.0) * multiplier
+        if diversity_tracker is not None:
+            for mode in list(weights):
+                weights[mode] = weights.get(mode, 0.0) * diversity_tracker.mutation_mode_weight(mode)
         return self.randomizer.choices(list(weights.keys()), weights=[max(value, 1e-6) for value in weights.values()], k=1)[0]
 
     def _mutate_genome(
@@ -157,16 +179,17 @@ class MutationPolicy:
         mutation_mode: str,
         parents: list,
         case_snapshot: CaseMemorySnapshot | None,
+        diversity_tracker: GenerationDiversityTracker | None,
     ) -> Genome:
         if mutation_mode == "exploit_local":
             return self._exploit_local(parent_genome)
         if mutation_mode == "structural":
-            return self._structural(parent_genome, case_snapshot=case_snapshot)
+            return self._structural(parent_genome, case_snapshot=case_snapshot, diversity_tracker=diversity_tracker)
         if mutation_mode == "crossover" and len(parents) > 1:
             partner = self._extract_parent_genome(self.randomizer.choice([item for item in parents if item is not parents[0]] or parents))
             return self.crossover.crossover(parent_genome, partner)
         if mutation_mode == "novelty":
-            return self._novelty(parent_genome, case_snapshot=case_snapshot)
+            return self._novelty(parent_genome, case_snapshot=case_snapshot, diversity_tracker=diversity_tracker)
         return self._repair_seed(parent_genome)
 
     def _exploit_local(self, genome: Genome) -> Genome:
@@ -181,18 +204,35 @@ class MutationPolicy:
             source_mode="exploit_local",
         )
 
-    def _structural(self, genome: Genome, *, case_snapshot: CaseMemorySnapshot | None) -> Genome:
+    def _structural(
+        self,
+        genome: Genome,
+        *,
+        case_snapshot: CaseMemorySnapshot | None,
+        diversity_tracker: GenerationDiversityTracker | None,
+    ) -> Genome:
         motif_choices = [motif for motif in MOTIF_LIBRARY if motif != genome.motif] or [genome.motif]
         seeded = self.genome_builder.build_parent_seeded_genome(
             motif=self.randomizer.choice(motif_choices),
             primary_family=genome.feature_gene.primary_family,
             source_mode="structural",
             case_snapshot=case_snapshot,
+            diversity_tracker=diversity_tracker,
         )
         return replace(seeded, feature_gene=replace(seeded.feature_gene, primary_field=genome.feature_gene.primary_field, primary_family=genome.feature_gene.primary_family))
 
-    def _novelty(self, genome: Genome, *, case_snapshot: CaseMemorySnapshot | None) -> Genome:
-        novel = self.genome_builder.build_guided_genome(case_snapshot=case_snapshot, explore=True)
+    def _novelty(
+        self,
+        genome: Genome,
+        *,
+        case_snapshot: CaseMemorySnapshot | None,
+        diversity_tracker: GenerationDiversityTracker | None,
+    ) -> Genome:
+        novel = self.genome_builder.build_guided_genome(
+            case_snapshot=case_snapshot,
+            explore=True,
+            diversity_tracker=diversity_tracker,
+        )
         return replace(
             novel,
             feature_gene=replace(
@@ -281,6 +321,18 @@ class MutationPolicy:
                 continue
             tags.update(self.registry.get(name).semantic_tags)
         return sorted(tags)
+
+    def _select_parent(self, parents: Sequence, *, diversity_tracker: GenerationDiversityTracker | None) -> Any:
+        parent_list = list(parents)
+        if diversity_tracker is None or len(parent_list) <= 1:
+            return self.randomizer.choice(parent_list)
+        weights: list[float] = []
+        for parent in parent_list:
+            parent_id = str(getattr(parent, "alpha_id", "") or "")
+            family_signature = str(getattr(parent, "family_signature", "") or "")
+            lineage_key = parent_id or family_signature
+            weights.append(max(1e-6, diversity_tracker.lineage_weight(lineage_key)))
+        return self.randomizer.choices(parent_list, weights=weights, k=1)[0]
 
     def _mutation_outcome_multipliers(self, *, family_signature: str) -> dict[str, float]:
         learning_config = self.adaptive_config.mutation_learning

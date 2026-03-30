@@ -7,8 +7,10 @@ from core.config import AdaptiveGenerationConfig, GenerationConfig, load_config
 from core.run_context import RunContext
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import build_registry
-from generator.engine import AlphaCandidate, AlphaGenerationEngine, CandidateBuildResult
+from generator.diversity_tracker import GenerationDiversityTracker
+from generator.engine import AlphaCandidate, AlphaGenerationEngine, CandidateBuildResult, GenerationSessionStats
 from generator.guided_generator import GuidedGenerator
+from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.brain_batch_service import BrainBatchService
 from services.data_service import CachedResearchContextProvider
@@ -147,14 +149,226 @@ def test_candidate_build_result_classifies_failure_reasons() -> None:
     redundant = engine._build_candidate_result("rank(rank(close))", mode="test", parent_ids=())  # noqa: SLF001
 
     assert parse_failed.failure_reason == "parse_failed"
-    assert disallowed.failure_reason == "disallowed_field"
+    assert disallowed.failure_reason == "validation_disallowed_field"
     assert redundant.failure_reason == "redundant_expression"
+
+
+def test_candidate_build_result_maps_validation_sub_reasons() -> None:
+    config = _build_generation_config()
+    engine = AlphaGenerationEngine(
+        config=config,
+        adaptive_config=AdaptiveGenerationConfig(),
+        registry=build_registry(["rank", "group_neutralize", "ts_mean"]),
+        field_registry=_build_field_registry(),
+    )
+
+    unknown_operator = engine._build_candidate_result("mystery(close)", mode="test", parent_ids=())  # noqa: SLF001
+    arity_mismatch = engine._build_candidate_result("rank(close, 1)", mode="test", parent_ids=())  # noqa: SLF001
+    unsupported = engine._build_candidate_result("group_neutralize(close, close)", mode="test", parent_ids=())  # noqa: SLF001
+    semantic_invalid = engine._build_candidate_result("ts_mean(close, 0)", mode="test", parent_ids=())  # noqa: SLF001
+
+    assert unknown_operator.failure_reason == "validation_unknown_operator"
+    assert arity_mismatch.failure_reason == "validation_operator_arity_mismatch"
+    assert unsupported.failure_reason == "validation_unsupported_combination"
+    assert semantic_invalid.failure_reason == "validation_semantic_invalid"
+
+
+def test_generation_session_stats_remaps_legacy_validation_bucket() -> None:
+    session = GenerationSessionStats()
+
+    session.record_failure("expression_validation_failed")
+    session.record_failure("validation_disallowed_field")
+    session.record_failure("duplicate_normalized_expression")
+
+    metrics = session.to_metrics(generated_count=0, selected_for_simulation=0)
+
+    assert metrics["validate_fail_count"] == 2
+    assert "expression_validation_failed" not in metrics["failure_reason_counts"]
+    assert metrics["failure_reason_counts"]["validation_unknown_error"] == 1
+    assert "expression_validation_failed" not in metrics["top_fail_reasons"]
+
+
+def test_generation_session_stats_omits_failure_samples_at_info() -> None:
+    session = GenerationSessionStats()
+    session.record_failure("validation_disallowed_field", expression="rank(foo)")
+    session.record_failure("duplicate_normalized_expression", expression="rank(close)")
+
+    metrics = session.to_metrics(generated_count=0, selected_for_simulation=0, include_debug_samples=False)
+
+    assert "failure_samples" not in metrics
+
+
+def test_generation_session_stats_limits_failure_samples_in_debug() -> None:
+    session = GenerationSessionStats()
+    for expression in ("rank(foo)", "rank(bar)", "rank(baz)", "rank(qux)"):
+        session.record_failure("validation_disallowed_field", expression=expression)
+
+    metrics = session.to_metrics(generated_count=0, selected_for_simulation=0, include_debug_samples=True)
+
+    assert metrics["failure_samples"]["validation_disallowed_field"] == [
+        "rank(foo)",
+        "rank(bar)",
+        "rank(baz)",
+    ]
+
+
+def test_generation_session_stats_reports_duplicate_breakdowns() -> None:
+    session = GenerationSessionStats()
+
+    session.record_duplicate(
+        "structural_duplicate_expression",
+        expression="rank(close)",
+        mutation_mode="exploit_local",
+        motif="momentum",
+        operator_path=("rank", "ts_mean"),
+        pre_dedup=True,
+    )
+    session.record_duplicate(
+        "duplicate_normalized_expression",
+        expression="rank(volume)",
+        mutation_mode="novelty",
+        motif="mean_reversion",
+        operator_path=("rank", "ts_delta"),
+        pre_dedup=False,
+    )
+
+    metrics = session.to_metrics(generated_count=0, selected_for_simulation=0)
+
+    assert metrics["pre_dedup_reject_count"] == 1
+    assert metrics["structural_duplicate_count"] == 1
+    assert metrics["normalized_duplicate_count"] == 1
+    assert metrics["duplicate_by_mutation_mode"] == {"exploit_local": 1, "novelty": 1}
+    assert metrics["duplicate_by_motif"] == {"momentum": 1, "mean_reversion": 1}
+    assert metrics["duplicate_by_operator_path"] == {"rank>ts_mean": 1, "rank>ts_delta": 1}
+
+
+def test_build_candidates_rejects_structural_duplicates_before_validation(monkeypatch) -> None:
+    config = _build_generation_config()
+    engine = AlphaGenerationEngine(
+        config=config,
+        adaptive_config=AdaptiveGenerationConfig(),
+        registry=build_registry(config.allowed_operators),
+        field_registry=_build_field_registry(),
+    )
+    session = GenerationSessionStats()
+    valid_candidate = AlphaCandidate(
+        alpha_id="alpha-1",
+        expression="rank(close)",
+        normalized_expression="rank(close)",
+        generation_mode="test",
+        parent_ids=(),
+        complexity=2,
+        created_at="2026-03-30T00:00:00+00:00",
+        generation_metadata={
+            "motif": "momentum",
+            "mutation_mode": "exploit_local",
+            "operator_path": ["rank", "ts_mean"],
+            "field_families": ["price"],
+        },
+    )
+    calls: list[str] = []
+
+    def fake_build_candidate_result(*args, **kwargs):
+        calls.append(str(kwargs["expression"]))
+        return CandidateBuildResult(candidate=valid_candidate)
+
+    monkeypatch.setattr(engine, "_build_candidate_result", fake_build_candidate_result)
+
+    candidates = engine._build_candidates(  # noqa: SLF001
+        [
+            (
+                "rank(close)",
+                "test",
+                (),
+                {
+                    "motif": "momentum",
+                    "mutation_mode": "exploit_local",
+                    "operator_path": ["rank", "ts_mean"],
+                    "pre_normalized_expression": "rank(close)",
+                    "genome_hash": "g-1",
+                },
+            ),
+            (
+                "rank(close)",
+                "test",
+                (),
+                {
+                    "motif": "momentum",
+                    "mutation_mode": "exploit_local",
+                    "operator_path": ["rank", "ts_mean"],
+                    "pre_normalized_expression": "rank(close)",
+                    "genome_hash": "g-2",
+                },
+            ),
+        ],
+        existing_normalized=set(),
+        session=session,
+    )
+
+    metrics = session.to_metrics(generated_count=len(candidates), selected_for_simulation=0)
+    assert len(calls) == 1
+    assert len(candidates) == 1
+    assert metrics["pre_dedup_reject_count"] == 1
+    assert metrics["structural_duplicate_count"] == 1
+
+
+def test_build_candidates_rejects_history_duplicates_before_validation(monkeypatch) -> None:
+    config = _build_generation_config()
+    engine = AlphaGenerationEngine(
+        config=config,
+        adaptive_config=AdaptiveGenerationConfig(),
+        registry=build_registry(config.allowed_operators),
+        field_registry=_build_field_registry(),
+    )
+    session = GenerationSessionStats()
+
+    def fail_if_called(*args, **kwargs):
+        raise AssertionError("_build_candidate_result should not run for pre-dedup history duplicates")
+
+    monkeypatch.setattr(engine, "_build_candidate_result", fail_if_called)
+
+    candidates = engine._build_candidates(  # noqa: SLF001
+        [
+            (
+                "rank(close)",
+                "test",
+                (),
+                {
+                    "motif": "momentum",
+                    "mutation_mode": "exploit_local",
+                    "operator_path": ["rank", "ts_mean"],
+                    "pre_normalized_expression": "rank(close)",
+                    "genome_hash": "g-1",
+                },
+            )
+        ],
+        existing_normalized={"rank(close)"},
+        session=session,
+    )
+
+    metrics = session.to_metrics(generated_count=len(candidates), selected_for_simulation=0)
+    assert candidates == []
+    assert metrics["pre_dedup_reject_count"] == 1
+    assert metrics["normalized_duplicate_count"] == 1
+
+
+def test_round_scoped_generation_seed_changes_by_round_and_scope() -> None:
+    round_one_fresh = derive_generation_seed(11, run_id="run-1", round_index=1, scope="fresh")
+    round_two_fresh = derive_generation_seed(11, run_id="run-1", round_index=2, scope="fresh")
+    round_one_mutation = derive_generation_seed(11, run_id="run-1", round_index=1, scope="mutation")
+
+    assert round_one_fresh != round_two_fresh
+    assert round_one_fresh != round_one_mutation
 
 
 def test_guided_generator_stops_on_time_budget(monkeypatch) -> None:
     adaptive = AdaptiveGenerationConfig(
         max_generation_seconds=1.0,
         max_attempt_multiplier=50,
+        exploit_budget_ratio=0.6,
+        explore_budget_ratio=0.4,
+        min_explore_attempts=1,
+        min_explore_seconds=0.5,
         max_consecutive_failures=100,
         min_candidates_before_early_exit=1,
     )
@@ -174,7 +388,7 @@ def test_guided_generator_stops_on_time_budget(monkeypatch) -> None:
     monkeypatch.setattr(
         generator.base_engine,
         "_build_candidate_result",
-        lambda *args, **kwargs: CandidateBuildResult(candidate=None, failure_reason="expression_validation_failed"),
+        lambda *args, **kwargs: CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
     )
 
     candidates = generator.generate(
@@ -185,13 +399,20 @@ def test_guided_generator_stops_on_time_budget(monkeypatch) -> None:
     assert candidates == []
     assert generator.last_generation_stats is not None
     assert generator.last_generation_stats.timeout_stop is True
+    assert generator.last_generation_stats.explore_phase_entered is False
+    assert generator.last_generation_stats.exploit_attempt_count == 1
+    assert generator.last_generation_stats.explore_attempt_count == 0
     assert generator.last_generation_stats.attempt_count == 1
 
 
-def test_guided_generator_stops_after_consecutive_failures_and_returns_partial_candidates(monkeypatch) -> None:
+def test_guided_generator_explore_runs_after_exploit_failure_break_and_returns_partial_candidates(monkeypatch) -> None:
     adaptive = AdaptiveGenerationConfig(
         max_generation_seconds=20.0,
         max_attempt_multiplier=50,
+        exploit_budget_ratio=0.6,
+        explore_budget_ratio=0.4,
+        min_explore_attempts=2,
+        min_explore_seconds=1.0,
         max_consecutive_failures=4,
         min_candidates_before_early_exit=1,
     )
@@ -209,9 +430,10 @@ def test_guided_generator_stops_after_consecutive_failures_and_returns_partial_c
     results = iter(
         [
             CandidateBuildResult(candidate=valid_candidate),
-            CandidateBuildResult(candidate=None, failure_reason="expression_validation_failed"),
-            CandidateBuildResult(candidate=None, failure_reason="expression_validation_failed"),
-            CandidateBuildResult(candidate=None, failure_reason="expression_validation_failed"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
         ]
     )
 
@@ -229,7 +451,18 @@ def test_guided_generator_stops_after_consecutive_failures_and_returns_partial_c
     assert len(candidates) == 1
     assert generator.last_generation_stats is not None
     assert generator.last_generation_stats.consecutive_failure_stop is True
-    assert generator.last_generation_stats.attempt_count == 3
+    assert generator.last_generation_stats.exploit_consecutive_failure_stop is True
+    assert generator.last_generation_stats.explore_phase_entered is True
+    assert generator.last_generation_stats.explore_consecutive_failure_stop is True
+    assert generator.last_generation_stats.exploit_attempt_count == 3
+    assert generator.last_generation_stats.explore_attempt_count == 2
+    assert generator.last_generation_stats.attempt_count == 5
+    metrics = generator.last_generation_stats.to_metrics(generated_count=len(candidates), selected_for_simulation=0)
+    assert metrics["exploit_attempt_count"] == 3
+    assert metrics["explore_attempt_count"] == 2
+    assert metrics["explore_phase_entered"] is True
+    assert metrics["exploit_consecutive_failure_stop"] is True
+    assert metrics["explore_consecutive_failure_stop"] is True
 
 
 def test_research_context_provider_hits_cache_and_expires_with_ttl() -> None:

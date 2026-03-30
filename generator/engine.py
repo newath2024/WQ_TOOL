@@ -9,10 +9,11 @@ from typing import Any, Iterable, Sequence
 
 from alpha.ast_nodes import to_expression
 from alpha.parser import parse_expression
-from alpha.validator import validate_expression
+from alpha.validator import ValidationResult, validate_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import OperatorRegistry
+from generator.diversity_tracker import GenerationDiversityTracker, operator_path_key
 from generator.genome import GenomeRenderResult
 from generator.genome_builder import GenomeBuilder
 from generator.grammar import MotifGrammar
@@ -60,35 +61,78 @@ class GenerationSessionStats:
     explore_phase_ms: float = 0.0
     attempt_count: int = 0
     attempt_success_count: int = 0
+    exploit_attempt_count: int = 0
+    explore_attempt_count: int = 0
+    exploit_success_count: int = 0
+    explore_success_count: int = 0
     timeout_stop: bool = False
     consecutive_failure_stop: bool = False
+    exploit_consecutive_failure_stop: bool = False
+    explore_consecutive_failure_stop: bool = False
+    explore_phase_entered: bool = False
     validation_context_cache_hit: bool = False
+    pre_dedup_reject_count: int = 0
     failure_counts: Counter[str] = field(default_factory=Counter)
+    failure_samples: dict[str, list[str]] = field(default_factory=dict)
+    duplicate_by_mutation_mode: Counter[str] = field(default_factory=Counter)
+    duplicate_by_motif: Counter[str] = field(default_factory=Counter)
+    duplicate_by_operator_path: Counter[str] = field(default_factory=Counter)
 
-    def record_failure(self, reason: str | None) -> None:
-        if reason:
-            self.failure_counts[reason] += 1
+    def record_attempt(self, phase: str = "exploit") -> None:
+        self.attempt_count += 1
+        if phase == "explore":
+            self.explore_attempt_count += 1
+            return
+        self.exploit_attempt_count += 1
 
-    def record_success(self) -> None:
+    def record_failure(self, reason: str | None, *, expression: str | None = None) -> None:
+        normalized_reason = self._normalize_failure_reason(reason)
+        if normalized_reason is None:
+            return
+        self.failure_counts[normalized_reason] += 1
+        if expression:
+            bucket = self.failure_samples.setdefault(normalized_reason, [])
+            if expression not in bucket and len(bucket) < 3:
+                bucket.append(expression)
+
+    def record_success(self, phase: str = "exploit") -> None:
         self.attempt_success_count += 1
+        if phase == "explore":
+            self.explore_success_count += 1
+            return
+        self.exploit_success_count += 1
+
+    def record_duplicate(
+        self,
+        reason: str,
+        *,
+        expression: str | None = None,
+        mutation_mode: str = "",
+        motif: str = "",
+        operator_path: tuple[str, ...] = (),
+        pre_dedup: bool = False,
+    ) -> None:
+        self.record_failure(reason, expression=expression)
+        if pre_dedup:
+            self.pre_dedup_reject_count += 1
+        if mutation_mode:
+            self.duplicate_by_mutation_mode[mutation_mode] += 1
+        if motif:
+            self.duplicate_by_motif[motif] += 1
+        self.duplicate_by_operator_path[operator_path_key(operator_path)] += 1
 
     def top_fail_reasons(self, limit: int = 5) -> dict[str, int]:
-        return dict(self.failure_counts.most_common(limit))
+        return dict(self._materialize_failure_counts().most_common(limit))
 
     def to_metrics(
         self,
         *,
         generated_count: int,
         selected_for_simulation: int = 0,
+        include_debug_samples: bool = False,
     ) -> dict[str, Any]:
-        validate_reason_codes = (
-            "disallowed_field",
-            "invalid_group_field",
-            "field_type_resolution_failed",
-            "expression_validation_failed",
-            "empty_render",
-        )
-        return {
+        failure_reason_counts = self._materialize_failure_counts()
+        metrics = {
             "generated": generated_count,
             "selected_for_simulation": selected_for_simulation,
             "prepare_validation_context_ms": round(self.prepare_validation_context_ms, 3),
@@ -97,17 +141,55 @@ class GenerationSessionStats:
             "explore_phase_ms": round(self.explore_phase_ms, 3),
             "attempt_count": self.attempt_count,
             "attempt_success_count": self.attempt_success_count,
-            "parse_fail_count": int(self.failure_counts.get("parse_failed", 0)),
-            "validate_fail_count": int(sum(self.failure_counts.get(code, 0) for code in validate_reason_codes)),
-            "complexity_fail_count": int(self.failure_counts.get("complexity_exceeded", 0)),
-            "redundancy_fail_count": int(self.failure_counts.get("redundant_expression", 0)),
-            "duplicate_fail_count": int(self.failure_counts.get("duplicate_normalized_expression", 0)),
+            "exploit_attempt_count": self.exploit_attempt_count,
+            "explore_attempt_count": self.explore_attempt_count,
+            "exploit_success_count": self.exploit_success_count,
+            "explore_success_count": self.explore_success_count,
+            "pre_dedup_reject_count": int(self.pre_dedup_reject_count),
+            "parse_fail_count": int(failure_reason_counts.get("parse_failed", 0)),
+            "validate_fail_count": int(
+                sum(count for reason, count in failure_reason_counts.items() if reason.startswith("validation_"))
+            ),
+            "complexity_fail_count": int(failure_reason_counts.get("complexity_exceeded", 0)),
+            "redundancy_fail_count": int(failure_reason_counts.get("redundant_expression", 0)),
+            "duplicate_fail_count": int(
+                failure_reason_counts.get("duplicate_normalized_expression", 0)
+                + failure_reason_counts.get("structural_duplicate_expression", 0)
+            ),
+            "structural_duplicate_count": int(failure_reason_counts.get("structural_duplicate_expression", 0)),
+            "normalized_duplicate_count": int(failure_reason_counts.get("duplicate_normalized_expression", 0)),
             "timeout_stop": self.timeout_stop,
             "consecutive_failure_stop": self.consecutive_failure_stop,
+            "exploit_consecutive_failure_stop": self.exploit_consecutive_failure_stop,
+            "explore_consecutive_failure_stop": self.explore_consecutive_failure_stop,
+            "explore_phase_entered": self.explore_phase_entered,
             "validation_context_cache_hit": self.validation_context_cache_hit,
-            "failure_reason_counts": dict(self.failure_counts),
+            "duplicate_by_mutation_mode": dict(self.duplicate_by_mutation_mode),
+            "duplicate_by_motif": dict(self.duplicate_by_motif),
+            "duplicate_by_operator_path": dict(self.duplicate_by_operator_path),
+            "failure_reason_counts": dict(failure_reason_counts),
             "top_fail_reasons": self.top_fail_reasons(),
         }
+        if include_debug_samples:
+            metrics["failure_samples"] = {
+                reason: list(samples)
+                for reason, samples in self.failure_samples.items()
+                if samples
+            }
+        return metrics
+
+    @staticmethod
+    def _normalize_failure_reason(reason: str | None) -> str | None:
+        if reason == "expression_validation_failed":
+            return "validation_unknown_error"
+        return reason
+
+    def _materialize_failure_counts(self) -> Counter[str]:
+        counts = Counter(self.failure_counts)
+        legacy = int(counts.pop("expression_validation_failed", 0))
+        if legacy:
+            counts["validation_unknown_error"] += legacy
+        return counts
 
 
 class AlphaGenerationEngine:
@@ -167,6 +249,7 @@ class AlphaGenerationEngine:
             prepare_validation_context_ms=prepare_ms,
             validation_context_cache_hit=cache_hit,
         )
+        diversity_tracker = GenerationDiversityTracker()
         generation_started = time.monotonic()
         max_attempts = self._resolve_max_attempts(target, legacy_multiplier=25, minimum=80)
         consecutive_failures = 0
@@ -179,39 +262,64 @@ class AlphaGenerationEngine:
                 target_count=target,
             ):
                 break
-            session.attempt_count += 1
+            session.record_attempt()
             novelty_bias = (len(candidates) / max(1, target)) >= (1.0 - self.adaptive_config.exploration_ratio)
             genome = self.genome_builder.build_random_genome(
                 source_mode="genome_novelty" if novelty_bias else "genome_random",
                 novelty_bias=novelty_bias,
                 case_snapshot=case_snapshot,
+                diversity_tracker=diversity_tracker,
             )
             repaired_genome, repair_actions = self.repair_policy.repair(genome)
             render = self.grammar.render(repaired_genome)
+            metadata = self._render_metadata(
+                render,
+                mutation_mode="novelty" if novelty_bias else "exploit_local",
+                repair_actions=repair_actions,
+                memory_context=self._memory_context_metadata(case_snapshot=case_snapshot),
+            )
+            if self._reject_pre_dedup_candidate(
+                session=session,
+                diversity_tracker=diversity_tracker,
+                existing_normalized=existing,
+                expression=render.expression,
+                generation_metadata=metadata,
+                operator_path=render.operator_path,
+                genome_hash=repaired_genome.stable_hash,
+                structural_key=render.normalized_expression,
+                normalized_expression=render.normalized_expression,
+                pre_dedup=True,
+            ):
+                consecutive_failures += 1
+                continue
             result = self._build_candidate_result(
                 expression=render.expression,
                 mode="novelty" if novelty_bias else "genome",
                 parent_ids=(),
-                generation_metadata=self._render_metadata(
-                    render,
-                    mutation_mode="novelty" if novelty_bias else "exploit_local",
-                    repair_actions=repair_actions,
-                    memory_context=self._memory_context_metadata(case_snapshot=case_snapshot),
-                ),
+                generation_metadata=metadata,
                 validation_ctx=validation_ctx,
             )
             candidate = result.candidate
             if candidate is None:
-                session.record_failure(result.failure_reason)
+                session.record_failure(result.failure_reason, expression=render.expression)
                 consecutive_failures += 1
                 continue
             if candidate.normalized_expression in existing:
-                session.record_failure("duplicate_normalized_expression")
+                self._record_duplicate_reject(
+                    session=session,
+                    diversity_tracker=diversity_tracker,
+                    reason="duplicate_normalized_expression",
+                    expression=candidate.normalized_expression,
+                    generation_metadata=candidate.generation_metadata,
+                    operator_path=tuple(candidate.generation_metadata.get("operator_path") or candidate.operators_used),
+                    pre_dedup=False,
+                )
                 consecutive_failures += 1
                 continue
             existing.add(candidate.normalized_expression)
             candidates.append(candidate)
             session.record_success()
+            self._record_diversity_success(diversity_tracker, candidate)
             consecutive_failures = 0
         session.generation_total_ms = (time.monotonic() - generation_started) * 1000.0
         session.exploit_phase_ms = session.generation_total_ms
@@ -233,6 +341,7 @@ class AlphaGenerationEngine:
             prepare_validation_context_ms=prepare_ms,
             validation_context_cache_hit=cache_hit,
         )
+        diversity_tracker = GenerationDiversityTracker()
         generation_started = time.monotonic()
         max_attempts = self._resolve_max_attempts(target, legacy_multiplier=12, minimum=24)
         consecutive_failures = 0
@@ -245,18 +354,33 @@ class AlphaGenerationEngine:
                 target_count=target,
             ):
                 break
-            session.attempt_count += 1
+            session.record_attempt()
             payload = self.mutation_policy.generate_from_candidates(
                 parents=list(parents),
                 target_count=1,
                 case_snapshot=case_snapshot,
+                diversity_tracker=diversity_tracker,
             )
             if not payload:
-                session.record_failure("expression_validation_failed")
+                session.record_failure("mutation_payload_empty")
                 consecutive_failures += 1
                 continue
             expression, mode, parent_ids, metadata = payload[0]
             metadata.setdefault("memory_context", self._memory_context_metadata(case_snapshot=case_snapshot))
+            if self._reject_pre_dedup_candidate(
+                session=session,
+                diversity_tracker=diversity_tracker,
+                existing_normalized=existing,
+                expression=expression,
+                generation_metadata=metadata,
+                operator_path=tuple(metadata.get("operator_path") or ()),
+                genome_hash=str(metadata.get("genome_hash") or ""),
+                structural_key=str(metadata.get("pre_normalized_expression") or ""),
+                normalized_expression=str(metadata.get("pre_normalized_expression") or ""),
+                pre_dedup=True,
+            ):
+                consecutive_failures += 1
+                continue
             result = self._build_candidate_result(
                 expression=expression,
                 mode=mode,
@@ -266,16 +390,25 @@ class AlphaGenerationEngine:
             )
             candidate = result.candidate
             if candidate is None:
-                session.record_failure(result.failure_reason)
+                session.record_failure(result.failure_reason, expression=expression)
                 consecutive_failures += 1
                 continue
             if candidate.normalized_expression in existing:
-                session.record_failure("duplicate_normalized_expression")
+                self._record_duplicate_reject(
+                    session=session,
+                    diversity_tracker=diversity_tracker,
+                    reason="duplicate_normalized_expression",
+                    expression=candidate.normalized_expression,
+                    generation_metadata=candidate.generation_metadata,
+                    operator_path=tuple(candidate.generation_metadata.get("operator_path") or candidate.operators_used),
+                    pre_dedup=False,
+                )
                 consecutive_failures += 1
                 continue
             existing.add(candidate.normalized_expression)
             candidates.append(candidate)
             session.record_success()
+            self._record_diversity_success(diversity_tracker, candidate)
             consecutive_failures = 0
         session.generation_total_ms = (time.monotonic() - generation_started) * 1000.0
         session.exploit_phase_ms = session.generation_total_ms
@@ -294,9 +427,23 @@ class AlphaGenerationEngine:
         if session is not None and session.prepare_validation_context_ms == 0.0:
             session.prepare_validation_context_ms = prepare_ms
             session.validation_context_cache_hit = cache_hit
+        diversity_tracker = GenerationDiversityTracker()
         for expression, mode, parent_ids, generation_metadata in payload:
             if session is not None:
-                session.attempt_count += 1
+                session.record_attempt()
+            if self._reject_pre_dedup_candidate(
+                session=session,
+                diversity_tracker=diversity_tracker,
+                existing_normalized=existing,
+                expression=expression,
+                generation_metadata=generation_metadata,
+                operator_path=tuple((generation_metadata or {}).get("operator_path") or ()),
+                genome_hash=str((generation_metadata or {}).get("genome_hash") or ""),
+                structural_key=str((generation_metadata or {}).get("pre_normalized_expression") or ""),
+                normalized_expression=str((generation_metadata or {}).get("pre_normalized_expression") or ""),
+                pre_dedup=True,
+            ):
+                continue
             result = self._build_candidate_result(
                 expression=expression,
                 mode=mode,
@@ -307,16 +454,25 @@ class AlphaGenerationEngine:
             candidate = result.candidate
             if candidate is None:
                 if session is not None:
-                    session.record_failure(result.failure_reason)
+                    session.record_failure(result.failure_reason, expression=expression)
                 continue
             if candidate.normalized_expression in existing:
                 if session is not None:
-                    session.record_failure("duplicate_normalized_expression")
+                    self._record_duplicate_reject(
+                        session=session,
+                        diversity_tracker=diversity_tracker,
+                        reason="duplicate_normalized_expression",
+                        expression=candidate.normalized_expression,
+                        generation_metadata=candidate.generation_metadata,
+                        operator_path=tuple(candidate.generation_metadata.get("operator_path") or candidate.operators_used),
+                        pre_dedup=False,
+                    )
                 continue
             existing.add(candidate.normalized_expression)
             candidates.append(candidate)
             if session is not None:
                 session.record_success()
+            self._record_diversity_success(diversity_tracker, candidate)
         return candidates
 
     def build_candidate(
@@ -377,7 +533,7 @@ class AlphaGenerationEngine:
         if not validation.is_valid:
             return CandidateBuildResult(
                 candidate=None,
-                failure_reason=self._classify_validation_failure(validation.errors),
+                failure_reason=self._classify_validation_failure(validation),
             )
 
         normalized_expression = to_expression(node)
@@ -450,6 +606,7 @@ class AlphaGenerationEngine:
             "genome": render.genome.to_dict(),
             "genome_hash": render.genome.stable_hash,
             "family_signature": render.family_signature,
+            "pre_normalized_expression": render.normalized_expression,
             "fields_used": list(render.field_names),
             "field_families": list(render.field_families),
             "operators_used": list(dict.fromkeys(render.operator_path)),
@@ -468,6 +625,81 @@ class AlphaGenerationEngine:
         if memory_context:
             payload["memory_context"] = dict(memory_context)
         return payload
+
+    def _reject_pre_dedup_candidate(
+        self,
+        *,
+        session: GenerationSessionStats | None,
+        diversity_tracker: GenerationDiversityTracker,
+        existing_normalized: set[str],
+        expression: str,
+        generation_metadata: dict[str, Any] | None,
+        operator_path: tuple[str, ...],
+        genome_hash: str,
+        structural_key: str,
+        normalized_expression: str,
+        pre_dedup: bool,
+    ) -> bool:
+        reason = diversity_tracker.check_pre_dedup(
+            genome_hash=genome_hash.strip(),
+            structural_key=structural_key.strip(),
+            normalized_expression=normalized_expression.strip(),
+            existing_normalized=existing_normalized,
+        )
+        if reason is None:
+            return False
+        self._record_duplicate_reject(
+            session=session,
+            diversity_tracker=diversity_tracker,
+            reason=reason,
+            expression=normalized_expression.strip() or expression,
+            generation_metadata=generation_metadata,
+            operator_path=operator_path,
+            pre_dedup=pre_dedup,
+        )
+        return True
+
+    def _record_duplicate_reject(
+        self,
+        *,
+        session: GenerationSessionStats | None,
+        diversity_tracker: GenerationDiversityTracker,
+        reason: str,
+        expression: str,
+        generation_metadata: dict[str, Any] | None,
+        operator_path: tuple[str, ...],
+        pre_dedup: bool,
+    ) -> None:
+        mutation_mode = self._metadata_string(generation_metadata, "mutation_mode")
+        motif = self._metadata_string(generation_metadata, "motif", fallback_key="template_name")
+        lineage_key = self._lineage_key(generation_metadata)
+        diversity_tracker.record_duplicate(
+            mutation_mode=mutation_mode,
+            motif=motif,
+            operator_path=operator_path,
+            lineage_key=lineage_key,
+        )
+        if session is not None:
+            session.record_duplicate(
+                reason,
+                expression=expression,
+                mutation_mode=mutation_mode,
+                motif=motif,
+                operator_path=operator_path,
+                pre_dedup=pre_dedup,
+            )
+
+    def _record_diversity_success(
+        self,
+        diversity_tracker: GenerationDiversityTracker,
+        candidate: AlphaCandidate,
+    ) -> None:
+        metadata = candidate.generation_metadata
+        diversity_tracker.record_candidate(
+            motif=self._metadata_string(metadata, "motif", fallback_key="template_name"),
+            operator_path=tuple(metadata.get("operator_path") or candidate.operators_used),
+            field_families=tuple(metadata.get("field_families") or ()),
+        )
 
     def _memory_context_metadata(
         self,
@@ -491,6 +723,31 @@ class AlphaGenerationEngine:
                 continue
             tags.update(self.registry.get(name).semantic_tags)
         return sorted(tags)
+
+    @staticmethod
+    def _metadata_string(
+        generation_metadata: dict[str, Any] | None,
+        key: str,
+        *,
+        fallback_key: str | None = None,
+    ) -> str:
+        metadata = generation_metadata or {}
+        value = metadata.get(key)
+        if not value and fallback_key is not None:
+            value = metadata.get(fallback_key)
+        return str(value or "")
+
+    def _lineage_key(self, generation_metadata: dict[str, Any] | None) -> str:
+        metadata = generation_metadata or {}
+        explicit = str(metadata.get("lineage_branch_key") or "")
+        if explicit:
+            return explicit
+        parent_refs = metadata.get("parent_refs")
+        if isinstance(parent_refs, list) and parent_refs:
+            primary = parent_refs[0]
+            if isinstance(primary, dict):
+                return str(primary.get("alpha_id") or primary.get("family_signature") or "")
+        return ""
 
     def _get_or_build_validation_context(self) -> tuple[GenerationValidationContext, float, bool]:
         if not getattr(self.config, "engine_validation_cache_enabled", True):
@@ -573,19 +830,10 @@ class AlphaGenerationEngine:
             return True
         return False
 
-    def _classify_validation_failure(self, errors: Sequence[str]) -> str:
-        lowered = [error.lower() for error in errors]
-        if any("complexity exceeds limit" in error for error in lowered):
-            return "complexity_exceeded"
-        if any("redundant" in error for error in lowered):
-            return "redundant_expression"
-        if any("group field can only" in error for error in lowered):
-            return "invalid_group_field"
-        if any("unknown field" in error for error in lowered):
-            return "disallowed_field"
-        if any("input types" in error for error in lowered):
-            return "field_type_resolution_failed"
-        return "expression_validation_failed"
+    def _classify_validation_failure(self, validation: ValidationResult) -> str:
+        if validation.primary_reason_code:
+            return validation.primary_reason_code
+        return "validation_unknown_error"
 
     def _fallback_field_registry(self, allowed_fields: list[str]) -> FieldRegistry:
         fields = {

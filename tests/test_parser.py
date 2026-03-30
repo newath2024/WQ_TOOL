@@ -27,6 +27,10 @@ def test_validator_rejects_unknown_fields_and_depth() -> None:
     assert not result.is_valid
     assert any("Unknown field 'foo'" in error for error in result.errors)
     assert any("depth exceeds" in error for error in result.errors)
+    assert {issue.reason_code for issue in result.issues} == {
+        "validation_invalid_nesting",
+        "validation_disallowed_field",
+    }
 
 
 def test_validator_handles_group_operator_field_types() -> None:
@@ -50,6 +54,88 @@ def test_validator_handles_group_operator_field_types() -> None:
     assert valid.is_valid
     assert not invalid.is_valid
     assert any("can only be used as the grouping argument" in error for error in invalid.errors)
+    assert invalid.primary_reason_code == "validation_invalid_group_field"
+
+
+def test_validator_maps_unknown_operator_reason_code() -> None:
+    registry = build_registry(["rank"])
+    result = validate_expression(
+        parse_expression("mystery(close)"),
+        registry,
+        {"close"},
+        max_depth=4,
+    )
+
+    assert not result.is_valid
+    assert result.primary_reason_code == "validation_unknown_operator"
+
+
+def test_validator_maps_operator_arity_mismatch_reason_code() -> None:
+    registry = build_registry(["rank"])
+    result = validate_expression(
+        parse_expression("rank(close, 1)"),
+        registry,
+        {"close"},
+        max_depth=4,
+    )
+
+    assert not result.is_valid
+    assert result.primary_reason_code == "validation_operator_arity_mismatch"
+
+
+def test_validator_maps_unsupported_combination_reason_code() -> None:
+    registry = build_registry(["group_neutralize"])
+    result = validate_expression(
+        parse_expression("group_neutralize(close, close)"),
+        registry,
+        {"close"},
+        max_depth=4,
+        group_fields={"sector"},
+        field_types={"close": "matrix", "sector": "group"},
+    )
+
+    assert not result.is_valid
+    assert result.primary_reason_code == "validation_unsupported_combination"
+
+
+def test_validator_maps_field_type_resolution_failure_reason_code() -> None:
+    registry = build_registry(["rank"])
+    result = validate_expression(
+        parse_expression("-sector"),
+        registry,
+        {"close"},
+        max_depth=4,
+        group_fields={"sector"},
+    )
+
+    assert not result.is_valid
+    assert result.primary_reason_code == "validation_field_type_resolution_failed"
+
+
+def test_validator_maps_invalid_nesting_reason_code() -> None:
+    registry = build_registry(["rank", "ts_mean"])
+    result = validate_expression(
+        parse_expression("rank(ts_mean(close, 2))"),
+        registry,
+        {"close"},
+        max_depth=1,
+    )
+
+    assert not result.is_valid
+    assert result.primary_reason_code == "validation_invalid_nesting"
+
+
+def test_validator_maps_semantic_invalid_reason_code() -> None:
+    registry = build_registry(["ts_mean"])
+    result = validate_expression(
+        parse_expression("ts_mean(close, 0)"),
+        registry,
+        {"close"},
+        max_depth=4,
+    )
+
+    assert not result.is_valid
+    assert result.primary_reason_code == "validation_semantic_invalid"
 
 
 def test_registry_keeps_legacy_aliases_but_exposes_brain_canonical_names() -> None:
