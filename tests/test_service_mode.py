@@ -26,23 +26,45 @@ class FakeApiAdapter(BrainApiAdapter):
         self,
         *,
         auth_plan: list[dict | Exception] | None = None,
+        persona_resume_plan: list[dict | Exception] | None = None,
         status_plan: dict[str, list[dict | Exception]] | None = None,
         result_plan: dict[str, dict] | None = None,
     ) -> None:
         self.auth_plan = list(auth_plan or [{"mode": "session_cookie", "status": "ready", "session_path": "session.json"}])
+        self.persona_resume_plan = list(persona_resume_plan or [])
         self.status_plan = {job_id: list(items) for job_id, items in (status_plan or {}).items()}
         self.result_plan = dict(result_plan or {})
         self.submit_calls: list[tuple[str, dict]] = []
         self.status_calls: list[str] = []
         self.result_calls: list[str] = []
         self.persona_notifications: list[str] = []
+        self.auth_calls = 0
+        self.persona_resume_calls: list[str] = []
+        self.persona_timeout_seconds = 1800
 
     def ensure_authenticated(self, **kwargs) -> dict:
         del kwargs
+        self.auth_calls += 1
         item = self.auth_plan.pop(0) if self.auth_plan else {"mode": "session_cookie", "status": "ready"}
         if isinstance(item, Exception):
             raise item
         return {"status": "ready", "session_path": "session.json", **item}
+
+    def resume_persona_authentication(self, persona_url: str) -> dict:
+        self.persona_resume_calls.append(persona_url)
+        item = (
+            self.persona_resume_plan.pop(0)
+            if self.persona_resume_plan
+            else {"status": "waiting_persona", "persona_url": persona_url, "detail": "pending", "expired": False}
+        )
+        if isinstance(item, Exception):
+            raise item
+        payload = dict(item)
+        payload.setdefault("status", "waiting_persona")
+        payload.setdefault("persona_url", persona_url)
+        payload.setdefault("detail", "pending")
+        payload.setdefault("expired", False)
+        return payload
 
     def send_persona_notification(self, persona_url: str) -> bool:
         self.persona_notifications.append(persona_url)
@@ -115,7 +137,7 @@ def test_session_manager_reauthenticates_when_adapter_requires_new_login() -> No
             {"mode": "non_interactive", "status": "ready"},
         ]
     )
-    manager = SessionManager(adapter)
+    manager = SessionManager(adapter, persona_retry_interval_seconds=30)
     runtime = _runtime_record(run_id="run-auth")
 
     first = manager.ensure_session(runtime=runtime)
@@ -145,7 +167,7 @@ def test_service_worker_waits_for_persona_and_throttles_notifications() -> None:
             config=config,
             environment=environment,
             brain_service=BrainService(repository, config.brain, adapter=adapter),
-            session_manager=SessionManager(adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
             notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=999999),
         )
 
@@ -183,7 +205,7 @@ def test_service_worker_resends_notification_when_persona_url_changes() -> None:
             config=config,
             environment=environment,
             brain_service=BrainService(repository, config.brain, adapter=adapter),
-            session_manager=SessionManager(adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
             notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=999999),
         )
 
@@ -198,9 +220,86 @@ def test_service_worker_resends_notification_when_persona_url_changes() -> None:
     assert refreshed.persona_url == "https://persona.example/scan-new"
 
 
+def test_service_worker_reuses_existing_persona_inquiry_before_requesting_new_one() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        environment = _environment("run-persona-reuse")
+        runtime = replace(
+            _runtime_record(run_id="run-persona-reuse"),
+            status="waiting_persona",
+            persona_url="https://persona.example/scan-existing",
+            persona_wait_started_at=(datetime.now(UTC) - timedelta(seconds=5)).isoformat(),
+            persona_last_notification_at=_timestamp(),
+        )
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter(
+            auth_plan=[PersonaVerificationRequired("https://persona.example/scan-new")],
+        )
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=environment,
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=999999),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.status == "waiting_persona"
+    assert outcome.persona_url == "https://persona.example/scan-existing"
+    assert adapter.auth_calls == 0
+    assert adapter.persona_resume_calls == []
+    assert adapter.persona_notifications == []
+
+
+def test_service_worker_resumes_existing_persona_inquiry_after_face_scan() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        run_id = "run-persona-complete"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            status="waiting_persona",
+            persona_url="https://persona.example/scan-existing",
+            persona_wait_started_at=(datetime.now(UTC) - timedelta(seconds=45)).isoformat(),
+            persona_last_notification_at=_timestamp(),
+        )
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter(
+            persona_resume_plan=[{"status": "ready", "mode": "session_cookie", "session_path": "session.json"}]
+        )
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=999999),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert outcome.status in {"idle", "no_candidates", "running", "submitting"}
+    assert adapter.auth_calls == 0
+    assert adapter.persona_resume_calls == ["https://persona.example/scan-existing"]
+    assert refreshed is not None
+    assert refreshed.persona_url is None
+    assert refreshed.persona_wait_started_at is None
+    assert refreshed.persona_last_notification_at is None
+
+
 def test_session_manager_reports_biometrics_throttle_without_failing_service() -> None:
     adapter = FakeApiAdapter(auth_plan=[BiometricsThrottled("BIOMETRICS_THROTTLED", retry_after_seconds=45)])
-    manager = SessionManager(adapter)
+    manager = SessionManager(adapter, persona_retry_interval_seconds=30)
 
     state = manager.ensure_session(runtime=_runtime_record(run_id="run-throttled"))
 
@@ -212,7 +311,7 @@ def test_session_manager_reports_auth_transport_error_without_failing_service() 
     adapter = FakeApiAdapter(
         auth_plan=[requests.ConnectionError("Remote end closed connection without response")]
     )
-    manager = SessionManager(adapter)
+    manager = SessionManager(adapter, persona_retry_interval_seconds=30)
 
     state = manager.ensure_session(runtime=_runtime_record(run_id="run-auth-unavailable"))
 
@@ -239,7 +338,7 @@ def test_service_worker_waits_when_biometrics_are_throttled() -> None:
             config=config,
             environment=environment,
             brain_service=BrainService(repository, config.brain, adapter=adapter),
-            session_manager=SessionManager(adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
             notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
         )
 
@@ -277,7 +376,7 @@ def test_service_worker_retries_when_auth_transport_error_occurs() -> None:
             config=config,
             environment=environment,
             brain_service=BrainService(repository, config.brain, adapter=adapter),
-            session_manager=SessionManager(adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
             notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
         )
 
@@ -313,7 +412,7 @@ def test_service_worker_rechecks_auth_during_auth_related_cooldown() -> None:
             config=config,
             environment=_environment(run_id),
             brain_service=BrainService(repository, config.brain, adapter=adapter),
-            session_manager=SessionManager(adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
             notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
         )
         now = datetime.now(UTC)
@@ -377,7 +476,7 @@ def test_service_worker_applies_backoff_after_transient_poll_failure() -> None:
             config=config,
             environment=_environment(run_id),
             brain_service=BrainService(repository, config.brain, adapter=adapter),
-            session_manager=SessionManager(adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
             notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
         )
 

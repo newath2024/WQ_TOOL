@@ -42,7 +42,10 @@ class ServiceRunner:
         self.brain_service = brain_service or BrainService(repository, config.brain)
         if not isinstance(self.brain_service.adapter, BrainApiAdapter):
             raise ValueError("run-service requires `brain.backend: api` and a BrainApiAdapter backend.")
-        self.session_manager = SessionManager(self.brain_service.adapter)
+        self.session_manager = SessionManager(
+            self.brain_service.adapter,
+            persona_retry_interval_seconds=config.service.persona_retry_interval_seconds,
+        )
         self.notification_manager = NotificationManager(
             self.brain_service.adapter,
             persona_email_cooldown_seconds=config.service.persona_email_cooldown_seconds,

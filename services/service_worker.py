@@ -73,6 +73,9 @@ class ServiceWorker:
 
         session_state = self.session_manager.ensure_session(runtime=runtime)
         if session_state.status == "waiting_persona":
+            persona_wait_started_at = runtime.persona_wait_started_at or now
+            if session_state.persona_url and session_state.persona_url != runtime.persona_url:
+                persona_wait_started_at = now
             sent, notification_at = self.notification_manager.notify_persona_required(
                 runtime=runtime,
                 persona_url=str(session_state.persona_url or ""),
@@ -81,7 +84,7 @@ class ServiceWorker:
                 runtime.service_name,
                 status="waiting_persona",
                 persona_url=session_state.persona_url,
-                persona_wait_started_at=runtime.persona_wait_started_at or now,
+                persona_wait_started_at=persona_wait_started_at,
                 persona_last_notification_at=notification_at if sent else runtime.persona_last_notification_at,
                 updated_at=now,
             )
@@ -153,6 +156,7 @@ class ServiceWorker:
                 status="running",
                 persona_url=None,
                 persona_wait_started_at=None,
+                persona_last_notification_at=None,
                 updated_at=now,
             )
 
