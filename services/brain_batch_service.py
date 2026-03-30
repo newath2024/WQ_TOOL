@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import json
+import logging
 import time
+from dataclasses import replace
 from datetime import UTC, datetime
 
 from core.config import AppConfig
 from features.registry import build_registry
 from generator.engine import AlphaCandidate, AlphaGenerationEngine, GenerationSessionStats
 from generator.guided_generator import GuidedGenerator
+from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.candidate_selection_service import CandidateSelectionService
 from services.data_service import CachedResearchContextProvider, resolve_field_registry
@@ -99,6 +102,7 @@ class BrainBatchService:
             run_id=environment.context.run_id,
             mutation_parent_ids=mutation_parent_ids or set(),
             existing_normalized=existing_normalized,
+            round_index=round_index,
         )
         fresh_budget = max(0, generation_count - len(mutation_candidates))
         fresh_candidates, fresh_stats = self._generate_fresh_candidates(
@@ -112,6 +116,8 @@ class BrainBatchService:
             | {candidate.normalized_expression for candidate in mutation_candidates},
             memory_service=research_context.memory_service,
             region_learning_context=research_context.region_learning_context,
+            run_id=environment.context.run_id,
+            round_index=round_index,
         )
         candidates = [*mutation_candidates, *fresh_candidates]
         self.repository.save_alpha_candidates(environment.context.run_id, candidates)
@@ -140,6 +146,7 @@ class BrainBatchService:
         generation_metrics = generation_stats.to_metrics(
             generated_count=len(candidates),
             selected_for_simulation=len(pre_sim_result.selected),
+            include_debug_samples=logging.getLogger(__name__).isEnabledFor(logging.DEBUG),
         )
         generation_metrics.update(
             {
@@ -185,12 +192,20 @@ class BrainBatchService:
         existing_normalized: set[str],
         memory_service,
         region_learning_context,
+        run_id: str,
+        round_index: int,
     ) -> tuple[list[AlphaCandidate], GenerationSessionStats]:
         if count <= 0:
             return [], GenerationSessionStats()
+        scoped_generation = self._generation_config_for_scope(
+            config.generation,
+            run_id=run_id,
+            round_index=round_index,
+            scope="fresh",
+        )
         if config.adaptive_generation.enabled:
             engine = GuidedGenerator(
-                generation_config=config.generation,
+                generation_config=scoped_generation,
                 adaptive_config=config.adaptive_generation,
                 registry=registry,
                 memory_service=memory_service,
@@ -205,7 +220,7 @@ class BrainBatchService:
             )
             return candidates, engine.last_generation_stats or GenerationSessionStats()
         engine = AlphaGenerationEngine(
-            config=config.generation,
+            config=scoped_generation,
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
@@ -226,10 +241,17 @@ class BrainBatchService:
         run_id: str,
         mutation_parent_ids: set[str],
         existing_normalized: set[str],
+        round_index: int,
     ) -> tuple[list[AlphaCandidate], GenerationSessionStats]:
         if not mutation_parent_ids:
             return [], GenerationSessionStats()
         mutation_learning_records = self.repository.list_mutation_outcomes(effective_regime_key=snapshot.regime_key)
+        scoped_generation = self._generation_config_for_scope(
+            config.generation,
+            run_id=run_id,
+            round_index=round_index,
+            scope="mutation",
+        )
         mutation_budget = max(
             1,
             min(
@@ -242,7 +264,7 @@ class BrainBatchService:
             if not parent_pool:
                 return [], GenerationSessionStats()
             engine = GuidedGenerator(
-                generation_config=config.generation,
+                generation_config=scoped_generation,
                 adaptive_config=config.adaptive_generation,
                 registry=registry,
                 memory_service=self.selection_service.memory_service if self.selection_service else PatternMemoryService(),
@@ -269,7 +291,7 @@ class BrainBatchService:
         if not parents:
             return [], GenerationSessionStats()
         engine = AlphaGenerationEngine(
-            config=config.generation,
+            config=scoped_generation,
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
@@ -306,8 +328,45 @@ class BrainBatchService:
             merged.explore_phase_ms += item.explore_phase_ms
             merged.attempt_count += item.attempt_count
             merged.attempt_success_count += item.attempt_success_count
+            merged.exploit_attempt_count += item.exploit_attempt_count
+            merged.explore_attempt_count += item.explore_attempt_count
+            merged.exploit_success_count += item.exploit_success_count
+            merged.explore_success_count += item.explore_success_count
             merged.timeout_stop = merged.timeout_stop or item.timeout_stop
             merged.consecutive_failure_stop = merged.consecutive_failure_stop or item.consecutive_failure_stop
+            merged.exploit_consecutive_failure_stop = (
+                merged.exploit_consecutive_failure_stop or item.exploit_consecutive_failure_stop
+            )
+            merged.explore_consecutive_failure_stop = (
+                merged.explore_consecutive_failure_stop or item.explore_consecutive_failure_stop
+            )
+            merged.explore_phase_entered = merged.explore_phase_entered or item.explore_phase_entered
             merged.validation_context_cache_hit = merged.validation_context_cache_hit or item.validation_context_cache_hit
+            merged.pre_dedup_reject_count += item.pre_dedup_reject_count
             merged.failure_counts.update(item.failure_counts)
+            merged.duplicate_by_mutation_mode.update(item.duplicate_by_mutation_mode)
+            merged.duplicate_by_motif.update(item.duplicate_by_motif)
+            merged.duplicate_by_operator_path.update(item.duplicate_by_operator_path)
+            for reason, samples in item.failure_samples.items():
+                merged_bucket = merged.failure_samples.setdefault(reason, [])
+                for sample in samples:
+                    if sample in merged_bucket or len(merged_bucket) >= 3:
+                        continue
+                    merged_bucket.append(sample)
         return merged
+
+    @staticmethod
+    def _generation_config_for_scope(
+        generation_config,
+        *,
+        run_id: str,
+        round_index: int,
+        scope: str,
+    ):
+        scoped_seed = derive_generation_seed(
+            generation_config.random_seed,
+            run_id=run_id,
+            round_index=round_index,
+            scope=scope,
+        )
+        return replace(generation_config, random_seed=scoped_seed)

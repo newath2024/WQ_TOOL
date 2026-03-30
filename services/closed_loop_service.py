@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
+from dataclasses import replace
 
 import yaml
 
@@ -10,6 +11,7 @@ from core.logging import get_logger
 from features.registry import build_registry
 from generator.engine import AlphaCandidate, AlphaGenerationEngine
 from generator.guided_generator import GuidedGenerator
+from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.brain_learning_service import BrainLearningService
 from services.brain_service import BrainService
@@ -112,6 +114,8 @@ class ClosedLoopService:
                 region_learning_context=research_context.region_learning_context,
                 count=fresh_budget,
                 existing_normalized=existing_normalized | {candidate.normalized_expression for candidate in staged_mutations},
+                run_id=environment.context.run_id,
+                round_index=round_index,
             )
             round_candidates = [*staged_mutations, *fresh_candidates]
             if not round_candidates:
@@ -198,6 +202,8 @@ class ClosedLoopService:
                     case_snapshot=case_snapshot,
                     count=max(1, min(config.generation.mutation_count, len(selected_parent_ids) * config.loop.max_children_per_parent)),
                     existing_normalized=self.repository.list_existing_normalized_expressions(environment.context.run_id),
+                    run_id=environment.context.run_id,
+                    round_index=round_index,
                 )
                 round_status = "completed"
                 selected_for_mutation_count = len(selected_parent_ids)
@@ -278,12 +284,20 @@ class ClosedLoopService:
         region_learning_context,
         count: int,
         existing_normalized: set[str],
+        run_id: str,
+        round_index: int,
     ) -> list[AlphaCandidate]:
         if count <= 0:
             return []
+        scoped_generation = self._generation_config_for_scope(
+            config.generation,
+            run_id=run_id,
+            round_index=round_index,
+            scope="fresh",
+        )
         if config.adaptive_generation.enabled:
             engine = GuidedGenerator(
-                generation_config=config.generation,
+                generation_config=scoped_generation,
                 adaptive_config=config.adaptive_generation,
                 registry=registry,
                 memory_service=self.memory_service,
@@ -297,7 +311,7 @@ class ClosedLoopService:
                 case_snapshot=case_snapshot,
             )
         engine = AlphaGenerationEngine(
-            config=config.generation,
+            config=scoped_generation,
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
@@ -320,10 +334,18 @@ class ClosedLoopService:
         case_snapshot,
         count: int,
         existing_normalized: set[str],
+        run_id: str,
+        round_index: int,
     ) -> list[AlphaCandidate]:
         if not selected_parent_ids or count <= 0:
             return []
         mutation_learning_records = self.repository.list_mutation_outcomes(effective_regime_key=regime_key)
+        scoped_generation = self._generation_config_for_scope(
+            config.generation,
+            run_id=run_id,
+            round_index=round_index,
+            scope="mutation",
+        )
         if config.adaptive_generation.enabled:
             snapshot = self.repository.alpha_history.load_snapshot(
                 regime_key=regime_key,
@@ -338,7 +360,7 @@ class ClosedLoopService:
             if not parent_pool:
                 return []
             engine = GuidedGenerator(
-                generation_config=config.generation,
+                generation_config=scoped_generation,
                 adaptive_config=config.adaptive_generation,
                 registry=registry,
                 memory_service=self.memory_service,
@@ -358,7 +380,7 @@ class ClosedLoopService:
         if not parents:
             return []
         engine = AlphaGenerationEngine(
-            config=config.generation,
+            config=scoped_generation,
             adaptive_config=config.adaptive_generation,
             registry=registry,
             field_registry=field_registry,
@@ -371,6 +393,22 @@ class ClosedLoopService:
             existing_normalized=existing_normalized,
             case_snapshot=case_snapshot,
         )
+
+    @staticmethod
+    def _generation_config_for_scope(
+        generation_config,
+        *,
+        run_id: str,
+        round_index: int,
+        scope: str,
+    ):
+        scoped_seed = derive_generation_seed(
+            generation_config.random_seed,
+            run_id=run_id,
+            round_index=round_index,
+            scope=scope,
+        )
+        return replace(generation_config, random_seed=scoped_seed)
 
     def _persist_round_summary(self, environment: CommandEnvironment, summary: ClosedLoopRoundSummary) -> None:
         payload = {
