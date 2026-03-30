@@ -36,7 +36,14 @@ class ServiceWorker:
         self.config = config
         self.environment = environment
         self.brain_service = brain_service
-        self.selection_service = selection_service or CandidateSelectionService()
+        self.selection_service = selection_service or CandidateSelectionService(
+            repository=repository,
+            adaptive_config=config.adaptive_generation,
+        )
+        self.selection_service.configure_runtime(
+            repository=repository,
+            adaptive_config=config.adaptive_generation,
+        )
         self.batch_service = batch_service or BrainBatchService(repository, selection_service=self.selection_service)
         self.learning_service = learning_service or BrainLearningService(
             repository,
@@ -71,7 +78,36 @@ class ServiceWorker:
         if runtime.cooldown_until and runtime.cooldown_until > now and should_probe_auth:
             logger.info("Auth-related cooldown detected; probing session state before waiting out cooldown.")
 
-        session_state = self.session_manager.ensure_session(runtime=runtime)
+        session_state = self.session_manager.ensure_session(runtime=runtime, allow_new_login=False)
+        if session_state.status == "authentication_required":
+            confirmation = self.notification_manager.request_persona_confirmation(
+                runtime=runtime,
+                service_name=runtime.service_name,
+            )
+            self._update_persona_confirmation_state(
+                service_name=runtime.service_name,
+                now=now,
+                nonce=confirmation.nonce,
+                last_prompt_at=confirmation.last_prompt_at,
+                granted_at=confirmation.granted_at,
+                last_update_id=confirmation.last_update_id,
+            )
+            runtime = self.repository.service_runtime.get_state(runtime.service_name) or runtime
+            if confirmation.status == "pending":
+                pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+                logger.warning(
+                    "Waiting for Telegram confirmation before requesting Persona link; pending_jobs=%s",
+                    pending_jobs,
+                )
+                return ServiceTickOutcome(
+                    status="waiting_persona_confirmation",
+                    pending_job_count=pending_jobs,
+                    active_batch_id=runtime.active_batch_id,
+                    persona_url=None,
+                    last_error=confirmation.detail,
+                    next_sleep_seconds=self.config.service.persona_confirmation_poll_interval_seconds,
+                )
+            session_state = self.session_manager.ensure_session(runtime=runtime, allow_new_login=True)
         if session_state.status == "waiting_persona":
             persona_wait_started_at = runtime.persona_wait_started_at or now
             if session_state.persona_url and session_state.persona_url != runtime.persona_url:
@@ -86,6 +122,9 @@ class ServiceWorker:
                 persona_url=session_state.persona_url,
                 persona_wait_started_at=persona_wait_started_at,
                 persona_last_notification_at=notification_at if sent else runtime.persona_last_notification_at,
+                persona_confirmation_nonce=None,
+                persona_confirmation_last_prompt_at=None,
+                persona_confirmation_granted_at=None,
                 updated_at=now,
             )
             pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
@@ -150,13 +189,22 @@ class ServiceWorker:
 
         if runtime.cooldown_until and runtime.cooldown_until > now and should_probe_auth:
             logger.info("Authentication recovered during cooldown; resuming normal service work.")
-        if runtime.persona_url or runtime.persona_wait_started_at:
+        if (
+            runtime.persona_url
+            or runtime.persona_wait_started_at
+            or runtime.persona_confirmation_nonce
+            or runtime.persona_confirmation_granted_at
+        ):
             self.repository.service_runtime.update_state(
                 runtime.service_name,
                 status="running",
                 persona_url=None,
                 persona_wait_started_at=None,
                 persona_last_notification_at=None,
+                persona_confirmation_nonce=None,
+                persona_confirmation_last_prompt_at=None,
+                persona_confirmation_granted_at=None,
+                persona_confirmation_last_update_id=None,
                 updated_at=now,
             )
 
@@ -282,6 +330,7 @@ class ServiceWorker:
             environment=self.environment,
             count=self.config.loop.generation_batch_size,
             mutation_parent_ids=mutation_parent_ids,
+            round_index=tick_id,
         )
         selected_candidates = [item.candidate for item in selected]
         if not selected_candidates:
@@ -363,6 +412,9 @@ class ServiceWorker:
         run = self.repository.get_run(run_id)
         region = str(run.region or "") if run else ""
         global_regime_key = str(run.global_regime_key or "") if run else ""
+        market_regime_key = str(run.market_regime_key or "") if run else ""
+        regime_label = str(run.regime_label or "unknown") if run else "unknown"
+        regime_confidence = float(run.regime_confidence or 0.0) if run else 0.0
         candidates_by_id = self._load_candidates_by_ids(
             run_id=run_id,
             candidate_ids={result.candidate_id for result in results},
@@ -376,20 +428,31 @@ class ServiceWorker:
             pattern_decay=self.config.adaptive_generation.pattern_decay,
             prior_weight=self.config.adaptive_generation.critic_thresholds.score_prior_weight,
         )
-        selected_parent_ids = {
-            result.candidate_id
-            for result in self.selection_service.select_results_for_mutation(
-                [self._simulation_result_from_record(result) for result in results],
-                candidates_by_id=candidates_by_id,
-                top_k=self.config.loop.mutate_top_k,
-                diversity_config=self.config.adaptive_generation.diversity,
-            )
-        }
+        case_snapshot = self.repository.alpha_history.load_case_snapshot(
+            regime_key,
+            region=region,
+            global_regime_key=global_regime_key,
+            region_learning_config=self.config.adaptive_generation.region_learning,
+        )
+        selected_parent_results, _, _ = self.selection_service.select_results_for_mutation_with_details(
+            [self._simulation_result_from_record(result) for result in results],
+            candidates_by_id=candidates_by_id,
+            top_k=self.config.loop.mutate_top_k,
+            diversity_config=self.config.adaptive_generation.diversity,
+            case_snapshot=case_snapshot,
+            run_id=run_id,
+            round_index=results[0].round_index if results else 0,
+        )
+        selected_parent_ids = {result.candidate_id for result in selected_parent_results}
         self.learning_service.persist_results(
             config=self.config,
             regime_key=regime_key,
             region=region,
             global_regime_key=global_regime_key,
+            market_regime_key=market_regime_key,
+            effective_regime_key=regime_key,
+            regime_label=regime_label,
+            regime_confidence=regime_confidence,
             snapshot=snapshot,
             candidates_by_id=candidates_by_id,
             results=[self._simulation_result_from_record(result) for result in results],
@@ -410,6 +473,16 @@ class ServiceWorker:
         latest_results = self.repository.brain_results.list_latest_results_by_candidate(run_id)
         if not latest_results:
             return set()
+        regime_key = self._resolve_regime_key(run_id)
+        run = self.repository.get_run(run_id)
+        region = str(run.region or "") if run else ""
+        global_regime_key = str(run.global_regime_key or "") if run else ""
+        case_snapshot = self.repository.alpha_history.load_case_snapshot(
+            regime_key,
+            region=region,
+            global_regime_key=global_regime_key,
+            region_learning_config=self.config.adaptive_generation.region_learning,
+        )
         candidates_by_id = self._load_candidates_by_ids(
             run_id=run_id,
             candidate_ids={result.candidate_id for result in latest_results},
@@ -419,6 +492,7 @@ class ServiceWorker:
             candidates_by_id=candidates_by_id,
             top_k=self.config.loop.mutate_top_k,
             diversity_config=self.config.adaptive_generation.diversity,
+            case_snapshot=case_snapshot,
         )
         return {result.candidate_id for result in selected}
 
@@ -434,14 +508,14 @@ class ServiceWorker:
 
     def _resolve_regime_key(self, run_id: str) -> str:
         run = self.repository.get_run(run_id)
-        if run and run.regime_key:
-            return run.regime_key
+        if run and (run.effective_regime_key or run.regime_key):
+            return str(run.effective_regime_key or run.regime_key)
         research_context = load_research_context(
             self.config,
             self.environment,
             stage="service-learning-data",
         )
-        return research_context.regime_key
+        return research_context.effective_regime_key or research_context.regime_key
 
     def _simulation_result_from_record(self, record: BrainResultRecord) -> SimulationResult:
         return SimulationResult(
@@ -498,9 +572,14 @@ class ServiceWorker:
 
     @staticmethod
     def _should_probe_session_during_cooldown(runtime: ServiceRuntimeRecord) -> bool:
-        if runtime.status in {"waiting_persona", "auth_throttled", "auth_unavailable"}:
+        if runtime.status in {
+            "waiting_persona",
+            "waiting_persona_confirmation",
+            "auth_throttled",
+            "auth_unavailable",
+        }:
             return True
-        if runtime.persona_url or runtime.persona_wait_started_at:
+        if runtime.persona_url or runtime.persona_wait_started_at or runtime.persona_confirmation_nonce:
             return True
         last_error = str(runtime.last_error or "").upper()
         return any(
@@ -511,4 +590,23 @@ class ServiceWorker:
                 "BIOMETRICS_THROTTLED",
                 "PERSONA",
             )
+        )
+
+    def _update_persona_confirmation_state(
+        self,
+        *,
+        service_name: str,
+        now: str,
+        nonce: str | None,
+        last_prompt_at: str | None,
+        granted_at: str | None,
+        last_update_id: int | None,
+    ) -> None:
+        self.repository.service_runtime.update_state(
+            service_name,
+            persona_confirmation_nonce=nonce,
+            persona_confirmation_last_prompt_at=last_prompt_at,
+            persona_confirmation_granted_at=granted_at,
+            persona_confirmation_last_update_id=last_update_id,
+            updated_at=now,
         )

@@ -23,11 +23,36 @@ class SessionManager:
         self.adapter = adapter
         self.persona_retry_interval_seconds = persona_retry_interval_seconds
 
-    def ensure_session(self, *, runtime: ServiceRuntimeRecord, force: bool = False) -> SessionState:
+    def ensure_session(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        force: bool = False,
+        allow_new_login: bool = True,
+    ) -> SessionState:
         if not force:
             resumed = self._resume_pending_persona(runtime)
             if resumed is not None:
                 return resumed
+        try:
+            probe = self.adapter.probe_authenticated_session()
+        except requests.RequestException as exc:
+            return SessionState(
+                status="auth_unavailable",
+                detail=f"BRAIN auth transport error: {exc}",
+            )
+        if probe.get("authenticated"):
+            return SessionState(
+                status="ready",
+                persona_url=None,
+                session_path=str(probe.get("session_path") or "") or None,
+                detail=str(probe.get("mode") or "session_cookie"),
+            )
+        if not allow_new_login:
+            return SessionState(
+                status="authentication_required",
+                detail="BRAIN session requires re-authentication before requesting a new Persona link.",
+            )
         try:
             result = self.adapter.ensure_authenticated(force=force, interactive=False)
         except PersonaVerificationRequired as exc:

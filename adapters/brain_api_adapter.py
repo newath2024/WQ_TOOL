@@ -15,12 +15,7 @@ from urllib.parse import urljoin
 import requests
 
 from adapters.simulation_adapter import SimulationAdapter
-from services.email_service import (
-    EmailService,
-    SmtpNotificationConfig,
-    TelegramNotificationConfig,
-    TelegramService,
-)
+from services.email_service import TelegramNotificationConfig, TelegramService
 
 
 class SessionProtocol(Protocol):
@@ -83,7 +78,7 @@ class BrainApiAdapter(SimulationAdapter):
         persona_timeout_seconds: int = 1800,
         endpoints: ApiEndpointConfig | None = None,
         session: SessionProtocol | None = None,
-        email_service: EmailService | None = None,
+        email_service: object | None = None,
         telegram_service: TelegramService | None = None,
         max_retries: int = 3,
         rate_limit_per_minute: int = 60,
@@ -102,7 +97,9 @@ class BrainApiAdapter(SimulationAdapter):
         self.persona_timeout_seconds = persona_timeout_seconds
         self.endpoints = endpoints or ApiEndpointConfig()
         self.session = session or requests.Session()
-        self.email_service = email_service or EmailService()
+        # Retain the legacy constructor parameter so older call sites do not break,
+        # but Persona notifications are Telegram-only now.
+        del email_service
         self.telegram_service = telegram_service or TelegramService()
         self.max_retries = max_retries
         self.rate_limit_per_minute = rate_limit_per_minute
@@ -269,6 +266,59 @@ class BrainApiAdapter(SimulationAdapter):
 
     def send_persona_notification(self, persona_url: str) -> bool:
         return self._deliver_persona_notification(persona_url) is not None
+
+    def probe_authenticated_session(self) -> dict:
+        token = self.auth_token or os.getenv(self.auth_env)
+        if token:
+            return {"authenticated": True, "mode": "bearer_token", "session_path": None}
+        self._load_session_from_disk_if_changed()
+        state = self._authentication_state()
+        if state.get("authenticated"):
+            return {
+                "authenticated": True,
+                "mode": "session_cookie",
+                "session_path": str(self.session_path),
+            }
+        return {
+            "authenticated": False,
+            "mode": "not_authenticated",
+            "session_path": str(self.session_path) if self.session_path.exists() else None,
+        }
+
+    def supports_persona_confirmation(self) -> bool:
+        return self._telegram_notification_config() is not None
+
+    def send_persona_confirmation_prompt(self, *, prompt_token: str, service_name: str) -> bool:
+        telegram_config = self._telegram_notification_config()
+        if telegram_config is None:
+            return False
+        self.telegram_service.send_persona_confirmation_prompt(
+            prompt_token=prompt_token,
+            service_name=service_name,
+            telegram_config=telegram_config,
+        )
+        return True
+
+    def poll_persona_confirmation(self, *, prompt_token: str, last_update_id: int | None = None) -> dict:
+        telegram_config = self._telegram_notification_config()
+        if telegram_config is None:
+            return {
+                "supported": False,
+                "approved": False,
+                "declined": False,
+                "last_update_id": last_update_id,
+            }
+        result = self.telegram_service.poll_persona_confirmation(
+            prompt_token=prompt_token,
+            telegram_config=telegram_config,
+            offset=(last_update_id + 1) if last_update_id is not None else None,
+        )
+        return {
+            "supported": True,
+            "approved": result.approved,
+            "declined": result.declined,
+            "last_update_id": result.last_update_id,
+        }
 
     def resume_persona_authentication(self, persona_url: str) -> dict:
         result = self._poll_persona_verification(persona_url)
@@ -525,11 +575,6 @@ class BrainApiAdapter(SimulationAdapter):
             destination = telegram_config.chat_id if telegram_config is not None else "configured Telegram chat"
             print(f"Sent Persona verification link to Telegram chat {destination}.")
             return
-        if channel == "email":
-            smtp_config = self._smtp_notification_config()
-            destination = smtp_config.to_email if smtp_config is not None else "configured email"
-            print(f"Sent Persona verification link to {destination}.")
-            return
         print("Persona notification is not configured; skipping alert.")
 
     def _wait_for_persona_completion(self, persona_url: str):
@@ -605,37 +650,6 @@ class BrainApiAdapter(SimulationAdapter):
         value = section_payload.get(key)
         return str(value).strip() if value not in (None, "") else ""
 
-    def _smtp_notification_config(self) -> SmtpNotificationConfig | None:
-        payload = self._load_credentials_payload()
-        section_payload = payload.get("persona_notification")
-        if not isinstance(section_payload, dict):
-            return None
-        from_email = str(
-            section_payload.get("from_email")
-            or section_payload.get("smtp_username")
-            or self._credential_value("brain", "email")
-            or ""
-        ).strip()
-        to_email = str(
-            section_payload.get("to_email")
-            or self._credential_value("brain", "email")
-            or ""
-        ).strip()
-        try:
-            port = int(section_payload.get("smtp_port") or 587)
-        except (TypeError, ValueError):
-            port = 587
-        smtp_config = SmtpNotificationConfig(
-            host=str(section_payload.get("smtp_host") or "").strip(),
-            port=port,
-            username=str(section_payload.get("smtp_username") or "").strip(),
-            password=str(section_payload.get("smtp_password") or "").strip(),
-            from_email=from_email,
-            to_email=to_email,
-            use_tls=bool(section_payload.get("use_tls", True)),
-        )
-        return smtp_config if smtp_config.is_configured() else None
-
     def _telegram_notification_config(self) -> TelegramNotificationConfig | None:
         payload = self._load_credentials_payload()
         section_payload = payload.get("persona_notification")
@@ -665,17 +679,13 @@ class BrainApiAdapter(SimulationAdapter):
 
     def _deliver_persona_notification(self, persona_url: str) -> str | None:
         telegram_config = self._telegram_notification_config()
-        if telegram_config is not None:
-            self.telegram_service.send_persona_link(
-                persona_url=persona_url,
-                telegram_config=telegram_config,
-            )
-            return "telegram"
-        smtp_config = self._smtp_notification_config()
-        if smtp_config is None:
+        if telegram_config is None:
             return None
-        self.email_service.send_persona_link(persona_url=persona_url, smtp_config=smtp_config)
-        return "email"
+        self.telegram_service.send_persona_link(
+            persona_url=persona_url,
+            telegram_config=telegram_config,
+        )
+        return "telegram"
 
     def _resolve_authentication_url(self) -> str:
         return f"{self.base_url}{self.endpoints.authentication_path}"

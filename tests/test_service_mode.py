@@ -27,17 +27,23 @@ class FakeApiAdapter(BrainApiAdapter):
         *,
         auth_plan: list[dict | Exception] | None = None,
         persona_resume_plan: list[dict | Exception] | None = None,
+        persona_confirmation_supported: bool = True,
+        persona_confirmation_plan: list[dict | Exception] | None = None,
         status_plan: dict[str, list[dict | Exception]] | None = None,
         result_plan: dict[str, dict] | None = None,
     ) -> None:
         self.auth_plan = list(auth_plan or [{"mode": "session_cookie", "status": "ready", "session_path": "session.json"}])
         self.persona_resume_plan = list(persona_resume_plan or [])
+        self.persona_confirmation_supported = persona_confirmation_supported
+        self.persona_confirmation_plan = list(persona_confirmation_plan or [])
         self.status_plan = {job_id: list(items) for job_id, items in (status_plan or {}).items()}
         self.result_plan = dict(result_plan or {})
         self.submit_calls: list[tuple[str, dict]] = []
         self.status_calls: list[str] = []
         self.result_calls: list[str] = []
         self.persona_notifications: list[str] = []
+        self.persona_confirmation_prompts: list[tuple[str, str]] = []
+        self.persona_confirmation_polls: list[tuple[str, int | None]] = []
         self.auth_calls = 0
         self.persona_resume_calls: list[str] = []
         self.persona_timeout_seconds = 1800
@@ -49,6 +55,9 @@ class FakeApiAdapter(BrainApiAdapter):
         if isinstance(item, Exception):
             raise item
         return {"status": "ready", "session_path": "session.json", **item}
+
+    def probe_authenticated_session(self) -> dict:
+        return {"authenticated": False, "mode": "not_authenticated", "session_path": "session.json"}
 
     def resume_persona_authentication(self, persona_url: str) -> dict:
         self.persona_resume_calls.append(persona_url)
@@ -69,6 +78,29 @@ class FakeApiAdapter(BrainApiAdapter):
     def send_persona_notification(self, persona_url: str) -> bool:
         self.persona_notifications.append(persona_url)
         return True
+
+    def supports_persona_confirmation(self) -> bool:
+        return self.persona_confirmation_supported
+
+    def send_persona_confirmation_prompt(self, *, prompt_token: str, service_name: str) -> bool:
+        self.persona_confirmation_prompts.append((prompt_token, service_name))
+        return self.persona_confirmation_supported
+
+    def poll_persona_confirmation(self, *, prompt_token: str, last_update_id: int | None = None) -> dict:
+        self.persona_confirmation_polls.append((prompt_token, last_update_id))
+        item = (
+            self.persona_confirmation_plan.pop(0)
+            if self.persona_confirmation_plan
+            else {"supported": self.persona_confirmation_supported, "approved": False, "declined": False}
+        )
+        if isinstance(item, Exception):
+            raise item
+        payload = dict(item)
+        payload.setdefault("supported", self.persona_confirmation_supported)
+        payload.setdefault("approved", False)
+        payload.setdefault("declined", False)
+        payload.setdefault("last_update_id", last_update_id)
+        return payload
 
     def submit_simulation(self, expression: str, sim_config: dict) -> dict:
         self.submit_calls.append((expression, sim_config))
@@ -181,6 +213,94 @@ def test_service_worker_waits_for_persona_and_throttles_notifications() -> None:
     assert first.status == "waiting_persona"
     assert second.status == "waiting_persona"
     assert adapter.persona_notifications == ["https://persona.example/scan"]
+
+
+def test_service_worker_waits_for_telegram_confirmation_before_requesting_persona_link() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.persona_confirmation_required = True
+        config.service.persona_confirmation_prompt_cooldown_seconds = 999999
+        environment = _environment("run-persona-confirmation")
+        runtime = _runtime_record(run_id="run-persona-confirmation")
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter(
+            auth_plan=[PersonaVerificationRequired("https://persona.example/scan-confirmed")],
+            persona_confirmation_plan=[{"approved": False, "last_update_id": 101}],
+        )
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=environment,
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(
+                adapter,
+                persona_email_cooldown_seconds=999999,
+                persona_confirmation_required=True,
+            ),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert outcome.status == "waiting_persona_confirmation"
+    assert adapter.auth_calls == 0
+    assert len(adapter.persona_confirmation_prompts) == 1
+    assert adapter.persona_notifications == []
+    assert refreshed is not None
+    assert refreshed.persona_confirmation_nonce
+    assert refreshed.persona_url is None
+
+
+def test_service_worker_requests_persona_link_only_after_telegram_confirmation() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.persona_confirmation_required = True
+        config.service.persona_confirmation_prompt_cooldown_seconds = 999999
+        environment = _environment("run-persona-approved")
+        runtime = _runtime_record(run_id="run-persona-approved")
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter(
+            auth_plan=[PersonaVerificationRequired("https://persona.example/scan-confirmed")],
+            persona_confirmation_plan=[
+                {"approved": False, "last_update_id": 201},
+                {"approved": True, "last_update_id": 202},
+            ],
+        )
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=environment,
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(
+                adapter,
+                persona_email_cooldown_seconds=999999,
+                persona_confirmation_required=True,
+            ),
+        )
+
+        first = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+        assert refreshed is not None
+        second = worker.run_tick(runtime=refreshed, tick_id=2)
+        final_runtime = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert first.status == "waiting_persona_confirmation"
+    assert second.status == "waiting_persona"
+    assert adapter.auth_calls == 1
+    assert len(adapter.persona_confirmation_prompts) == 1
+    assert adapter.persona_notifications == ["https://persona.example/scan-confirmed"]
+    assert final_runtime is not None
+    assert final_runtime.persona_url == "https://persona.example/scan-confirmed"
+    assert final_runtime.persona_confirmation_nonce is None
+    assert final_runtime.persona_confirmation_granted_at is None
 
 
 def test_service_worker_resends_notification_when_persona_url_changes() -> None:
@@ -627,6 +747,7 @@ def _service_config():
     config.service.resume_incomplete_jobs = True
     config.service.max_consecutive_failures = 2
     config.service.cooldown_seconds = 60
+    config.service.persona_confirmation_required = False
     return config
 
 

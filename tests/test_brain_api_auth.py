@@ -9,7 +9,7 @@ from pathlib import Path
 import requests
 
 from adapters.brain_api_adapter import BiometricsThrottled, BrainApiAdapter
-from services.email_service import SmtpNotificationConfig, TelegramNotificationConfig
+from services.email_service import TelegramNotificationConfig
 
 
 class FakeResponse:
@@ -54,14 +54,6 @@ class FakeSession:
             return item(self, url, kwargs)
         item.url = url
         return item
-
-
-class FakeEmailService:
-    def __init__(self) -> None:
-        self.calls: list[tuple[str, SmtpNotificationConfig]] = []
-
-    def send_persona_link(self, *, persona_url: str, smtp_config: SmtpNotificationConfig) -> None:
-        self.calls.append((persona_url, smtp_config))
 
 
 class FakeTelegramService:
@@ -188,7 +180,9 @@ def test_brain_api_adapter_accepts_visible_password_prompt(tmp_path: Path, monke
     assert fake_session.cookies.get("t") == "jwt-cookie"
 
 
-def test_brain_api_adapter_reads_credentials_file_and_sends_persona_email(tmp_path: Path, monkeypatch) -> None:
+def test_brain_api_adapter_skips_persona_notification_when_telegram_is_not_configured(
+    tmp_path: Path, monkeypatch
+) -> None:
     session_path = tmp_path / "brain_session.json"
     credentials_path = tmp_path / "brain_credentials.json"
     credentials_path.write_text(
@@ -197,15 +191,6 @@ def test_brain_api_adapter_reads_credentials_file_and_sends_persona_email(tmp_pa
           "brain": {
             "email": "user@example.com",
             "password": "secret"
-          },
-          "persona_notification": {
-            "smtp_host": "smtp.gmail.com",
-            "smtp_port": 587,
-            "smtp_username": "notify@example.com",
-            "smtp_password": "app-password",
-            "from_email": "notify@example.com",
-            "to_email": "owner@example.com",
-            "use_tls": true
           }
         }
         """.strip(),
@@ -229,7 +214,6 @@ def test_brain_api_adapter_reads_credentials_file_and_sends_persona_email(tmp_pa
             _success_login_response,
         ],
     )
-    fake_email_service = FakeEmailService()
     adapter = BrainApiAdapter(
         base_url="https://api.worldquantbrain.com",
         session=fake_session,
@@ -238,7 +222,6 @@ def test_brain_api_adapter_reads_credentials_file_and_sends_persona_email(tmp_pa
         open_browser_for_persona=False,
         persona_poll_interval_seconds=0.01,
         persona_timeout_seconds=1,
-        email_service=fake_email_service,
     )
     monkeypatch.setattr(builtins, "input", lambda prompt="": (_ for _ in ()).throw(AssertionError("input not expected")))
     monkeypatch.setattr(
@@ -252,13 +235,10 @@ def test_brain_api_adapter_reads_credentials_file_and_sends_persona_email(tmp_pa
 
     assert result["mode"] == "interactive"
     assert fake_session.cookies.get("t") == "jwt-cookie"
-    assert len(fake_email_service.calls) == 1
-    persona_url, smtp_config = fake_email_service.calls[0]
-    assert persona_url == "https://api.worldquantbrain.com/authentication/persona?inquiry=inq_999"
-    assert smtp_config.to_email == "owner@example.com"
+    assert adapter.send_persona_notification("https://persona.example/manual") is False
 
 
-def test_brain_api_adapter_prefers_telegram_notification_when_configured(tmp_path: Path, monkeypatch) -> None:
+def test_brain_api_adapter_sends_persona_notification_via_telegram(tmp_path: Path, monkeypatch) -> None:
     session_path = tmp_path / "brain_session.json"
     credentials_path = tmp_path / "brain_credentials.json"
     credentials_path.write_text(
@@ -270,14 +250,7 @@ def test_brain_api_adapter_prefers_telegram_notification_when_configured(tmp_pat
           },
           "persona_notification": {
             "telegram_bot_token": "bot-token-123",
-            "telegram_chat_id": "99887766",
-            "smtp_host": "smtp.gmail.com",
-            "smtp_port": 587,
-            "smtp_username": "notify@example.com",
-            "smtp_password": "app-password",
-            "from_email": "notify@example.com",
-            "to_email": "owner@example.com",
-            "use_tls": true
+            "telegram_chat_id": "99887766"
           }
         }
         """.strip(),
@@ -301,7 +274,6 @@ def test_brain_api_adapter_prefers_telegram_notification_when_configured(tmp_pat
             _success_login_response,
         ],
     )
-    fake_email_service = FakeEmailService()
     fake_telegram_service = FakeTelegramService()
     adapter = BrainApiAdapter(
         base_url="https://api.worldquantbrain.com",
@@ -311,7 +283,6 @@ def test_brain_api_adapter_prefers_telegram_notification_when_configured(tmp_pat
         open_browser_for_persona=False,
         persona_poll_interval_seconds=0.01,
         persona_timeout_seconds=1,
-        email_service=fake_email_service,
         telegram_service=fake_telegram_service,
     )
     monkeypatch.setattr(builtins, "input", lambda prompt="": (_ for _ in ()).throw(AssertionError("input not expected")))
@@ -325,7 +296,6 @@ def test_brain_api_adapter_prefers_telegram_notification_when_configured(tmp_pat
     result = adapter.ensure_authenticated()
 
     assert result["mode"] == "interactive"
-    assert fake_email_service.calls == []
     assert len(fake_telegram_service.calls) == 1
     persona_url, telegram_config = fake_telegram_service.calls[0]
     assert persona_url == "https://api.worldquantbrain.com/authentication/persona?inquiry=inq_tg"

@@ -78,6 +78,10 @@ class HeartbeatReporter:
             persona_url=None,
             persona_wait_started_at=None,
             persona_last_notification_at=None,
+            persona_confirmation_nonce=None,
+            persona_confirmation_last_prompt_at=None,
+            persona_confirmation_granted_at=None,
+            persona_confirmation_last_update_id=None,
             last_heartbeat_at=datetime.now(UTC).isoformat(),
             updated_at=datetime.now(UTC).isoformat(),
         )

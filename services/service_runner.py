@@ -49,6 +49,11 @@ class ServiceRunner:
         self.notification_manager = NotificationManager(
             self.brain_service.adapter,
             persona_email_cooldown_seconds=config.service.persona_email_cooldown_seconds,
+            persona_confirmation_required=config.service.persona_confirmation_required,
+            persona_confirmation_prompt_cooldown_seconds=(
+                config.service.persona_confirmation_prompt_cooldown_seconds
+            ),
+            persona_confirmation_granted_ttl_seconds=config.service.persona_confirmation_granted_ttl_seconds,
         )
         self.scheduler = ServiceScheduler(config.service)
         self.heartbeat = HeartbeatReporter(repository.service_runtime)
@@ -232,6 +237,10 @@ class ServiceRunner:
             persona_url=None,
             persona_wait_started_at=None,
             persona_last_notification_at=None,
+            persona_confirmation_nonce=None,
+            persona_confirmation_last_prompt_at=None,
+            persona_confirmation_granted_at=None,
+            persona_confirmation_last_update_id=None,
             counters_json="{}",
             lock_expires_at=_shift(now, self.config.service.lock_lease_seconds),
             started_at=started_at,
