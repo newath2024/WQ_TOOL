@@ -261,11 +261,7 @@ class BrainApiAdapter(SimulationAdapter):
                 except Exception:  # noqa: BLE001
                     pass
             self._notify_persona_required(persona_url)
-            persona_response = self._wait_for_persona_completion(persona_url)
-            if persona_response.status_code not in {200, 201, 204}:
-                raise RuntimeError(
-                    f"Persona authentication failed with status {persona_response.status_code}: {persona_response.text}"
-                )
+            self._wait_for_persona_completion(persona_url)
             return
         raise RuntimeError(
             f"BRAIN authentication failed with status {response.status_code}: {response.text}"
@@ -273,6 +269,22 @@ class BrainApiAdapter(SimulationAdapter):
 
     def send_persona_notification(self, persona_url: str) -> bool:
         return self._deliver_persona_notification(persona_url) is not None
+
+    def resume_persona_authentication(self, persona_url: str) -> dict:
+        result = self._poll_persona_verification(persona_url)
+        if str(result.get("status") or "") == "callback_complete":
+            state = self._authentication_state()
+            if not state.get("authenticated"):
+                raise RuntimeError(
+                    "BRAIN Persona verification callback succeeded but authentication is still pending."
+                )
+            self._save_session_to_disk()
+            return {
+                "mode": "session_cookie",
+                "status": "ready",
+                "session_path": str(self.session_path),
+            }
+        return result
 
     @staticmethod
     def _prompt_password_interactive(show_password: bool = False) -> str:
@@ -528,22 +540,47 @@ class BrainApiAdapter(SimulationAdapter):
         deadline = time.monotonic() + float(self.persona_timeout_seconds)
         last_response = None
         while time.monotonic() < deadline:
-            response = self._request(
-                "POST",
-                persona_url,
-                json_payload=None,
-                allow_retry=False,
-            )
-            if response.status_code in {200, 201, 204}:
-                return response
-            last_response = response
+            result = self._poll_persona_verification(persona_url)
+            if result.get("status") == "callback_complete":
+                return result
+            last_response = result
             time.sleep(float(self.persona_poll_interval_seconds))
-        last_status = getattr(last_response, "status_code", "unknown")
-        last_text = getattr(last_response, "text", "")
+        last_status = "unknown"
+        last_text = ""
+        if isinstance(last_response, dict):
+            last_status = str(last_response.get("http_status", "unknown"))
+            last_text = str(last_response.get("detail", ""))
         raise RuntimeError(
             f"Timed out waiting for Persona verification after {self.persona_timeout_seconds}s "
             f"(last status {last_status}: {last_text})"
         )
+
+    def _poll_persona_verification(self, persona_url: str) -> dict:
+        response = self._request(
+            "POST",
+            persona_url,
+            json_payload=None,
+            allow_retry=False,
+        )
+        if response.status_code in {200, 201, 204}:
+            return {
+                "status": "callback_complete",
+                "persona_url": persona_url,
+                "http_status": response.status_code,
+            }
+        if response.status_code == 429 and self._extract_response_detail(response) == "BIOMETRICS_THROTTLED":
+            raise BiometricsThrottled(
+                "BIOMETRICS_THROTTLED",
+                retry_after_seconds=self._parse_retry_after_seconds(response.headers.get("Retry-After")),
+            )
+        return {
+            "mode": "persona_pending",
+            "status": "waiting_persona",
+            "persona_url": persona_url,
+            "http_status": response.status_code,
+            "detail": self._extract_response_detail(response),
+            "expired": response.status_code in {400, 404, 410},
+        }
 
     def _load_credentials_payload(self) -> dict:
         if self._credentials_payload is not None:
