@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
 
 from core.config import AppConfig
@@ -325,16 +326,21 @@ class ServiceWorker:
             tick_id=tick_id,
         )
         mutation_parent_ids = self._select_mutation_parent_ids(run_id=runtime.service_run_id)
-        candidates, selected, _ = self.batch_service.prepare_service_batch(
+        batch_result = self.batch_service.prepare_service_batch(
             config=self.config,
             environment=self.environment,
             count=self.config.loop.generation_batch_size,
             mutation_parent_ids=mutation_parent_ids,
             round_index=tick_id,
         )
-        selected_candidates = [item.candidate for item in selected]
+        candidates = list(batch_result.candidates)
+        selected_candidates = [item.candidate for item in batch_result.selected]
+        logger.info("[generation-summary] %s", json.dumps(batch_result.generation_stage_metrics, sort_keys=True))
         if not selected_candidates:
-            logger.info("No simulation-worthy candidates generated on this tick.")
+            logger.info(
+                "No simulation-worthy candidates generated on this tick. top_fail_reasons=%s",
+                batch_result.generation_stage_metrics.get("top_fail_reasons", {}),
+            )
             return ServiceTickOutcome(status="no_candidates", pending_job_count=0, generated_count=len(candidates))
 
         batch = self.brain_service.submit_candidates(

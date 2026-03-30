@@ -29,6 +29,9 @@ def test_parser_registers_new_brain_commands() -> None:
     service_status_args = parser.parse_args(["service-status"])
     assert service_status_args.command == "service-status"
     assert service_status_args.command_handler.__module__ == "cli.commands.service_status"
+    benchmark_args = parser.parse_args(["benchmark-generation"])
+    assert benchmark_args.command == "benchmark-generation"
+    assert benchmark_args.command_handler.__module__ == "cli.commands.benchmark_generation"
     login_args = parser.parse_args(["brain-login"])
     assert login_args.command == "brain-login"
     login_visible_args = parser.parse_args(["brain-login", "--show-password"])

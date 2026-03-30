@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from pathlib import Path
 
 from cli.commands import (
+    benchmark_generation,
     brain_login,
     evaluate,
     export_brain_candidates,
@@ -47,6 +48,7 @@ _SUBCOMMANDS = {
     "run-service",
     "service-status",
     "brain-login",
+    "benchmark-generation",
 }
 _GLOBAL_OPTIONS_WITH_VALUES = {"--config", "--run-id", "--seed", "--log-level"}
 _GLOBAL_FLAG_OPTIONS = {"--resume"}
@@ -104,6 +106,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_service.register(subparsers, common)
     service_status.register(subparsers, common)
     brain_login.register(subparsers, common)
+    benchmark_generation.register(subparsers, common)
     return parser
 
 

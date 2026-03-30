@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 from core.run_context import RunContext
 from data.field_registry import FieldRegistry
@@ -120,6 +121,14 @@ class PreSimulationSelectionResult:
     crowding_scores: dict[str, CrowdingScore] = field(default_factory=dict)
     selection_decisions: tuple[SelectionDecision, ...] = ()
     stage_metrics: dict[str, float | int | str] = field(default_factory=dict)
+
+
+@dataclass(slots=True, frozen=True)
+class BatchPreparationResult:
+    candidates: tuple[AlphaCandidate, ...]
+    selected: tuple["CandidateScore", ...]
+    regime_key: str
+    generation_stage_metrics: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(slots=True)

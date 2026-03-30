@@ -110,6 +110,13 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert default_config.adaptive_generation.region_learning.local_scope == "region_regime"
     assert default_config.adaptive_generation.region_learning.global_prior_scope == "match_non_region_regime"
     assert default_config.adaptive_generation.region_learning.blend_mode == "linear_ramp"
+    assert default_config.generation.engine_validation_cache_enabled is True
+    assert default_config.adaptive_generation.max_generation_seconds == 20.0
+    assert default_config.adaptive_generation.max_attempt_multiplier == 12
+    assert default_config.adaptive_generation.max_consecutive_failures == 250
+    assert default_config.adaptive_generation.min_candidates_before_early_exit == 5
+    assert default_config.service.research_context_cache_enabled is True
+    assert default_config.service.research_context_cache_ttl_seconds == 0
 
 
 def test_region_learning_config_loads_and_legacy_yaml_keeps_defaults(tmp_path: Path) -> None:
@@ -216,3 +223,51 @@ def test_generation_config_can_enable_catalog_only_brain_mode(tmp_path: Path) ->
     assert config.generation.allow_catalog_fields_without_runtime is True
     assert config.generation.field_catalog_paths == ["inputs/wq_snapshots/2026-03-29"]
     assert config.generation.allowed_fields == []
+
+
+def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_path: Path) -> None:
+    config_path = tmp_path / "legacy_generation_defaults.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "data": {"path": "examples/sample_data/daily_ohlcv.csv"},
+                "splits": {
+                    "train": {"start": "2021-01-01", "end": "2021-02-01"},
+                    "validation": {"start": "2021-02-02", "end": "2021-03-01"},
+                    "test": {"start": "2021-03-02", "end": "2021-03-31"},
+                },
+                "generation": {
+                    "allowed_fields": ["close", "volume", "returns"],
+                    "allowed_operators": ["rank", "ts_delta"],
+                    "lookbacks": [2, 5],
+                    "max_depth": 4,
+                    "complexity_limit": 10,
+                    "template_count": 2,
+                    "grammar_count": 2,
+                    "mutation_count": 1,
+                    "normalization_wrappers": ["rank"],
+                },
+                "backtest": {"timeframe": "1d"},
+                "evaluation": {
+                    "hard_filters": {},
+                    "data_requirements": {},
+                    "diversity": {},
+                    "ranking": {},
+                    "robustness": {},
+                },
+                "storage": {"path": str(tmp_path / "out.sqlite3")},
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert config.generation.engine_validation_cache_enabled is True
+    assert config.adaptive_generation.max_generation_seconds == 20.0
+    assert config.adaptive_generation.max_attempt_multiplier == 12
+    assert config.adaptive_generation.max_consecutive_failures == 250
+    assert config.adaptive_generation.min_candidates_before_early_exit == 5
+    assert config.service.research_context_cache_enabled is True
+    assert config.service.research_context_cache_ttl_seconds == 0

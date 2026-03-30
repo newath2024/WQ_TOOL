@@ -82,6 +82,7 @@ class GenerationConfig:
     template_weights: dict[str, float] = field(default_factory=dict)
     template_pool_size: int = 200
     max_turnover_bias: float = 0.35
+    engine_validation_cache_enabled: bool = True
 
 
 @dataclass(slots=True)
@@ -277,6 +278,10 @@ class AdaptiveGenerationConfig:
     selection: SelectionConfig = field(default_factory=SelectionConfig)
     regime_detection: RegimeDetectionConfig = field(default_factory=RegimeDetectionConfig)
     mutation_learning: MutationLearningConfig = field(default_factory=MutationLearningConfig)
+    max_generation_seconds: float = 20.0
+    max_attempt_multiplier: int = 12
+    max_consecutive_failures: int = 250
+    min_candidates_before_early_exit: int = 5
 
 
 @dataclass(slots=True)
@@ -562,6 +567,8 @@ class ServiceConfig:
     persona_confirmation_poll_interval_seconds: int = 30
     persona_confirmation_prompt_cooldown_seconds: int = 1800
     persona_confirmation_granted_ttl_seconds: int = 300
+    research_context_cache_enabled: bool = True
+    research_context_cache_ttl_seconds: int = 0
 
     def __post_init__(self) -> None:
         if self.tick_interval_seconds <= 0:
@@ -596,6 +603,8 @@ class ServiceConfig:
             raise ValueError("service.persona_confirmation_prompt_cooldown_seconds must be > 0")
         if self.persona_confirmation_granted_ttl_seconds <= 0:
             raise ValueError("service.persona_confirmation_granted_ttl_seconds must be > 0")
+        if self.research_context_cache_ttl_seconds < 0:
+            raise ValueError("service.research_context_cache_ttl_seconds must be >= 0")
 
 
 @dataclass(slots=True)

@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import math
 import random
+import time
 
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry
 from features.registry import OperatorRegistry
-from generator.engine import AlphaCandidate, AlphaGenerationEngine
+from generator.engine import AlphaCandidate, AlphaGenerationEngine, GenerationSessionStats
 from generator.genome_builder import GenomeBuilder
 from generator.grammar import MotifGrammar
 from generator.mutation_policy import MutationPolicy
@@ -64,6 +65,7 @@ class GuidedGenerator:
             field_registry=field_registry,
             registry=registry,
         )
+        self.last_generation_stats: GenerationSessionStats | None = None
 
     def generate(
         self,
@@ -73,24 +75,42 @@ class GuidedGenerator:
         case_snapshot: CaseMemorySnapshot | None = None,
     ) -> list[AlphaCandidate]:
         if not self.adaptive_config.enabled:
-            return self.base_engine.generate(
+            candidates = self.base_engine.generate(
                 count=count,
                 existing_normalized=existing_normalized,
                 case_snapshot=case_snapshot,
             )
+            self.last_generation_stats = self.base_engine.last_generation_stats
+            return candidates
 
         existing = set(existing_normalized or set())
         candidates: list[AlphaCandidate] = []
         exploration_count = max(1, int(math.ceil(count * self.adaptive_config.exploration_ratio)))
         exploitation_count = max(0, count - exploration_count)
-        attempts = 0
-        max_attempts = max(count * 25, 80)
-        while len(candidates) < exploitation_count and attempts < max_attempts:
-            attempts += 1
+        validation_ctx, prepare_ms, cache_hit = self.base_engine._get_or_build_validation_context()  # noqa: SLF001
+        session = GenerationSessionStats(
+            prepare_validation_context_ms=prepare_ms,
+            validation_context_cache_hit=cache_hit,
+        )
+        generation_started = time.monotonic()
+        max_attempts = self.base_engine._resolve_max_attempts(count, legacy_multiplier=25, minimum=80)  # noqa: SLF001
+        consecutive_failures = 0
+
+        exploit_started = time.monotonic()
+        while len(candidates) < exploitation_count and session.attempt_count < max_attempts:
+            if self.base_engine._should_stop_generation(  # noqa: SLF001
+                session=session,
+                generation_started=generation_started,
+                consecutive_failures=consecutive_failures,
+                candidate_count=len(candidates),
+                target_count=count,
+            ):
+                break
+            session.attempt_count += 1
             genome = self.genome_builder.build_guided_genome(case_snapshot=case_snapshot, explore=False)
             repaired, repair_actions = self.repair_policy.repair(genome)
             render = self.grammar.render(repaired)
-            candidate = self.base_engine.build_candidate(
+            result = self.base_engine._build_candidate_result(  # noqa: SLF001
                 expression=render.expression,
                 mode="guided_exploit",
                 parent_ids=(),
@@ -103,35 +123,71 @@ class GuidedGenerator:
                         case_snapshot=case_snapshot,
                     ),
                 ),
+                validation_ctx=validation_ctx,
             )
-            if candidate is None or candidate.normalized_expression in existing:
+            candidate = result.candidate
+            if candidate is None:
+                session.record_failure(result.failure_reason)
+                consecutive_failures += 1
+                continue
+            if candidate.normalized_expression in existing:
+                session.record_failure("duplicate_normalized_expression")
+                consecutive_failures += 1
                 continue
             existing.add(candidate.normalized_expression)
             candidates.append(candidate)
-        attempts = 0
-        while len(candidates) < count and attempts < max_attempts:
-            attempts += 1
-            genome = self.genome_builder.build_guided_genome(case_snapshot=case_snapshot, explore=True)
-            repaired, repair_actions = self.repair_policy.repair(genome)
-            render = self.grammar.render(repaired)
-            candidate = self.base_engine.build_candidate(
-                expression=render.expression,
-                mode="guided_explore",
-                parent_ids=(),
-                generation_metadata=self.base_engine._render_metadata(  # noqa: SLF001
-                    render,
-                    mutation_mode="novelty",
-                    repair_actions=repair_actions,
-                    memory_context=self.base_engine._memory_context_metadata(  # noqa: SLF001
-                        pattern_snapshot=snapshot,
-                        case_snapshot=case_snapshot,
+            session.record_success()
+            consecutive_failures = 0
+        session.exploit_phase_ms = (time.monotonic() - exploit_started) * 1000.0
+
+        if not session.timeout_stop and not session.consecutive_failure_stop:
+            explore_started = time.monotonic()
+            while len(candidates) < count and session.attempt_count < max_attempts:
+                if self.base_engine._should_stop_generation(  # noqa: SLF001
+                    session=session,
+                    generation_started=generation_started,
+                    consecutive_failures=consecutive_failures,
+                    candidate_count=len(candidates),
+                    target_count=count,
+                ):
+                    break
+                session.attempt_count += 1
+                genome = self.genome_builder.build_guided_genome(case_snapshot=case_snapshot, explore=True)
+                repaired, repair_actions = self.repair_policy.repair(genome)
+                render = self.grammar.render(repaired)
+                result = self.base_engine._build_candidate_result(  # noqa: SLF001
+                    expression=render.expression,
+                    mode="guided_explore",
+                    parent_ids=(),
+                    generation_metadata=self.base_engine._render_metadata(  # noqa: SLF001
+                        render,
+                        mutation_mode="novelty",
+                        repair_actions=repair_actions,
+                        memory_context=self.base_engine._memory_context_metadata(  # noqa: SLF001
+                            pattern_snapshot=snapshot,
+                            case_snapshot=case_snapshot,
+                        ),
                     ),
-                ),
-            )
-            if candidate is None or candidate.normalized_expression in existing:
-                continue
-            existing.add(candidate.normalized_expression)
-            candidates.append(candidate)
+                    validation_ctx=validation_ctx,
+                )
+                candidate = result.candidate
+                if candidate is None:
+                    session.record_failure(result.failure_reason)
+                    consecutive_failures += 1
+                    continue
+                if candidate.normalized_expression in existing:
+                    session.record_failure("duplicate_normalized_expression")
+                    consecutive_failures += 1
+                    continue
+                existing.add(candidate.normalized_expression)
+                candidates.append(candidate)
+                session.record_success()
+                consecutive_failures = 0
+            session.explore_phase_ms = (time.monotonic() - explore_started) * 1000.0
+
+        session.generation_total_ms = (time.monotonic() - generation_started) * 1000.0
+        self.last_generation_stats = session
+        self.base_engine.last_generation_stats = session
         return candidates[:count]
 
     def generate_mutations(
@@ -145,11 +201,28 @@ class GuidedGenerator:
         existing = set(existing_normalized or set())
         candidates: list[AlphaCandidate] = []
         if not parent_pool or count <= 0:
+            self.last_generation_stats = GenerationSessionStats()
+            self.base_engine.last_generation_stats = self.last_generation_stats
             return []
-        attempts = 0
-        max_attempts = max(count * 20, 40)
-        while len(candidates) < count and attempts < max_attempts:
-            attempts += 1
+
+        validation_ctx, prepare_ms, cache_hit = self.base_engine._get_or_build_validation_context()  # noqa: SLF001
+        session = GenerationSessionStats(
+            prepare_validation_context_ms=prepare_ms,
+            validation_context_cache_hit=cache_hit,
+        )
+        generation_started = time.monotonic()
+        max_attempts = self.base_engine._resolve_max_attempts(count, legacy_multiplier=20, minimum=40)  # noqa: SLF001
+        consecutive_failures = 0
+        while len(candidates) < count and session.attempt_count < max_attempts:
+            if self.base_engine._should_stop_generation(  # noqa: SLF001
+                session=session,
+                generation_started=generation_started,
+                consecutive_failures=consecutive_failures,
+                candidate_count=len(candidates),
+                target_count=count,
+            ):
+                break
+            session.attempt_count += 1
             parent = self.random.choice(parent_pool)
             variants = self.mutation_policy.generate(
                 parent=parent,
@@ -159,6 +232,8 @@ class GuidedGenerator:
                 case_snapshot=case_snapshot,
             )
             if not variants:
+                session.record_failure("expression_validation_failed")
+                consecutive_failures += 1
                 continue
             expression, metadata = variants[0]
             metadata.setdefault(
@@ -169,16 +244,31 @@ class GuidedGenerator:
                 ),
             )
             parent_ids = tuple(ref["alpha_id"] for ref in metadata.get("parent_refs", []) if ref.get("alpha_id"))
-            candidate = self.base_engine.build_candidate(
+            result = self.base_engine._build_candidate_result(  # noqa: SLF001
                 expression=expression,
                 mode=str(metadata.get("mutation_mode") or "exploit_local"),
                 parent_ids=parent_ids,
                 generation_metadata=metadata,
+                validation_ctx=validation_ctx,
             )
-            if candidate is None or candidate.normalized_expression in existing:
+            candidate = result.candidate
+            if candidate is None:
+                session.record_failure(result.failure_reason)
+                consecutive_failures += 1
+                continue
+            if candidate.normalized_expression in existing:
+                session.record_failure("duplicate_normalized_expression")
+                consecutive_failures += 1
                 continue
             existing.add(candidate.normalized_expression)
             candidates.append(candidate)
+            session.record_success()
+            consecutive_failures = 0
+
+        session.generation_total_ms = (time.monotonic() - generation_started) * 1000.0
+        session.exploit_phase_ms = session.generation_total_ms
+        self.last_generation_stats = session
+        self.base_engine.last_generation_stats = session
         return candidates[:count]
 
     def _allocate_counts(self, count: int) -> dict[str, int]:
