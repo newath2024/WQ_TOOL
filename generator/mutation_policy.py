@@ -26,6 +26,7 @@ class MutationPolicy:
         config: GenerationConfig,
         adaptive_config: AdaptiveGenerationConfig | None = None,
         memory_service: PatternMemoryService,
+        mutation_learning_records: list[dict[str, Any]] | None = None,
         randomizer_seed: int | None = None,
         randomizer: random.Random | None = None,
         field_registry: FieldRegistry | None = None,
@@ -35,6 +36,7 @@ class MutationPolicy:
         self.adaptive_config = adaptive_config or AdaptiveGenerationConfig()
         self.memory_service = memory_service
         self.case_memory_service = CaseMemoryService()
+        self.mutation_learning_records = list(mutation_learning_records or [])
         self.randomizer = randomizer or random.Random(randomizer_seed if randomizer_seed is not None else config.random_seed)
         self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
         self.registry = registry or build_default_registry()
@@ -143,6 +145,9 @@ class MutationPolicy:
             "novelty": weights["novelty"] * config_weights.novelty,
             "repair": weights["repair"] * config_weights.repair,
         }
+        outcome_multipliers = self._mutation_outcome_multipliers(family_signature=family_signature)
+        for mode, multiplier in outcome_multipliers.items():
+            weights[mode] = weights.get(mode, 0.0) * multiplier
         return self.randomizer.choices(list(weights.keys()), weights=[max(value, 1e-6) for value in weights.values()], k=1)[0]
 
     def _mutate_genome(
@@ -276,3 +281,33 @@ class MutationPolicy:
                 continue
             tags.update(self.registry.get(name).semantic_tags)
         return sorted(tags)
+
+    def _mutation_outcome_multipliers(self, *, family_signature: str) -> dict[str, float]:
+        learning_config = self.adaptive_config.mutation_learning
+        if not learning_config.enabled or not self.mutation_learning_records:
+            return {}
+        by_mode: dict[str, list[float]] = {}
+        for row in self.mutation_learning_records:
+            row_family = str(row.get("family_signature") or "")
+            if family_signature and row_family and row_family != family_signature:
+                continue
+            mode = str(row.get("mutation_mode") or "")
+            if not mode:
+                continue
+            by_mode.setdefault(mode, []).append(float(row.get("outcome_delta") or 0.0))
+        multipliers: dict[str, float] = {}
+        for mode, deltas in by_mode.items():
+            support = len(deltas)
+            if support < learning_config.min_support:
+                continue
+            success_rate = sum(1 for value in deltas if value > 0.0) / support
+            avg_uplift = sum(deltas) / support
+            negative_penalty = max(0.0, -avg_uplift) * learning_config.negative_lift_penalty
+            multiplier = (
+                1.0
+                + learning_config.success_rate_weight * success_rate
+                + learning_config.uplift_weight * avg_uplift
+                - negative_penalty
+            )
+            multipliers[mode] = max(0.10, float(multiplier))
+        return multipliers

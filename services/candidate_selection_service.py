@@ -1,12 +1,31 @@
 from __future__ import annotations
 
-from core.config import DiversityThresholdConfig
+import json
+from datetime import UTC, datetime
+
+from core.config import AdaptiveGenerationConfig, DiversityThresholdConfig
 from data.field_registry import FieldRegistry
-from memory.case_memory import CaseMemoryService, CaseMemorySnapshot, ObjectiveVector
+from memory.case_memory import CaseMemoryService, CaseMemorySnapshot
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
-from services.diversity_manager import DiversityManager
-from services.models import CandidateScore, SimulationResult
-from services.multi_objective_selection import MultiObjectiveSelectionService, RankedItem
+from services.crowding_service import CrowdingService
+from services.duplicate_service import DuplicateService
+from services.models import (
+    CandidateScore,
+    CrowdingScore,
+    DedupBatchResult,
+    DedupDecision,
+    PreSimulationSelectionResult,
+    SelectionDecision,
+    SimulationResult,
+)
+from services.selection_service import SelectionService
+from storage.models import (
+    CrowdingScoreRecord,
+    DuplicateDecisionRecord,
+    SelectionScoreRecord,
+    StageMetricRecord,
+)
+from storage.repository import SQLiteRepository
 
 
 class CandidateSelectionService:
@@ -14,10 +33,27 @@ class CandidateSelectionService:
         self,
         memory_service: PatternMemoryService | None = None,
         case_memory_service: CaseMemoryService | None = None,
+        *,
+        repository: SQLiteRepository | None = None,
+        adaptive_config: AdaptiveGenerationConfig | None = None,
     ) -> None:
         self.memory_service = memory_service or PatternMemoryService()
         self.case_memory_service = case_memory_service or CaseMemoryService()
-        self.multi_objective = MultiObjectiveSelectionService()
+        self.repository = repository
+        self.adaptive_config = adaptive_config or AdaptiveGenerationConfig()
+        self._build_services()
+
+    def configure_runtime(
+        self,
+        *,
+        repository: SQLiteRepository | None = None,
+        adaptive_config: AdaptiveGenerationConfig | None = None,
+    ) -> None:
+        if repository is not None:
+            self.repository = repository
+        if adaptive_config is not None:
+            self.adaptive_config = adaptive_config
+        self._build_services()
 
     def score_candidates(
         self,
@@ -27,65 +63,96 @@ class CandidateSelectionService:
         field_registry: FieldRegistry,
         min_pattern_support: int,
         case_snapshot: CaseMemorySnapshot | None = None,
+        crowding_scores: dict[str, CrowdingScore] | None = None,
+        dedup_result: DedupBatchResult | None = None,
     ) -> list[CandidateScore]:
-        ranked_items: list[RankedItem] = []
-        score_by_id: dict[str, CandidateScore] = {}
-        field_categories = {name: spec.category for name, spec in field_registry.fields.items()}
-        for candidate in candidates:
-            family_score, novelty_score, signature, _ = self.memory_service.score_expression(
-                candidate.expression,
-                snapshot=snapshot,
-                min_pattern_support=min_pattern_support,
-                generation_metadata=candidate.generation_metadata,
-                field_categories=field_categories,
-                scope="blended",
+        return self.selection_service.score_pre_sim_candidates(
+            list(candidates),
+            snapshot=snapshot,
+            field_registry=field_registry,
+            min_pattern_support=min_pattern_support,
+            case_snapshot=case_snapshot,
+            crowding_scores=crowding_scores,
+            dedup_result=dedup_result,
+        )
+
+    def run_pre_sim_pipeline(
+        self,
+        candidates,
+        *,
+        snapshot: PatternMemorySnapshot,
+        field_registry: FieldRegistry,
+        batch_size: int,
+        min_pattern_support: int,
+        rejection_filters: list[str] | None = None,
+        case_snapshot: CaseMemorySnapshot | None = None,
+        diversity_config: DiversityThresholdConfig | None = None,
+        run_id: str = "",
+        round_index: int = 0,
+        legacy_regime_key: str = "",
+        global_regime_key: str = "",
+        effective_regime_key: str = "",
+        persist_metrics: bool = True,
+    ) -> PreSimulationSelectionResult:
+        candidate_list = list(candidates)
+        dedup_result = self._pass_through_dedup_result(candidate_list)
+        if self.duplicate_service is not None and run_id:
+            dedup_result = self.duplicate_service.filter_pre_sim(
+                candidate_list,
+                run_id=run_id,
+                round_index=round_index,
+                legacy_regime_key=legacy_regime_key or snapshot.regime_key,
+                global_regime_key=global_regime_key or snapshot.global_regime_key,
             )
-            diversity_score = max(novelty_score, 1.0 - min(1.0, signature.complexity / max(1, 2 * candidate.complexity or 1)))
-            objective_vector = self.case_memory_service.predict_objectives(
-                generation_metadata=candidate.generation_metadata,
-                signature=signature,
-                snapshot=case_snapshot,
-                novelty_score=novelty_score,
-                diversity_score=diversity_score,
+
+        crowding_scores = self._zero_crowding_scores(list(dedup_result.kept_candidates))
+        if self.crowding_service is not None:
+            crowding_scores = self.crowding_service.score_pre_sim(
+                list(dedup_result.kept_candidates),
+                run_id=run_id,
+                round_index=round_index,
+                effective_regime_key=effective_regime_key or snapshot.regime_key,
+                case_snapshot=case_snapshot,
             )
-            candidate.generation_metadata["region"] = snapshot.region
-            candidate.generation_metadata["regime_key"] = snapshot.regime_key
-            candidate.generation_metadata["global_regime_key"] = snapshot.global_regime_key
-            memory_context = candidate.generation_metadata.get("memory_context")
-            if not isinstance(memory_context, dict):
-                memory_context = {}
-                candidate.generation_metadata["memory_context"] = memory_context
-            if snapshot.blend is not None:
-                memory_context["pattern_blend"] = snapshot.blend.to_dict()
-            if case_snapshot is not None and case_snapshot.blend is not None:
-                memory_context["case_blend"] = case_snapshot.blend.to_dict()
-            candidate.generation_metadata["selection_objectives"] = objective_vector.to_dict()
-            field_score = self._average_field_score(candidate, field_registry)
-            heuristic = 0.40 * field_score + 0.30 * family_score + 0.30 * diversity_score
-            candidate_score = CandidateScore(
-                candidate=candidate,
-                objective_vector=objective_vector,
-                local_heuristic_score=heuristic,
-                novelty_score=novelty_score,
-                family_score=family_score,
-                diversity_score=diversity_score,
-                structural_signature=signature,
-                ranking_rationale={
-                    "objective_vector": objective_vector.to_dict(),
-                    "region": snapshot.region,
-                    "regime_key": snapshot.regime_key,
-                    "global_regime_key": snapshot.global_regime_key,
-                    "pattern_blend": snapshot.blend.to_dict() if snapshot.blend is not None else {},
-                    "case_blend": case_snapshot.blend.to_dict() if case_snapshot and case_snapshot.blend is not None else {},
-                },
-            )
-            score_by_id[candidate.alpha_id] = candidate_score
-            ranked_items.append(self._candidate_ranked_item(candidate_score, field_registry))
-        ordered = self.multi_objective.order(ranked_items)
-        return [
-            self._with_ranked_rationale(score_by_id[item.item.candidate.alpha_id], item)
-            for item in ordered
-        ]
+
+        scored = self.score_candidates(
+            list(dedup_result.kept_candidates),
+            snapshot=snapshot,
+            field_registry=field_registry,
+            min_pattern_support=min_pattern_support,
+            case_snapshot=case_snapshot,
+            crowding_scores=crowding_scores,
+            dedup_result=dedup_result,
+        )
+        selected, archived, selection_decisions = self.selection_service.select_pre_sim(
+            scored,
+            field_registry=field_registry,
+            batch_size=batch_size,
+            rejection_filters=rejection_filters,
+            diversity_config=diversity_config,
+        )
+        kept_count = max(1, len(dedup_result.kept_candidates))
+        hard_blocked = sum(1 for score in crowding_scores.values() if score.hard_blocked)
+        avg_crowding_penalty = sum(score.total_penalty for score in crowding_scores.values()) / kept_count
+        stage_metrics = {
+            **dict(dedup_result.stage_metrics),
+            "kept_after_hard_dedup": len(dedup_result.kept_candidates),
+            "hard_blocked_by_crowding": hard_blocked,
+            "avg_crowding_penalty": float(avg_crowding_penalty),
+            "selected_for_simulation": len(selected),
+            "archived_after_selection": len(archived),
+        }
+        result = PreSimulationSelectionResult(
+            selected=tuple(selected),
+            archived=tuple(archived),
+            dedup_result=dedup_result,
+            crowding_scores=crowding_scores,
+            selection_decisions=selection_decisions,
+            stage_metrics=stage_metrics,
+        )
+        if persist_metrics and self.repository is not None and run_id:
+            self._persist_pre_sim_pipeline(run_id=run_id, round_index=round_index, result=result)
+        return result
 
     def select_for_simulation(
         self,
@@ -98,82 +165,52 @@ class CandidateSelectionService:
         rejection_filters: list[str] | None = None,
         case_snapshot: CaseMemorySnapshot | None = None,
         diversity_config: DiversityThresholdConfig | None = None,
+        run_id: str = "",
+        round_index: int = 0,
+        legacy_regime_key: str = "",
+        global_regime_key: str = "",
+        effective_regime_key: str = "",
     ) -> tuple[list[CandidateScore], list[CandidateScore]]:
-        scored = self.score_candidates(
+        result = self.run_pre_sim_pipeline(
             candidates,
             snapshot=snapshot,
             field_registry=field_registry,
+            batch_size=batch_size,
             min_pattern_support=min_pattern_support,
+            rejection_filters=rejection_filters,
+            case_snapshot=case_snapshot,
+            diversity_config=diversity_config,
+            run_id=run_id,
+            round_index=round_index,
+            legacy_regime_key=legacy_regime_key,
+            global_regime_key=global_regime_key,
+            effective_regime_key=effective_regime_key,
+            persist_metrics=bool(run_id),
+        )
+        return list(result.selected), list(result.archived)
+
+    def select_results_for_mutation_with_details(
+        self,
+        results: list[SimulationResult],
+        *,
+        candidates_by_id: dict[str, object],
+        top_k: int,
+        diversity_config: DiversityThresholdConfig | None = None,
+        case_snapshot: CaseMemorySnapshot | None = None,
+        run_id: str = "",
+        round_index: int = 0,
+        persist_metrics: bool = True,
+    ) -> tuple[list[SimulationResult], tuple[SelectionDecision, ...], tuple[SelectionDecision, ...]]:
+        selected, post_decisions, mutation_decisions = self.selection_service.select_mutation_parents(
+            results,
+            candidates_by_id=candidates_by_id,
+            top_k=top_k,
+            diversity_config=diversity_config,
             case_snapshot=case_snapshot,
         )
-        blocked_tags = set(rejection_filters or [])
-        diversity_manager = DiversityManager(diversity_config or DiversityThresholdConfig())
-        eligible_items: list[RankedItem] = []
-        archived: list[CandidateScore] = []
-        for item in scored:
-            fail_tags = set(item.candidate.generation_metadata.get("constraint_tags", []))
-            if blocked_tags & fail_tags:
-                archived.append(
-                    CandidateScore(
-                        candidate=item.candidate,
-                        objective_vector=item.objective_vector,
-                        local_heuristic_score=item.local_heuristic_score,
-                        novelty_score=item.novelty_score,
-                        family_score=item.family_score,
-                        diversity_score=item.diversity_score,
-                        structural_signature=item.structural_signature,
-                        archive_reason="blocked_by_rejection_filter",
-                        ranking_rationale=item.ranking_rationale,
-                    )
-                )
-                continue
-            eligible_items.append(self._candidate_ranked_item(item, field_registry))
-
-        selected_ranked, archived_ranked = diversity_manager.select(eligible_items, batch_size=batch_size)
-        selected_ids = {item.item.candidate.alpha_id for item in selected_ranked}
-        selected_templates = {item.item.candidate.template_name for item in selected_ranked if item.item.candidate.template_name}
-        selected = [item for item in scored if item.candidate.alpha_id in selected_ids]
-        archived.extend(
-            [
-                CandidateScore(
-                    candidate=item.item.candidate,
-                    objective_vector=item.item.objective_vector,
-                    local_heuristic_score=item.item.local_heuristic_score,
-                    novelty_score=item.item.novelty_score,
-                    family_score=item.item.family_score,
-                    diversity_score=item.item.diversity_score,
-                    structural_signature=item.item.structural_signature,
-                    archive_reason=(
-                        "template_diversity_cap"
-                        if item.item.candidate.template_name and item.item.candidate.template_name in selected_templates
-                        else "diversity_cap"
-                    ),
-                    ranking_rationale=item.item.ranking_rationale,
-                )
-                for item in archived_ranked
-                if item.item.candidate.alpha_id not in selected_ids
-            ]
-        )
-        archived.extend(
-            [
-                CandidateScore(
-                    candidate=item.candidate,
-                    objective_vector=item.objective_vector,
-                    local_heuristic_score=item.local_heuristic_score,
-                    novelty_score=item.novelty_score,
-                    family_score=item.family_score,
-                    diversity_score=item.diversity_score,
-                    structural_signature=item.structural_signature,
-                    archive_reason="fell_below_batch_cutoff",
-                    ranking_rationale=item.ranking_rationale,
-                )
-                for item in scored
-                if item.candidate.alpha_id not in selected_ids and all(
-                    archived_item.candidate.alpha_id != item.candidate.alpha_id for archived_item in archived
-                )
-            ]
-        )
-        return selected[:batch_size], archived
+        if persist_metrics and self.repository is not None and run_id:
+            self.persist_selection_decisions(run_id, round_index, [*post_decisions, *mutation_decisions])
+        return selected, post_decisions, mutation_decisions
 
     def select_results_for_mutation(
         self,
@@ -182,84 +219,172 @@ class CandidateSelectionService:
         candidates_by_id: dict[str, object],
         top_k: int,
         diversity_config: DiversityThresholdConfig | None = None,
+        case_snapshot: CaseMemorySnapshot | None = None,
     ) -> list[SimulationResult]:
-        ranked_items: list[RankedItem] = []
-        for result in results:
-            candidate = candidates_by_id.get(result.candidate_id)
-            if candidate is None or result.status != "completed":
-                continue
-            signature = self.memory_service.extract_signature(
-                candidate.expression,
-                generation_metadata=candidate.generation_metadata,
-            )
-            objective_vector = ObjectiveVector(
-                fitness=float(result.metrics.get("fitness") or 0.0),
-                sharpe=float(result.metrics.get("sharpe") or 0.0),
-                eligibility=1.0 if result.submission_eligible else 0.0,
-                robustness=1.0 if not result.rejection_reason else 0.0,
-                novelty=float(candidate.generation_metadata.get("selection_objectives", {}).get("novelty", 0.5)),
-                diversity=float(candidate.generation_metadata.get("selection_objectives", {}).get("diversity", 0.5)),
-                turnover_cost=min(1.0, max(0.0, float(result.metrics.get("turnover") or 0.0) / 2.0)),
-                complexity_cost=min(1.0, max(0.0, float(candidate.complexity) / 20.0)),
-            )
-            ranked_items.append(
-                RankedItem(
-                    item=result,
-                    objective_vector=objective_vector,
-                    family_signature=signature.family_signature,
-                    primary_field_category=(candidate.generation_metadata.get("field_families") or ["other"])[0],
-                    horizon_bucket=signature.horizon_bucket,
-                    operator_path_key=">".join(signature.operator_path[:4]),
-                    diversity_score=objective_vector.diversity,
-                    exploration_candidate=str(candidate.generation_mode).startswith("novelty"),
+        selected, _, _ = self.select_results_for_mutation_with_details(
+            results,
+            candidates_by_id=candidates_by_id,
+            top_k=top_k,
+            diversity_config=diversity_config,
+            case_snapshot=case_snapshot,
+            persist_metrics=False,
+        )
+        return selected
+
+    def persist_selection_decisions(
+        self,
+        run_id: str,
+        round_index: int,
+        decisions: list[SelectionDecision] | tuple[SelectionDecision, ...],
+    ) -> None:
+        if self.repository is None or not decisions:
+            return
+        created_at = datetime.now(UTC).isoformat()
+        self.repository.save_selection_scores(
+            [
+                SelectionScoreRecord(
+                    run_id=run_id,
+                    round_index=round_index,
+                    alpha_id=decision.alpha_id,
+                    score_stage=decision.score_stage,
+                    composite_score=decision.composite_score,
+                    selected=decision.selected,
+                    rank=decision.rank,
+                    reason_codes_json=json.dumps(list(decision.reason_codes), sort_keys=True),
+                    breakdown_json=json.dumps(
+                        {
+                            "score_stage": decision.breakdown.score_stage if decision.breakdown else decision.score_stage,
+                            "composite_score": decision.breakdown.composite_score if decision.breakdown else decision.composite_score,
+                            "components": decision.breakdown.components if decision.breakdown else {},
+                            "reason_codes": list(decision.breakdown.reason_codes if decision.breakdown else decision.reason_codes),
+                        },
+                        sort_keys=True,
+                    ),
+                    created_at=created_at,
                 )
-            )
-        ordered = self.multi_objective.order(ranked_items)
-        selected_ranked, _ = DiversityManager(diversity_config or DiversityThresholdConfig()).select(ordered, batch_size=top_k)
-        return [item.item for item in selected_ranked]
+                for decision in decisions
+            ]
+        )
 
     def flag_for_manual_review(self, results: list[SimulationResult]) -> list[SimulationResult]:
         return [result for result in results if result.status in {"failed", "rejected"} and not result.rejection_reason]
 
-    def _candidate_ranked_item(self, item: CandidateScore, field_registry: FieldRegistry) -> RankedItem[CandidateScore]:
-        primary_field = item.candidate.fields_used[0] if item.candidate.fields_used else ""
-        primary_field_category = field_registry.get(primary_field).category if primary_field and field_registry.contains(primary_field) else "other"
-        operator_path = item.candidate.generation_metadata.get("operator_path") or list(item.structural_signature.operator_path)
-        return RankedItem(
-            item=item,
-            objective_vector=item.objective_vector,
-            family_signature=item.structural_signature.family_signature,
-            primary_field_category=primary_field_category,
-            horizon_bucket=item.structural_signature.horizon_bucket,
-            operator_path_key=">".join(operator_path[:4]) if operator_path else "none",
-            diversity_score=item.diversity_score,
-            exploration_candidate=(
-                "novelty" in str(item.candidate.generation_mode)
-                or str(item.candidate.generation_metadata.get("mutation_mode") or "") == "novelty"
-            ),
-            rationale=item.ranking_rationale,
+    def _build_services(self) -> None:
+        self.selection_service = SelectionService(
+            config=self.adaptive_config.selection,
+            memory_service=self.memory_service,
+            case_memory_service=self.case_memory_service,
+        )
+        self.duplicate_service = (
+            DuplicateService(
+                self.repository,
+                config=self.adaptive_config.duplicate,
+                memory_service=self.memory_service,
+            )
+            if self.repository is not None
+            else None
+        )
+        self.crowding_service = CrowdingService(
+            config=self.adaptive_config.crowding,
+            diversity_config=self.adaptive_config.diversity,
         )
 
-    def _with_ranked_rationale(self, score: CandidateScore, ranked: RankedItem[CandidateScore]) -> CandidateScore:
-        return CandidateScore(
-            candidate=score.candidate,
-            objective_vector=score.objective_vector,
-            local_heuristic_score=score.local_heuristic_score,
-            novelty_score=score.novelty_score,
-            family_score=score.family_score,
-            diversity_score=score.diversity_score,
-            structural_signature=score.structural_signature,
-            archive_reason=score.archive_reason,
-            ranking_rationale=ranked.rationale,
+    def _persist_pre_sim_pipeline(
+        self,
+        *,
+        run_id: str,
+        round_index: int,
+        result: PreSimulationSelectionResult,
+    ) -> None:
+        if self.repository is None:
+            return
+        created_at = datetime.now(UTC).isoformat()
+        self.repository.save_duplicate_decisions(
+            [
+                DuplicateDecisionRecord(
+                    run_id=run_id,
+                    round_index=round_index,
+                    alpha_id=decision.alpha_id,
+                    stage=decision.stage,
+                    decision=decision.decision,
+                    reason_code=decision.reason_code,
+                    matched_run_id=decision.matched_run_id,
+                    matched_alpha_id=decision.matched_alpha_id,
+                    matched_scope=decision.matched_scope,
+                    similarity_score=decision.similarity_score,
+                    normalized_match=decision.normalized_match,
+                    metrics_json=json.dumps(decision.metrics, sort_keys=True),
+                    created_at=created_at,
+                )
+                for decision in result.dedup_result.decisions
+            ]
+        )
+        self.repository.save_crowding_scores(
+            [
+                CrowdingScoreRecord(
+                    run_id=run_id,
+                    round_index=round_index,
+                    alpha_id=score.alpha_id,
+                    stage=score.stage,
+                    total_penalty=score.total_penalty,
+                    family_penalty=score.family_penalty,
+                    motif_penalty=score.motif_penalty,
+                    operator_path_penalty=score.operator_path_penalty,
+                    lineage_penalty=score.lineage_penalty,
+                    batch_penalty=score.batch_penalty,
+                    historical_penalty=score.historical_penalty,
+                    hard_blocked=score.hard_blocked,
+                    reason_codes_json=json.dumps(list(score.reason_codes), sort_keys=True),
+                    metrics_json=json.dumps(score.metrics, sort_keys=True),
+                    created_at=created_at,
+                )
+                for score in result.crowding_scores.values()
+            ]
+        )
+        self.persist_selection_decisions(run_id, round_index, list(result.selection_decisions))
+        self.repository.save_stage_metrics(
+            [
+                StageMetricRecord(
+                    run_id=run_id,
+                    round_index=round_index,
+                    stage="pre_sim",
+                    metrics_json=json.dumps(result.stage_metrics, sort_keys=True),
+                    created_at=created_at,
+                )
+            ]
+        )
+
+    def _pass_through_dedup_result(self, candidates: list) -> DedupBatchResult:
+        return DedupBatchResult(
+            kept_candidates=tuple(candidates),
+            blocked_candidates=(),
+            decisions=tuple(
+                DedupDecision(
+                    alpha_id=candidate.alpha_id,
+                    normalized_expression=candidate.normalized_expression,
+                    stage="pre_sim",
+                    decision="kept",
+                    reason_code="dedup_not_applied",
+                    metrics={"duplicate_risk": 0.0},
+                )
+                for candidate in candidates
+            ),
+            stage_metrics={
+                "generated": len(candidates),
+                "blocked_by_exact_dedup": 0,
+                "blocked_by_near_duplicate": 0,
+                "blocked_by_cross_run_dedup": 0,
+                "kept_after_dedup": len(candidates),
+            },
         )
 
     @staticmethod
-    def _average_field_score(candidate, field_registry: FieldRegistry) -> float:
-        if not candidate.fields_used:
-            return 0.0
-        scores = [
-            field_registry.get(name).field_score
-            for name in candidate.fields_used
-            if field_registry.contains(name)
-        ]
-        return float(sum(scores) / len(scores)) if scores else 0.0
+    def _zero_crowding_scores(candidates: list) -> dict[str, CrowdingScore]:
+        return {
+            candidate.alpha_id: CrowdingScore(
+                alpha_id=candidate.alpha_id,
+                stage="pre_sim",
+                total_penalty=0.0,
+            )
+            for candidate in candidates
+        }

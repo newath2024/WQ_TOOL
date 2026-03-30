@@ -24,6 +24,7 @@ class GuidedGenerator:
         memory_service: PatternMemoryService,
         field_registry: FieldRegistry,
         region_learning_context: RegionLearningContext | None = None,
+        mutation_learning_records: list[dict] | None = None,
     ) -> None:
         self.generation_config = generation_config
         self.adaptive_config = adaptive_config
@@ -37,6 +38,7 @@ class GuidedGenerator:
             registry=registry,
             field_registry=field_registry,
             region_learning_context=region_learning_context,
+            mutation_learning_records=mutation_learning_records,
         )
         self.random = random.Random(generation_config.random_seed)
         self.genome_builder = GenomeBuilder(
@@ -57,6 +59,7 @@ class GuidedGenerator:
             config=generation_config,
             adaptive_config=adaptive_config,
             memory_service=memory_service,
+            mutation_learning_records=mutation_learning_records,
             randomizer_seed=generation_config.random_seed + 211,
             field_registry=field_registry,
             registry=registry,

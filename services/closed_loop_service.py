@@ -40,7 +40,10 @@ class ClosedLoopService:
     ) -> None:
         self.repository = repository
         self.memory_service = memory_service or PatternMemoryService()
-        self.selection_service = selection_service or CandidateSelectionService(self.memory_service)
+        self.selection_service = selection_service or CandidateSelectionService(
+            self.memory_service,
+            repository=repository,
+        )
         self.brain_service = brain_service
         self.learning_service = BrainLearningService(repository, memory_service=self.memory_service)
 
@@ -52,8 +55,13 @@ class ClosedLoopService:
     ) -> ClosedLoopRunSummary:
         logger = get_logger(__name__, run_id=environment.context.run_id, stage="closed-loop")
         research_context = load_research_context(config, environment, stage="closed-loop-data")
+        active_regime_key = research_context.effective_regime_key or research_context.regime_key
+        self.selection_service.configure_runtime(
+            repository=self.repository,
+            adaptive_config=config.adaptive_generation,
+        )
         field_registry = resolve_field_registry(config, research_context)
-        persist_research_metadata(self.repository, config, environment, research_context)
+        persist_research_metadata(self.repository, config, environment, research_context, round_index=0)
         registry = build_registry(
             config.generation.allowed_operators,
             operator_catalog_paths=config.generation.operator_catalog_paths,
@@ -79,7 +87,7 @@ class ClosedLoopService:
         run_status = "completed"
         for round_index in range(1, config.loop.rounds + 1):
             snapshot = self.repository.alpha_history.load_snapshot(
-                regime_key=research_context.regime_key,
+                regime_key=active_regime_key,
                 region=research_context.region,
                 global_regime_key=research_context.global_regime_key,
                 parent_pool_size=max(config.adaptive_generation.parent_pool_size, config.loop.mutate_top_k * 2),
@@ -88,7 +96,7 @@ class ClosedLoopService:
                 prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
             )
             case_snapshot = self.repository.alpha_history.load_case_snapshot(
-                research_context.regime_key,
+                active_regime_key,
                 region=research_context.region,
                 global_regime_key=research_context.global_regime_key,
                 region_learning_config=config.adaptive_generation.region_learning,
@@ -124,7 +132,7 @@ class ClosedLoopService:
                 break
 
             inserted = self.repository.save_alpha_candidates(environment.context.run_id, round_candidates)
-            selected, archived = self.selection_service.select_for_simulation(
+            pre_sim_result = self.selection_service.run_pre_sim_pipeline(
                 round_candidates,
                 snapshot=snapshot,
                 field_registry=field_registry,
@@ -133,7 +141,14 @@ class ClosedLoopService:
                 rejection_filters=config.loop.rejection_filters,
                 case_snapshot=case_snapshot,
                 diversity_config=config.adaptive_generation.diversity,
+                run_id=environment.context.run_id,
+                round_index=round_index,
+                legacy_regime_key=research_context.regime_key,
+                global_regime_key=research_context.global_regime_key,
+                effective_regime_key=active_regime_key,
             )
+            selected = list(pre_sim_result.selected)
+            archived = list(pre_sim_result.archived)
             selected_candidates = [item.candidate for item in selected]
             batch = brain_service.simulate_candidates(
                 selected_candidates,
@@ -146,18 +161,25 @@ class ClosedLoopService:
             candidates_by_id = {candidate.alpha_id: candidate for candidate in round_candidates}
 
             if results:
-                selected_parent_results = self.selection_service.select_results_for_mutation(
+                selected_parent_results, _, _ = self.selection_service.select_results_for_mutation_with_details(
                     results,
                     candidates_by_id=candidates_by_id,
                     top_k=config.loop.mutate_top_k,
                     diversity_config=config.adaptive_generation.diversity,
+                    case_snapshot=case_snapshot,
+                    run_id=environment.context.run_id,
+                    round_index=round_index,
                 )
                 selected_parent_ids = {result.candidate_id for result in selected_parent_results}
                 self.learning_service.persist_results(
                     config=config,
-                    regime_key=research_context.regime_key,
+                    regime_key=active_regime_key,
                     region=research_context.region,
                     global_regime_key=research_context.global_regime_key,
+                    market_regime_key=research_context.market_regime_key,
+                    effective_regime_key=active_regime_key,
+                    regime_label=research_context.regime_label,
+                    regime_confidence=research_context.regime_confidence,
                     snapshot=snapshot,
                     candidates_by_id=candidates_by_id,
                     results=results,
@@ -169,7 +191,7 @@ class ClosedLoopService:
                     field_registry=field_registry,
                     selected_parent_ids=selected_parent_ids,
                     candidates_by_id=candidates_by_id,
-                    regime_key=research_context.regime_key,
+                    regime_key=active_regime_key,
                     region=research_context.region,
                     global_regime_key=research_context.global_regime_key,
                     region_learning_context=research_context.region_learning_context,
@@ -192,6 +214,10 @@ class ClosedLoopService:
             notes = [
                 f"inserted={inserted}",
                 f"archived={len(archived)}",
+                f"blocked_exact={pre_sim_result.stage_metrics.get('blocked_by_exact_dedup', 0)}",
+                f"blocked_near={pre_sim_result.stage_metrics.get('blocked_by_near_duplicate', 0)}",
+                f"blocked_cross_run={pre_sim_result.stage_metrics.get('blocked_by_cross_run_dedup', 0)}",
+                f"avg_crowding_penalty={float(pre_sim_result.stage_metrics.get('avg_crowding_penalty', 0.0)):.4f}",
             ]
             if batch.export_path:
                 notes.append(f"export_path={batch.export_path}")
@@ -199,7 +225,7 @@ class ClosedLoopService:
                 round_index=round_index,
                 status=round_status,
                 generated_count=len(round_candidates),
-                validated_count=len(round_candidates),
+                validated_count=int(pre_sim_result.stage_metrics.get("kept_after_dedup", len(round_candidates))),
                 submitted_count=len(selected_candidates),
                 completed_count=len(results),
                 selected_for_mutation_count=selected_for_mutation_count,
@@ -297,6 +323,7 @@ class ClosedLoopService:
     ) -> list[AlphaCandidate]:
         if not selected_parent_ids or count <= 0:
             return []
+        mutation_learning_records = self.repository.list_mutation_outcomes(effective_regime_key=regime_key)
         if config.adaptive_generation.enabled:
             snapshot = self.repository.alpha_history.load_snapshot(
                 regime_key=regime_key,
@@ -317,6 +344,7 @@ class ClosedLoopService:
                 memory_service=self.memory_service,
                 field_registry=field_registry,
                 region_learning_context=region_learning_context,
+                mutation_learning_records=mutation_learning_records,
             )
             return engine.generate_mutations(
                 count=count,
@@ -335,6 +363,7 @@ class ClosedLoopService:
             registry=registry,
             field_registry=field_registry,
             region_learning_context=region_learning_context,
+            mutation_learning_records=mutation_learning_records,
         )
         return engine.generate_mutations(
             parents=parents,

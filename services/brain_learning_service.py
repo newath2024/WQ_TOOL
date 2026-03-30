@@ -6,6 +6,7 @@ from evaluation.critic import AlphaDiagnosis, MutationHint
 from generator.engine import AlphaCandidate
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.models import SimulationResult
+from storage.models import MutationOutcomeRecord
 from storage.repository import SQLiteRepository
 
 
@@ -26,6 +27,10 @@ class BrainLearningService:
         regime_key: str,
         region: str = "",
         global_regime_key: str = "",
+        market_regime_key: str = "",
+        effective_regime_key: str = "",
+        regime_label: str = "unknown",
+        regime_confidence: float = 0.0,
         snapshot: PatternMemorySnapshot,
         candidates_by_id: dict[str, AlphaCandidate],
         results: list[SimulationResult],
@@ -85,9 +90,20 @@ class BrainLearningService:
                 regime_key=regime_key,
                 region=region,
                 global_regime_key=global_regime_key,
+                market_regime_key=market_regime_key,
+                effective_regime_key=effective_regime_key or regime_key,
+                regime_label=regime_label,
+                regime_confidence=regime_confidence,
                 entries=entries,
                 pattern_decay=config.adaptive_generation.pattern_decay,
                 prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+                created_at=timestamp,
+            )
+            self._persist_mutation_outcomes(
+                run_id=entries[0]["result"].run_id,
+                effective_regime_key=effective_regime_key or regime_key,
+                entries=entries,
+                selected_parent_ids=selected,
                 created_at=timestamp,
             )
 
@@ -156,3 +172,61 @@ class BrainLearningService:
             seen_hints.add(hint.hint)
         diagnosis.mutation_hints = deduped_hints
         return diagnosis
+
+    def _persist_mutation_outcomes(
+        self,
+        *,
+        run_id: str,
+        effective_regime_key: str,
+        entries: list[dict],
+        selected_parent_ids: set[str],
+        created_at: str,
+    ) -> None:
+        records: list[MutationOutcomeRecord] = []
+        for entry in entries:
+            candidate = entry["candidate"]
+            parent_refs = candidate.generation_metadata.get("parent_refs") or [
+                {"run_id": run_id, "alpha_id": parent_id}
+                for parent_id in candidate.parent_ids
+            ]
+            if not parent_refs:
+                continue
+            family_signature = str(candidate.generation_metadata.get("family_signature") or "")
+            mutation_mode = str(candidate.generation_metadata.get("mutation_mode") or candidate.generation_mode or "")
+            child_score = float(entry["outcome_score"])
+            for parent_ref in parent_refs:
+                parent_run_id = str(parent_ref.get("run_id") or run_id)
+                parent_alpha_id = str(parent_ref.get("alpha_id") or "")
+                if not parent_alpha_id:
+                    continue
+                parent_row = self.repository.connection.execute(
+                    """
+                    SELECT outcome_score
+                    FROM alpha_history
+                    WHERE run_id = ? AND alpha_id = ?
+                    ORDER BY created_at DESC
+                    LIMIT 1
+                    """,
+                    (parent_run_id, parent_alpha_id),
+                ).fetchone()
+                parent_score = float(parent_row["outcome_score"] or 0.0) if parent_row else 0.0
+                records.append(
+                    MutationOutcomeRecord(
+                        run_id=run_id,
+                        child_alpha_id=candidate.alpha_id,
+                        parent_alpha_id=parent_alpha_id,
+                        parent_run_id=parent_run_id,
+                        mutation_mode=mutation_mode,
+                        family_signature=family_signature,
+                        effective_regime_key=effective_regime_key,
+                        outcome_source=str(entry.get("metric_source") or "external_brain"),
+                        parent_post_sim_score=parent_score,
+                        child_post_sim_score=child_score,
+                        outcome_delta=child_score - parent_score,
+                        selected_for_simulation=True,
+                        selected_for_mutation=candidate.alpha_id in selected_parent_ids,
+                        created_at=created_at,
+                    )
+                )
+        if records:
+            self.repository.save_mutation_outcomes(records)

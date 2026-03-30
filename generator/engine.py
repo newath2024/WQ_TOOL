@@ -44,6 +44,7 @@ class AlphaGenerationEngine:
         field_registry: FieldRegistry | None = None,
         adaptive_config: AdaptiveGenerationConfig | None = None,
         region_learning_context: RegionLearningContext | None = None,
+        mutation_learning_records: list[dict[str, Any]] | None = None,
     ) -> None:
         self.config = config
         self.registry = registry
@@ -69,6 +70,7 @@ class AlphaGenerationEngine:
             config=config,
             adaptive_config=self.adaptive_config,
             memory_service=self.memory_service,
+            mutation_learning_records=mutation_learning_records,
             randomizer_seed=config.random_seed + 17,
             field_registry=self.field_registry,
             registry=self.registry,
@@ -217,6 +219,22 @@ class AlphaGenerationEngine:
             return None
 
         alpha_id = hashlib.sha1(normalized_expression.encode("utf-8")).hexdigest()[:16]
+        parent_refs = metadata.get("parent_refs") if isinstance(metadata.get("parent_refs"), list) else []
+        primary_parent = parent_refs[0] if parent_refs else {}
+        metadata["family_signature"] = signature.family_signature
+        metadata["canonical_structural_signature"] = signature.to_dict()
+        metadata["fields_used"] = list(metadata.get("fields_used") or signature.fields)
+        metadata["field_families"] = list(metadata.get("field_families") or signature.field_families)
+        metadata["operators_used"] = list(metadata.get("operators_used") or signature.operators)
+        metadata["operator_path"] = list(metadata.get("operator_path") or signature.operator_path)
+        metadata["horizon_bucket"] = str(metadata.get("horizon_bucket") or signature.horizon_bucket)
+        metadata["turnover_bucket"] = str(metadata.get("turnover_bucket") or signature.turnover_bucket)
+        metadata["complexity_bucket"] = str(metadata.get("complexity_bucket") or signature.complexity_bucket)
+        metadata["primary_parent_alpha_id"] = str(primary_parent.get("alpha_id") or "")
+        metadata["primary_parent_family_signature"] = str(primary_parent.get("family_signature") or "")
+        metadata["lineage_branch_key"] = (
+            str(primary_parent.get("alpha_id") or primary_parent.get("family_signature") or "")
+        )
         fields_used = tuple(metadata.get("fields_used") or signature.fields)
         operators_used = tuple(metadata.get("operators_used") or signature.operators)
         template_name = str(metadata.get("template_name") or metadata.get("motif") or "")

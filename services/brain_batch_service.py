@@ -44,16 +44,18 @@ class BrainBatchService:
         environment: CommandEnvironment,
         count: int | None = None,
         mutation_parent_ids: set[str] | None = None,
+        round_index: int = 0,
     ) -> tuple[list[AlphaCandidate], list[CandidateScore], str]:
         research_context = load_research_context(config, environment, stage="brain-sim-data")
-        persist_research_metadata(self.repository, config, environment, research_context)
+        active_regime_key = research_context.effective_regime_key or research_context.regime_key
+        persist_research_metadata(self.repository, config, environment, research_context, round_index=round_index)
         field_registry = resolve_field_registry(config, research_context)
         registry = build_registry(
             config.generation.allowed_operators,
             operator_catalog_paths=config.generation.operator_catalog_paths,
         )
         snapshot = self.repository.alpha_history.load_snapshot(
-            regime_key=research_context.regime_key,
+            regime_key=active_regime_key,
             region=research_context.region,
             global_regime_key=research_context.global_regime_key,
             parent_pool_size=config.adaptive_generation.parent_pool_size,
@@ -62,7 +64,7 @@ class BrainBatchService:
             prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
         )
         case_snapshot = self.repository.alpha_history.load_case_snapshot(
-            research_context.regime_key,
+            active_regime_key,
             region=research_context.region,
             global_regime_key=research_context.global_regime_key,
             region_learning_config=config.adaptive_generation.region_learning,
@@ -95,8 +97,13 @@ class BrainBatchService:
         )
         candidates = [*mutation_candidates, *fresh_candidates]
         self.repository.save_alpha_candidates(environment.context.run_id, candidates)
-        selector = self.selection_service or CandidateSelectionService(research_context.memory_service)
-        selected, _ = selector.select_for_simulation(
+        selector = self.selection_service or CandidateSelectionService(
+            research_context.memory_service,
+            repository=self.repository,
+            adaptive_config=config.adaptive_generation,
+        )
+        selector.configure_runtime(repository=self.repository, adaptive_config=config.adaptive_generation)
+        pre_sim_result = selector.run_pre_sim_pipeline(
             candidates,
             snapshot=snapshot,
             field_registry=field_registry,
@@ -105,8 +112,13 @@ class BrainBatchService:
             rejection_filters=config.loop.rejection_filters,
             case_snapshot=case_snapshot,
             diversity_config=config.adaptive_generation.diversity,
+            run_id=environment.context.run_id,
+            round_index=round_index,
+            legacy_regime_key=research_context.regime_key,
+            global_regime_key=research_context.global_regime_key,
+            effective_regime_key=active_regime_key,
         )
-        return candidates, selected, research_context.regime_key
+        return candidates, list(pre_sim_result.selected), active_regime_key
 
     def _generate_fresh_candidates(
         self,
@@ -162,6 +174,7 @@ class BrainBatchService:
     ) -> list[AlphaCandidate]:
         if not mutation_parent_ids:
             return []
+        mutation_learning_records = self.repository.list_mutation_outcomes(effective_regime_key=snapshot.regime_key)
         mutation_budget = max(
             1,
             min(
@@ -180,6 +193,7 @@ class BrainBatchService:
                 memory_service=self.selection_service.memory_service if self.selection_service else PatternMemoryService(),
                 field_registry=field_registry,
                 region_learning_context=region_learning_context,
+                mutation_learning_records=mutation_learning_records,
             )
             return engine.generate_mutations(
                 count=mutation_budget,
@@ -204,6 +218,7 @@ class BrainBatchService:
             registry=registry,
             field_registry=field_registry,
             region_learning_context=region_learning_context,
+            mutation_learning_records=mutation_learning_records,
         )
         return engine.generate_mutations(
             parents=parents,
