@@ -61,6 +61,7 @@ class GenerationConfig:
     field_catalog_paths: list[str] = field(default_factory=list)
     operator_catalog_paths: list[str] = field(default_factory=list)
     field_value_paths: list[str] = field(default_factory=list)
+    allow_catalog_fields_without_runtime: bool = False
     field_score_weights: dict[str, float] = field(
         default_factory=lambda: {"coverage": 0.50, "usage": 0.30, "category": 0.20}
     )

@@ -96,6 +96,43 @@ class FieldRegistry:
     def runtime_group_fields(self, allowed: set[str] | None = None) -> list[FieldSpec]:
         return self._sorted_runtime_fields("group", allowed=allowed)
 
+    def generation_numeric_fields(
+        self,
+        allowed_fields: list[str],
+        *,
+        include_catalog_fields: bool = False,
+    ) -> list[FieldSpec]:
+        allowed = set(allowed_fields) if allowed_fields else None
+        return self._sorted_fields("matrix", allowed=allowed, runtime_only=not include_catalog_fields)
+
+    def generation_group_fields(
+        self,
+        *,
+        include_catalog_fields: bool = False,
+    ) -> list[FieldSpec]:
+        return self._sorted_fields("group", allowed=None, runtime_only=not include_catalog_fields)
+
+    def generation_allowed_fields(
+        self,
+        allowed_fields: list[str],
+        *,
+        include_catalog_fields: bool = False,
+    ) -> set[str]:
+        allowed = {
+            spec.name
+            for spec in self.generation_numeric_fields(
+                allowed_fields,
+                include_catalog_fields=include_catalog_fields,
+            )
+        }
+        allowed.update(
+            spec.name
+            for spec in self.generation_group_fields(
+                include_catalog_fields=include_catalog_fields,
+            )
+        )
+        return allowed
+
     def field_types(self, allowed: set[str] | None = None) -> dict[str, str]:
         mapping: dict[str, str] = {}
         for spec in self.fields.values():
@@ -113,10 +150,23 @@ class FieldRegistry:
         return self._sorted_runtime_fields(operator_type, allowed=allowed)[:limit]
 
     def _sorted_runtime_fields(self, operator_type: str, allowed: set[str] | None = None) -> list[FieldSpec]:
+        return self._sorted_fields(operator_type, allowed=allowed, runtime_only=True)
+
+    def _sorted_fields(
+        self,
+        operator_type: str,
+        *,
+        allowed: set[str] | None = None,
+        runtime_only: bool,
+    ) -> list[FieldSpec]:
         candidates = [
             spec
             for spec in self.fields.values()
-            if spec.runtime_available and spec.operator_type == operator_type and (allowed is None or spec.name in allowed)
+            if (
+                (spec.runtime_available or not runtime_only)
+                and spec.operator_type == operator_type
+                and (allowed is None or spec.name in allowed)
+            )
         ]
         return sorted(
             candidates,
@@ -129,14 +179,15 @@ def load_field_catalog(
     paths: list[str],
     category_weights: dict[str, float],
     score_weights: FieldScoreWeights,
+    *,
+    preferred_region: str = "",
+    preferred_universe: str = "",
+    preferred_delay: int | None = None,
 ) -> dict[str, FieldSpec]:
     if not paths:
         return {}
     records: list[dict[str, Any]] = []
-    for raw_path in paths:
-        path = Path(raw_path).expanduser().resolve()
-        if not path.exists():
-            continue
+    for path in _expand_catalog_paths(paths):
         if path.suffix.lower() == ".json":
             payload = json.loads(path.read_text(encoding="utf-8"))
             rows = payload.get("rows", []) if isinstance(payload, dict) else payload
@@ -150,13 +201,24 @@ def load_field_catalog(
     if not records:
         return {}
 
-    max_alpha_usage = max(int(record.get("alphaCount") or record.get("alpha_count") or 0) for record in records) or 1
+    max_alpha_usage = max(_coerce_int(record.get("alphaCount") or record.get("alpha_count")) or 0 for record in records) or 1
     fields: dict[str, FieldSpec] = {}
+    field_ranks: dict[str, tuple[int, int, float, float, int]] = {}
     for record in records:
         spec = _field_spec_from_catalog_row(record, max_alpha_usage=max_alpha_usage, category_weights=category_weights, score_weights=score_weights)
-        existing = fields.get(spec.name)
-        if existing is None or _field_rank_tuple(spec) > _field_rank_tuple(existing):
+        rank = (
+            *_catalog_preference_rank(
+                record,
+                preferred_region=preferred_region,
+                preferred_universe=preferred_universe,
+                preferred_delay=preferred_delay,
+            ),
+            *_field_rank_tuple(spec),
+        )
+        existing_rank = field_ranks.get(spec.name)
+        if existing_rank is None or rank > existing_rank:
             fields[spec.name] = spec
+            field_ranks[spec.name] = rank
     return fields
 
 
@@ -229,8 +291,18 @@ def build_field_registry(
     runtime_group_fields: dict[str, pd.DataFrame],
     category_weights: dict[str, float],
     score_weights: FieldScoreWeights,
+    preferred_region: str = "",
+    preferred_universe: str = "",
+    preferred_delay: int | None = None,
 ) -> FieldRegistry:
-    catalog_fields = load_field_catalog(catalog_paths, category_weights=category_weights, score_weights=score_weights)
+    catalog_fields = load_field_catalog(
+        catalog_paths,
+        category_weights=category_weights,
+        score_weights=score_weights,
+        preferred_region=preferred_region,
+        preferred_universe=preferred_universe,
+        preferred_delay=preferred_delay,
+    )
     runtime_fields = _runtime_specs_from_matrices(
         numeric_fields=runtime_numeric_fields,
         group_fields=runtime_group_fields,
@@ -471,6 +543,78 @@ def _category_from_field_name(name: str) -> str:
     if normalized in {"volume", "adv20"}:
         return "volume"
     return "other"
+
+
+def _expand_catalog_paths(paths: list[str]) -> list[Path]:
+    resolved: list[Path] = []
+    seen: set[Path] = set()
+    for raw_path in paths:
+        path = Path(raw_path).expanduser().resolve()
+        if not path.exists():
+            continue
+        candidates = [path]
+        if path.is_dir():
+            candidates = sorted(
+                [
+                    *path.rglob("*.csv"),
+                    *path.rglob("*.json"),
+                ]
+            )
+        for candidate in candidates:
+            if candidate in seen or candidate.suffix.lower() not in {".csv", ".json"}:
+                continue
+            seen.add(candidate)
+            resolved.append(candidate)
+    return resolved
+
+
+def _catalog_preference_rank(
+    record: dict[str, Any],
+    *,
+    preferred_region: str,
+    preferred_universe: str,
+    preferred_delay: int | None,
+) -> tuple[int, int]:
+    region = str(record.get("region") or "").strip().upper()
+    universe = str(record.get("universe") or "").strip().upper()
+    delay = _coerce_int(record.get("delay"))
+
+    region_rank = 0
+    preferred_region_normalized = str(preferred_region or "").strip().upper()
+    if preferred_region_normalized:
+        if region == preferred_region_normalized:
+            region_rank = 3
+        elif region in {"GLB", "GLOBAL"}:
+            region_rank = 2
+        elif not region:
+            region_rank = 1
+
+    universe_rank = 0
+    preferred_universe_normalized = str(preferred_universe or "").strip().upper()
+    if preferred_universe_normalized:
+        if universe == preferred_universe_normalized:
+            universe_rank = 3
+        elif not universe:
+            universe_rank = 1
+
+    delay_rank = 0
+    if preferred_delay is not None:
+        if delay == preferred_delay:
+            delay_rank = 2
+        elif delay is None:
+            delay_rank = 1
+
+    return (
+        region_rank + universe_rank + delay_rank,
+        universe_rank,
+    )
+
+
+def _coerce_int(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _field_rank_tuple(spec: FieldSpec) -> tuple[float, float, int]:

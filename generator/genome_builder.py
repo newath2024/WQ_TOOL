@@ -36,12 +36,12 @@ class GenomeBuilder:
         self.registry = registry
         self.field_registry = field_registry
         self.random = random.Random(seed)
-        self.allowed_numeric_fields = self.field_registry.runtime_numeric_fields(
-            allowed=self.field_registry.allowed_runtime_fields(generation_config.allowed_fields)
+        self.allowed_numeric_fields = self.field_registry.generation_numeric_fields(
+            generation_config.allowed_fields,
+            include_catalog_fields=generation_config.allow_catalog_fields_without_runtime,
         )
-        self.allowed_group_fields = self.field_registry.runtime_group_fields(
-            allowed=self.field_registry.allowed_runtime_fields(generation_config.allowed_fields)
-            | {spec.name for spec in self.field_registry.runtime_group_fields()}
+        self.allowed_group_fields = self.field_registry.generation_group_fields(
+            include_catalog_fields=generation_config.allow_catalog_fields_without_runtime,
         )
         self.fields_by_category = self._fields_by_category(self.allowed_numeric_fields)
         self.wrapper_choices = [

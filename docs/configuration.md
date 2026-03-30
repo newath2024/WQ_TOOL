@@ -32,6 +32,7 @@ generation:
   operator_catalog_paths:
     - inputs/wq_snapshots/2026-03-29/operators/brain_operator_catalog.json
   field_value_paths: []
+  allow_catalog_fields_without_runtime: false
   field_score_weights:
     coverage: 0.50
     usage: 0.30
@@ -57,6 +58,8 @@ Ghi chu:
 - `grammar_count` van duoc chap nhan de backward compatibility
 - generator mac dinh hien tai la genome-based. Expression string van la external contract, nhung duoc render tu `Genome -> AST -> normalized expression`
 - `operator_catalog_paths` cho phep load operator catalog da export tu BRAIN de enrich registry bang `summary/details/tags/constraints`
+- `field_catalog_paths` co the tro toi file CSV/JSON hoac ca thu muc snapshot; loader se nap de quy tat ca catalog ben trong
+- `allow_catalog_fields_without_runtime: true` mo che do generate alpha bang catalog-only fields cho BRAIN/service mode; local evaluate/backtest van can runtime values neu muon chay tren may
 - config/sample moi uu tien ten operator chuan cua BRAIN nhu `ts_delta`, `ts_corr`, `ts_covariance`, `ts_decay_linear`, `ts_std_dev`
 - alias local cu nhu `delta`, `correlation`, `covariance`, `decay_linear`, `ts_std` van duoc registry chap nhan de backward compatibility, nhung khong con la mac dinh de submit BRAIN
 

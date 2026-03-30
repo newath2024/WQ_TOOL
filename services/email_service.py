@@ -204,6 +204,19 @@ class TelegramService:
             timeout=30,
         )
         if response.status_code >= 400:
+            if self._is_expired_callback_query_error(response):
+                return
             raise RuntimeError(
                 f"Telegram callback acknowledgement failed with status {response.status_code}: {response.text}"
             )
+
+    @staticmethod
+    def _is_expired_callback_query_error(response) -> bool:
+        if int(getattr(response, "status_code", 0) or 0) != 400:
+            return False
+        text = str(getattr(response, "text", "") or "").lower()
+        return (
+            "query is too old" in text
+            or "query id is invalid" in text
+            or "response timeout expired" in text
+        )

@@ -36,6 +36,7 @@ def load_research_context(
     stage: str,
 ) -> ResearchContext:
     """Load bundle, matrices, and memory context for one command."""
+    logger = get_logger(__name__, run_id=environment.context.run_id, stage=stage)
     bundle = load_dataset(config, environment, stage=stage)
     matrices = build_research_matrices(bundle.get_timeframe_data(config.backtest.timeframe))
     runtime_bundle = load_runtime_field_values(
@@ -72,6 +73,17 @@ def load_research_context(
         runtime_group_fields=matrices.group_fields,
         category_weights=config.generation.category_weights,
         score_weights=score_weights,
+        preferred_region=config.brain.region,
+        preferred_universe=config.brain.universe,
+        preferred_delay=config.brain.delay,
+    )
+    logger.info(
+        "Resolved field registry summary: total=%s runtime_numeric=%s runtime_group=%s catalog_only=%s catalog_generation=%s",
+        len(field_registry.fields),
+        len(field_registry.runtime_numeric_fields()),
+        len(field_registry.runtime_group_fields()),
+        sum(1 for spec in field_registry.fields.values() if not spec.runtime_available),
+        config.generation.allow_catalog_fields_without_runtime,
     )
     return ResearchContext(
         bundle=bundle,

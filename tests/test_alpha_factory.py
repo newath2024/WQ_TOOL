@@ -132,6 +132,163 @@ def test_alpha_factory_generates_structured_candidates_with_metadata() -> None:
     assert all({"delta", "correlation", "covariance", "decay_linear", "ts_std"} & set(candidate.operators_used) == set() for candidate in candidates)
 
 
+def test_field_catalog_directory_loads_and_prefers_matching_brain_market(tmp_path: Path) -> None:
+    catalog_dir = tmp_path / "catalog"
+    catalog_dir.mkdir()
+    pd.DataFrame(
+        [
+            {
+                "id": "close",
+                "dataset": "Price Volume",
+                "category": "Price",
+                "type": "MATRIX",
+                "coverage": 1.0,
+                "alphaCount": 100,
+                "region": "IND",
+                "universe": "TOP500",
+                "delay": 1,
+            },
+            {
+                "id": "close",
+                "dataset": "Price Volume",
+                "category": "Price",
+                "type": "MATRIX",
+                "coverage": 0.9,
+                "alphaCount": 50,
+                "region": "GLB",
+                "universe": "TOP3000",
+                "delay": 1,
+            },
+            {
+                "id": "cap",
+                "dataset": "Price Volume",
+                "category": "Price",
+                "type": "MATRIX",
+                "coverage": 1.0,
+                "alphaCount": 10,
+                "region": "USA",
+                "universe": "TOP3000",
+                "delay": 1,
+            },
+        ]
+    ).to_csv(catalog_dir / "market.csv", index=False)
+
+    fields = load_field_catalog(
+        [str(catalog_dir)],
+        category_weights={"price": 1.0, "other": 0.5},
+        score_weights=FieldScoreWeights(),
+        preferred_region="USA",
+        preferred_universe="TOP3000",
+        preferred_delay=1,
+    )
+
+    assert fields["close"].region == "GLB"
+    assert fields["close"].universe == "TOP3000"
+    assert fields["cap"].region == "USA"
+
+
+def test_alpha_factory_can_generate_catalog_only_candidates_when_enabled(tmp_path: Path) -> None:
+    catalog_path = tmp_path / "catalog.csv"
+    pd.DataFrame(
+        [
+            {
+                "id": "close",
+                "dataset": "Price Volume",
+                "category": "Price",
+                "type": "MATRIX",
+                "coverage": 1.0,
+                "alphaCount": 1000,
+                "region": "GLB",
+                "universe": "TOP3000",
+                "delay": 1,
+            },
+            {
+                "id": "adv20",
+                "dataset": "Price Volume",
+                "category": "Volume",
+                "type": "MATRIX",
+                "coverage": 1.0,
+                "alphaCount": 800,
+                "region": "GLB",
+                "universe": "TOP3000",
+                "delay": 1,
+            },
+            {
+                "id": "cap",
+                "dataset": "Price Volume",
+                "category": "Price",
+                "type": "MATRIX",
+                "coverage": 1.0,
+                "alphaCount": 600,
+                "region": "GLB",
+                "universe": "TOP3000",
+                "delay": 1,
+            },
+            {
+                "id": "sector",
+                "dataset": "Universe",
+                "category": "Group",
+                "type": "VECTOR",
+                "coverage": 1.0,
+                "alphaCount": 50,
+                "region": "GLB",
+                "universe": "TOP3000",
+                "delay": 1,
+            },
+        ]
+    ).to_csv(catalog_path, index=False)
+
+    field_registry = build_field_registry(
+        catalog_paths=[str(catalog_path)],
+        runtime_numeric_fields={},
+        runtime_group_fields={},
+        category_weights={"price": 1.0, "volume": 0.8, "group": 0.6, "other": 0.5},
+        score_weights=FieldScoreWeights(),
+        preferred_region="USA",
+        preferred_universe="TOP3000",
+        preferred_delay=1,
+    )
+    config = GenerationConfig(
+        allowed_fields=[],
+        allowed_operators=[
+            "rank",
+            "ts_delta",
+            "ts_mean",
+            "ts_std_dev",
+            "group_neutralize",
+            "ts_decay_linear",
+            "ts_corr",
+            "ts_covariance",
+        ],
+        lookbacks=[2, 5, 10],
+        max_depth=5,
+        complexity_limit=20,
+        template_count=4,
+        grammar_count=0,
+        mutation_count=2,
+        normalization_wrappers=["rank", "zscore", "sign"],
+        random_seed=11,
+        template_pool_size=12,
+        allow_catalog_fields_without_runtime=True,
+    )
+    engine = AlphaGenerationEngine(
+        config=config,
+        registry=build_registry(config.allowed_operators),
+        field_registry=field_registry,
+    )
+
+    candidates = engine.generate(count=3)
+
+    assert len(candidates) == 3
+    assert all(candidate.fields_used for candidate in candidates)
+    assert all(
+        field_registry.contains(field_name)
+        for candidate in candidates
+        for field_name in candidate.fields_used
+    )
+    assert all(not field_registry.get(field_name).runtime_available for candidate in candidates for field_name in candidate.fields_used)
+
+
 def test_typed_validator_rejects_redundant_wrapper_chain() -> None:
     registry = build_registry(["rank"])
     node = parse_expression("rank(rank(close))")

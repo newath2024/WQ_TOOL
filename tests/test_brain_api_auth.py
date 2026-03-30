@@ -9,7 +9,7 @@ from pathlib import Path
 import requests
 
 from adapters.brain_api_adapter import BiometricsThrottled, BrainApiAdapter
-from services.email_service import TelegramNotificationConfig
+from services.email_service import TelegramNotificationConfig, TelegramService
 
 
 class FakeResponse:
@@ -62,6 +62,47 @@ class FakeTelegramService:
 
     def send_persona_link(self, *, persona_url: str, telegram_config: TelegramNotificationConfig) -> None:
         self.calls.append((persona_url, telegram_config))
+
+
+def test_telegram_service_accepts_ready_callback_even_if_ack_is_expired() -> None:
+    telegram = TelegramService(
+        session=FakeSession(
+            get_queue=[
+                FakeResponse(
+                    200,
+                    json_data={
+                        "ok": True,
+                        "result": [
+                            {
+                                "update_id": 123,
+                                "callback_query": {
+                                    "id": "cbq-1",
+                                    "data": "persona_ready:abc123",
+                                    "message": {"chat": {"id": "99887766"}},
+                                },
+                            }
+                        ],
+                    },
+                )
+            ],
+            post_queue=[
+                FakeResponse(
+                    400,
+                    json_data={"ok": False, "error_code": 400},
+                    text='{"ok":false,"error_code":400,"description":"Bad Request: query is too old and response timeout expired or query ID is invalid"}',
+                )
+            ],
+        )
+    )
+
+    result = telegram.poll_persona_confirmation(
+        prompt_token="abc123",
+        telegram_config=TelegramNotificationConfig(bot_token="bot-token", chat_id="99887766"),
+    )
+
+    assert result.approved is True
+    assert result.declined is False
+    assert result.last_update_id == 123
 
 
 def test_brain_api_adapter_prompts_and_saves_session(tmp_path: Path, monkeypatch) -> None:

@@ -189,16 +189,23 @@ class AlphaGenerationEngine:
         except ValueError:
             return None
 
-        allowed_runtime_fields = self.field_registry.allowed_runtime_fields(self.config.allowed_fields) | {
-            spec.name for spec in self.field_registry.runtime_group_fields()
+        allowed_generation_fields = self.field_registry.generation_allowed_fields(
+            self.config.allowed_fields,
+            include_catalog_fields=self.config.allow_catalog_fields_without_runtime,
+        )
+        generation_group_fields = {
+            spec.name
+            for spec in self.field_registry.generation_group_fields(
+                include_catalog_fields=self.config.allow_catalog_fields_without_runtime,
+            )
         }
         validation = validate_expression(
             node=node,
             registry=self.registry,
-            allowed_fields=allowed_runtime_fields,
+            allowed_fields=allowed_generation_fields,
             max_depth=self.config.max_depth,
-            group_fields={spec.name for spec in self.field_registry.runtime_group_fields()},
-            field_types=self.field_registry.field_types(allowed=allowed_runtime_fields),
+            group_fields=generation_group_fields,
+            field_types=self.field_registry.field_types(allowed=allowed_generation_fields),
             complexity_limit=self.config.complexity_limit,
         )
         if not validation.is_valid:

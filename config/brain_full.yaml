@@ -1,6 +1,6 @@
-# Dev profile keeps the sample universe, loose thresholds, and smaller generation counts
-# so contributors can iterate quickly on the bundled demo dataset.
-# For BRAIN full-catalog generation in service / closed-loop mode, use config/brain_full.yaml.
+# Full BRAIN catalog profile for service / closed-loop submission.
+# Local sample OHLCV remains in place only as lightweight regime context.
+# Alpha generation itself can use the full field catalog snapshot under inputs/wq_snapshots.
 
 data:
   path: examples/sample_data/daily_ohlcv.csv
@@ -36,7 +36,7 @@ splits:
     end: "2021-03-31"
 
 generation:
-  allowed_fields: ["open", "high", "low", "close", "volume", "returns"]
+  allowed_fields: []
   allowed_operators:
     [
       "ts_delay",
@@ -67,8 +67,11 @@ generation:
   mutation_count: 15
   normalization_wrappers: ["rank", "zscore", "sign"]
   random_seed: 42
+  field_catalog_paths:
+    - inputs/wq_snapshots/2026-03-29
   operator_catalog_paths:
     - inputs/wq_snapshots/2026-03-29/operators/brain_operator_catalog.json
+  allow_catalog_fields_without_runtime: true
 
 adaptive_generation:
   enabled: true
@@ -252,4 +255,4 @@ service:
 runtime:
   log_level: INFO
   fail_fast: false
-  profile_name: dev
+  profile_name: brain_full

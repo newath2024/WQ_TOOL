@@ -169,3 +169,50 @@ def test_region_learning_config_loads_and_legacy_yaml_keeps_defaults(tmp_path: P
     assert config.adaptive_generation.region_learning.min_local_case_samples == 3
     assert config.adaptive_generation.region_learning.full_local_case_samples == 12
     assert config.adaptive_generation.region_learning.allow_global_parent_fallback is False
+
+
+def test_generation_config_can_enable_catalog_only_brain_mode(tmp_path: Path) -> None:
+    config_path = tmp_path / "brain_full_like.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "data": {"path": "examples/sample_data/daily_ohlcv.csv"},
+                "splits": {
+                    "train": {"start": "2021-01-01", "end": "2021-02-01"},
+                    "validation": {"start": "2021-02-02", "end": "2021-03-01"},
+                    "test": {"start": "2021-03-02", "end": "2021-03-31"},
+                },
+                "generation": {
+                    "allowed_fields": [],
+                    "allowed_operators": ["rank", "ts_delta"],
+                    "lookbacks": [2, 5],
+                    "max_depth": 4,
+                    "complexity_limit": 10,
+                    "template_count": 2,
+                    "grammar_count": 2,
+                    "mutation_count": 1,
+                    "normalization_wrappers": ["rank"],
+                    "field_catalog_paths": ["inputs/wq_snapshots/2026-03-29"],
+                    "allow_catalog_fields_without_runtime": True,
+                },
+                "backtest": {"timeframe": "1d"},
+                "evaluation": {
+                    "hard_filters": {},
+                    "data_requirements": {},
+                    "diversity": {},
+                    "ranking": {},
+                    "robustness": {},
+                },
+                "storage": {"path": str(tmp_path / "out.sqlite3")},
+                "brain": {"region": "USA", "universe": "TOP3000", "delay": 1},
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert config.generation.allow_catalog_fields_without_runtime is True
+    assert config.generation.field_catalog_paths == ["inputs/wq_snapshots/2026-03-29"]
+    assert config.generation.allowed_fields == []
