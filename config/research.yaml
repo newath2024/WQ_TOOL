@@ -243,6 +243,10 @@ service:
   stuck_job_after_seconds: 1800
   persona_retry_interval_seconds: 300
   persona_email_cooldown_seconds: 900
+  persona_confirmation_required: true
+  persona_confirmation_poll_interval_seconds: 30
+  persona_confirmation_prompt_cooldown_seconds: 3600
+  persona_confirmation_granted_ttl_seconds: 300
 
 runtime:
   log_level: INFO

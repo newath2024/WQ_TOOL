@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
 
 import pandas as pd
@@ -15,8 +16,9 @@ from data.field_registry import (
 from data.loader import load_market_data
 from features.transforms import build_research_matrices
 from memory.pattern_memory import PatternMemoryService, RegionLearningContext
+from services.regime_service import RegimeService
 from services.models import CommandEnvironment, ResearchContext
-from storage.models import FieldCatalogRecord, RunFieldScoreRecord
+from storage.models import FieldCatalogRecord, RegimeSnapshotRecord, RunFieldScoreRecord
 from storage.repository import SQLiteRepository
 
 
@@ -52,6 +54,13 @@ def load_research_context(
     )
     memory_service = PatternMemoryService()
     region_learning_context = memory_service.build_learning_context(bundle.fingerprint, config)
+    regime_snapshot = RegimeService().resolve(
+        matrices=matrices,
+        config=config.adaptive_generation.regime_detection,
+        region=region_learning_context.region,
+        legacy_regime_key=region_learning_context.regime_key,
+        global_regime_key=region_learning_context.global_regime_key,
+    )
     score_weights = FieldScoreWeights(
         coverage=float(config.generation.field_score_weights.get("coverage", 0.50)),
         usage=float(config.generation.field_score_weights.get("usage", 0.30)),
@@ -73,6 +82,12 @@ def load_research_context(
         region_learning_context=region_learning_context,
         memory_service=memory_service,
         field_registry=field_registry,
+        legacy_regime_key=region_learning_context.regime_key,
+        market_regime_key=regime_snapshot.market_regime_key,
+        effective_regime_key=regime_snapshot.effective_regime_key or region_learning_context.regime_key,
+        regime_label=regime_snapshot.regime_label,
+        regime_confidence=regime_snapshot.confidence,
+        regime_features=dict(regime_snapshot.features),
     )
 
 
@@ -81,6 +96,8 @@ def persist_research_metadata(
     config: AppConfig,
     environment: CommandEnvironment,
     research_context: ResearchContext,
+    *,
+    round_index: int = 0,
 ) -> None:
     """Persist dataset summary and research context metadata for the active run."""
     repository.save_dataset_summary(
@@ -90,9 +107,30 @@ def persist_research_metadata(
         selected_timeframe=config.backtest.timeframe,
         regime_key=research_context.regime_key,
         global_regime_key=research_context.global_regime_key,
+        market_regime_key=research_context.market_regime_key,
+        effective_regime_key=research_context.effective_regime_key,
+        regime_label=research_context.regime_label,
+        regime_confidence=research_context.regime_confidence,
         region=research_context.region,
     )
     timestamp = datetime.now(UTC).isoformat()
+    repository.save_regime_snapshots(
+        [
+            RegimeSnapshotRecord(
+                run_id=environment.context.run_id,
+                round_index=round_index,
+                region=research_context.region,
+                legacy_regime_key=research_context.legacy_regime_key or research_context.regime_key,
+                global_regime_key=research_context.global_regime_key,
+                market_regime_key=research_context.market_regime_key,
+                effective_regime_key=research_context.effective_regime_key or research_context.regime_key,
+                regime_label=research_context.regime_label,
+                confidence=research_context.regime_confidence,
+                features_json=json.dumps(research_context.regime_features, sort_keys=True),
+                created_at=timestamp,
+            )
+        ]
+    )
     repository.save_field_catalog(
         [
             FieldCatalogRecord(

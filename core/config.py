@@ -106,6 +106,7 @@ class DiversityThresholdConfig:
     max_field_category_fraction: float = 0.50
     max_horizon_bucket_fraction: float = 0.40
     max_operator_path_fraction: float = 0.40
+    max_lineage_branch_fraction: float = 0.50
     exploration_quota_fraction: float = 0.20
     min_structural_distance: float = 0.08
 
@@ -161,6 +162,95 @@ class RegionLearningConfig:
 
 
 @dataclass(slots=True)
+class DuplicateConfig:
+    enabled: bool = True
+    exact_match_enabled: bool = True
+    structural_match_enabled: bool = True
+    cross_run_enabled: bool = True
+    same_run_structural_threshold: float = 0.92
+    cross_run_structural_threshold: float = 0.95
+    max_cross_run_references: int = 500
+
+
+@dataclass(slots=True)
+class CrowdingConfig:
+    enabled: bool = True
+    family_penalty_weight: float = 0.30
+    motif_penalty_weight: float = 0.20
+    operator_path_penalty_weight: float = 0.20
+    lineage_penalty_weight: float = 0.15
+    batch_penalty_weight: float = 0.10
+    historical_penalty_weight: float = 0.25
+    hard_block_penalty_threshold: float = 1.00
+
+
+@dataclass(slots=True)
+class PreSimSelectionWeightsConfig:
+    predicted_quality: float = 0.40
+    novelty: float = 0.20
+    family_diversity: float = 0.15
+    regime_fit: float = 0.05
+    exploration_bonus: float = 0.05
+    duplicate_risk: float = 0.25
+    crowding_penalty: float = 0.20
+    complexity_cost: float = 0.10
+
+
+@dataclass(slots=True)
+class PostSimSelectionWeightsConfig:
+    performance_quality: float = 0.45
+    robustness: float = 0.20
+    regime_fit: float = 0.10
+    family_diversity_bonus: float = 0.10
+    turnover_margin_cost: float = 0.20
+    crowding_penalty: float = 0.15
+    duplicate_penalty: float = 0.10
+
+
+@dataclass(slots=True)
+class MutationParentSelectionWeightsConfig:
+    post_sim_score: float = 0.45
+    family_diversification_bonus: float = 0.20
+    lineage_diversity_bonus: float = 0.15
+    mutation_learnability_bonus: float = 0.20
+
+
+@dataclass(slots=True)
+class SelectionConfig:
+    enabled: bool = True
+    bias: str = "balanced_frontier"
+    pre_sim: PreSimSelectionWeightsConfig = field(default_factory=PreSimSelectionWeightsConfig)
+    post_sim: PostSimSelectionWeightsConfig = field(default_factory=PostSimSelectionWeightsConfig)
+    mutation_parent: MutationParentSelectionWeightsConfig = field(default_factory=MutationParentSelectionWeightsConfig)
+
+    def __post_init__(self) -> None:
+        self.bias = str(self.bias or "balanced_frontier").strip().lower()
+
+
+@dataclass(slots=True)
+class RegimeDetectionConfig:
+    enabled: bool = True
+    short_window: int = 20
+    long_window: int = 60
+    min_points: int = 20
+    min_confidence: float = 0.35
+    low_vol_threshold: float = 0.85
+    high_vol_threshold: float = 1.15
+    trend_threshold: float = 0.50
+    high_dispersion_threshold: float = 1.10
+
+
+@dataclass(slots=True)
+class MutationLearningConfig:
+    enabled: bool = True
+    min_support: int = 3
+    score_decay: float = 0.98
+    negative_lift_penalty: float = 0.50
+    success_rate_weight: float = 0.60
+    uplift_weight: float = 0.40
+
+
+@dataclass(slots=True)
 class AdaptiveGenerationConfig:
     enabled: bool = True
     memory_scope: str = "regime"
@@ -181,6 +271,11 @@ class AdaptiveGenerationConfig:
     pattern_decay: float = 0.98
     critic_thresholds: CriticThresholdConfig = field(default_factory=CriticThresholdConfig)
     region_learning: RegionLearningConfig = field(default_factory=RegionLearningConfig)
+    duplicate: DuplicateConfig = field(default_factory=DuplicateConfig)
+    crowding: CrowdingConfig = field(default_factory=CrowdingConfig)
+    selection: SelectionConfig = field(default_factory=SelectionConfig)
+    regime_detection: RegimeDetectionConfig = field(default_factory=RegimeDetectionConfig)
+    mutation_learning: MutationLearningConfig = field(default_factory=MutationLearningConfig)
 
 
 @dataclass(slots=True)
@@ -462,6 +557,10 @@ class ServiceConfig:
     stuck_job_after_seconds: int = 1800
     persona_retry_interval_seconds: int = 300
     persona_email_cooldown_seconds: int = 900
+    persona_confirmation_required: bool = True
+    persona_confirmation_poll_interval_seconds: int = 30
+    persona_confirmation_prompt_cooldown_seconds: int = 1800
+    persona_confirmation_granted_ttl_seconds: int = 300
 
     def __post_init__(self) -> None:
         if self.tick_interval_seconds <= 0:
@@ -490,6 +589,12 @@ class ServiceConfig:
             raise ValueError("service.persona_retry_interval_seconds must be > 0")
         if self.persona_email_cooldown_seconds <= 0:
             raise ValueError("service.persona_email_cooldown_seconds must be > 0")
+        if self.persona_confirmation_poll_interval_seconds <= 0:
+            raise ValueError("service.persona_confirmation_poll_interval_seconds must be > 0")
+        if self.persona_confirmation_prompt_cooldown_seconds <= 0:
+            raise ValueError("service.persona_confirmation_prompt_cooldown_seconds must be > 0")
+        if self.persona_confirmation_granted_ttl_seconds <= 0:
+            raise ValueError("service.persona_confirmation_granted_ttl_seconds must be > 0")
 
 
 @dataclass(slots=True)
@@ -562,6 +667,28 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     adaptive_payload["repair_policy"] = RepairPolicyConfig(**adaptive_payload.get("repair_policy", {}))
     adaptive_payload["critic_thresholds"] = CriticThresholdConfig(**adaptive_payload.get("critic_thresholds", {}))
     adaptive_payload["region_learning"] = RegionLearningConfig(**adaptive_payload.get("region_learning", {}))
+    adaptive_payload["duplicate"] = DuplicateConfig(**adaptive_payload.get("duplicate", {}))
+    adaptive_payload["crowding"] = CrowdingConfig(**adaptive_payload.get("crowding", {}))
+    adaptive_payload["selection"] = SelectionConfig(
+        **{
+            **adaptive_payload.get("selection", {}),
+            "pre_sim": PreSimSelectionWeightsConfig(
+                **dict((adaptive_payload.get("selection", {}) or {}).get("pre_sim", {}))
+            ),
+            "post_sim": PostSimSelectionWeightsConfig(
+                **dict((adaptive_payload.get("selection", {}) or {}).get("post_sim", {}))
+            ),
+            "mutation_parent": MutationParentSelectionWeightsConfig(
+                **dict((adaptive_payload.get("selection", {}) or {}).get("mutation_parent", {}))
+            ),
+        }
+    )
+    adaptive_payload["regime_detection"] = RegimeDetectionConfig(
+        **adaptive_payload.get("regime_detection", {})
+    )
+    adaptive_payload["mutation_learning"] = MutationLearningConfig(
+        **adaptive_payload.get("mutation_learning", {})
+    )
     return AdaptiveGenerationConfig(**adaptive_payload)
 
 

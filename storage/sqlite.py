@@ -24,6 +24,10 @@ CREATE TABLE IF NOT EXISTS runs (
     selected_timeframe TEXT NOT NULL DEFAULT '',
     regime_key TEXT NOT NULL DEFAULT '',
     global_regime_key TEXT NOT NULL DEFAULT '',
+    market_regime_key TEXT NOT NULL DEFAULT '',
+    effective_regime_key TEXT NOT NULL DEFAULT '',
+    regime_label TEXT NOT NULL DEFAULT 'unknown',
+    regime_confidence REAL NOT NULL DEFAULT 0.0,
     region TEXT NOT NULL DEFAULT '',
     entry_command TEXT NOT NULL DEFAULT ''
 );
@@ -124,6 +128,10 @@ CREATE TABLE IF NOT EXISTS alpha_history (
     region TEXT NOT NULL DEFAULT '',
     regime_key TEXT NOT NULL,
     global_regime_key TEXT NOT NULL DEFAULT '',
+    market_regime_key TEXT NOT NULL DEFAULT '',
+    effective_regime_key TEXT NOT NULL DEFAULT '',
+    regime_label TEXT NOT NULL DEFAULT 'unknown',
+    regime_confidence REAL NOT NULL DEFAULT 0.0,
     expression TEXT NOT NULL,
     normalized_expression TEXT NOT NULL,
     generation_mode TEXT NOT NULL,
@@ -153,6 +161,9 @@ CREATE INDEX IF NOT EXISTS idx_alpha_history_regime_outcome
 
 CREATE INDEX IF NOT EXISTS idx_alpha_history_global_regime_outcome
     ON alpha_history(global_regime_key, outcome_score DESC);
+
+CREATE INDEX IF NOT EXISTS idx_alpha_history_effective_regime_outcome
+    ON alpha_history(effective_regime_key, outcome_score DESC);
 
 CREATE TABLE IF NOT EXISTS alpha_diagnoses (
     run_id TEXT NOT NULL,
@@ -208,6 +219,10 @@ CREATE TABLE IF NOT EXISTS alpha_cases (
     region TEXT NOT NULL DEFAULT '',
     regime_key TEXT NOT NULL,
     global_regime_key TEXT NOT NULL DEFAULT '',
+    market_regime_key TEXT NOT NULL DEFAULT '',
+    effective_regime_key TEXT NOT NULL DEFAULT '',
+    regime_label TEXT NOT NULL DEFAULT 'unknown',
+    regime_confidence REAL NOT NULL DEFAULT 0.0,
     metric_source TEXT NOT NULL DEFAULT 'local_backtest',
     family_signature TEXT NOT NULL DEFAULT '',
     structural_signature_json TEXT NOT NULL DEFAULT '{}',
@@ -234,6 +249,9 @@ CREATE INDEX IF NOT EXISTS idx_alpha_cases_regime_outcome
 
 CREATE INDEX IF NOT EXISTS idx_alpha_cases_global_regime_outcome
     ON alpha_cases(global_regime_key, metric_source, outcome_score DESC);
+
+CREATE INDEX IF NOT EXISTS idx_alpha_cases_effective_regime_outcome
+    ON alpha_cases(effective_regime_key, metric_source, outcome_score DESC);
 
 CREATE TABLE IF NOT EXISTS field_catalog (
     field_name TEXT PRIMARY KEY,
@@ -405,11 +423,122 @@ CREATE TABLE IF NOT EXISTS service_runtime (
     persona_url TEXT,
     persona_wait_started_at TEXT,
     persona_last_notification_at TEXT,
+    persona_confirmation_nonce TEXT,
+    persona_confirmation_last_prompt_at TEXT,
+    persona_confirmation_granted_at TEXT,
+    persona_confirmation_last_update_id INTEGER,
     counters_json TEXT NOT NULL DEFAULT '{}',
     lock_expires_at TEXT,
     started_at TEXT NOT NULL DEFAULT '',
     updated_at TEXT NOT NULL DEFAULT ''
 );
+
+CREATE TABLE IF NOT EXISTS alpha_duplicate_decisions (
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL DEFAULT 0,
+    alpha_id TEXT NOT NULL,
+    stage TEXT NOT NULL,
+    decision TEXT NOT NULL,
+    reason_code TEXT NOT NULL,
+    matched_run_id TEXT NOT NULL DEFAULT '',
+    matched_alpha_id TEXT NOT NULL DEFAULT '',
+    matched_scope TEXT NOT NULL DEFAULT '',
+    similarity_score REAL NOT NULL DEFAULT 0.0,
+    normalized_match INTEGER NOT NULL DEFAULT 0,
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, round_index, stage, alpha_id, decision, reason_code)
+);
+
+CREATE INDEX IF NOT EXISTS idx_alpha_duplicate_decisions_stage
+    ON alpha_duplicate_decisions(run_id, round_index, stage, decision, reason_code);
+
+CREATE TABLE IF NOT EXISTS alpha_crowding_scores (
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL DEFAULT 0,
+    alpha_id TEXT NOT NULL,
+    stage TEXT NOT NULL,
+    total_penalty REAL NOT NULL DEFAULT 0.0,
+    family_penalty REAL NOT NULL DEFAULT 0.0,
+    motif_penalty REAL NOT NULL DEFAULT 0.0,
+    operator_path_penalty REAL NOT NULL DEFAULT 0.0,
+    lineage_penalty REAL NOT NULL DEFAULT 0.0,
+    batch_penalty REAL NOT NULL DEFAULT 0.0,
+    historical_penalty REAL NOT NULL DEFAULT 0.0,
+    hard_blocked INTEGER NOT NULL DEFAULT 0,
+    reason_codes_json TEXT NOT NULL DEFAULT '[]',
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, round_index, stage, alpha_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_alpha_crowding_scores_stage
+    ON alpha_crowding_scores(run_id, round_index, stage, hard_blocked);
+
+CREATE TABLE IF NOT EXISTS round_stage_metrics (
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL DEFAULT 0,
+    stage TEXT NOT NULL,
+    metrics_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, round_index, stage)
+);
+
+CREATE TABLE IF NOT EXISTS alpha_selection_scores (
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL DEFAULT 0,
+    alpha_id TEXT NOT NULL,
+    score_stage TEXT NOT NULL,
+    composite_score REAL NOT NULL DEFAULT 0.0,
+    selected INTEGER NOT NULL DEFAULT 0,
+    rank INTEGER,
+    reason_codes_json TEXT NOT NULL DEFAULT '[]',
+    breakdown_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, round_index, score_stage, alpha_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_alpha_selection_scores_stage
+    ON alpha_selection_scores(run_id, round_index, score_stage, selected, composite_score DESC);
+
+CREATE TABLE IF NOT EXISTS regime_snapshots (
+    run_id TEXT NOT NULL,
+    round_index INTEGER NOT NULL DEFAULT 0,
+    region TEXT NOT NULL DEFAULT '',
+    legacy_regime_key TEXT NOT NULL DEFAULT '',
+    global_regime_key TEXT NOT NULL DEFAULT '',
+    market_regime_key TEXT NOT NULL DEFAULT '',
+    effective_regime_key TEXT NOT NULL DEFAULT '',
+    regime_label TEXT NOT NULL DEFAULT 'unknown',
+    confidence REAL NOT NULL DEFAULT 0.0,
+    features_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, round_index)
+);
+
+CREATE INDEX IF NOT EXISTS idx_regime_snapshots_effective
+    ON regime_snapshots(run_id, effective_regime_key, round_index);
+
+CREATE TABLE IF NOT EXISTS mutation_outcomes (
+    run_id TEXT NOT NULL,
+    child_alpha_id TEXT NOT NULL,
+    parent_alpha_id TEXT NOT NULL,
+    parent_run_id TEXT NOT NULL DEFAULT '',
+    mutation_mode TEXT NOT NULL DEFAULT '',
+    family_signature TEXT NOT NULL DEFAULT '',
+    effective_regime_key TEXT NOT NULL DEFAULT '',
+    outcome_source TEXT NOT NULL DEFAULT '',
+    parent_post_sim_score REAL NOT NULL DEFAULT 0.0,
+    child_post_sim_score REAL NOT NULL DEFAULT 0.0,
+    outcome_delta REAL NOT NULL DEFAULT 0.0,
+    selected_for_simulation INTEGER NOT NULL DEFAULT 0,
+    selected_for_mutation INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    PRIMARY KEY (run_id, child_alpha_id, parent_alpha_id, outcome_source)
+);
+
+CREATE INDEX IF NOT EXISTS idx_mutation_outcomes_effective_family_mode
+    ON mutation_outcomes(effective_regime_key, family_signature, mutation_mode, outcome_delta DESC);
 """
 
 
@@ -435,6 +564,10 @@ REQUIRED_COLUMNS = {
         "selected_timeframe": "TEXT NOT NULL DEFAULT ''",
         "regime_key": "TEXT NOT NULL DEFAULT ''",
         "global_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "market_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "effective_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "regime_label": "TEXT NOT NULL DEFAULT 'unknown'",
+        "regime_confidence": "REAL NOT NULL DEFAULT 0.0",
         "region": "TEXT NOT NULL DEFAULT ''",
         "entry_command": "TEXT NOT NULL DEFAULT ''",
     },
@@ -463,6 +596,10 @@ REQUIRED_COLUMNS = {
     "alpha_history": {
         "region": "TEXT NOT NULL DEFAULT ''",
         "global_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "market_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "effective_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "regime_label": "TEXT NOT NULL DEFAULT 'unknown'",
+        "regime_confidence": "REAL NOT NULL DEFAULT 0.0",
         "rejection_reasons_json": "TEXT NOT NULL DEFAULT '[]'",
         "metric_source": "TEXT NOT NULL DEFAULT 'local_backtest'",
     },
@@ -473,6 +610,10 @@ REQUIRED_COLUMNS = {
     "alpha_cases": {
         "region": "TEXT NOT NULL DEFAULT ''",
         "global_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "market_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "effective_regime_key": "TEXT NOT NULL DEFAULT ''",
+        "regime_label": "TEXT NOT NULL DEFAULT 'unknown'",
+        "regime_confidence": "REAL NOT NULL DEFAULT 0.0",
         "metric_source": "TEXT NOT NULL DEFAULT 'local_backtest'",
         "family_signature": "TEXT NOT NULL DEFAULT ''",
         "structural_signature_json": "TEXT NOT NULL DEFAULT '{}'",
@@ -541,6 +682,10 @@ REQUIRED_COLUMNS = {
         "persona_url": "TEXT",
         "persona_wait_started_at": "TEXT",
         "persona_last_notification_at": "TEXT",
+        "persona_confirmation_nonce": "TEXT",
+        "persona_confirmation_last_prompt_at": "TEXT",
+        "persona_confirmation_granted_at": "TEXT",
+        "persona_confirmation_last_update_id": "INTEGER",
         "counters_json": "TEXT NOT NULL DEFAULT '{}'",
         "lock_expires_at": "TEXT",
         "started_at": "TEXT NOT NULL DEFAULT ''",
@@ -607,12 +752,17 @@ def _backfill_region_learning_columns(connection: sqlite3.Connection) -> None:
             UPDATE runs
             SET regime_key = COALESCE(NULLIF(?, ''), regime_key),
                 global_regime_key = COALESCE(NULLIF(?, ''), global_regime_key),
+                effective_regime_key = COALESCE(NULLIF(effective_regime_key, ''), NULLIF(?, ''), regime_key),
+                market_regime_key = COALESCE(NULLIF(market_regime_key, ''), ''),
+                regime_label = COALESCE(NULLIF(regime_label, ''), 'unknown'),
+                regime_confidence = COALESCE(regime_confidence, 0.0),
                 region = COALESCE(NULLIF(?, ''), region)
             WHERE run_id = ?
             """,
             (
                 regime_key,
                 global_regime_key,
+                regime_key,
                 region,
                 row["run_id"],
             ),
@@ -638,15 +788,19 @@ def _backfill_region_learning_columns(connection: sqlite3.Connection) -> None:
             global_regime_key = CASE
                 WHEN global_regime_key = '' THEN regime_key
                 ELSE global_regime_key
+            END,
+            effective_regime_key = CASE
+                WHEN effective_regime_key = '' THEN regime_key
+                ELSE effective_regime_key
+            END,
+            regime_label = CASE
+                WHEN regime_label = '' THEN 'unknown'
+                ELSE regime_label
             END
         """
     )
 
-    for table_name, candidate_column in (
-        ("alpha_history", "alpha_id"),
-        ("alpha_cases", "alpha_id"),
-        ("alpha_pattern_membership", "alpha_id"),
-    ):
+    for table_name, candidate_column in (("alpha_history", "alpha_id"), ("alpha_cases", "alpha_id")):
         connection.execute(
             f"""
             UPDATE {table_name}
@@ -661,6 +815,11 @@ def _backfill_region_learning_columns(connection: sqlite3.Connection) -> None:
                 global_regime_key = COALESCE(
                     NULLIF((SELECT runs.global_regime_key FROM runs WHERE runs.run_id = {table_name}.run_id), ''),
                     global_regime_key
+                ),
+                effective_regime_key = COALESCE(
+                    NULLIF((SELECT runs.effective_regime_key FROM runs WHERE runs.run_id = {table_name}.run_id), ''),
+                    effective_regime_key,
+                    regime_key
                 )
             WHERE EXISTS (SELECT 1 FROM runs WHERE runs.run_id = {table_name}.run_id)
             """
@@ -686,10 +845,62 @@ def _backfill_region_learning_columns(connection: sqlite3.Connection) -> None:
                 global_regime_key = CASE
                     WHEN global_regime_key = '' THEN regime_key
                     ELSE global_regime_key
+                END,
+                effective_regime_key = CASE
+                    WHEN effective_regime_key = '' THEN regime_key
+                    ELSE effective_regime_key
+                END,
+                regime_label = CASE
+                    WHEN regime_label = '' THEN 'unknown'
+                    ELSE regime_label
                 END
-            WHERE COALESCE(region, '') = '' OR COALESCE(global_regime_key, '') = ''
+            WHERE COALESCE(region, '') = '' OR COALESCE(global_regime_key, '') = '' OR COALESCE(effective_regime_key, '') = ''
             """
         )
+
+    connection.execute(
+        """
+        UPDATE alpha_pattern_membership
+        SET region = COALESCE(
+                NULLIF((SELECT runs.region FROM runs WHERE runs.run_id = alpha_pattern_membership.run_id), ''),
+                region
+            ),
+            regime_key = COALESCE(
+                NULLIF((SELECT runs.regime_key FROM runs WHERE runs.run_id = alpha_pattern_membership.run_id), ''),
+                regime_key
+            ),
+            global_regime_key = COALESCE(
+                NULLIF((SELECT runs.global_regime_key FROM runs WHERE runs.run_id = alpha_pattern_membership.run_id), ''),
+                global_regime_key
+            )
+        WHERE EXISTS (SELECT 1 FROM runs WHERE runs.run_id = alpha_pattern_membership.run_id)
+        """
+    )
+    connection.execute(
+        """
+        UPDATE alpha_pattern_membership
+        SET region = COALESCE(
+                NULLIF(
+                    (
+                        SELECT brain_results.region
+                        FROM brain_results
+                        WHERE brain_results.run_id = alpha_pattern_membership.run_id
+                          AND brain_results.candidate_id = alpha_pattern_membership.alpha_id
+                          AND brain_results.region <> ''
+                        ORDER BY brain_results.created_at DESC
+                        LIMIT 1
+                    ),
+                    ''
+                ),
+                region
+            ),
+            global_regime_key = CASE
+                WHEN global_regime_key = '' THEN regime_key
+                ELSE global_regime_key
+            END
+        WHERE COALESCE(region, '') = '' OR COALESCE(global_regime_key, '') = ''
+        """
+    )
 
 
 def _parse_config_snapshot(payload: str) -> dict | None:

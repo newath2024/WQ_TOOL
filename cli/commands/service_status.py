@@ -73,6 +73,13 @@ def _print_human(snapshot: ServiceStatusSnapshot) -> None:
         print(f"updated_at: {snapshot.runtime.updated_at}")
         if snapshot.runtime.persona_url:
             print(f"persona_url: {snapshot.runtime.persona_url}")
+        elif snapshot.runtime.persona_confirmation_nonce:
+            confirmation_state = (
+                "approved"
+                if snapshot.runtime.persona_confirmation_granted_at
+                else "pending"
+            )
+            print(f"persona_confirmation: {confirmation_state}")
         if snapshot.runtime.last_error:
             print(f"last_error: {snapshot.runtime.last_error}")
 
@@ -98,6 +105,19 @@ def _print_human(snapshot: ServiceStatusSnapshot) -> None:
     print(f"batch_counts: {_format_counts(snapshot.batch_counts)}")
     print(f"submission_counts: {_format_counts(snapshot.submission_counts)}")
     print(f"result_counts: {_format_counts(snapshot.result_counts)}")
+    print(f"avg_crowding_penalty: {snapshot.avg_crowding_penalty:.4f}")
+    if snapshot.latest_regime_snapshot is not None:
+        print(
+            "latest_regime: "
+            f"market_key={snapshot.latest_regime_snapshot.get('market_regime_key') or '-'} "
+            f"effective_key={str(snapshot.latest_regime_snapshot.get('effective_regime_key') or '-')[:12]} "
+            f"label={snapshot.latest_regime_snapshot.get('regime_label') or '-'} "
+            f"confidence={float(snapshot.latest_regime_snapshot.get('confidence') or 0.0):.2f}"
+        )
+    if snapshot.duplicate_summary:
+        print("duplicate_summary:")
+        for row in snapshot.duplicate_summary[:5]:
+            print(f"  {row['stage']} {row['decision']} {row['reason_code']}: {row['total_count']}")
 
     if snapshot.recent_batches:
         print("recent_batches:")

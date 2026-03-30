@@ -23,8 +23,10 @@ class ServiceRuntimeStore:
             INSERT INTO service_runtime
             (service_name, service_run_id, owner_token, pid, hostname, status, tick_id, active_batch_id, pending_job_count,
              consecutive_failures, cooldown_until, last_heartbeat_at, last_success_at, last_error, persona_url,
-             persona_wait_started_at, persona_last_notification_at, counters_json, lock_expires_at, started_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             persona_wait_started_at, persona_last_notification_at, persona_confirmation_nonce,
+             persona_confirmation_last_prompt_at, persona_confirmation_granted_at,
+             persona_confirmation_last_update_id, counters_json, lock_expires_at, started_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(service_name) DO UPDATE SET
                 service_run_id = excluded.service_run_id,
                 owner_token = excluded.owner_token,
@@ -42,6 +44,10 @@ class ServiceRuntimeStore:
                 persona_url = excluded.persona_url,
                 persona_wait_started_at = excluded.persona_wait_started_at,
                 persona_last_notification_at = excluded.persona_last_notification_at,
+                persona_confirmation_nonce = excluded.persona_confirmation_nonce,
+                persona_confirmation_last_prompt_at = excluded.persona_confirmation_last_prompt_at,
+                persona_confirmation_granted_at = excluded.persona_confirmation_granted_at,
+                persona_confirmation_last_update_id = excluded.persona_confirmation_last_update_id,
                 counters_json = excluded.counters_json,
                 lock_expires_at = excluded.lock_expires_at,
                 started_at = excluded.started_at,
@@ -65,6 +71,10 @@ class ServiceRuntimeStore:
                 record.persona_url,
                 record.persona_wait_started_at,
                 record.persona_last_notification_at,
+                record.persona_confirmation_nonce,
+                record.persona_confirmation_last_prompt_at,
+                record.persona_confirmation_granted_at,
+                record.persona_confirmation_last_update_id,
                 record.counters_json,
                 record.lock_expires_at,
                 record.started_at,
@@ -108,9 +118,10 @@ class ServiceRuntimeStore:
                     INSERT INTO service_runtime
                     (service_name, service_run_id, owner_token, pid, hostname, status, tick_id, active_batch_id,
                      pending_job_count, consecutive_failures, cooldown_until, last_heartbeat_at, last_success_at, last_error,
-                     persona_url, persona_wait_started_at, persona_last_notification_at, counters_json, lock_expires_at,
-                     started_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, 0, NULL, 0, 0, NULL, ?, NULL, NULL, NULL, NULL, NULL, '{}', ?, ?, ?)
+                     persona_url, persona_wait_started_at, persona_last_notification_at, persona_confirmation_nonce,
+                     persona_confirmation_last_prompt_at, persona_confirmation_granted_at,
+                     persona_confirmation_last_update_id, counters_json, lock_expires_at, started_at, updated_at)
+                    VALUES (?, ?, ?, ?, ?, ?, 0, NULL, 0, 0, NULL, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '{}', ?, ?, ?)
                     """,
                     (service_name, service_run_id, owner_token, pid, hostname, status, now, lock_expires_at, now, now),
                 )

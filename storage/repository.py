@@ -12,12 +12,18 @@ from storage.alpha_history import AlphaHistoryStore
 from storage.brain_result_store import BrainResultStore
 from storage.models import (
     AlphaRecord,
+    CrowdingScoreRecord,
+    DuplicateDecisionRecord,
     FieldCatalogRecord,
     MetricRecord,
+    MutationOutcomeRecord,
+    RegimeSnapshotRecord,
     RunFieldScoreRecord,
     RunRecord,
     SelectionRecord,
+    SelectionScoreRecord,
     SimulationCacheRecord,
+    StageMetricRecord,
     SubmissionTestRecord,
 )
 from storage.service_runtime_store import ServiceRuntimeStore
@@ -113,6 +119,10 @@ class SQLiteRepository:
         selected_timeframe: str | None = None,
         regime_key: str | None = None,
         global_regime_key: str | None = None,
+        market_regime_key: str | None = None,
+        effective_regime_key: str | None = None,
+        regime_label: str | None = None,
+        regime_confidence: float | None = None,
         region: str | None = None,
     ) -> None:
         self.connection.execute(
@@ -123,6 +133,10 @@ class SQLiteRepository:
                 selected_timeframe = COALESCE(?, selected_timeframe),
                 regime_key = COALESCE(?, regime_key),
                 global_regime_key = COALESCE(?, global_regime_key),
+                market_regime_key = COALESCE(?, market_regime_key),
+                effective_regime_key = COALESCE(?, effective_regime_key),
+                regime_label = COALESCE(?, regime_label),
+                regime_confidence = COALESCE(?, regime_confidence),
                 region = COALESCE(?, region)
             WHERE run_id = ?
             """,
@@ -132,6 +146,10 @@ class SQLiteRepository:
                 selected_timeframe,
                 regime_key,
                 global_regime_key,
+                market_regime_key,
+                effective_regime_key,
+                regime_label,
+                regime_confidence,
                 region,
                 run_id,
             ),
@@ -467,6 +485,342 @@ class SQLiteRepository:
             ORDER BY alpha_count DESC, generation_mode ASC
             """,
             (run_id,),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def get_cross_run_duplicate_references(
+        self,
+        *,
+        run_id: str,
+        global_regime_key: str,
+        limit: int,
+    ) -> list[dict]:
+        if not global_regime_key or limit <= 0:
+            return []
+        rows = self.connection.execute(
+            """
+            SELECT
+                run_id,
+                alpha_id,
+                normalized_expression,
+                structural_signature_json,
+                outcome_score,
+                selected,
+                passed_filters,
+                metric_source,
+                created_at
+            FROM alpha_history
+            WHERE run_id <> ?
+              AND global_regime_key = ?
+              AND (
+                    passed_filters = 1
+                    OR selected = 1
+                    OR (metric_source = 'external_brain' AND outcome_score > 0)
+                  )
+            ORDER BY outcome_score DESC, created_at DESC
+            LIMIT ?
+            """,
+            (run_id, global_regime_key, limit),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def save_duplicate_decisions(self, records: list[DuplicateDecisionRecord]) -> None:
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO alpha_duplicate_decisions
+                (run_id, round_index, alpha_id, stage, decision, reason_code, matched_run_id, matched_alpha_id,
+                 matched_scope, similarity_score, normalized_match, metrics_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(run_id, round_index, stage, alpha_id, decision, reason_code) DO UPDATE SET
+                    matched_run_id = excluded.matched_run_id,
+                    matched_alpha_id = excluded.matched_alpha_id,
+                    matched_scope = excluded.matched_scope,
+                    similarity_score = excluded.similarity_score,
+                    normalized_match = excluded.normalized_match,
+                    metrics_json = excluded.metrics_json,
+                    created_at = excluded.created_at
+                """,
+                (
+                    record.run_id,
+                    record.round_index,
+                    record.alpha_id,
+                    record.stage,
+                    record.decision,
+                    record.reason_code,
+                    record.matched_run_id,
+                    record.matched_alpha_id,
+                    record.matched_scope,
+                    record.similarity_score,
+                    int(record.normalized_match),
+                    record.metrics_json,
+                    record.created_at,
+                ),
+            )
+        self.connection.commit()
+
+    def save_crowding_scores(self, records: list[CrowdingScoreRecord]) -> None:
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO alpha_crowding_scores
+                (run_id, round_index, alpha_id, stage, total_penalty, family_penalty, motif_penalty,
+                 operator_path_penalty, lineage_penalty, batch_penalty, historical_penalty, hard_blocked,
+                 reason_codes_json, metrics_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(run_id, round_index, stage, alpha_id) DO UPDATE SET
+                    total_penalty = excluded.total_penalty,
+                    family_penalty = excluded.family_penalty,
+                    motif_penalty = excluded.motif_penalty,
+                    operator_path_penalty = excluded.operator_path_penalty,
+                    lineage_penalty = excluded.lineage_penalty,
+                    batch_penalty = excluded.batch_penalty,
+                    historical_penalty = excluded.historical_penalty,
+                    hard_blocked = excluded.hard_blocked,
+                    reason_codes_json = excluded.reason_codes_json,
+                    metrics_json = excluded.metrics_json,
+                    created_at = excluded.created_at
+                """,
+                (
+                    record.run_id,
+                    record.round_index,
+                    record.alpha_id,
+                    record.stage,
+                    record.total_penalty,
+                    record.family_penalty,
+                    record.motif_penalty,
+                    record.operator_path_penalty,
+                    record.lineage_penalty,
+                    record.batch_penalty,
+                    record.historical_penalty,
+                    int(record.hard_blocked),
+                    record.reason_codes_json,
+                    record.metrics_json,
+                    record.created_at,
+                ),
+            )
+        self.connection.commit()
+
+    def save_stage_metrics(self, records: list[StageMetricRecord]) -> None:
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO round_stage_metrics (run_id, round_index, stage, metrics_json, created_at)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(run_id, round_index, stage) DO UPDATE SET
+                    metrics_json = excluded.metrics_json,
+                    created_at = excluded.created_at
+                """,
+                (
+                    record.run_id,
+                    record.round_index,
+                    record.stage,
+                    record.metrics_json,
+                    record.created_at,
+                ),
+            )
+        self.connection.commit()
+
+    def save_selection_scores(self, records: list[SelectionScoreRecord]) -> None:
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO alpha_selection_scores
+                (run_id, round_index, alpha_id, score_stage, composite_score, selected, rank, reason_codes_json,
+                 breakdown_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(run_id, round_index, score_stage, alpha_id) DO UPDATE SET
+                    composite_score = excluded.composite_score,
+                    selected = excluded.selected,
+                    rank = excluded.rank,
+                    reason_codes_json = excluded.reason_codes_json,
+                    breakdown_json = excluded.breakdown_json,
+                    created_at = excluded.created_at
+                """,
+                (
+                    record.run_id,
+                    record.round_index,
+                    record.alpha_id,
+                    record.score_stage,
+                    record.composite_score,
+                    int(record.selected),
+                    record.rank,
+                    record.reason_codes_json,
+                    record.breakdown_json,
+                    record.created_at,
+                ),
+            )
+        self.connection.commit()
+
+    def save_regime_snapshots(self, records: list[RegimeSnapshotRecord]) -> None:
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO regime_snapshots
+                (run_id, round_index, region, legacy_regime_key, global_regime_key, market_regime_key,
+                 effective_regime_key, regime_label, confidence, features_json, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(run_id, round_index) DO UPDATE SET
+                    region = excluded.region,
+                    legacy_regime_key = excluded.legacy_regime_key,
+                    global_regime_key = excluded.global_regime_key,
+                    market_regime_key = excluded.market_regime_key,
+                    effective_regime_key = excluded.effective_regime_key,
+                    regime_label = excluded.regime_label,
+                    confidence = excluded.confidence,
+                    features_json = excluded.features_json,
+                    created_at = excluded.created_at
+                """,
+                (
+                    record.run_id,
+                    record.round_index,
+                    record.region,
+                    record.legacy_regime_key,
+                    record.global_regime_key,
+                    record.market_regime_key,
+                    record.effective_regime_key,
+                    record.regime_label,
+                    record.confidence,
+                    record.features_json,
+                    record.created_at,
+                ),
+            )
+        self.connection.commit()
+
+    def save_mutation_outcomes(self, records: list[MutationOutcomeRecord]) -> None:
+        for record in records:
+            self.connection.execute(
+                """
+                INSERT INTO mutation_outcomes
+                (run_id, child_alpha_id, parent_alpha_id, parent_run_id, mutation_mode, family_signature,
+                 effective_regime_key, outcome_source, parent_post_sim_score, child_post_sim_score, outcome_delta,
+                 selected_for_simulation, selected_for_mutation, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(run_id, child_alpha_id, parent_alpha_id, outcome_source) DO UPDATE SET
+                    parent_run_id = excluded.parent_run_id,
+                    mutation_mode = excluded.mutation_mode,
+                    family_signature = excluded.family_signature,
+                    effective_regime_key = excluded.effective_regime_key,
+                    parent_post_sim_score = excluded.parent_post_sim_score,
+                    child_post_sim_score = excluded.child_post_sim_score,
+                    outcome_delta = excluded.outcome_delta,
+                    selected_for_simulation = excluded.selected_for_simulation,
+                    selected_for_mutation = excluded.selected_for_mutation,
+                    created_at = excluded.created_at
+                """,
+                (
+                    record.run_id,
+                    record.child_alpha_id,
+                    record.parent_alpha_id,
+                    record.parent_run_id,
+                    record.mutation_mode,
+                    record.family_signature,
+                    record.effective_regime_key,
+                    record.outcome_source,
+                    record.parent_post_sim_score,
+                    record.child_post_sim_score,
+                    record.outcome_delta,
+                    int(record.selected_for_simulation),
+                    int(record.selected_for_mutation),
+                    record.created_at,
+                ),
+            )
+        self.connection.commit()
+
+    def get_stage_metrics(self, run_id: str) -> list[dict]:
+        rows = self.connection.execute(
+            """
+            SELECT *
+            FROM round_stage_metrics
+            WHERE run_id = ?
+            ORDER BY round_index ASC, stage ASC
+            """,
+            (run_id,),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def get_duplicate_decision_summary(self, run_id: str) -> list[dict]:
+        rows = self.connection.execute(
+            """
+            SELECT stage, decision, reason_code, COUNT(*) AS total_count
+            FROM alpha_duplicate_decisions
+            WHERE run_id = ?
+            GROUP BY stage, decision, reason_code
+            ORDER BY stage ASC, total_count DESC, reason_code ASC
+            """,
+            (run_id,),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def get_average_crowding_penalty(self, run_id: str) -> float:
+        row = self.connection.execute(
+            """
+            SELECT AVG(total_penalty) AS avg_penalty
+            FROM alpha_crowding_scores
+            WHERE run_id = ? AND stage = 'pre_sim'
+            """,
+            (run_id,),
+        ).fetchone()
+        return float(row["avg_penalty"] or 0.0)
+
+    def list_selection_scores(self, run_id: str, *, score_stage: str | None = None) -> list[dict]:
+        if score_stage:
+            rows = self.connection.execute(
+                """
+                SELECT *
+                FROM alpha_selection_scores
+                WHERE run_id = ? AND score_stage = ?
+                ORDER BY round_index ASC, composite_score DESC, alpha_id ASC
+                """,
+                (run_id, score_stage),
+            ).fetchall()
+        else:
+            rows = self.connection.execute(
+                """
+                SELECT *
+                FROM alpha_selection_scores
+                WHERE run_id = ?
+                ORDER BY round_index ASC, score_stage ASC, composite_score DESC, alpha_id ASC
+                """,
+                (run_id,),
+            ).fetchall()
+        return [dict(row) for row in rows]
+
+    def get_latest_regime_snapshot(self, run_id: str) -> dict | None:
+        row = self.connection.execute(
+            """
+            SELECT *
+            FROM regime_snapshots
+            WHERE run_id = ?
+            ORDER BY round_index DESC
+            LIMIT 1
+            """,
+            (run_id,),
+        ).fetchone()
+        return dict(row) if row else None
+
+    def list_mutation_outcomes(
+        self,
+        *,
+        effective_regime_key: str | None = None,
+        family_signature: str | None = None,
+    ) -> list[dict]:
+        clauses = ["1 = 1"]
+        params: list[object] = []
+        if effective_regime_key:
+            clauses.append("effective_regime_key = ?")
+            params.append(effective_regime_key)
+        if family_signature:
+            clauses.append("family_signature = ?")
+            params.append(family_signature)
+        rows = self.connection.execute(
+            f"""
+            SELECT *
+            FROM mutation_outcomes
+            WHERE {" AND ".join(clauses)}
+            ORDER BY created_at DESC
+            """,
+            tuple(params),
         ).fetchall()
         return [dict(row) for row in rows]
 

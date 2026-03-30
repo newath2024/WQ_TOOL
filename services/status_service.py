@@ -29,6 +29,10 @@ class ServiceStatusSnapshot:
     submission_counts: dict[str, int]
     result_counts: dict[str, int]
     active_batch_submission_counts: dict[str, int]
+    stage_metrics: list[dict]
+    duplicate_summary: list[dict]
+    avg_crowding_penalty: float
+    latest_regime_snapshot: dict[str, Any] | None
 
 
 def build_service_status_snapshot(
@@ -57,6 +61,10 @@ def build_service_status_snapshot(
             submission_counts={},
             result_counts={},
             active_batch_submission_counts={},
+            stage_metrics=[],
+            duplicate_summary=[],
+            avg_crowding_penalty=0.0,
+            latest_regime_snapshot=None,
         )
 
     batches = repository.submissions.list_batches(resolved_run_id)
@@ -86,6 +94,10 @@ def build_service_status_snapshot(
         active_batch_submission_counts=_count_statuses(
             submission.status for submission in active_batch_submissions
         ),
+        stage_metrics=repository.get_stage_metrics(resolved_run_id),
+        duplicate_summary=repository.get_duplicate_decision_summary(resolved_run_id),
+        avg_crowding_penalty=repository.get_average_crowding_penalty(resolved_run_id),
+        latest_regime_snapshot=repository.get_latest_regime_snapshot(resolved_run_id),
     )
 
 
@@ -100,7 +112,11 @@ def service_status_snapshot_to_dict(snapshot: ServiceStatusSnapshot) -> dict[str
             "submission_counts": snapshot.submission_counts,
             "result_counts": snapshot.result_counts,
             "active_batch_submission_counts": snapshot.active_batch_submission_counts,
+            "avg_crowding_penalty": snapshot.avg_crowding_penalty,
         },
+        "stage_metrics": snapshot.stage_metrics,
+        "duplicate_summary": snapshot.duplicate_summary,
+        "latest_regime_snapshot": snapshot.latest_regime_snapshot,
         "active_batch": _batch_to_dict(snapshot.active_batch),
         "active_batch_submissions": [_submission_to_dict(row) for row in snapshot.active_batch_submissions],
         "recent_batches": [_batch_to_dict(row) for row in snapshot.recent_batches],
@@ -155,6 +171,10 @@ def _run_to_dict(run: RunRecord | None) -> dict[str, Any] | None:
         "selected_timeframe": run.selected_timeframe,
         "regime_key": run.regime_key,
         "global_regime_key": run.global_regime_key,
+        "market_regime_key": run.market_regime_key,
+        "effective_regime_key": run.effective_regime_key,
+        "regime_label": run.regime_label,
+        "regime_confidence": run.regime_confidence,
         "entry_command": run.entry_command,
     }
 

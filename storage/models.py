@@ -18,6 +18,10 @@ class RunRecord:
     selected_timeframe: str | None = None
     regime_key: str | None = None
     global_regime_key: str | None = None
+    market_regime_key: str | None = None
+    effective_regime_key: str | None = None
+    regime_label: str | None = None
+    regime_confidence: float | None = None
     region: str | None = None
     entry_command: str | None = None
 
@@ -108,6 +112,10 @@ class AlphaHistoryRecord:
     region: str
     regime_key: str
     global_regime_key: str
+    market_regime_key: str
+    effective_regime_key: str
+    regime_label: str
+    regime_confidence: float
     expression: str
     normalized_expression: str
     generation_mode: str
@@ -177,6 +185,10 @@ class AlphaCaseRecord:
     region: str
     regime_key: str
     global_regime_key: str
+    market_regime_key: str
+    effective_regime_key: str
+    regime_label: str
+    regime_confidence: float
     metric_source: str
     family_signature: str
     structural_signature_json: str
@@ -339,6 +351,98 @@ class ClosedLoopRoundRecord:
 
 
 @dataclass(frozen=True, slots=True)
+class DuplicateDecisionRecord:
+    run_id: str
+    round_index: int
+    alpha_id: str
+    stage: str
+    decision: str
+    reason_code: str
+    matched_run_id: str
+    matched_alpha_id: str
+    matched_scope: str
+    similarity_score: float
+    normalized_match: bool
+    metrics_json: str
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class CrowdingScoreRecord:
+    run_id: str
+    round_index: int
+    alpha_id: str
+    stage: str
+    total_penalty: float
+    family_penalty: float
+    motif_penalty: float
+    operator_path_penalty: float
+    lineage_penalty: float
+    batch_penalty: float
+    historical_penalty: float
+    hard_blocked: bool
+    reason_codes_json: str
+    metrics_json: str
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class StageMetricRecord:
+    run_id: str
+    round_index: int
+    stage: str
+    metrics_json: str
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class SelectionScoreRecord:
+    run_id: str
+    round_index: int
+    alpha_id: str
+    score_stage: str
+    composite_score: float
+    selected: bool
+    rank: int | None
+    reason_codes_json: str
+    breakdown_json: str
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class RegimeSnapshotRecord:
+    run_id: str
+    round_index: int
+    region: str
+    legacy_regime_key: str
+    global_regime_key: str
+    market_regime_key: str
+    effective_regime_key: str
+    regime_label: str
+    confidence: float
+    features_json: str
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
+class MutationOutcomeRecord:
+    run_id: str
+    child_alpha_id: str
+    parent_alpha_id: str
+    parent_run_id: str
+    mutation_mode: str
+    family_signature: str
+    effective_regime_key: str
+    outcome_source: str
+    parent_post_sim_score: float
+    child_post_sim_score: float
+    outcome_delta: float
+    selected_for_simulation: bool
+    selected_for_mutation: bool
+    created_at: str
+
+
+@dataclass(frozen=True, slots=True)
 class ServiceRuntimeRecord:
     service_name: str
     service_run_id: str
@@ -361,3 +465,7 @@ class ServiceRuntimeRecord:
     lock_expires_at: str | None
     started_at: str
     updated_at: str
+    persona_confirmation_nonce: str | None = None
+    persona_confirmation_last_prompt_at: str | None = None
+    persona_confirmation_granted_at: str | None = None
+    persona_confirmation_last_update_id: int | None = None

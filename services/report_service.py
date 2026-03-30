@@ -107,4 +107,8 @@ def build_report_summary(
         rejection_reasons=repository.alpha_history.get_run_rejection_reason_summary(environment.context.run_id, limit),
         generation_mix=repository.get_generation_mix(environment.context.run_id),
         hard_filter_summary=hard_filter_summary,
+        stage_metrics=repository.get_stage_metrics(environment.context.run_id),
+        duplicate_summary=repository.get_duplicate_decision_summary(environment.context.run_id),
+        avg_crowding_penalty=repository.get_average_crowding_penalty(environment.context.run_id),
+        latest_regime_snapshot=repository.get_latest_regime_snapshot(environment.context.run_id),
     )

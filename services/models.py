@@ -34,6 +34,92 @@ class ResearchContext:
     region_learning_context: RegionLearningContext
     memory_service: PatternMemoryService
     field_registry: FieldRegistry
+    legacy_regime_key: str = ""
+    market_regime_key: str = ""
+    effective_regime_key: str = ""
+    regime_label: str = "unknown"
+    regime_confidence: float = 0.0
+    regime_features: dict[str, float | int | str] = field(default_factory=dict)
+
+
+@dataclass(slots=True, frozen=True)
+class RegimeSnapshot:
+    region: str
+    legacy_regime_key: str
+    global_regime_key: str
+    market_regime_key: str = ""
+    effective_regime_key: str = ""
+    regime_label: str = "unknown"
+    confidence: float = 0.0
+    features: dict[str, float | int | str] = field(default_factory=dict)
+
+
+@dataclass(slots=True, frozen=True)
+class DedupDecision:
+    alpha_id: str
+    normalized_expression: str
+    stage: str
+    decision: str
+    reason_code: str
+    matched_run_id: str = ""
+    matched_alpha_id: str = ""
+    matched_scope: str = ""
+    similarity_score: float = 0.0
+    normalized_match: bool = False
+    metrics: dict[str, float | int | str | bool] = field(default_factory=dict)
+
+
+@dataclass(slots=True, frozen=True)
+class DedupBatchResult:
+    kept_candidates: tuple[AlphaCandidate, ...]
+    blocked_candidates: tuple[AlphaCandidate, ...]
+    decisions: tuple[DedupDecision, ...]
+    stage_metrics: dict[str, float | int | str] = field(default_factory=dict)
+
+
+@dataclass(slots=True, frozen=True)
+class CrowdingScore:
+    alpha_id: str
+    stage: str
+    total_penalty: float
+    family_penalty: float = 0.0
+    motif_penalty: float = 0.0
+    operator_path_penalty: float = 0.0
+    lineage_penalty: float = 0.0
+    batch_penalty: float = 0.0
+    historical_penalty: float = 0.0
+    hard_blocked: bool = False
+    reason_codes: tuple[str, ...] = ()
+    metrics: dict[str, float | int | str | bool] = field(default_factory=dict)
+
+
+@dataclass(slots=True, frozen=True)
+class SelectionBreakdown:
+    score_stage: str
+    composite_score: float
+    components: dict[str, float]
+    reason_codes: tuple[str, ...] = ()
+
+
+@dataclass(slots=True, frozen=True)
+class SelectionDecision:
+    alpha_id: str
+    score_stage: str
+    composite_score: float
+    selected: bool
+    rank: int | None
+    reason_codes: tuple[str, ...] = ()
+    breakdown: SelectionBreakdown | None = None
+
+
+@dataclass(slots=True, frozen=True)
+class PreSimulationSelectionResult:
+    selected: tuple["CandidateScore", ...]
+    archived: tuple["CandidateScore", ...]
+    dedup_result: DedupBatchResult
+    crowding_scores: dict[str, CrowdingScore] = field(default_factory=dict)
+    selection_decisions: tuple[SelectionDecision, ...] = ()
+    stage_metrics: dict[str, float | int | str] = field(default_factory=dict)
 
 
 @dataclass(slots=True)
@@ -100,6 +186,10 @@ class ReportSummary:
     rejection_reasons: list[dict] = field(default_factory=list)
     generation_mix: list[dict] = field(default_factory=list)
     hard_filter_summary: dict[str, float | int] = field(default_factory=dict)
+    stage_metrics: list[dict] = field(default_factory=list)
+    duplicate_summary: list[dict] = field(default_factory=list)
+    avg_crowding_penalty: float = 0.0
+    latest_regime_snapshot: dict | None = None
 
 
 @dataclass(slots=True, frozen=True)
@@ -194,11 +284,18 @@ class CandidateScore:
     family_score: float
     structural_signature: StructuralSignature
     diversity_score: float = 0.0
+    duplicate_risk: float = 0.0
+    crowding_penalty: float = 0.0
+    regime_fit: float = 0.0
+    composite_score: float | None = None
     archive_reason: str | None = None
+    reason_codes: tuple[str, ...] = ()
     ranking_rationale: dict[str, object] = field(default_factory=dict)
 
     @property
     def total_score(self) -> float:
+        if self.composite_score is not None:
+            return float(self.composite_score)
         return (
             self.local_heuristic_score
             + 0.15 * self.novelty_score

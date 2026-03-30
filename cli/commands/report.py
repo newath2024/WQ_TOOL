@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 
 from core.config import AppConfig
 from core.logging import get_logger
@@ -86,6 +87,37 @@ def handle_report(
             f"local_samples={summary.case_blend.local_samples} "
             f"global_samples={summary.case_blend.global_samples}"
         )
+    if summary.latest_regime_snapshot:
+        print(
+            "latest_regime: "
+            f"market_key={summary.latest_regime_snapshot.get('market_regime_key') or '-'} "
+            f"effective_key={str(summary.latest_regime_snapshot.get('effective_regime_key') or '-')[:12]} "
+            f"label={summary.latest_regime_snapshot.get('regime_label') or '-'} "
+            f"confidence={float(summary.latest_regime_snapshot.get('confidence') or 0.0):.2f}"
+        )
+    pre_sim_metrics = next(
+        (
+            json.loads(row["metrics_json"])
+            for row in reversed(summary.stage_metrics)
+            if row.get("stage") == "pre_sim"
+        ),
+        None,
+    )
+    if pre_sim_metrics is not None:
+        print(
+            "pre_sim_funnel: "
+            f"generated={pre_sim_metrics.get('generated', 0)} "
+            f"blocked_exact={pre_sim_metrics.get('blocked_by_exact_dedup', 0)} "
+            f"blocked_near={pre_sim_metrics.get('blocked_by_near_duplicate', 0)} "
+            f"blocked_cross_run={pre_sim_metrics.get('blocked_by_cross_run_dedup', 0)} "
+            f"kept={pre_sim_metrics.get('kept_after_dedup', 0)} "
+            f"selected={pre_sim_metrics.get('selected_for_simulation', 0)} "
+            f"avg_crowding_penalty={float(summary.avg_crowding_penalty):.4f}"
+        )
+    if summary.duplicate_summary:
+        print("duplicate_summary:")
+        for row in summary.duplicate_summary[: args.limit]:
+            print(f"  {row['stage']} {row['decision']} {row['reason_code']}: {row['total_count']}")
     print(
         "hard_filters: "
         + " ".join(f"{key}={value}" for key, value in summary.hard_filter_summary.items())
