@@ -252,6 +252,7 @@ class SelectionService:
         *,
         candidates_by_id: dict[str, AlphaCandidate],
         case_snapshot: CaseMemorySnapshot | None = None,
+        field_registry: FieldRegistry | None = None,
     ) -> tuple[dict[str, SelectionBreakdown], dict[str, RankedItem[SimulationResult]]]:
         ranked_items: list[RankedItem[SimulationResult]] = []
         breakdowns: dict[str, SelectionBreakdown] = {}
@@ -301,7 +302,7 @@ class SelectionService:
                     item=result,
                     objective_vector=objective_vector,
                     family_signature=signature.family_signature,
-                    primary_field_category=self._primary_field_category(candidate, field_registry=None),
+                    primary_field_category=self._primary_field_category(candidate, field_registry=field_registry),
                     horizon_bucket=signature.horizon_bucket,
                     operator_path_key=">".join(signature.operator_path[:4]) if signature.operator_path else "none",
                     diversity_score=objective_vector.diversity,
@@ -331,12 +332,14 @@ class SelectionService:
         diversity_config: DiversityThresholdConfig | None = None,
         case_snapshot: CaseMemorySnapshot | None = None,
         mutation_learnability_by_id: dict[str, float] | None = None,
+        field_registry: FieldRegistry | None = None,
     ) -> tuple[list[SimulationResult], tuple[SelectionDecision, ...], tuple[SelectionDecision, ...]]:
         diversity_manager = DiversityManager(diversity_config or DiversityThresholdConfig())
         post_breakdowns, post_ranked = self.score_post_sim(
             results,
             candidates_by_id=candidates_by_id,
             case_snapshot=case_snapshot,
+            field_registry=field_registry,
         )
         ordered_post = list(post_ranked.values())
         post_decisions: list[SelectionDecision] = []

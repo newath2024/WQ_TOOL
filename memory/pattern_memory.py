@@ -174,21 +174,16 @@ class PatternMemorySnapshot:
         return ordered[:limit] if limit is not None else ordered
 
     def _blended_patterns(self) -> dict[str, PatternScore]:
-        pattern_ids = set(self.patterns) | set(self.global_patterns)
-        return {
-            pattern_id: _merge_pattern_scores(
+        result: dict[str, PatternScore] = {}
+        for pattern_id in set(self.patterns) | set(self.global_patterns):
+            merged = _merge_pattern_scores(
                 self.patterns.get(pattern_id),
                 self.global_patterns.get(pattern_id),
                 self.blend,
             )
-            for pattern_id in pattern_ids
-            if _merge_pattern_scores(
-                self.patterns.get(pattern_id),
-                self.global_patterns.get(pattern_id),
-                self.blend,
-            )
-            is not None
-        }
+            if merged is not None:
+                result[pattern_id] = merged
+        return result
 
 
 class PatternMemoryService:

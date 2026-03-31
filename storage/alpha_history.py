@@ -371,6 +371,21 @@ class AlphaHistoryStore:
         self._rebuild_pattern_scores(regime_key=regime_key, pattern_decay=pattern_decay, prior_weight=prior_weight)
         self.connection.commit()
 
+    def get_outcome_score(self, run_id: str, alpha_id: str) -> float | None:
+        row = self.connection.execute(
+            """
+            SELECT outcome_score
+            FROM alpha_history
+            WHERE run_id = ? AND alpha_id = ?
+            ORDER BY created_at DESC
+            LIMIT 1
+            """,
+            (run_id, alpha_id),
+        ).fetchone()
+        if row is None or row["outcome_score"] is None:
+            return None
+        return float(row["outcome_score"])
+
     def load_snapshot(
         self,
         regime_key: str,

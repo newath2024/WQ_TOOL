@@ -199,17 +199,8 @@ class BrainLearningService:
                 parent_alpha_id = str(parent_ref.get("alpha_id") or "")
                 if not parent_alpha_id:
                     continue
-                parent_row = self.repository.connection.execute(
-                    """
-                    SELECT outcome_score
-                    FROM alpha_history
-                    WHERE run_id = ? AND alpha_id = ?
-                    ORDER BY created_at DESC
-                    LIMIT 1
-                    """,
-                    (parent_run_id, parent_alpha_id),
-                ).fetchone()
-                parent_score = float(parent_row["outcome_score"] or 0.0) if parent_row else 0.0
+                parent_outcome_score = self.repository.alpha_history.get_outcome_score(parent_run_id, parent_alpha_id)
+                parent_score = float(parent_outcome_score or 0.0)
                 records.append(
                     MutationOutcomeRecord(
                         run_id=run_id,

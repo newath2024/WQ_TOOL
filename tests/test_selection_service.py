@@ -72,6 +72,34 @@ def test_post_sim_score_orders_by_quality() -> None:
     assert list(ordered.keys())[0] == "alpha-good"
 
 
+def test_score_post_sim_uses_field_registry_for_category() -> None:
+    service = SelectionService(config=SelectionConfig())
+    registry = _field_registry()
+    candidate = AlphaCandidate(
+        alpha_id="alpha-registry",
+        expression="rank(ts_mean(close, 5))",
+        normalized_expression="rank(ts_mean(close, 5))",
+        generation_mode="template",
+        parent_ids=(),
+        complexity=3,
+        created_at="2026-01-01T00:00:00+00:00",
+        template_name="template",
+        fields_used=("close",),
+        operators_used=("rank", "ts_mean"),
+        depth=2,
+        generation_metadata={},
+    )
+    result = _result(candidate.alpha_id, fitness=1.0, sharpe=1.0, turnover=0.3, margin=0.1)
+
+    _, ranked = service.score_post_sim(
+        [result],
+        candidates_by_id={candidate.alpha_id: candidate},
+        field_registry=registry,
+    )
+
+    assert ranked[candidate.alpha_id].primary_field_category == "price"
+
+
 def test_mutation_parent_score_can_boost_learnable_branch() -> None:
     service = SelectionService(config=SelectionConfig())
     candidates = {

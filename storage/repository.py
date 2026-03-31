@@ -824,6 +824,49 @@ class SQLiteRepository:
         ).fetchall()
         return [dict(row) for row in rows]
 
+
+    def list_mutation_outcomes_with_motif(
+        self,
+        *,
+        effective_regime_key: str | None = None,
+        limit: int = 2000,
+    ) -> list[dict]:
+        """Return structural mutation outcomes enriched with the child alpha motif.
+
+        ``child_motif`` is lifted from ``alpha_cases.motif`` so that
+        ``MutationPolicy._motif_success_weights()`` can bias structural mutation
+        toward historically high-success motifs without a raw SQL JOIN inside the
+        policy layer.
+        """
+        clauses = ["mo.mutation_mode = 'structural'"]
+        params: list[object] = []
+        if effective_regime_key:
+            clauses.append("mo.effective_regime_key = ?")
+            params.append(effective_regime_key)
+        params.append(limit)
+        rows = self.connection.execute(
+            f"""
+            SELECT
+                mo.mutation_mode,
+                mo.family_signature,
+                mo.effective_regime_key,
+                mo.outcome_delta,
+                mo.selected_for_simulation,
+                mo.selected_for_mutation,
+                mo.created_at,
+                COALESCE(ac.motif, '') AS child_motif
+            FROM mutation_outcomes mo
+            LEFT JOIN alpha_cases ac
+                ON ac.run_id  = mo.run_id
+               AND ac.alpha_id = mo.child_alpha_id
+            WHERE {" AND ".join(clauses)}
+            ORDER BY mo.created_at DESC
+            LIMIT ?
+            """,
+            tuple(params),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
     def get_top_selections(self, run_id: str, limit: int) -> list[dict]:
         rows = self.connection.execute(
             """

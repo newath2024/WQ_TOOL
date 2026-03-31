@@ -197,6 +197,7 @@ class CandidateSelectionService:
         top_k: int,
         diversity_config: DiversityThresholdConfig | None = None,
         case_snapshot: CaseMemorySnapshot | None = None,
+        field_registry: FieldRegistry | None = None,
         run_id: str = "",
         round_index: int = 0,
         persist_metrics: bool = True,
@@ -207,6 +208,7 @@ class CandidateSelectionService:
             top_k=top_k,
             diversity_config=diversity_config,
             case_snapshot=case_snapshot,
+            field_registry=field_registry,
         )
         if persist_metrics and self.repository is not None and run_id:
             self.persist_selection_decisions(run_id, round_index, [*post_decisions, *mutation_decisions])
@@ -220,6 +222,7 @@ class CandidateSelectionService:
         top_k: int,
         diversity_config: DiversityThresholdConfig | None = None,
         case_snapshot: CaseMemorySnapshot | None = None,
+        field_registry: FieldRegistry | None = None,
     ) -> list[SimulationResult]:
         selected, _, _ = self.select_results_for_mutation_with_details(
             results,
@@ -227,6 +230,7 @@ class CandidateSelectionService:
             top_k=top_k,
             diversity_config=diversity_config,
             case_snapshot=case_snapshot,
+            field_registry=field_registry,
             persist_metrics=False,
         )
         return selected

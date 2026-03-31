@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+
 from core.config import (
     AdaptiveGenerationConfig,
     AppConfig,
@@ -18,6 +20,8 @@ from core.config import (
     SubmissionTestConfig,
 )
 from memory.pattern_memory import FAIL_TAG_PENALTIES, PatternMemoryService, PatternMemorySnapshot, PatternScore
+from storage.alpha_history import AlphaHistoryStore
+from storage.sqlite import connect_sqlite
 
 
 def build_app_config(*, delay_mode: str = "d1", holding_period: int = 2, region: str = "USA") -> AppConfig:
@@ -179,3 +183,118 @@ def test_pattern_memory_outcome_score_and_thresholded_pattern_scoring() -> None:
     assert outcome_score > 0.0
     assert outcome_score < 1.0 + 0.25 + 0.25 + 0.10 * 0.80
     assert FAIL_TAG_PENALTIES["high_turnover"] > 0
+
+
+def test_blended_patterns_does_not_double_compute(monkeypatch) -> None:
+    from memory import pattern_memory as pm
+
+    call_count = 0
+    original = pm._merge_pattern_scores
+
+    def counted(*args, **kwargs):
+        nonlocal call_count
+        call_count += 1
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(pm, "_merge_pattern_scores", counted)
+
+    snapshot = PatternMemorySnapshot(
+        regime_key="r",
+        patterns={"a": _make_pattern("a"), "b": _make_pattern("b")},
+        global_patterns={"b": _make_pattern("b"), "c": _make_pattern("c")},
+    )
+
+    result = snapshot._blended_patterns()
+    unique_ids = set(snapshot.patterns) | set(snapshot.global_patterns)
+
+    assert set(result) == unique_ids
+    assert call_count == len(unique_ids)
+
+
+def test_alpha_history_get_outcome_score_returns_none_for_missing() -> None:
+    connection = connect_sqlite(":memory:")
+    try:
+        store = AlphaHistoryStore(connection, PatternMemoryService())
+        result = store.get_outcome_score("nonexistent-run", "nonexistent-alpha")
+    finally:
+        connection.close()
+
+    assert result is None
+
+
+def test_alpha_history_get_outcome_score_returns_latest() -> None:
+    connection = connect_sqlite(":memory:")
+    try:
+        store = AlphaHistoryStore(connection, PatternMemoryService())
+        run_id = "run-1"
+        alpha_id = "alpha-1"
+        _insert_alpha_history_row(
+            store,
+            run_id=run_id,
+            alpha_id=alpha_id,
+            outcome_score=0.5,
+            created_at="2026-01-01T00:00:00+00:00",
+        )
+        store.connection.execute(
+            """
+            UPDATE alpha_history
+            SET outcome_score = ?, created_at = ?
+            WHERE run_id = ? AND alpha_id = ?
+            """,
+            (0.8, "2026-01-01T00:05:00+00:00", run_id, alpha_id),
+        )
+        store.connection.commit()
+
+        result = store.get_outcome_score(run_id, alpha_id)
+    finally:
+        connection.close()
+
+    assert result == 0.8
+
+
+def _make_pattern(pattern_id: str) -> PatternScore:
+    return PatternScore(
+        pattern_id=pattern_id,
+        pattern_kind="subexpression",
+        pattern_value=pattern_id,
+        support=3,
+        success_count=2,
+        failure_count=1,
+        avg_outcome=0.25,
+        avg_behavioral_novelty=0.5,
+        fail_tag_counts={},
+        pattern_score=0.4,
+    )
+
+
+def _insert_alpha_history_row(
+    store: AlphaHistoryStore,
+    *,
+    run_id: str,
+    alpha_id: str,
+    outcome_score: float,
+    created_at: str,
+) -> None:
+    signature = store.memory_service.extract_signature("rank(close)", generation_metadata={})
+    store.connection.execute(
+        """
+        INSERT INTO alpha_history
+        (run_id, alpha_id, region, regime_key, global_regime_key, market_regime_key, effective_regime_key,
+         regime_label, regime_confidence, expression, normalized_expression, generation_mode, generation_metadata_json,
+         parent_refs_json, structural_signature_json, gene_ids_json, train_metrics_json, validation_metrics_json,
+         test_metrics_json, validation_signal_json, validation_returns_json, outcome_score, behavioral_novelty_score,
+         passed_filters, selected, submission_pass_count, diagnosis_summary_json, rejection_reasons_json, metric_source, created_at)
+        VALUES (?, ?, '', 'legacy', '', '', 'legacy', 'unknown', 0.0, ?, ?, 'template', '{}', '[]', ?, '[]', '{}', '{}', '{}', '{}', '{}', ?, 0.5, 1, 1, 1, ?, '[]', 'external_brain', ?)
+        """,
+        (
+            run_id,
+            alpha_id,
+            "rank(close)",
+            "rank(close)",
+            json.dumps(signature.to_dict(), sort_keys=True),
+            outcome_score,
+            json.dumps({"fail_tags": [], "success_tags": []}, sort_keys=True),
+            created_at,
+        ),
+    )
+    store.connection.commit()

@@ -1,7 +1,10 @@
 from __future__ import annotations
 
+import json
+import math
 import random
 from dataclasses import replace
+from datetime import datetime, timezone
 from typing import Any, Iterable, Sequence
 
 from core.config import AdaptiveGenerationConfig, GenerationConfig
@@ -212,8 +215,14 @@ class MutationPolicy:
         diversity_tracker: GenerationDiversityTracker | None,
     ) -> Genome:
         motif_choices = [motif for motif in MOTIF_LIBRARY if motif != genome.motif] or [genome.motif]
+        motif_weights_map = self._motif_success_weights()
+        if motif_weights_map:
+            weights = [max(0.10, motif_weights_map.get(m, 1.0)) for m in motif_choices]
+        else:
+            weights = [1.0] * len(motif_choices)
+        chosen_motif = self.randomizer.choices(motif_choices, weights=weights, k=1)[0]
         seeded = self.genome_builder.build_parent_seeded_genome(
-            motif=self.randomizer.choice(motif_choices),
+            motif=chosen_motif,
             primary_family=genome.feature_gene.primary_family,
             source_mode="structural",
             case_snapshot=case_snapshot,
@@ -363,3 +372,62 @@ class MutationPolicy:
             )
             multipliers[mode] = max(0.10, float(multiplier))
         return multipliers
+
+    def _motif_success_weights(self) -> dict[str, float]:
+        """Return a per-motif weight map biasing structural mutation.
+
+        Iterates over ``self.mutation_learning_records`` (pre-filtered to
+        ``mutation_mode == 'structural'`` by the repository query) and computes
+        a score per motif using:
+            - success_rate  (fraction of records with outcome_delta > 0)
+            - avg_uplift    (mean outcome_delta across all records for the motif)
+            - time_decay    (exponential decay per day using score_decay config)
+
+        Falls back gracefully to ``{}`` when:
+            - mutation learning is disabled
+            - fewer than ``min_support`` records exist for every motif
+        A global (cross-family) aggregate is used so even unseen family
+        combinations benefit from system-wide structural learning.
+        """
+        learning_config = self.adaptive_config.mutation_learning
+        if not learning_config.enabled or not self.mutation_learning_records:
+            return {}
+
+        now = datetime.now(timezone.utc)
+        score_decay = float(learning_config.score_decay)
+
+        # Aggregate: motif -> list of time-weighted deltas
+        motif_weighted: dict[str, list[float]] = {}
+        for row in self.mutation_learning_records:
+            motif = str(row.get("child_motif") or "").strip()
+            if not motif:
+                continue
+            delta = float(row.get("outcome_delta") or 0.0)
+
+            # Time-based exponential decay
+            decay_weight = 1.0
+            created_at_raw = row.get("created_at")
+            if created_at_raw and score_decay < 1.0:
+                try:
+                    created_dt = datetime.fromisoformat(str(created_at_raw))
+                    if created_dt.tzinfo is None:
+                        created_dt = created_dt.replace(tzinfo=timezone.utc)
+                    days_old = max(0.0, (now - created_dt).total_seconds() / 86400.0)
+                    decay_weight = math.pow(score_decay, days_old)
+                except (ValueError, TypeError):
+                    decay_weight = 1.0
+
+            motif_weighted.setdefault(motif, []).append(delta * decay_weight)
+
+        weights: dict[str, float] = {}
+        for motif, weighted_deltas in motif_weighted.items():
+            support = len(weighted_deltas)
+            if support < learning_config.min_support:
+                continue
+            success_rate = sum(1.0 for d in weighted_deltas if d > 0.0) / support
+            avg_uplift = sum(weighted_deltas) / support
+            # Positive history: boost; negative history: penalize but keep > 0.10
+            score = 1.0 + learning_config.success_rate_weight * success_rate + learning_config.uplift_weight * avg_uplift
+            weights[motif] = max(0.10, float(score))
+
+        return weights

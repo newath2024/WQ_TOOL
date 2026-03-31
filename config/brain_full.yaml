@@ -92,7 +92,7 @@ adaptive_generation:
   pattern_decay: 0.98
   max_generation_seconds: 20
   max_attempt_multiplier: 12
-  max_consecutive_failures: 250
+  max_consecutive_failures: 400
   min_candidates_before_early_exit: 5
   exploration_ratio: 0.35
   novelty_weight: 0.25
