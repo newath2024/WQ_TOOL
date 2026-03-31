@@ -144,6 +144,16 @@ python main.py service-status --config config/dev.yaml
 `run-service` la foreground process de chay duoi Task Scheduler, NSSM, systemd, hoac supervisor tuong tu.
 `service-status` la lenh nhanh de xem service dang o run nao, batch nao, con bao nhieu alpha pending, va ket qua gan nhat.
 
+Google Drive snapshot backup:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\tools\backup_to_google_drive.ps1 -GoogleDriveRoot "C:\Users\<you>\Google Drive"
+powershell -ExecutionPolicy Bypass -File .\tools\register_google_drive_backup_task.ps1 -GoogleDriveRoot "C:\Users\<you>\Google Drive"
+```
+
+`backup_to_google_drive.ps1` tao snapshot an toan cua `*.sqlite3`, `outputs/`, `progress_logs/`, `config/`, va mot so file repo can thiet vao `Google Drive\WQ_TOOL_backups`.
+Script mac dinh khong copy `outputs/brain_api_session.json` de tranh sync session API.
+
 Moi service tick:
 
 1. renew/acquire DB lease lock
