@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import replace
+from pathlib import Path
 
 from core.config import AdaptiveGenerationConfig, GenerationConfig, load_config
 from core.run_context import RunContext
@@ -529,11 +530,12 @@ def test_research_context_provider_persist_metadata_skips_rewrites_on_cache_hit(
     assert first_catalog_updated_at == second_catalog_updated_at
 
 
-def test_brain_batch_service_persists_generation_stage_metrics() -> None:
+def test_brain_batch_service_persists_generation_stage_metrics(tmp_path: Path) -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = load_config("config/dev.yaml")
         config.storage.path = ":memory:"
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
         environment = _environment("config/dev.yaml", "generation-stage")
         init_run(repository, config, environment, status="running")
 
@@ -545,11 +547,14 @@ def test_brain_batch_service_persists_generation_stage_metrics() -> None:
             round_index=1,
         )
         stage_metrics = repository.get_stage_metrics(environment.context.run_id)
+        log_path = tmp_path / "progress" / f"{environment.context.run_id}.jsonl"
+        progress_rows = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
     finally:
         repository.close()
 
     generation_rows = [row for row in stage_metrics if row["stage"] == "generation"]
     assert generation_rows
+    assert any(row["event"] == "batch_prepared" for row in progress_rows)
     metrics = json.loads(generation_rows[-1]["metrics_json"])
     assert metrics["generated"] == len(result.candidates)
     assert metrics["selected_for_simulation"] == len(result.selected)

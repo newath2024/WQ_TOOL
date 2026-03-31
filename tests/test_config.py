@@ -78,6 +78,8 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     research_config = load_config("config/research.yaml")
 
     assert default_config.runtime.profile_name == "research"
+    assert default_config.runtime.progress_log_enabled is True
+    assert default_config.runtime.progress_log_dir == ""
     assert research_config.runtime.profile_name == "research"
     assert default_config.evaluation.min_sharpe == research_config.evaluation.min_sharpe
     assert default_config.evaluation.max_turnover == research_config.evaluation.max_turnover
@@ -279,3 +281,5 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.adaptive_generation.min_candidates_before_early_exit == 5
     assert config.service.research_context_cache_enabled is True
     assert config.service.research_context_cache_ttl_seconds == 0
+    assert config.runtime.progress_log_enabled is True
+    assert config.runtime.progress_log_dir == ""

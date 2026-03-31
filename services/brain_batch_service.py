@@ -16,6 +16,7 @@ from services.candidate_selection_service import CandidateSelectionService
 from services.data_service import CachedResearchContextProvider, resolve_field_registry
 from services.evaluation_service import alpha_candidate_from_record
 from services.models import BatchPreparationResult, CandidateScore, CommandEnvironment
+from services.progress_log import append_progress_event
 from storage.models import StageMetricRecord
 from storage.repository import SQLiteRepository
 
@@ -172,6 +173,21 @@ class BrainBatchService:
                     created_at=datetime.now(UTC).isoformat(),
                 )
             ]
+        )
+        append_progress_event(
+            config,
+            environment,
+            event="batch_prepared",
+            stage="generation",
+            status="prepared",
+            round_index=round_index,
+            payload={
+                "candidate_count": len(candidates),
+                "selected_count": len(pre_sim_result.selected),
+                "archived_count": len(pre_sim_result.archived),
+                "regime_key": active_regime_key,
+                "generation_stage_metrics": generation_metrics,
+            },
         )
         return BatchPreparationResult(
             candidates=tuple(candidates),

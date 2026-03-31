@@ -334,6 +334,7 @@ class ClosedLoopRunSummary:
     backend: str
     status: str
     rounds: tuple[ClosedLoopRoundSummary, ...]
+    progress_log_path: str | None = None
 
 
 @dataclass(slots=True, frozen=True)
@@ -368,3 +369,4 @@ class ServiceRunSummary:
     status: str
     ticks_executed: int
     pending_job_count: int
+    progress_log_path: str | None = None

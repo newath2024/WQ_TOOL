@@ -616,6 +616,8 @@ class RuntimeConfig:
     log_level: str = "INFO"
     fail_fast: bool = False
     profile_name: str = ""
+    progress_log_enabled: bool = True
+    progress_log_dir: str = ""
 
 
 @dataclass(slots=True)

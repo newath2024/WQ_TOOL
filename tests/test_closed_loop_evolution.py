@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+import json
 from pathlib import Path
 
 from adapters.simulation_adapter import SimulationAdapter
@@ -106,6 +107,48 @@ def test_closed_loop_persists_pre_sim_and_learning_artifacts(tmp_path: Path) -> 
     assert any(row["score_stage"] == "mutation_parent" for row in selection_rows)
     assert regime_snapshot is not None
     assert isinstance(mutation_outcomes, list)
+
+
+def test_closed_loop_writes_progress_log_jsonl(tmp_path: Path) -> None:
+    data_path = tmp_path / "market.csv"
+    metadata_path = tmp_path / "metadata.csv"
+    write_sample_csv(data_path)
+    write_sample_metadata_csv(metadata_path)
+
+    config = load_config("config/dev.yaml")
+    config.data.path = str(data_path)
+    config.aux_data.group_path = str(metadata_path)
+    config.aux_data.factor_path = str(metadata_path)
+    config.aux_data.mask_path = str(metadata_path)
+    config.storage.path = str(tmp_path / "closed_loop_progress.sqlite3")
+    config.runtime.log_level = "WARNING"
+    config.runtime.progress_log_dir = str(tmp_path / "progress")
+    config.loop.rounds = 1
+    config.loop.generation_batch_size = 4
+    config.loop.simulation_batch_size = 2
+    config.loop.mutate_top_k = 1
+    config.loop.max_children_per_parent = 1
+    config.generation.template_count = 4
+    config.generation.grammar_count = 0
+    config.generation.mutation_count = 1
+
+    repository = SQLiteRepository(config.storage.path)
+    try:
+        environment = _init_environment(repository, config, "run-closed-loop")
+        service = ClosedLoopService(
+            repository,
+            brain_service=BrainService(repository, config.brain, adapter=FakeCompletedAdapter()),
+        )
+        summary = service.run(config=config, environment=environment)
+        log_path = tmp_path / "progress" / f"{environment.context.run_id}.jsonl"
+        progress_rows = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    finally:
+        repository.close()
+
+    assert summary.progress_log_path == str(log_path)
+    assert any(row["event"] == "closed_loop_run_started" for row in progress_rows)
+    assert any(row["event"] == "closed_loop_round_completed" for row in progress_rows)
+    assert progress_rows[-1]["event"] == "closed_loop_run_finished"
 
 
 def _init_environment(repository: SQLiteRepository, config, command_name: str) -> CommandEnvironment:

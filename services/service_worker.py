@@ -14,6 +14,7 @@ from services.evaluation_service import alpha_candidate_from_record
 from generator.engine import AlphaCandidate
 from services.models import CommandEnvironment, ServiceTickOutcome, SimulationResult
 from services.notification_manager import NotificationManager
+from services.progress_log import append_progress_event
 from services.session_manager import SessionManager
 from storage.models import BrainResultRecord, ServiceRuntimeRecord
 from storage.repository import SQLiteRepository
@@ -291,6 +292,24 @@ class ServiceWorker:
                 refreshed.pending_count,
                 len(refreshed.results),
             )
+            completed_count = sum(1 for result in refreshed.results if result.status == "completed")
+            failed_count = sum(1 for result in refreshed.results if result.status in {"failed", "rejected", "timeout"})
+            append_progress_event(
+                self.config,
+                self.environment,
+                event="batch_polled",
+                stage="service-poll",
+                status=refreshed.status,
+                tick_id=tick_id,
+                round_index=refreshed.jobs[0].round_index if refreshed.jobs else None,
+                batch_id=batch_id,
+                payload={
+                    "pending_count": refreshed.pending_count,
+                    "new_result_count": len(refreshed.results),
+                    "completed_count": completed_count,
+                    "failed_count": failed_count,
+                },
+            )
             for result in refreshed.results:
                 if result.status == "completed":
                     completed_results.append(result)
@@ -357,6 +376,22 @@ class ServiceWorker:
             len(candidates),
             batch.submitted_count,
             pending_count,
+        )
+        append_progress_event(
+            self.config,
+            self.environment,
+            event="batch_submitted",
+            stage="service-submit",
+            status=batch.status,
+            tick_id=tick_id,
+            round_index=tick_id,
+            batch_id=batch.batch_id,
+            payload={
+                "generated_count": len(candidates),
+                "submitted_count": batch.submitted_count,
+                "pending_job_count": pending_count,
+                "export_path": batch.export_path,
+            },
         )
         return ServiceTickOutcome(
             status="running" if pending_count else "idle",

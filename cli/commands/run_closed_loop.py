@@ -32,6 +32,8 @@ def handle(
     print(f"backend: {summary.backend}")
     print(f"status: {summary.status}")
     print(f"rounds_completed: {len(summary.rounds)}")
+    if summary.progress_log_path:
+        print(f"progress_log_path: {summary.progress_log_path}")
     for round_summary in summary.rounds:
         print(
             f"round_{round_summary.round_index}: status={round_summary.status}; generated={round_summary.generated_count}; submitted={round_summary.submitted_count}; "

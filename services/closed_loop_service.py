@@ -27,6 +27,7 @@ from services.models import (
     CommandEnvironment,
     SimulationResult,
 )
+from services.progress_log import append_progress_event, resolve_progress_log_path
 from storage.models import ClosedLoopRoundRecord, ClosedLoopRunRecord
 from storage.repository import SQLiteRepository
 
@@ -56,6 +57,10 @@ class ClosedLoopService:
         environment: CommandEnvironment,
     ) -> ClosedLoopRunSummary:
         logger = get_logger(__name__, run_id=environment.context.run_id, stage="closed-loop")
+        progress_log_path = resolve_progress_log_path(config, environment)
+        progress_log_path_str = str(progress_log_path) if progress_log_path is not None else None
+        if progress_log_path_str:
+            logger.info("Progress log path=%s", progress_log_path_str)
         research_context = load_research_context(config, environment, stage="closed-loop-data")
         active_regime_key = research_context.effective_regime_key or research_context.regime_key
         self.selection_service.configure_runtime(
@@ -82,6 +87,19 @@ class ClosedLoopService:
                 started_at=datetime.now(UTC).isoformat(),
                 finished_at=None,
             )
+        )
+        append_progress_event(
+            config,
+            environment,
+            event="closed_loop_run_started",
+            stage="closed-loop",
+            status="running",
+            payload={
+                "requested_rounds": config.loop.rounds,
+                "generation_batch_size": config.loop.generation_batch_size,
+                "simulation_batch_size": config.loop.simulation_batch_size,
+                "mutate_top_k": config.loop.mutate_top_k,
+            },
         )
 
         staged_mutations: list[AlphaCandidate] = []
@@ -132,6 +150,15 @@ class ClosedLoopService:
                 )
                 round_summaries.append(summary)
                 self._persist_round_summary(environment, summary)
+                append_progress_event(
+                    config,
+                    environment,
+                    event="closed_loop_round_completed",
+                    stage="closed-loop",
+                    status=summary.status,
+                    round_index=round_index,
+                    payload=self._round_summary_payload(summary),
+                )
                 run_status = "stopped_no_candidates"
                 break
 
@@ -242,6 +269,16 @@ class ClosedLoopService:
             )
             round_summaries.append(summary)
             self._persist_round_summary(environment, summary)
+            append_progress_event(
+                config,
+                environment,
+                event="closed_loop_round_completed",
+                stage="closed-loop",
+                status=summary.status,
+                round_index=round_index,
+                batch_id=summary.batch_id,
+                payload=self._round_summary_payload(summary),
+            )
             logger.info(
                 "Closed-loop round %s status=%s generated=%s submitted=%s completed=%s next_mutations=%s",
                 round_index,
@@ -266,11 +303,23 @@ class ClosedLoopService:
                 finished_at=datetime.now(UTC).isoformat(),
             )
         )
+        append_progress_event(
+            config,
+            environment,
+            event="closed_loop_run_finished",
+            stage="closed-loop",
+            status=run_status,
+            payload={
+                "completed_rounds": len(round_summaries),
+                "requested_rounds": config.loop.rounds,
+            },
+        )
         return ClosedLoopRunSummary(
             run_id=environment.context.run_id,
             backend=config.brain.backend,
             status=run_status,
             rounds=tuple(round_summaries),
+            progress_log_path=progress_log_path_str,
         )
 
     def _generate_fresh_candidates(
@@ -433,3 +482,16 @@ class ClosedLoopService:
                 updated_at=timestamp,
             )
         )
+
+    @staticmethod
+    def _round_summary_payload(summary: ClosedLoopRoundSummary) -> dict[str, object]:
+        return {
+            "generated_count": summary.generated_count,
+            "validated_count": summary.validated_count,
+            "submitted_count": summary.submitted_count,
+            "completed_count": summary.completed_count,
+            "selected_for_mutation_count": summary.selected_for_mutation_count,
+            "mutated_children_count": summary.mutated_children_count,
+            "export_path": summary.export_path,
+            "notes": list(summary.notes),
+        }

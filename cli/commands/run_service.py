@@ -34,4 +34,6 @@ def handle(
     print(f"status: {summary.status}")
     print(f"ticks_executed: {summary.ticks_executed}")
     print(f"pending_job_count: {summary.pending_job_count}")
+    if summary.progress_log_path:
+        print(f"progress_log_path: {summary.progress_log_path}")
     return 0 if summary.status != "lock_denied" else 1

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 import requests
 
@@ -580,6 +581,40 @@ def test_service_runner_resumes_pending_jobs_without_duplicate_submission() -> N
     assert len(adapter.submit_calls) == 0
     assert result is not None and result.status == "completed"
     assert submission is not None and submission.status == "completed"
+
+
+def test_service_runner_writes_progress_log_jsonl(tmp_path: Path) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        run_id = "run-progress-log"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        repository.service_runtime.upsert_state(_runtime_record(run_id=run_id))
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
+        runner = ServiceRunner(
+            repository,
+            config=config,
+            environment=_environment("fresh-run-id"),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            sleep_fn=lambda seconds: None,
+            install_signal_handlers=False,
+        )
+
+        summary = runner.run(max_ticks=1)
+        log_path = tmp_path / "progress" / f"{run_id}.jsonl"
+        progress_rows = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    finally:
+        repository.close()
+
+    assert summary.progress_log_path == str(log_path)
+    assert any(row["event"] == "service_run_started" for row in progress_rows)
+    assert any(row["event"] == "service_tick_started" for row in progress_rows)
+    assert any(row["event"] == "batch_polled" and row["batch_id"] == "batch-1" for row in progress_rows)
+    assert any(row["event"] == "service_tick_completed" and row["status"] == "idle" for row in progress_rows)
+    assert any(row["event"] == "service_run_finished" for row in progress_rows)
 
 
 def test_service_worker_applies_backoff_after_transient_poll_failure() -> None:

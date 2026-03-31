@@ -13,6 +13,7 @@ from services.brain_service import BrainService
 from services.heartbeat_reporter import HeartbeatReporter
 from services.models import CommandEnvironment, ServiceRunSummary
 from services.notification_manager import NotificationManager
+from services.progress_log import append_progress_event, resolve_progress_log_path
 from services.runtime_lock import RuntimeLock
 from services.runtime_service import init_run
 from services.service_scheduler import ServiceScheduler
@@ -63,7 +64,23 @@ class ServiceRunner:
         environment = self._resolve_service_environment()
         self.environment = environment
         logger = get_logger(__name__, run_id=environment.context.run_id, stage="service")
+        progress_log_path = resolve_progress_log_path(self.config, environment)
+        progress_log_path_str = str(progress_log_path) if progress_log_path is not None else None
         init_run(self.repository, self.config, environment, status="running_service")
+        if progress_log_path_str:
+            logger.info("Progress log path=%s", progress_log_path_str)
+        append_progress_event(
+            self.config,
+            environment,
+            event="service_run_started",
+            stage="service",
+            status="running_service",
+            payload={
+                "service_name": self.config.service.lock_name,
+                "max_ticks": max_ticks,
+                "pending_job_limit": self.config.service.max_pending_jobs,
+            },
+        )
 
         runtime_lock = RuntimeLock.create(
             self.repository.service_runtime,
@@ -73,12 +90,21 @@ class ServiceRunner:
         )
         if not runtime_lock.acquire(status="starting"):
             logger.error("Service already active for lock=%s", self.config.service.lock_name)
+            append_progress_event(
+                self.config,
+                environment,
+                event="service_run_lock_denied",
+                stage="service",
+                status="lock_denied",
+                payload={"service_name": self.config.service.lock_name},
+            )
             return ServiceRunSummary(
                 run_id=environment.context.run_id,
                 service_name=self.config.service.lock_name,
                 status="lock_denied",
                 ticks_executed=0,
                 pending_job_count=0,
+                progress_log_path=progress_log_path_str,
             )
 
         now = _utcnow()
@@ -117,6 +143,16 @@ class ServiceRunner:
                 runtime = self.repository.service_runtime.get_state(self.config.service.lock_name) or runtime
                 tick_id = runtime.tick_id + 1
                 logger.info("Service tick starting active_batch=%s pending=%s", runtime.active_batch_id, runtime.pending_job_count)
+                append_progress_event(
+                    self.config,
+                    environment,
+                    event="service_tick_started",
+                    stage="service",
+                    status=runtime.status,
+                    tick_id=tick_id,
+                    batch_id=runtime.active_batch_id,
+                    payload={"pending_job_count": runtime.pending_job_count},
+                )
                 try:
                     outcome = self.worker.run_tick(
                         runtime=runtime,
@@ -126,6 +162,26 @@ class ServiceRunner:
                     runtime = self.heartbeat.record_tick(runtime=runtime, outcome=outcome, tick_id=tick_id)
                     self.repository.update_run_status(environment.context.run_id, f"service_{outcome.status}")
                     final_status = f"service_{outcome.status}"
+                    append_progress_event(
+                        self.config,
+                        environment,
+                        event="service_tick_completed",
+                        stage="service",
+                        status=outcome.status,
+                        tick_id=tick_id,
+                        batch_id=outcome.active_batch_id,
+                        payload={
+                            "pending_job_count": outcome.pending_job_count,
+                            "generated_count": outcome.generated_count,
+                            "submitted_count": outcome.submitted_count,
+                            "completed_count": outcome.completed_count,
+                            "failed_count": outcome.failed_count,
+                            "quarantined_count": outcome.quarantined_count,
+                            "next_sleep_seconds": outcome.next_sleep_seconds,
+                            "cooldown_until": outcome.cooldown_until,
+                            "last_error": outcome.last_error,
+                        },
+                    )
                 except Exception as exc:  # noqa: BLE001
                     now = _utcnow()
                     consecutive_failures = runtime.consecutive_failures + 1
@@ -144,12 +200,36 @@ class ServiceRunner:
                     )
                     self.repository.update_run_status(environment.context.run_id, final_status)
                     logger.exception("Service tick failed")
+                    append_progress_event(
+                        self.config,
+                        environment,
+                        event="service_tick_failed",
+                        stage="service",
+                        status=final_status,
+                        tick_id=tick_id,
+                        batch_id=runtime.active_batch_id,
+                        payload={
+                            "error": str(exc),
+                            "consecutive_failures": consecutive_failures,
+                            "cooldown_until": cooldown_until,
+                        },
+                    )
 
                 ticks_executed += 1
                 if self.stop_requested:
                     break
                 sleep_seconds = self.scheduler.next_sleep_seconds(runtime=runtime, outcome=self._runtime_to_outcome(runtime))
                 logger.info("Service sleeping for %ss", sleep_seconds)
+                append_progress_event(
+                    self.config,
+                    environment,
+                    event="service_sleeping",
+                    stage="service",
+                    status=runtime.status,
+                    tick_id=runtime.tick_id,
+                    batch_id=runtime.active_batch_id,
+                    payload={"sleep_seconds": sleep_seconds},
+                )
                 self._sleep_interruptibly(float(sleep_seconds))
         finally:
             runtime = self.repository.service_runtime.get_state(self.config.service.lock_name) or runtime
@@ -157,6 +237,19 @@ class ServiceRunner:
             self.heartbeat.record_shutdown(runtime=runtime, status=stopped_status)
             runtime_lock.release(status=stopped_status)
             self.repository.update_run_status(environment.context.run_id, stopped_status, finished=True)
+            append_progress_event(
+                self.config,
+                environment,
+                event="service_run_finished",
+                stage="service",
+                status=stopped_status,
+                tick_id=runtime.tick_id,
+                batch_id=runtime.active_batch_id,
+                payload={
+                    "ticks_executed": ticks_executed,
+                    "pending_job_count": runtime.pending_job_count,
+                },
+            )
 
         refreshed = self.repository.service_runtime.get_state(self.config.service.lock_name) or runtime
         return ServiceRunSummary(
@@ -165,6 +258,7 @@ class ServiceRunner:
             status=refreshed.status,
             ticks_executed=ticks_executed,
             pending_job_count=refreshed.pending_job_count,
+            progress_log_path=progress_log_path_str,
         )
 
     def request_shutdown(self, signum: int | None = None, frame: FrameType | None = None) -> None:
