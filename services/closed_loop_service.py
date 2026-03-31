@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import time
 from datetime import UTC, datetime
 from dataclasses import replace
 
@@ -21,6 +22,7 @@ from services.data_service import (
     persist_research_metadata,
     resolve_field_registry,
 )
+from services.notification_manager import NotificationManager
 from services.models import (
     ClosedLoopRoundSummary,
     ClosedLoopRunSummary,
@@ -28,7 +30,8 @@ from services.models import (
     SimulationResult,
 )
 from services.progress_log import append_progress_event, resolve_progress_log_path
-from storage.models import ClosedLoopRoundRecord, ClosedLoopRunRecord
+from services.session_manager import SessionManager
+from storage.models import ClosedLoopRoundRecord, ClosedLoopRunRecord, ServiceRuntimeRecord
 from storage.repository import SQLiteRepository
 
 
@@ -121,7 +124,7 @@ class ClosedLoopService:
                 global_regime_key=research_context.global_regime_key,
                 region_learning_config=config.adaptive_generation.region_learning,
             )
-            existing_normalized = self.repository.list_existing_normalized_expressions(environment.context.run_id)
+            round_existing_normalized = self.repository.list_existing_normalized_expressions(environment.context.run_id)
             fresh_budget = max(0, config.loop.generation_batch_size - len(staged_mutations))
             fresh_candidates = self._generate_fresh_candidates(
                 config=config,
@@ -131,7 +134,7 @@ class ClosedLoopService:
                 case_snapshot=case_snapshot,
                 region_learning_context=research_context.region_learning_context,
                 count=fresh_budget,
-                existing_normalized=existing_normalized | {candidate.normalized_expression for candidate in staged_mutations},
+                existing_normalized=round_existing_normalized | {candidate.normalized_expression for candidate in staged_mutations},
                 run_id=environment.context.run_id,
                 round_index=round_index,
             )
@@ -181,6 +184,107 @@ class ClosedLoopService:
             selected = list(pre_sim_result.selected)
             archived = list(pre_sim_result.archived)
             selected_candidates = [item.candidate for item in selected]
+            
+            if hasattr(brain_service.adapter, "probe_authenticated_session"):
+                session_manager = SessionManager(
+                    brain_service.adapter, 
+                    persona_retry_interval_seconds=config.service.persona_retry_interval_seconds
+                )
+                notification_manager = (
+                    NotificationManager(
+                        brain_service.adapter,
+                        persona_email_cooldown_seconds=config.service.persona_email_cooldown_seconds,
+                        persona_confirmation_required=config.service.persona_confirmation_required,
+                        persona_confirmation_prompt_cooldown_seconds=(
+                            config.service.persona_confirmation_prompt_cooldown_seconds
+                        ),
+                        persona_confirmation_granted_ttl_seconds=(
+                            config.service.persona_confirmation_granted_ttl_seconds
+                        ),
+                    )
+                    if hasattr(brain_service.adapter, "send_persona_notification")
+                    else None
+                )
+                fake_runtime = ServiceRuntimeRecord(
+                    service_name="cli",
+                    service_run_id=environment.context.run_id,
+                    owner_token="",
+                    pid=0,
+                    hostname="",
+                    status="running",
+                    tick_id=0,
+                    active_batch_id=None,
+                    pending_job_count=0,
+                    consecutive_failures=0,
+                    cooldown_until=None,
+                    last_heartbeat_at=None,
+                    last_success_at=None,
+                    last_error=None,
+                    persona_url=None,
+                    persona_wait_started_at=None,
+                    persona_last_notification_at=None,
+                    counters_json="{}",
+                    lock_expires_at=None,
+                    started_at=datetime.now(UTC).isoformat(),
+                    updated_at=datetime.now(UTC).isoformat()
+                )
+                while True:
+                    state = session_manager.ensure_session(runtime=fake_runtime, allow_new_login=False)
+                    if state.status == "authentication_required":
+                        if notification_manager is not None:
+                            now = datetime.now(UTC).isoformat()
+                            confirmation = notification_manager.request_persona_confirmation(
+                                runtime=fake_runtime,
+                                service_name=environment.command_name,
+                            )
+                            fake_runtime = replace(
+                                fake_runtime,
+                                persona_confirmation_nonce=confirmation.nonce,
+                                persona_confirmation_last_prompt_at=confirmation.last_prompt_at,
+                                persona_confirmation_granted_at=confirmation.granted_at,
+                                persona_confirmation_last_update_id=confirmation.last_update_id,
+                                updated_at=now,
+                            )
+                            if confirmation.status == "pending":
+                                logger.info("%s", confirmation.detail)
+                                time.sleep(config.service.persona_confirmation_poll_interval_seconds)
+                                continue
+                        state = session_manager.ensure_session(runtime=fake_runtime, allow_new_login=True)
+                    if state.status == "ready":
+                        break
+                    elif state.status == "waiting_persona":
+                        now = datetime.now(UTC).isoformat()
+                        persona_wait_started_at = fake_runtime.persona_wait_started_at or now
+                        if state.persona_url and state.persona_url != fake_runtime.persona_url:
+                            persona_wait_started_at = now
+                        if fake_runtime.persona_wait_started_at is None:
+                            logger.info("Session requires Persona verification: %s. Polling...", state.persona_url)
+                        sent = False
+                        notification_at = now
+                        if notification_manager is not None and state.persona_url:
+                            sent, notification_at = notification_manager.notify_persona_required(
+                                runtime=fake_runtime,
+                                persona_url=str(state.persona_url),
+                            )
+                        fake_runtime = replace(
+                            fake_runtime,
+                            status="waiting_persona",
+                            persona_url=state.persona_url,
+                            persona_wait_started_at=persona_wait_started_at,
+                            persona_last_notification_at=notification_at if sent else fake_runtime.persona_last_notification_at,
+                            persona_confirmation_nonce=None,
+                            persona_confirmation_last_prompt_at=None,
+                            persona_confirmation_granted_at=None,
+                            updated_at=now,
+                        )
+                        time.sleep(config.service.persona_retry_interval_seconds)
+                    elif state.status == "auth_throttled":
+                        logger.warning("Biometrics throttled. Waiting %s seconds...", state.retry_after_seconds)
+                        time.sleep(state.retry_after_seconds or 60)
+                    else:
+                        logger.error("Authentication failed: %s", state.detail)
+                        break
+
             batch = brain_service.simulate_candidates(
                 selected_candidates,
                 config=config,
@@ -198,6 +302,7 @@ class ClosedLoopService:
                     top_k=config.loop.mutate_top_k,
                     diversity_config=config.adaptive_generation.diversity,
                     case_snapshot=case_snapshot,
+                    field_registry=field_registry,
                     run_id=environment.context.run_id,
                     round_index=round_index,
                 )
@@ -228,7 +333,7 @@ class ClosedLoopService:
                     region_learning_context=research_context.region_learning_context,
                     case_snapshot=case_snapshot,
                     count=max(1, min(config.generation.mutation_count, len(selected_parent_ids) * config.loop.max_children_per_parent)),
-                    existing_normalized=self.repository.list_existing_normalized_expressions(environment.context.run_id),
+                    existing_normalized=round_existing_normalized | {candidate.normalized_expression for candidate in round_candidates},
                     run_id=environment.context.run_id,
                     round_index=round_index,
                 )
@@ -388,7 +493,7 @@ class ClosedLoopService:
     ) -> list[AlphaCandidate]:
         if not selected_parent_ids or count <= 0:
             return []
-        mutation_learning_records = self.repository.list_mutation_outcomes(effective_regime_key=regime_key)
+        mutation_learning_records = self.repository.list_mutation_outcomes_with_motif(effective_regime_key=regime_key)
         scoped_generation = self._generation_config_for_scope(
             config.generation,
             run_id=run_id,

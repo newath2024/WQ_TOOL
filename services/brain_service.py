@@ -5,7 +5,7 @@ import time
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
-from adapters.brain_api_adapter import ApiEndpointConfig, BrainApiAdapter
+from adapters.brain_api_adapter import ApiEndpointConfig, BrainApiAdapter, BiometricsThrottled, PersonaVerificationRequired
 from adapters.brain_manual_adapter import BrainManualAdapter
 from adapters.simulation_adapter import SimulationAdapter
 from core.config import AppConfig, BrainConfig
@@ -284,6 +284,21 @@ class BrainService:
                 status = self.normalize_status(status_payload.get("status"))
                 retry_after = _optional_float(status_payload.get("retry_after"))
             except Exception as exc:  # noqa: BLE001
+                is_persona_wait = isinstance(exc, PersonaVerificationRequired) or (isinstance(exc, RuntimeError) and "Persona" in str(exc))
+                if isinstance(exc, BiometricsThrottled) or is_persona_wait:
+                    delay = exc.retry_after_seconds if isinstance(exc, BiometricsThrottled) and exc.retry_after_seconds else 60
+                    next_poll_after = _shift_iso(now, delay)
+                    self.repository.submissions.update_submission_runtime(
+                        job.job_id,
+                        updated_at=now,
+                        retry_count=submission.retry_count,
+                        last_polled_at=now,
+                        next_poll_after=next_poll_after,
+                        service_failure_reason=str(exc),
+                    )
+                    logger.warning("Job %s polling delayed by auth: %s", job.job_id, type(exc).__name__)
+                    continue
+
                 retry_count = submission.retry_count + 1
                 if retry_count > self.brain_config.max_retries:
                     logger.warning("Job %s exceeded retry budget; marking failed", job.job_id)

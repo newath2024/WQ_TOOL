@@ -36,7 +36,7 @@ class NotificationManager:
 
     def notify_persona_required(self, *, runtime: ServiceRuntimeRecord, persona_url: str) -> tuple[bool, str]:
         now = datetime.now(UTC).isoformat()
-        print("BRAIN requires biometric authentication for service mode.")
+        print("BRAIN requires biometric authentication.")
         print(f"Open this URL to complete face scan: {persona_url}")
         if not self._should_send(runtime, now, persona_url):
             return False, now
