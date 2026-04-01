@@ -78,6 +78,8 @@ class MotifGrammar:
         fast_window = NumberNode(float(max(1, genome.horizon_gene.fast_window)))
         slow_window = NumberNode(float(max(1, genome.horizon_gene.slow_window or genome.horizon_gene.fast_window)))
         context_window = NumberNode(float(max(1, genome.horizon_gene.context_window or genome.horizon_gene.fast_window)))
+        normalize_after_smoothing = False
+        deferred_group_neutralizers: list[ExprNode] = []
 
         if motif == "momentum":
             signal = self._call(genome.transform_gene.primitive_transform or "ts_delta", primary, slow_window)
@@ -104,23 +106,20 @@ class MotifGrammar:
             )
             signal = BinaryOpNode(operator="/", left=numerator, right=denominator)
         elif motif == "quality_score":
-            signal = self._normalize(
-                BinaryOpNode(
-                    operator="/",
-                    left=primary,
-                    right=self._stabilize_divisor(secondary),
-                )
+            signal = BinaryOpNode(
+                operator="/",
+                left=primary,
+                right=self._stabilize_divisor(secondary),
             )
+            normalize_after_smoothing = True
         elif motif == "price_volume_divergence":
-            signal = self._normalize(
-                self._call(genome.transform_gene.primitive_transform or "ts_corr", primary, secondary, slow_window)
-            )
+            signal = self._call(genome.transform_gene.primitive_transform or "ts_corr", primary, secondary, slow_window)
+            normalize_after_smoothing = True
         elif motif == "conditional_momentum":
             momentum = self._call(genome.transform_gene.primitive_transform or "ts_delta", primary, fast_window)
-            conditioner = self._normalize(
-                self._call(genome.transform_gene.secondary_transform or "ts_mean", secondary, slow_window)
-            )
+            conditioner = self._call(genome.transform_gene.secondary_transform or "ts_mean", secondary, slow_window)
             signal = BinaryOpNode(operator="*", left=momentum, right=conditioner)
+            normalize_after_smoothing = True
         elif motif == "residualized_signal":
             base = self._call(genome.transform_gene.primitive_transform or "ts_mean", primary, slow_window)
             residual = self._call(genome.transform_gene.secondary_transform or "ts_mean", secondary, slow_window)
@@ -128,27 +127,31 @@ class MotifGrammar:
         elif motif == "regime_conditioned_signal":
             base = self._call(genome.transform_gene.primitive_transform or "ts_delta", primary, slow_window)
             regime = self._call(genome.transform_gene.secondary_transform or "ts_std_dev", secondary, context_window)
-            signal = BinaryOpNode(operator="*", left=base, right=self._normalize(regime))
+            signal = BinaryOpNode(operator="*", left=base, right=regime)
+            normalize_after_smoothing = True
         elif motif == "group_relative_signal":
-            inner = self._call(genome.transform_gene.primitive_transform or "ts_mean", primary, slow_window)
-            signal = self._call("group_neutralize", inner, group_node or IdentifierNode("sector"))
+            signal = self._call(genome.transform_gene.primitive_transform or "ts_mean", primary, slow_window)
+            deferred_group_neutralizers.append(group_node or IdentifierNode("sector"))
         elif motif == "liquidity_conditioned_signal":
             base = self._call(genome.transform_gene.primitive_transform or "ts_delta", primary, slow_window)
             liquidity = self._call(genome.transform_gene.secondary_transform or "ts_mean", liquidity_node or auxiliary, context_window)
-            signal = BinaryOpNode(operator="*", left=base, right=self._normalize(liquidity))
+            signal = BinaryOpNode(operator="*", left=base, right=liquidity)
+            normalize_after_smoothing = True
         else:
             pair_operator = genome.transform_gene.pair_operator or "ts_corr"
             signal = self._call(pair_operator, primary, secondary, slow_window)
 
         if genome.regime_gene.conditioning_mode == "volatility_gate":
-            conditioner = self._normalize(self._call("ts_std_dev", auxiliary, context_window))
+            conditioner = self._call("ts_std_dev", auxiliary, context_window)
             signal = BinaryOpNode(operator="*", left=signal, right=conditioner)
+            normalize_after_smoothing = True
         elif genome.regime_gene.conditioning_mode == "liquidity_gate":
             condition_field = IdentifierNode(genome.regime_gene.conditioning_field or genome.feature_gene.liquidity_field or auxiliary.name)
-            conditioner = self._normalize(self._call("ts_mean", condition_field, context_window))
+            conditioner = self._call("ts_mean", condition_field, context_window)
             signal = BinaryOpNode(operator="*", left=signal, right=conditioner)
+            normalize_after_smoothing = True
         elif genome.regime_gene.conditioning_mode == "group_neutralize":
-            signal = self._call("group_neutralize", signal, group_node or IdentifierNode("sector"))
+            deferred_group_neutralizers.append(group_node or IdentifierNode("sector"))
 
         if genome.turnover_gene.smoothing_operator and genome.turnover_gene.smoothing_window > 0:
             signal = self._call(
@@ -157,6 +160,10 @@ class MotifGrammar:
                 NumberNode(float(genome.turnover_gene.smoothing_window)),
             )
 
+        if normalize_after_smoothing:
+            signal = self._normalize(signal)
+        for group_field in deferred_group_neutralizers:
+            signal = self._call("group_neutralize", signal, group_field)
         for wrapper in genome.wrapper_gene.pre_wrappers:
             signal = self._call(wrapper, signal)
         for wrapper in genome.wrapper_gene.post_wrappers:
