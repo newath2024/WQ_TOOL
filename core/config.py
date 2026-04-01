@@ -83,6 +83,8 @@ class GenerationConfig:
     template_pool_size: int = 200
     max_turnover_bias: float = 0.35
     engine_validation_cache_enabled: bool = True
+    sim_neutralization: str = "none"
+    sim_decay: int = 0
 
 
 @dataclass(slots=True)
@@ -282,9 +284,10 @@ class AdaptiveGenerationConfig:
     max_attempt_multiplier: int = 12
     exploit_budget_ratio: float = 0.60
     explore_budget_ratio: float = 0.40
-    min_explore_attempts: int = 50
+    min_explore_attempts: int = 150
     min_explore_seconds: float = 2.0
-    max_consecutive_failures: int = 250
+    max_consecutive_failures: int = 400
+    explore_max_consecutive_failures: int | None = None
     min_candidates_before_early_exit: int = 5
 
 
@@ -571,6 +574,8 @@ class ServiceConfig:
     persona_confirmation_poll_interval_seconds: int = 30
     persona_confirmation_prompt_cooldown_seconds: int = 1800
     persona_confirmation_granted_ttl_seconds: int = 300
+    max_persona_wait_seconds: int = 1800
+    max_consecutive_batch_failures_before_auth_check: int = 2
     research_context_cache_enabled: bool = True
     research_context_cache_ttl_seconds: int = 0
 
@@ -607,6 +612,10 @@ class ServiceConfig:
             raise ValueError("service.persona_confirmation_prompt_cooldown_seconds must be > 0")
         if self.persona_confirmation_granted_ttl_seconds <= 0:
             raise ValueError("service.persona_confirmation_granted_ttl_seconds must be > 0")
+        if self.max_persona_wait_seconds <= 0:
+            raise ValueError("service.max_persona_wait_seconds must be > 0")
+        if self.max_consecutive_batch_failures_before_auth_check <= 0:
+            raise ValueError("service.max_consecutive_batch_failures_before_auth_check must be > 0")
         if self.research_context_cache_ttl_seconds < 0:
             raise ValueError("service.research_context_cache_ttl_seconds must be >= 0")
 

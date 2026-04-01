@@ -7,6 +7,7 @@ from dataclasses import replace
 from datetime import datetime, timezone
 from typing import Any, Iterable, Sequence
 
+from alpha.parser import parse_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import OperatorRegistry, build_default_registry
@@ -119,6 +120,8 @@ class MutationPolicy:
                 fail_tags=tuple(getattr(primary_parent, "fail_tags", ()) or ()),
             )
             render = self.grammar.render(repaired)
+            if not self._is_parseable_expression(render.expression):
+                continue
             metadata = {
                 "template_name": repaired.motif,
                 "motif": repaired.motif,
@@ -330,6 +333,14 @@ class MutationPolicy:
                 continue
             tags.update(self.registry.get(name).semantic_tags)
         return sorted(tags)
+
+    @staticmethod
+    def _is_parseable_expression(expression: str) -> bool:
+        try:
+            parse_expression(expression)
+        except ValueError:
+            return False
+        return True
 
     def _select_parent(self, parents: Sequence, *, diversity_tracker: GenerationDiversityTracker | None) -> Any:
         parent_list = list(parents)

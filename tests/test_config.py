@@ -108,6 +108,8 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert "delta" not in default_config.generation.allowed_operators
     assert "correlation" not in default_config.generation.allowed_operators
     assert default_config.generation.operator_catalog_paths
+    assert default_config.generation.sim_neutralization == "none"
+    assert default_config.generation.sim_decay == 0
     assert default_config.adaptive_generation.region_learning.enabled is True
     assert default_config.adaptive_generation.region_learning.local_scope == "region_regime"
     assert default_config.adaptive_generation.region_learning.global_prior_scope == "match_non_region_regime"
@@ -117,9 +119,10 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert default_config.adaptive_generation.max_attempt_multiplier == 12
     assert default_config.adaptive_generation.exploit_budget_ratio == 0.60
     assert default_config.adaptive_generation.explore_budget_ratio == 0.40
-    assert default_config.adaptive_generation.min_explore_attempts == 50
+    assert default_config.adaptive_generation.min_explore_attempts == 150
     assert default_config.adaptive_generation.min_explore_seconds == 2.0
-    assert default_config.adaptive_generation.max_consecutive_failures == 250
+    assert default_config.adaptive_generation.max_consecutive_failures == 400
+    assert default_config.adaptive_generation.explore_max_consecutive_failures is None
     assert default_config.adaptive_generation.min_candidates_before_early_exit == 5
     assert default_config.service.research_context_cache_enabled is True
     assert default_config.service.research_context_cache_ttl_seconds == 0
@@ -184,6 +187,51 @@ def test_region_learning_config_loads_and_legacy_yaml_keeps_defaults(tmp_path: P
     assert config.adaptive_generation.region_learning.allow_global_parent_fallback is False
 
 
+def test_generation_config_can_override_explore_failure_limit(tmp_path: Path) -> None:
+    config_path = tmp_path / "explore_failure_limit.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "data": {"path": "examples/sample_data/daily_ohlcv.csv"},
+                "splits": {
+                    "train": {"start": "2021-01-01", "end": "2021-02-01"},
+                    "validation": {"start": "2021-02-02", "end": "2021-03-01"},
+                    "test": {"start": "2021-03-02", "end": "2021-03-31"},
+                },
+                "generation": {
+                    "allowed_fields": ["close", "volume", "returns"],
+                    "allowed_operators": ["rank", "ts_delta"],
+                    "lookbacks": [2, 5],
+                    "max_depth": 4,
+                    "complexity_limit": 10,
+                    "template_count": 2,
+                    "grammar_count": 2,
+                    "mutation_count": 1,
+                    "normalization_wrappers": ["rank"],
+                },
+                "adaptive_generation": {
+                    "explore_max_consecutive_failures": 12,
+                },
+                "backtest": {"timeframe": "1d"},
+                "evaluation": {
+                    "hard_filters": {},
+                    "data_requirements": {},
+                    "diversity": {},
+                    "ranking": {},
+                    "robustness": {},
+                },
+                "storage": {"path": str(tmp_path / "out.sqlite3")},
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert config.adaptive_generation.explore_max_consecutive_failures == 12
+
+
 def test_generation_config_can_enable_catalog_only_brain_mode(tmp_path: Path) -> None:
     config_path = tmp_path / "brain_full_like.yaml"
     config_path.write_text(
@@ -231,6 +279,51 @@ def test_generation_config_can_enable_catalog_only_brain_mode(tmp_path: Path) ->
     assert config.generation.allowed_fields == []
 
 
+def test_generation_config_can_override_simulation_awareness_fields(tmp_path: Path) -> None:
+    config_path = tmp_path / "sim_awareness.yaml"
+    config_path.write_text(
+        yaml.safe_dump(
+            {
+                "data": {"path": "examples/sample_data/daily_ohlcv.csv"},
+                "splits": {
+                    "train": {"start": "2021-01-01", "end": "2021-02-01"},
+                    "validation": {"start": "2021-02-02", "end": "2021-03-01"},
+                    "test": {"start": "2021-03-02", "end": "2021-03-31"},
+                },
+                "generation": {
+                    "allowed_fields": ["close", "volume", "returns"],
+                    "allowed_operators": ["rank", "ts_delta"],
+                    "lookbacks": [2, 5],
+                    "max_depth": 4,
+                    "complexity_limit": 10,
+                    "template_count": 2,
+                    "grammar_count": 2,
+                    "mutation_count": 1,
+                    "normalization_wrappers": ["rank"],
+                    "sim_neutralization": "sector",
+                    "sim_decay": 5,
+                },
+                "backtest": {"timeframe": "1d"},
+                "evaluation": {
+                    "hard_filters": {},
+                    "data_requirements": {},
+                    "diversity": {},
+                    "ranking": {},
+                    "robustness": {},
+                },
+                "storage": {"path": str(tmp_path / "out.sqlite3")},
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    config = load_config(config_path)
+
+    assert config.generation.sim_neutralization == "sector"
+    assert config.generation.sim_decay == 5
+
+
 def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_path: Path) -> None:
     config_path = tmp_path / "legacy_generation_defaults.yaml"
     config_path.write_text(
@@ -275,9 +368,10 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.adaptive_generation.max_attempt_multiplier == 12
     assert config.adaptive_generation.exploit_budget_ratio == 0.60
     assert config.adaptive_generation.explore_budget_ratio == 0.40
-    assert config.adaptive_generation.min_explore_attempts == 50
+    assert config.adaptive_generation.min_explore_attempts == 150
     assert config.adaptive_generation.min_explore_seconds == 2.0
-    assert config.adaptive_generation.max_consecutive_failures == 250
+    assert config.adaptive_generation.max_consecutive_failures == 400
+    assert config.adaptive_generation.explore_max_consecutive_failures is None
     assert config.adaptive_generation.min_candidates_before_early_exit == 5
     assert config.service.research_context_cache_enabled is True
     assert config.service.research_context_cache_ttl_seconds == 0

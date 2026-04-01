@@ -14,6 +14,9 @@ MOTIF_LIBRARY: tuple[str, ...] = (
     "volatility_adjusted_momentum",
     "spread",
     "ratio",
+    "quality_score",
+    "price_volume_divergence",
+    "conditional_momentum",
     "residualized_signal",
     "regime_conditioned_signal",
     "group_relative_signal",
@@ -37,6 +40,9 @@ class MotifGrammar:
             "volatility_adjusted_momentum": MotifSpec("volatility_adjusted_momentum", 1),
             "spread": MotifSpec("spread", 2),
             "ratio": MotifSpec("ratio", 2),
+            "quality_score": MotifSpec("quality_score", 2),
+            "price_volume_divergence": MotifSpec("price_volume_divergence", 2),
+            "conditional_momentum": MotifSpec("conditional_momentum", 2),
             "residualized_signal": MotifSpec("residualized_signal", 2),
             "regime_conditioned_signal": MotifSpec("regime_conditioned_signal", 2),
             "group_relative_signal": MotifSpec("group_relative_signal", 1, uses_group=True),
@@ -97,6 +103,24 @@ class MotifGrammar:
                 self._call(genome.transform_gene.secondary_transform or "ts_mean", secondary, slow_window)
             )
             signal = BinaryOpNode(operator="/", left=numerator, right=denominator)
+        elif motif == "quality_score":
+            signal = self._normalize(
+                BinaryOpNode(
+                    operator="/",
+                    left=primary,
+                    right=self._stabilize_divisor(secondary),
+                )
+            )
+        elif motif == "price_volume_divergence":
+            signal = self._normalize(
+                self._call(genome.transform_gene.primitive_transform or "ts_corr", primary, secondary, slow_window)
+            )
+        elif motif == "conditional_momentum":
+            momentum = self._call(genome.transform_gene.primitive_transform or "ts_delta", primary, fast_window)
+            conditioner = self._normalize(
+                self._call(genome.transform_gene.secondary_transform or "ts_mean", secondary, slow_window)
+            )
+            signal = BinaryOpNode(operator="*", left=momentum, right=conditioner)
         elif motif == "residualized_signal":
             base = self._call(genome.transform_gene.primitive_transform or "ts_mean", primary, slow_window)
             residual = self._call(genome.transform_gene.secondary_transform or "ts_mean", secondary, slow_window)

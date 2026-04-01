@@ -254,16 +254,20 @@ class AlphaGenerationEngine:
         max_attempts = self._resolve_max_attempts(target, legacy_multiplier=25, minimum=80)
         consecutive_failures = 0
         while len(candidates) < target and session.attempt_count < max_attempts:
+            novelty_bias = (len(candidates) / max(1, target)) >= (1.0 - self.adaptive_config.exploration_ratio)
+            phase = "explore" if novelty_bias else "exploit"
+            if phase == "explore":
+                session.explore_phase_entered = True
             if self._should_stop_generation(
                 session=session,
                 generation_started=generation_started,
                 consecutive_failures=consecutive_failures,
                 candidate_count=len(candidates),
                 target_count=target,
+                phase=phase,
             ):
                 break
-            session.record_attempt()
-            novelty_bias = (len(candidates) / max(1, target)) >= (1.0 - self.adaptive_config.exploration_ratio)
+            session.record_attempt(phase)
             genome = self.genome_builder.build_random_genome(
                 source_mode="genome_novelty" if novelty_bias else "genome_random",
                 novelty_bias=novelty_bias,
@@ -272,6 +276,10 @@ class AlphaGenerationEngine:
             )
             repaired_genome, repair_actions = self.repair_policy.repair(genome)
             render = self.grammar.render(repaired_genome)
+            if not self._is_parseable_expression(render.expression):
+                session.record_failure("parse_failed", expression=render.expression)
+                consecutive_failures += 1
+                continue
             metadata = self._render_metadata(
                 render,
                 mutation_mode="novelty" if novelty_bias else "exploit_local",
@@ -318,7 +326,7 @@ class AlphaGenerationEngine:
                 continue
             existing.add(candidate.normalized_expression)
             candidates.append(candidate)
-            session.record_success()
+            session.record_success(phase)
             self._record_diversity_success(diversity_tracker, candidate)
             consecutive_failures = 0
         session.generation_total_ms = (time.monotonic() - generation_started) * 1000.0
@@ -352,9 +360,10 @@ class AlphaGenerationEngine:
                 consecutive_failures=consecutive_failures,
                 candidate_count=len(candidates),
                 target_count=target,
+                phase="exploit",
             ):
                 break
-            session.record_attempt()
+            session.record_attempt("exploit")
             payload = self.mutation_policy.generate_from_candidates(
                 parents=list(parents),
                 target_count=1,
@@ -407,7 +416,7 @@ class AlphaGenerationEngine:
                 continue
             existing.add(candidate.normalized_expression)
             candidates.append(candidate)
-            session.record_success()
+            session.record_success("exploit")
             self._record_diversity_success(diversity_tracker, candidate)
             consecutive_failures = 0
         session.generation_total_ms = (time.monotonic() - generation_started) * 1000.0
@@ -807,6 +816,7 @@ class AlphaGenerationEngine:
         consecutive_failures: int,
         candidate_count: int,
         target_count: int,
+        phase: str = "exploit",
     ) -> bool:
         max_generation_seconds = float(getattr(self.adaptive_config, "max_generation_seconds", 0.0) or 0.0)
         if (
@@ -818,17 +828,57 @@ class AlphaGenerationEngine:
             session.record_failure("budget_timeout")
             return True
 
-        failure_limit = int(getattr(self.adaptive_config, "max_consecutive_failures", 0) or 0)
+        early_exit_limit = self._resolve_consecutive_failure_limit(
+            phase=phase,
+            candidate_count=candidate_count,
+            target_count=target_count,
+        )
+        if early_exit_limit <= 0 or consecutive_failures < early_exit_limit:
+            return False
+        if phase == "explore":
+            if session.explore_consecutive_failure_stop:
+                return True
+        elif session.exploit_consecutive_failure_stop:
+            return True
+        self._mark_phase_failure_stop(session, phase)
+        session.record_failure("consecutive_failure_break")
+        return True
+
+    def _resolve_consecutive_failure_limit(
+        self,
+        *,
+        phase: str,
+        candidate_count: int,
+        target_count: int,
+    ) -> int:
+        failure_limit = max(0, int(getattr(self.adaptive_config, "max_consecutive_failures", 0) or 0))
+        phase_limit = failure_limit
+        if phase == "explore":
+            explore_limit = getattr(self.adaptive_config, "explore_max_consecutive_failures", None)
+            phase_limit = max(0, int(explore_limit if explore_limit is not None else failure_limit * 2))
         partial_success_floor = min(
             max(1, int(getattr(self.adaptive_config, "min_candidates_before_early_exit", 1) or 1)),
             max(1, target_count),
         )
-        early_exit_limit = max(1, failure_limit // 2) if candidate_count >= partial_success_floor else failure_limit
-        if early_exit_limit > 0 and consecutive_failures >= early_exit_limit and not session.consecutive_failure_stop:
-            session.consecutive_failure_stop = True
-            session.record_failure("consecutive_failure_break")
-            return True
-        return False
+        if phase_limit <= 0:
+            return 0
+        return max(1, phase_limit // 2) if candidate_count >= partial_success_floor else phase_limit
+
+    @staticmethod
+    def _mark_phase_failure_stop(session: GenerationSessionStats, phase: str) -> None:
+        session.consecutive_failure_stop = True
+        if phase == "explore":
+            session.explore_consecutive_failure_stop = True
+            return
+        session.exploit_consecutive_failure_stop = True
+
+    @staticmethod
+    def _is_parseable_expression(expression: str) -> bool:
+        try:
+            parse_expression(expression)
+        except ValueError:
+            return False
+        return True
 
     def _classify_validation_failure(self, validation: ValidationResult) -> str:
         if validation.primary_reason_code:

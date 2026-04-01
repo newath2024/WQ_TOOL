@@ -125,6 +125,10 @@ class GuidedGenerator:
                 )
                 repaired, repair_actions = self.repair_policy.repair(genome)
                 render = self.grammar.render(repaired)
+                if not self.base_engine._is_parseable_expression(render.expression):  # noqa: SLF001
+                    session.record_failure("parse_failed", expression=render.expression)
+                    exploit_consecutive_failures += 1
+                    continue
                 metadata = self.base_engine._render_metadata(  # noqa: SLF001
                     render,
                     mutation_mode="exploit_local",
@@ -216,6 +220,10 @@ class GuidedGenerator:
                 )
                 repaired, repair_actions = self.repair_policy.repair(genome)
                 render = self.grammar.render(repaired)
+                if not self.base_engine._is_parseable_expression(render.expression):  # noqa: SLF001
+                    session.record_failure("parse_failed", expression=render.expression)
+                    explore_consecutive_failures += 1
+                    continue
                 metadata = self.base_engine._render_metadata(  # noqa: SLF001
                     render,
                     mutation_mode="novelty",
@@ -478,23 +486,20 @@ class GuidedGenerator:
         if phase_attempt_budget > 0 and phase_attempt_count >= phase_attempt_budget:
             return True
 
-        failure_limit = int(getattr(self.adaptive_config, "max_consecutive_failures", 0) or 0)
-        partial_success_floor = min(
-            max(1, int(getattr(self.adaptive_config, "min_candidates_before_early_exit", 1) or 1)),
-            max(1, target_count),
+        early_exit_limit = self.base_engine._resolve_consecutive_failure_limit(  # noqa: SLF001
+            phase=phase,
+            candidate_count=candidate_count,
+            target_count=target_count,
         )
-        early_exit_limit = max(1, failure_limit // 2) if candidate_count >= partial_success_floor else failure_limit
         if early_exit_limit <= 0 or consecutive_failures < early_exit_limit:
             return False
 
-        session.consecutive_failure_stop = True
         if phase == "explore":
             if session.explore_consecutive_failure_stop:
                 return True
-            session.explore_consecutive_failure_stop = True
         else:
             if session.exploit_consecutive_failure_stop:
                 return True
-            session.exploit_consecutive_failure_stop = True
+        self.base_engine._mark_phase_failure_stop(session, phase)  # noqa: SLF001
         session.record_failure("consecutive_failure_break")
         return True

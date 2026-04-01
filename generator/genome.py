@@ -148,6 +148,8 @@ class Genome:
     turnover_gene: TurnoverGene = field(default_factory=TurnoverGene)
     complexity_gene: ComplexityGene = field(default_factory=ComplexityGene)
     source_mode: str = "random"
+    sim_neutralization_active: bool = False
+    sim_decay_active: bool = False
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -165,6 +167,8 @@ class Genome:
             turnover_gene=TurnoverGene(**payload.get("turnover_gene", {})),
             complexity_gene=ComplexityGene(**payload.get("complexity_gene", {})),
             source_mode=str(payload.get("source_mode") or "random"),
+            sim_neutralization_active=bool(payload.get("sim_neutralization_active", False)),
+            sim_decay_active=bool(payload.get("sim_decay_active", False)),
         )
 
     @property

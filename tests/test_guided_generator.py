@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import random
 
+from alpha.parser import parse_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import build_registry
@@ -161,6 +162,8 @@ def test_mutation_policy_supports_repair_and_novelty_modes() -> None:
     )
     assert any(metadata.get("repair_actions") for _, metadata in simplify_variants)
     assert any(metadata.get("mutation_mode") in {"repair", "structural", "exploit_local"} for _, metadata in simplify_variants)
+    for expression, _ in [*turnover_variants, *simplify_variants]:
+        assert parse_expression(expression) is not None
 
 
 def test_guided_generator_prefers_global_motif_prior_when_local_region_is_cold() -> None:

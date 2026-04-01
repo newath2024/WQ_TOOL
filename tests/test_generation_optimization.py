@@ -362,6 +362,107 @@ def test_round_scoped_generation_seed_changes_by_round_and_scope() -> None:
     assert round_one_fresh != round_one_mutation
 
 
+def test_engine_generate_switches_to_explore_phase_when_novelty_tail_starts(monkeypatch) -> None:
+    config = _build_generation_config()
+    adaptive = AdaptiveGenerationConfig(
+        exploration_ratio=0.5,
+        max_consecutive_failures=100,
+        min_candidates_before_early_exit=1,
+    )
+    engine = AlphaGenerationEngine(
+        config=config,
+        adaptive_config=adaptive,
+        registry=build_registry(config.allowed_operators),
+        field_registry=_build_field_registry(),
+    )
+    phases: list[str] = []
+    render_expressions = iter(["rank(close)", "rank(volume)"])
+    fake_genome = type("FakeGenome", (), {"stable_hash": "g-1"})()
+
+    class FakeRender:
+        def __init__(self, expression: str) -> None:
+            self.expression = expression
+            self.normalized_expression = expression
+            self.operator_path = ()
+
+    original_should_stop = engine._should_stop_generation  # noqa: SLF001
+
+    def record_phase(**kwargs):
+        phases.append(str(kwargs["phase"]))
+        return original_should_stop(**kwargs)
+
+    monkeypatch.setattr(engine, "_should_stop_generation", record_phase)
+    monkeypatch.setattr(engine.genome_builder, "build_random_genome", lambda **kwargs: fake_genome)
+    monkeypatch.setattr(engine.repair_policy, "repair", lambda genome: (genome, ()))
+    monkeypatch.setattr(engine.grammar, "render", lambda genome: FakeRender(next(render_expressions)))
+    monkeypatch.setattr(engine, "_render_metadata", lambda *args, **kwargs: {})
+    monkeypatch.setattr(engine, "_reject_pre_dedup_candidate", lambda **kwargs: False)
+
+    candidates = engine.generate(count=2)
+
+    assert len(candidates) == 2
+    assert phases[:2] == ["exploit", "explore"]
+    assert engine.last_generation_stats is not None
+    assert engine.last_generation_stats.explore_phase_entered is True
+    assert engine.last_generation_stats.exploit_attempt_count == 1
+    assert engine.last_generation_stats.explore_attempt_count == 1
+
+
+def test_engine_explore_failure_limit_prefers_explicit_override() -> None:
+    config = _build_generation_config()
+    adaptive = AdaptiveGenerationConfig(
+        max_consecutive_failures=4,
+        explore_max_consecutive_failures=10,
+        min_candidates_before_early_exit=1,
+    )
+    engine = AlphaGenerationEngine(
+        config=config,
+        adaptive_config=adaptive,
+        registry=build_registry(config.allowed_operators),
+        field_registry=_build_field_registry(),
+    )
+
+    assert engine._resolve_consecutive_failure_limit(phase="exploit", candidate_count=1, target_count=5) == 2  # noqa: SLF001
+    assert engine._resolve_consecutive_failure_limit(phase="explore", candidate_count=1, target_count=5) == 5  # noqa: SLF001
+
+
+def test_engine_generate_skips_unparseable_render_before_candidate_build(monkeypatch) -> None:
+    config = _build_generation_config()
+    adaptive = AdaptiveGenerationConfig(
+        max_consecutive_failures=1,
+        min_candidates_before_early_exit=1,
+    )
+    engine = AlphaGenerationEngine(
+        config=config,
+        adaptive_config=adaptive,
+        registry=build_registry(config.allowed_operators),
+        field_registry=_build_field_registry(),
+    )
+    fake_genome = type("FakeGenome", (), {"stable_hash": "g-parse"})()
+    fake_render = type("FakeRender", (), {"expression": "rank("})()
+
+    monkeypatch.setattr(engine.genome_builder, "build_random_genome", lambda **kwargs: fake_genome)
+    monkeypatch.setattr(engine.repair_policy, "repair", lambda genome: (genome, ()))
+    monkeypatch.setattr(engine.grammar, "render", lambda genome: fake_render)
+    monkeypatch.setattr(
+        engine,
+        "_render_metadata",
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("_render_metadata should not run")),
+    )
+    monkeypatch.setattr(
+        engine,
+        "_build_candidate_result",
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("_build_candidate_result should not run")),
+    )
+
+    candidates = engine.generate(count=1)
+
+    assert candidates == []
+    assert engine.last_generation_stats is not None
+    metrics = engine.last_generation_stats.to_metrics(generated_count=0, selected_for_simulation=0)
+    assert metrics["parse_fail_count"] == 1
+
+
 def test_guided_generator_stops_on_time_budget(monkeypatch) -> None:
     adaptive = AdaptiveGenerationConfig(
         max_generation_seconds=1.0,
@@ -415,6 +516,7 @@ def test_guided_generator_explore_runs_after_exploit_failure_break_and_returns_p
         min_explore_attempts=2,
         min_explore_seconds=1.0,
         max_consecutive_failures=4,
+        explore_max_consecutive_failures=4,
         min_candidates_before_early_exit=1,
     )
     generator = _build_guided_generator(adaptive)
@@ -464,6 +566,94 @@ def test_guided_generator_explore_runs_after_exploit_failure_break_and_returns_p
     assert metrics["explore_phase_entered"] is True
     assert metrics["exploit_consecutive_failure_stop"] is True
     assert metrics["explore_consecutive_failure_stop"] is True
+
+
+def test_guided_generator_explore_uses_doubled_failure_limit_by_default(monkeypatch) -> None:
+    adaptive = AdaptiveGenerationConfig(
+        max_generation_seconds=20.0,
+        max_attempt_multiplier=50,
+        exploit_budget_ratio=0.6,
+        explore_budget_ratio=0.4,
+        min_explore_attempts=2,
+        min_explore_seconds=1.0,
+        max_consecutive_failures=4,
+        min_candidates_before_early_exit=1,
+    )
+    generator = _build_guided_generator(adaptive)
+    fake_render = type("FakeRender", (), {"expression": "rank(close)"})()
+    valid_candidate = AlphaCandidate(
+        alpha_id="alpha-1",
+        expression="rank(close)",
+        normalized_expression="rank(close)",
+        generation_mode="guided_exploit",
+        parent_ids=(),
+        complexity=2,
+        created_at="2026-03-30T00:00:00+00:00",
+    )
+    results = iter(
+        [
+            CandidateBuildResult(candidate=valid_candidate),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+            CandidateBuildResult(candidate=None, failure_reason="validation_unknown_error"),
+        ]
+    )
+
+    monkeypatch.setattr(generator.genome_builder, "build_guided_genome", lambda **kwargs: object())
+    monkeypatch.setattr(generator.repair_policy, "repair", lambda genome: (genome, ()))
+    monkeypatch.setattr(generator.grammar, "render", lambda genome: fake_render)
+    monkeypatch.setattr(generator.base_engine, "_render_metadata", lambda *args, **kwargs: {})
+    monkeypatch.setattr(generator.base_engine, "_build_candidate_result", lambda *args, **kwargs: next(results))
+
+    candidates = generator.generate(
+        count=5,
+        snapshot=PatternMemorySnapshot(regime_key="fail-slower"),
+    )
+
+    assert len(candidates) == 1
+    assert generator.last_generation_stats is not None
+    assert generator.last_generation_stats.exploit_attempt_count == 3
+    assert generator.last_generation_stats.explore_attempt_count == 4
+    assert generator.last_generation_stats.exploit_consecutive_failure_stop is True
+    assert generator.last_generation_stats.explore_consecutive_failure_stop is True
+
+
+def test_guided_generator_skips_unparseable_render_before_candidate_build(monkeypatch) -> None:
+    adaptive = AdaptiveGenerationConfig(
+        max_consecutive_failures=1,
+        explore_max_consecutive_failures=1,
+        min_candidates_before_early_exit=1,
+    )
+    generator = _build_guided_generator(adaptive)
+    fake_render = type("FakeRender", (), {"expression": "rank("})()
+
+    monkeypatch.setattr(generator.genome_builder, "build_guided_genome", lambda **kwargs: object())
+    monkeypatch.setattr(generator.repair_policy, "repair", lambda genome: (genome, ()))
+    monkeypatch.setattr(generator.grammar, "render", lambda genome: fake_render)
+    monkeypatch.setattr(
+        generator.base_engine,
+        "_render_metadata",
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("_render_metadata should not run")),
+    )
+    monkeypatch.setattr(
+        generator.base_engine,
+        "_build_candidate_result",
+        lambda *args, **kwargs: (_ for _ in ()).throw(AssertionError("_build_candidate_result should not run")),
+    )
+
+    candidates = generator.generate(
+        count=1,
+        snapshot=PatternMemorySnapshot(regime_key="parse-guard"),
+    )
+
+    assert candidates == []
+    assert generator.last_generation_stats is not None
+    metrics = generator.last_generation_stats.to_metrics(generated_count=0, selected_for_simulation=0)
+    assert metrics["parse_fail_count"] == 1
+    assert metrics["explore_attempt_count"] == 1
 
 
 def test_research_context_provider_hits_cache_and_expires_with_ttl() -> None:

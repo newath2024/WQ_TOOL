@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import logging
 import random
+from dataclasses import replace
 from collections import defaultdict
 
 from core.config import AdaptiveGenerationConfig, GenerationConfig
@@ -17,9 +19,23 @@ from generator.genome import (
     TurnoverGene,
     WrapperGene,
 )
-from generator.grammar import MOTIF_LIBRARY
-from memory.case_memory import CaseMemorySnapshot
 from generator.genome import bucket_horizon
+from generator.grammar import MOTIF_LIBRARY, MotifGrammar
+from memory.case_memory import CaseMemorySnapshot
+
+
+logger = logging.getLogger(__name__)
+
+
+COMPATIBLE_CATEGORIES: dict[str, set[str]] = {
+    "price": {"price", "volume", "fundamental", "analyst", "model", "risk"},
+    "volume": {"price", "volume", "liquidity"},
+    "fundamental": {"fundamental", "price", "analyst", "model"},
+    "analyst": {"fundamental", "analyst", "price", "model"},
+    "model": {"fundamental", "analyst", "model", "price"},
+    "risk": {"price", "risk", "volume"},
+    "liquidity": {"volume", "liquidity", "price"},
+}
 
 
 class GenomeBuilder:
@@ -36,7 +52,12 @@ class GenomeBuilder:
         self.adaptive_config = adaptive_config
         self.registry = registry
         self.field_registry = field_registry
+        self.sim_neutralization = str(getattr(generation_config, "sim_neutralization", "none") or "none").strip().lower()
+        self.sim_decay = max(0, int(getattr(generation_config, "sim_decay", 0) or 0))
+        self.sim_neutralization_active = self.sim_neutralization != "none"
+        self.sim_decay_active = self.sim_decay > 0
         self.random = random.Random(seed)
+        self._grammar = MotifGrammar()
         self.allowed_numeric_fields = self.field_registry.generation_numeric_fields(
             generation_config.allowed_fields,
             include_catalog_fields=generation_config.allow_catalog_fields_without_runtime,
@@ -102,6 +123,7 @@ class GenomeBuilder:
             novelty_bias=novelty_bias,
             case_snapshot=case_snapshot,
             diversity_tracker=diversity_tracker,
+            support_boost=True,
         )
         return self._build_genome(
             motif=motif,
@@ -140,6 +162,7 @@ class GenomeBuilder:
         diversity_tracker: GenerationDiversityTracker | None = None,
     ) -> Genome:
         primary = self._pick_numeric_field(
+            motif=motif,
             preferred_family=preferred_primary_family,
             novelty_bias=novelty_bias,
             case_snapshot=case_snapshot,
@@ -147,6 +170,7 @@ class GenomeBuilder:
         )
         secondary = self._pick_secondary_field(
             primary,
+            motif=motif,
             novelty_bias=novelty_bias,
             case_snapshot=case_snapshot,
             diversity_tracker=diversity_tracker,
@@ -165,15 +189,32 @@ class GenomeBuilder:
             diversity_tracker=diversity_tracker,
         )
         pair_operator = self.random.choice(self.pair_ops or ["ts_corr"]) if motif not in MOTIF_LIBRARY else ""
-        wrappers = self._pick_wrappers(novelty_bias=novelty_bias, diversity_tracker=diversity_tracker)
         conditioning_mode = self._pick_conditioning_mode(motif)
+        smoothing_op = self._pick_smoothing_operator() if self.smoothing_ops else ""
+        # Calculate depth headroom BEFORE picking wrappers so we stay within max_depth.
+        # Use a conservative estimate (base +2 safety margin) to avoid producing
+        # genomes that will fail validation_invalid_nesting downstream.
+        depth_used = self._base_render_depth(motif) + 1  # +1 safety margin vs old code
+        if conditioning_mode != "none":
+            # group_relative_signal already includes group_neutralize in base depth
+            if not (motif == "group_relative_signal" and conditioning_mode == "group_neutralize"):
+                depth_used += 1
+        if smoothing_op:
+            depth_used += 1
+        wrapper_headroom = max(0, self.generation_config.max_depth - depth_used - 1)
+        wrappers = self._pick_wrappers(
+            novelty_bias=novelty_bias,
+            diversity_tracker=diversity_tracker,
+            depth_headroom=wrapper_headroom,
+        )
         turnover_hint = self._estimate_turnover_hint(primitive, secondary_transform, wrappers)
+        use_smoothing = bool(smoothing_op) and turnover_hint > self._smoothing_activation_threshold()
         turnover_gene = TurnoverGene(
-            smoothing_operator=self._pick_smoothing_operator() if turnover_hint > 0.15 and self.smoothing_ops else "",
-            smoothing_window=slow_window if turnover_hint > 0.15 else 0,
+            smoothing_operator=smoothing_op if use_smoothing else "",
+            smoothing_window=slow_window if use_smoothing else 0,
             turnover_hint=turnover_hint,
         )
-        return Genome(
+        genome = Genome(
             feature_gene=FeatureGene(
                 primary_field=primary.name,
                 primary_family=primary.category,
@@ -200,11 +241,24 @@ class GenomeBuilder:
             turnover_gene=turnover_gene,
             complexity_gene=ComplexityGene(
                 target_depth=3 if not wrappers else 4,
-                binary_branching=2 if motif in {"spread", "ratio", "residualized_signal", "regime_conditioned_signal"} else 1,
+                binary_branching=2
+                if motif
+                in {
+                    "spread",
+                    "ratio",
+                    "quality_score",
+                    "conditional_momentum",
+                    "residualized_signal",
+                    "regime_conditioned_signal",
+                }
+                else 1,
                 wrapper_budget=len(wrappers),
             ),
             source_mode=source_mode,
+            sim_neutralization_active=self.sim_neutralization_active,
+            sim_decay_active=self.sim_decay_active,
         )
+        return self._constrain_by_actual_depth(genome)
 
     def _pick_motif(
         self,
@@ -212,6 +266,7 @@ class GenomeBuilder:
         novelty_bias: bool,
         case_snapshot: CaseMemorySnapshot | None,
         diversity_tracker: GenerationDiversityTracker | None,
+        support_boost: bool = False,
     ) -> str:
         motifs = list(MOTIF_LIBRARY)
         weights: list[float] = []
@@ -225,11 +280,32 @@ class GenomeBuilder:
             if diversity_tracker is not None:
                 weight *= diversity_tracker.motif_weight(motif)
             weights.append(max(weight, 1e-6))
-        return self.random.choices(motifs, weights=weights, k=1)[0]
+        max_weight = max(weights) if weights else 1.0
+        min_weight = max_weight * 0.05
+        floored_weights = [max(weight, min_weight) for weight in weights]
+        if support_boost and case_snapshot and not novelty_bias:
+            boosted_weights: list[float] = []
+            for motif, weight in zip(motifs, floored_weights, strict=True):
+                support = motif_support.get(motif)
+                if support is not None and float(getattr(support, "support", 0) or 0) > 0:
+                    weight *= 1.15
+                boosted_weights.append(weight)
+            floored_weights = boosted_weights
+        selected = self.random.choices(motifs, weights=floored_weights, k=1)[0]
+        if diversity_tracker is not None:
+            domination_threshold = len(motifs) * 3
+            if diversity_tracker.sampled_motif_count(selected) > domination_threshold:
+                penalized_weights = list(floored_weights)
+                selected_index = motifs.index(selected)
+                penalized_weights[selected_index] = max(1e-6, penalized_weights[selected_index] * 0.3)
+                selected = self.random.choices(motifs, weights=penalized_weights, k=1)[0]
+            diversity_tracker.record_motif_pick(selected)
+        return selected
 
     def _pick_numeric_field(
         self,
         *,
+        motif: str,
         preferred_family: str,
         novelty_bias: bool,
         case_snapshot: CaseMemorySnapshot | None,
@@ -242,6 +318,10 @@ class GenomeBuilder:
             weight = max(spec.field_score, 1e-6)
             if preferred_family and spec.category == preferred_family:
                 weight *= 1.35
+            if motif == "quality_score" and spec.category in {"fundamental", "analyst", "model"}:
+                weight *= 1.50
+            if motif == "price_volume_divergence" and spec.category == "price":
+                weight *= 1.75
             if novelty_bias:
                 weight *= 0.75 if spec.alpha_usage_count else 1.15
             else:
@@ -255,6 +335,7 @@ class GenomeBuilder:
         self,
         primary: FieldSpec,
         *,
+        motif: str,
         novelty_bias: bool,
         case_snapshot: CaseMemorySnapshot | None,
         diversity_tracker: GenerationDiversityTracker | None,
@@ -268,6 +349,11 @@ class GenomeBuilder:
             weight = max(spec.field_score, 1e-6)
             if preferred_category and spec.category == preferred_category:
                 weight *= 1.25
+            weight *= self._compatibility_multiplier(primary.category, spec.category)
+            if motif == "quality_score" and spec.category in {"fundamental", "analyst", "model"}:
+                weight *= 1.50
+            if motif == "price_volume_divergence" and spec.category == "volume":
+                weight *= 1.90
             if novelty_bias and spec.category == primary.category:
                 weight *= 0.80
             if diversity_tracker is not None:
@@ -282,10 +368,15 @@ class GenomeBuilder:
         candidates = [spec for spec in self.allowed_numeric_fields if spec.name not in excluded]
         if not candidates:
             return secondary or primary
-        if novelty_bias:
-            candidates = sorted(candidates, key=lambda item: (item.alpha_usage_count, item.field_score, item.name))
-            return candidates[0]
-        return self.random.choice(candidates[: max(1, min(len(candidates), 6))])
+        weighted_candidates = candidates if novelty_bias else candidates[: max(1, min(len(candidates), 6))]
+        weights: list[float] = []
+        for spec in weighted_candidates:
+            weight = max(spec.field_score, 1e-6)
+            weight *= self._compatibility_multiplier(primary.category, spec.category)
+            if novelty_bias:
+                weight *= 1.15 if spec.alpha_usage_count <= 0 else 0.75 / max(1, spec.alpha_usage_count)
+            weights.append(max(weight, 1e-6))
+        return self.random.choices(weighted_candidates, weights=weights, k=1)[0]
 
     def _pick_group_field(self) -> str:
         if not self.allowed_group_fields:
@@ -324,6 +415,12 @@ class GenomeBuilder:
         return int(fast), int(slow), int(context)
 
     def _pick_primitive(self, motif: str, *, diversity_tracker: GenerationDiversityTracker | None) -> str:
+        if motif == "quality_score":
+            return ""
+        if motif == "price_volume_divergence" and self.registry.contains("ts_corr"):
+            return "ts_corr"
+        if motif == "conditional_momentum" and self.registry.contains("ts_delta"):
+            return "ts_delta"
         candidates = self.primitive_ops or ["ts_mean"]
         weights: list[float] = []
         for name in candidates:
@@ -331,7 +428,7 @@ class GenomeBuilder:
             weight = 1.0
             if spec.prefers_motif(motif):
                 weight *= 2.5
-            if motif in {"momentum", "volatility_adjusted_momentum", "liquidity_conditioned_signal"} and spec.has_tag("change_sensitive"):
+            if motif in {"momentum", "volatility_adjusted_momentum", "liquidity_conditioned_signal", "conditional_momentum"} and spec.has_tag("change_sensitive"):
                 weight *= 1.75
             if motif in {"mean_reversion", "spread", "ratio", "residualized_signal", "group_relative_signal"} and spec.has_tag("smoothing"):
                 weight *= 1.75
@@ -349,6 +446,10 @@ class GenomeBuilder:
         *,
         diversity_tracker: GenerationDiversityTracker | None,
     ) -> str:
+        if motif in {"quality_score", "price_volume_divergence"}:
+            return ""
+        if motif == "conditional_momentum" and self.registry.contains("ts_mean"):
+            return "ts_mean"
         if motif == "volatility_adjusted_momentum" and self.registry.contains("ts_std_dev"):
             return "ts_std_dev"
         options = [name for name in self.primitive_ops if name != primitive]
@@ -380,10 +481,11 @@ class GenomeBuilder:
         *,
         novelty_bias: bool,
         diversity_tracker: GenerationDiversityTracker | None,
+        depth_headroom: int = 2,
     ) -> tuple[str, ...]:
-        if not self.wrapper_choices:
+        if not self.wrapper_choices or depth_headroom <= 0:
             return ()
-        max_wrappers = 2 if novelty_bias else 1
+        max_wrappers = min(2 if novelty_bias else 1, depth_headroom)
         count = self.random.randint(0, max_wrappers)
         if count <= 0:
             return ()
@@ -408,14 +510,28 @@ class GenomeBuilder:
 
     def _pick_conditioning_mode(self, motif: str) -> str:
         if motif == "group_relative_signal":
-            return "group_neutralize"
+            if not self.sim_neutralization_active:
+                return "group_neutralize"
+            labels, weights = self._conditioning_mode_options(motif)
+            return self.random.choices(labels, weights=weights, k=1)[0]
         if motif == "liquidity_conditioned_signal":
             return "liquidity_gate"
-        return self.random.choices(
+        labels, weights = self._conditioning_mode_options(motif)
+        return self.random.choices(labels, weights=weights, k=1)[0]
+
+    def _conditioning_mode_options(self, motif: str) -> tuple[list[str], list[float]]:
+        if motif == "group_relative_signal":
+            return (
+                ["none", "volatility_gate", "liquidity_gate", "group_neutralize"],
+                [0.60, 0.20, 0.15, 0.05],
+            )
+        return (
             ["none", "volatility_gate", "liquidity_gate"],
-            weights=[0.65, 0.20, 0.15],
-            k=1,
-        )[0]
+            [0.65, 0.20, 0.15],
+        )
+
+    def _smoothing_activation_threshold(self) -> float:
+        return 0.30 if self.sim_decay_active else 0.15
 
     def _estimate_turnover_hint(self, primitive: str, secondary: str, wrappers: tuple[str, ...]) -> float:
         hint = 0.0
@@ -449,6 +565,13 @@ class GenomeBuilder:
             grouped[spec.category].append(spec)
         return grouped
 
+    def _compatibility_multiplier(self, primary_category: str, candidate_category: str) -> float:
+        compatible = COMPATIBLE_CATEGORIES.get(str(primary_category or "").strip().lower())
+        normalized_candidate = str(candidate_category or "").strip().lower()
+        if not compatible or not normalized_candidate:
+            return 1.0
+        return 1.5 if normalized_candidate in compatible else 0.3
+
     def _motif_prior_weight(self, support) -> float:
         if support is None:
             return 1.0
@@ -456,3 +579,152 @@ class GenomeBuilder:
         confidence = 1.0 + min(5.0, float(support.support) / 2.0)
         success_multiplier = 0.5 + max(0.0, float(support.success_rate))
         return max(1.0, 1.0 + (positive_outcome * confidence * success_multiplier))
+
+    # ------------------------------------------------------------------
+    # Depth constraint helpers
+    # ------------------------------------------------------------------
+
+    def _base_render_depth(self, motif: str) -> int:
+        """Minimum AST depth the grammar produces for a given motif (no wrappers/smoothing/conditioning).
+
+        Binary-branch motifs produce: BinaryOp(op(field,w), op(field,w)) = depth 4.
+        Single-branch motifs produce: op(field, w) = depth 3.
+
+        Motifs using _stabilize_divisor add +2 (abs() + BinaryOp(+, ..., 1.0)):
+          volatility_adjusted_momentum, ratio => depth 5.
+        Motifs using _normalize add +1 (rank()):
+          regime_conditioned_signal, liquidity_conditioned_signal => depth 4.
+        group_relative_signal already contains group_neutralize => depth 3.
+        """
+        # Motifs that use _stabilize_divisor: BinaryOp(/, left, BinaryOp(+, abs(right), 1.0))
+        # The divisor branch has depth: BinaryOp > FuncCall(abs) > FuncCall(op) > field = 4
+        # So total: BinaryOp(/, depth-2-left, depth-4-divisor) = depth 5
+        stabilized_motifs = {"volatility_adjusted_momentum", "ratio", "quality_score"}
+        if motif in stabilized_motifs:
+            return 5
+        # price_volume_divergence: rank(ts_corr(field, field, w)) = depth 3
+        if motif == "price_volume_divergence":
+            return 3
+        # conditional_momentum: ts_delta(field, w) * rank(ts_mean(field, w)) = depth 4
+        if motif == "conditional_momentum":
+            return 4
+        # Motifs that use _normalize (rank()) on one branch:
+        # BinaryOp(*, left, rank(right)) => depth = max(depth_left, depth_right+1) + 1
+        # left = op(field, w) = 2, right = rank(op(field, w)) = 3 => BinaryOp = 4
+        normalized_binary_motifs = {"regime_conditioned_signal", "liquidity_conditioned_signal"}
+        if motif in normalized_binary_motifs:
+            return 4
+        # Standard binary motifs: BinaryOp(op(field,w), op(field,w)) = depth 3
+        binary_motifs = {"spread", "residualized_signal"}
+        if motif in binary_motifs:
+            return 3
+        # group_relative_signal: group_neutralize(ts_mean(field, w), sector) = depth 3
+        # mean_reversion: BinaryOp(-, field, ts_mean(field, w)) = depth 3
+        # momentum: ts_delta(field, w) = depth 2
+        if motif == "momentum":
+            return 2
+        if motif == "mean_reversion":
+            return 3
+        return 3
+
+    def _estimate_render_depth(self, genome) -> int:
+        """Estimate the maximum AST depth grammar.render_ast() will produce for this genome."""
+        depth = self._base_render_depth(genome.motif)
+        # group_relative_signal already includes group_neutralize in its base motif;
+        # don't double-count if conditioning_mode is also group_neutralize
+        if genome.regime_gene.conditioning_mode in {"volatility_gate", "liquidity_gate", "group_neutralize"}:
+            if not (genome.motif == "group_relative_signal" and genome.regime_gene.conditioning_mode == "group_neutralize"):
+                depth += 1
+        if genome.turnover_gene.smoothing_operator:
+            depth += 1
+        depth += len(genome.wrapper_gene.pre_wrappers)
+        depth += len(genome.wrapper_gene.post_wrappers)
+        return depth
+
+    def _constrain_by_actual_depth(self, genome: Genome) -> Genome:
+        """Strip optional layers until ACTUAL rendered depth <= max_depth.
+
+        Uses a two-phase approach:
+        1. Quick estimate-based pass to strip obviously oversized genomes (cheap).
+        2. Actual render+parse verification to catch estimate drift (accurate).
+        """
+        max_depth = self.generation_config.max_depth
+        current = genome
+
+        # Phase 1: Cheap estimate-based pre-strip (avoids unnecessary renders)
+        if self._estimate_render_depth(current) > max_depth:
+            current = self._strip_by_estimate(current, max_depth)
+
+        # Phase 2: Verify with actual rendered depth and strip further if needed
+        for _ in range(4):  # max 4 strip rounds
+            actual_depth = self._actual_render_depth(current)
+            if actual_depth is None or actual_depth <= max_depth:
+                return current
+            stripped = self._strip_next_optional_layer(current)
+            if stripped is current:  # nothing left to strip
+                logger.debug(
+                    "Genome actual depth %s exceeds max %s for motif=%s after stripping all optional layers.",
+                    actual_depth,
+                    max_depth,
+                    current.motif,
+                )
+                return current
+            current = stripped
+        return current
+
+    def _strip_by_estimate(self, genome: Genome, max_depth: int) -> Genome:
+        """Fast estimate-based stripping (no render/parse overhead)."""
+        current = genome
+        # Layer 1: drop pre_wrappers (lowest signal value)
+        if self._estimate_render_depth(current) > max_depth and current.wrapper_gene.pre_wrappers:
+            current = replace(current, wrapper_gene=replace(current.wrapper_gene, pre_wrappers=()))
+        # Layer 2: drop post_wrappers
+        if self._estimate_render_depth(current) > max_depth and current.wrapper_gene.post_wrappers:
+            current = replace(current, wrapper_gene=replace(current.wrapper_gene, post_wrappers=()))
+        # Layer 3: drop smoothing operator
+        if self._estimate_render_depth(current) > max_depth and current.turnover_gene.smoothing_operator:
+            current = replace(
+                current,
+                turnover_gene=replace(current.turnover_gene, smoothing_operator="", smoothing_window=0),
+            )
+        # Layer 4: drop conditioning (most costly to remove, do last)
+        if self._estimate_render_depth(current) > max_depth and current.regime_gene.conditioning_mode != "none":
+            current = replace(
+                current,
+                regime_gene=replace(current.regime_gene, conditioning_mode="none", conditioning_field=""),
+            )
+        return current
+
+    def _actual_render_depth(self, genome: Genome) -> int | None:
+        """Render genome to expression, parse it, and return REAL AST depth."""
+        try:
+            from alpha.ast_nodes import node_depth
+            from alpha.parser import parse_expression
+
+            rendered = self._grammar.render(genome)
+            return node_depth(parse_expression(rendered.expression))
+        except Exception:
+            return None
+
+    def _strip_next_optional_layer(self, genome: Genome) -> Genome:
+        """Strip ONE optional layer in priority order (lowest value first)."""
+        if genome.wrapper_gene.pre_wrappers:
+            return replace(genome, wrapper_gene=replace(genome.wrapper_gene, pre_wrappers=()))
+        if genome.wrapper_gene.post_wrappers:
+            return replace(genome, wrapper_gene=replace(genome.wrapper_gene, post_wrappers=()))
+        if genome.turnover_gene.smoothing_operator:
+            return replace(
+                genome,
+                turnover_gene=replace(genome.turnover_gene, smoothing_operator="", smoothing_window=0),
+            )
+        if genome.regime_gene.conditioning_mode != "none":
+            return replace(
+                genome,
+                regime_gene=replace(genome.regime_gene, conditioning_mode="none", conditioning_field=""),
+            )
+        return genome
+
+    def _enforce_actual_depth_limit(self, genome: Genome) -> Genome:
+        """Backward-compatible alias for tests that still target the old helper name."""
+        return self._constrain_by_actual_depth(genome)
+

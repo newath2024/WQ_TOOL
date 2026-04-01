@@ -14,6 +14,7 @@ def operator_path_key(operator_path: Iterable[str] | None) -> str:
 class GenerationDiversityTracker:
     seen_genome_hashes: set[str] = field(default_factory=set)
     seen_structural_keys: set[str] = field(default_factory=set)
+    sampled_motifs: Counter[str] = field(default_factory=Counter)
     accepted_motifs: Counter[str] = field(default_factory=Counter)
     accepted_field_families: Counter[str] = field(default_factory=Counter)
     accepted_operators: Counter[str] = field(default_factory=Counter)
@@ -81,6 +82,13 @@ class GenerationDiversityTracker:
                 self.duplicate_by_operator[operator] += 1
         if lineage_key:
             self.duplicate_by_lineage[lineage_key] += 1
+
+    def record_motif_pick(self, motif: str) -> None:
+        if motif:
+            self.sampled_motifs[motif] += 1
+
+    def sampled_motif_count(self, motif: str) -> int:
+        return int(self.sampled_motifs.get(motif, 0))
 
     def motif_weight(self, motif: str) -> float:
         pressure = (0.10 * self.accepted_motifs.get(motif, 0)) + (0.75 * self.duplicate_by_motif.get(motif, 0))
