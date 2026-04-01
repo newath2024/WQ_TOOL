@@ -15,6 +15,39 @@ from alpha.ast_nodes import (
 )
 from features.registry import IDEMPOTENT_WRAPPERS, OperatorRegistry, WINDOWED_OPERATORS
 
+_CROSS_SECTIONAL_NESTING_OPERATORS = frozenset(
+    {
+        "rank",
+        "zscore",
+        "group_rank",
+        "group_zscore",
+        "group_neutralize",
+        "normalize",
+    }
+)
+_PRICE_FIELDS = frozenset({"close", "open", "high", "low", "vwap"})
+_QUANTITY_FIELDS = frozenset({"volume", "adv20", "sharesout"})
+_CURRENCY_FIELDS = frozenset({"sales", "assets", "debt", "equity", "ebitda", "net_income", "revenue", "cash", "capex"})
+_RATIO_FIELDS = frozenset({"returns"})
+_MARKET_VALUE_FIELDS = frozenset({"cap"})
+_UNIT_CLASS_BY_FIELD = {
+    **{name: "price" for name in _PRICE_FIELDS},
+    **{name: "quantity" for name in _QUANTITY_FIELDS},
+    **{name: "currency" for name in _CURRENCY_FIELDS},
+    **{name: "ratio" for name in _RATIO_FIELDS},
+    **{name: "market_value" for name in _MARKET_VALUE_FIELDS},
+}
+_DIMENSIONLESS_FUNCTIONS = frozenset(
+    {
+        "rank",
+        "zscore",
+        "group_rank",
+        "group_zscore",
+        "group_neutralize",
+        "normalize",
+    }
+)
+
 
 @dataclass(slots=True)
 class ValidationIssue:
@@ -66,6 +99,7 @@ class ExpressionValidator:
                 "complexity_exceeded",
                 f"Expression complexity exceeds limit {self.complexity_limit}.",
             )
+        self._validate_cross_sectional_inside_time_series(node, errors, issues)
         inferred = self._infer_node_type(node, errors, issues)
         if inferred is not None and inferred != "matrix":
             self._add_issue(
@@ -74,6 +108,7 @@ class ExpressionValidator:
                 "validation_semantic_invalid",
                 "Expression must evaluate to a matrix-valued signal.",
             )
+        self._validate_unit_compatibility(node, errors, issues)
         self._validate_redundancy(node, errors, issues)
         primary_issue = issues[0] if issues else None
         return ValidationResult(
@@ -301,6 +336,93 @@ class ExpressionValidator:
                     )
         for child in _iter_children(node):
             self._validate_redundancy(child, errors, issues)
+
+    def _validate_unit_compatibility(
+        self,
+        node: ExprNode,
+        errors: list[str],
+        issues: list[ValidationIssue],
+    ) -> None:
+        if isinstance(node, BinaryOpNode) and node.operator in {"+", "-"}:
+            left_unit = self._infer_unit_class(node.left)
+            right_unit = self._infer_unit_class(node.right)
+            if left_unit is not None and right_unit is not None and left_unit != right_unit:
+                self._add_issue(
+                    errors,
+                    issues,
+                    "validation_unit_incompatible",
+                    (
+                        f"Binary operator '{node.operator}' cannot combine "
+                        f"'{left_unit}' and '{right_unit}' units."
+                    ),
+                )
+        for child in _iter_children(node):
+            self._validate_unit_compatibility(child, errors, issues)
+
+    def _infer_unit_class(self, node: ExprNode) -> str | None:
+        if isinstance(node, IdentifierNode):
+            return _UNIT_CLASS_BY_FIELD.get(node.name)
+        if isinstance(node, UnaryOpNode):
+            return self._infer_unit_class(node.operand)
+        if isinstance(node, BinaryOpNode):
+            if node.operator in {"*", "/"}:
+                return None
+            if node.operator not in {"+", "-"}:
+                return None
+            left_unit = self._infer_unit_class(node.left)
+            right_unit = self._infer_unit_class(node.right)
+            if left_unit is None or right_unit is None or left_unit != right_unit:
+                return None
+            return left_unit
+        if isinstance(node, FunctionCallNode):
+            if node.name.startswith("ts_") or node.name in _DIMENSIONLESS_FUNCTIONS:
+                return None
+            if node.name == "abs" and len(node.args) == 1:
+                return self._infer_unit_class(node.args[0])
+        return None
+
+    def _validate_cross_sectional_inside_time_series(
+        self,
+        node: ExprNode,
+        errors: list[str],
+        issues: list[ValidationIssue],
+        *,
+        enclosing_time_series_operator: str | None = None,
+    ) -> None:
+        if isinstance(node, FunctionCallNode):
+            if (
+                enclosing_time_series_operator is not None
+                and node.name in _CROSS_SECTIONAL_NESTING_OPERATORS
+            ):
+                self._add_issue(
+                    errors,
+                    issues,
+                    "validation_invalid_nesting",
+                    (
+                        f"Cross-sectional operator '{node.name}' cannot be nested inside "
+                        f"time-series operator '{enclosing_time_series_operator}'."
+                    ),
+                )
+            next_enclosing_time_series_operator = (
+                node.name
+                if node.name.startswith("ts_")
+                else enclosing_time_series_operator
+            )
+            for child in node.args:
+                self._validate_cross_sectional_inside_time_series(
+                    child,
+                    errors,
+                    issues,
+                    enclosing_time_series_operator=next_enclosing_time_series_operator,
+                )
+            return
+        for child in _iter_children(node):
+            self._validate_cross_sectional_inside_time_series(
+                child,
+                errors,
+                issues,
+                enclosing_time_series_operator=enclosing_time_series_operator,
+            )
 
     @staticmethod
     def _add_issue(
