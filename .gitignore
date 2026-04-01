@@ -14,3 +14,7 @@ progress_logs/
 secrets/brain_credentials.json
 tools/*/*.csv
 tools/*/*.json
+.agents/
+TEMP/
+How to build/
+pmd.md
