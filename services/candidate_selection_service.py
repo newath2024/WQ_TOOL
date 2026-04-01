@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from datetime import UTC, datetime
 
 from core.config import AdaptiveGenerationConfig, DiversityThresholdConfig
 from data.field_registry import FieldRegistry
-from memory.case_memory import CaseMemoryService, CaseMemorySnapshot
+from memory.case_memory import CaseMemoryService, CaseMemorySnapshot, ObjectiveVector
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.crowding_service import CrowdingService
 from services.duplicate_service import DuplicateService
@@ -105,10 +106,18 @@ class CandidateSelectionService:
                 global_regime_key=global_regime_key or snapshot.global_regime_key,
             )
 
-        crowding_scores = self._zero_crowding_scores(list(dedup_result.kept_candidates))
+        pre_screen_passed, pre_screen_archived = self.pre_screen_candidates(
+            list(dedup_result.kept_candidates),
+            field_registry=field_registry,
+        )
+        pre_screen_decisions = tuple(
+            self._pre_screen_selection_decision(score)
+            for score in pre_screen_archived
+        )
+        crowding_scores = self._zero_crowding_scores(list(pre_screen_passed))
         if self.crowding_service is not None:
             crowding_scores = self.crowding_service.score_pre_sim(
-                list(dedup_result.kept_candidates),
+                list(pre_screen_passed),
                 run_id=run_id,
                 round_index=round_index,
                 effective_regime_key=effective_regime_key or snapshot.regime_key,
@@ -116,7 +125,7 @@ class CandidateSelectionService:
             )
 
         scored = self.score_candidates(
-            list(dedup_result.kept_candidates),
+            list(pre_screen_passed),
             snapshot=snapshot,
             field_registry=field_registry,
             min_pattern_support=min_pattern_support,
@@ -131,23 +140,46 @@ class CandidateSelectionService:
             rejection_filters=rejection_filters,
             diversity_config=diversity_config,
         )
-        kept_count = max(1, len(dedup_result.kept_candidates))
+        kept_count = max(1, len(pre_screen_passed))
         hard_blocked = sum(1 for score in crowding_scores.values() if score.hard_blocked)
         avg_crowding_penalty = sum(score.total_penalty for score in crowding_scores.values()) / kept_count
+        rejected_reason_counts = Counter[str]()
+        warned_low_field_diversity = 0
+        warned_low_operator_diversity = 0
+        for score in pre_screen_archived:
+            if "pre_screen_low_field_diversity" in score.reason_codes:
+                warned_low_field_diversity += 1
+            if "pre_screen_low_operator_diversity" in score.reason_codes:
+                warned_low_operator_diversity += 1
+            for code in score.reason_codes:
+                if code.startswith("pre_screen_"):
+                    rejected_reason_counts[code] += 1
+        for candidate in pre_screen_passed:
+            flags = candidate.generation_metadata.get("pre_screen_flags") or []
+            if "pre_screen_low_field_diversity" in flags:
+                warned_low_field_diversity += 1
+            if "pre_screen_low_operator_diversity" in flags:
+                warned_low_operator_diversity += 1
         stage_metrics = {
             **dict(dedup_result.stage_metrics),
+            "kept_after_pre_screen": len(pre_screen_passed),
+            "rejected_by_pre_screen": len(pre_screen_archived),
+            "warned_low_field_diversity": warned_low_field_diversity,
+            "warned_low_operator_diversity": warned_low_operator_diversity,
             "kept_after_hard_dedup": len(dedup_result.kept_candidates),
             "hard_blocked_by_crowding": hard_blocked,
             "avg_crowding_penalty": float(avg_crowding_penalty),
             "selected_for_simulation": len(selected),
-            "archived_after_selection": len(archived),
+            "archived_after_selection": len(pre_screen_archived) + len(archived),
         }
+        for reason, count in sorted(rejected_reason_counts.items()):
+            stage_metrics[f"rejected_{reason}"] = count
         result = PreSimulationSelectionResult(
             selected=tuple(selected),
-            archived=tuple(archived),
+            archived=tuple([*pre_screen_archived, *archived]),
             dedup_result=dedup_result,
             crowding_scores=crowding_scores,
-            selection_decisions=selection_decisions,
+            selection_decisions=tuple([*pre_screen_decisions, *selection_decisions]),
             stage_metrics=stage_metrics,
         )
         if persist_metrics and self.repository is not None and run_id:
@@ -273,6 +305,96 @@ class CandidateSelectionService:
     def flag_for_manual_review(self, results: list[SimulationResult]) -> list[SimulationResult]:
         return [result for result in results if result.status in {"failed", "rejected"} and not result.rejection_reason]
 
+    def pre_screen_candidates(
+        self,
+        candidates: list,
+        *,
+        field_registry: FieldRegistry | None = None,
+        min_complexity: int = 2,
+        min_operators: int = 2,
+        min_field_families: int = 2,
+    ) -> tuple[list, list[CandidateScore]]:
+        passed: list = []
+        rejected: list[CandidateScore] = []
+        field_categories = (
+            {name: spec.category for name, spec in field_registry.fields.items()}
+            if field_registry is not None
+            else None
+        )
+        for candidate in candidates:
+            hard_reasons: list[str] = []
+            soft_flags: list[str] = []
+            if int(candidate.complexity) < int(min_complexity):
+                hard_reasons.append("pre_screen_low_complexity")
+            if int(candidate.depth) < 2:
+                hard_reasons.append("pre_screen_trivial_depth")
+            # Check actual AST depth against max_depth to catch expressions
+            # that passed genome building but will fail validation downstream
+            if not hard_reasons:
+                try:
+                    from alpha.ast_nodes import node_depth
+                    from alpha.parser import parse_expression
+                    max_depth = int(getattr(self.adaptive_config, "max_depth", 0) or 0)
+                    if max_depth > 0:
+                        actual = node_depth(parse_expression(candidate.expression))
+                        if actual > max_depth:
+                            hard_reasons.append("pre_screen_exceeds_max_depth")
+                except (ValueError, Exception):
+                    pass  # If parse fails, let downstream handle it
+            operator_count = len(set(self._candidate_operator_names(candidate)))
+            if operator_count < int(min_operators):
+                soft_flags.append("pre_screen_low_operator_diversity")
+            field_family_count = len(self._candidate_field_families(candidate, field_registry=field_registry))
+            if field_family_count < int(min_field_families):
+                soft_flags.append("pre_screen_low_field_diversity")
+            if soft_flags:
+                existing_flags = [
+                    str(item)
+                    for item in (candidate.generation_metadata.get("pre_screen_flags") or [])
+                    if str(item)
+                ]
+                candidate.generation_metadata["pre_screen_flags"] = list(
+                    dict.fromkeys([*existing_flags, *soft_flags])
+                )
+            if not hard_reasons:
+                passed.append(candidate)
+                continue
+            reason_codes = tuple(dict.fromkeys([*hard_reasons, *soft_flags]))
+            archive_reason = self._primary_pre_screen_reason(reason_codes)
+            structural_signature = self.memory_service.extract_signature(
+                candidate.expression,
+                generation_metadata=candidate.generation_metadata,
+                field_categories=field_categories,
+            )
+            rejected.append(
+                CandidateScore(
+                    candidate=candidate,
+                    objective_vector=ObjectiveVector(),
+                    local_heuristic_score=0.0,
+                    novelty_score=0.0,
+                    family_score=0.0,
+                    diversity_score=0.0,
+                    duplicate_risk=0.0,
+                    crowding_penalty=0.0,
+                    regime_fit=0.0,
+                    composite_score=0.0,
+                    structural_signature=structural_signature,
+                    archive_reason=archive_reason,
+                    reason_codes=reason_codes,
+                    ranking_rationale={
+                        "archive_reason": archive_reason,
+                        "pre_screen_reasons": list(reason_codes),
+                        "selection_breakdown": {
+                            "score_stage": "pre_sim",
+                            "composite_score": 0.0,
+                            "components": {},
+                            "reason_codes": list(reason_codes),
+                        },
+                    },
+                )
+            )
+        return passed, rejected
+
     def _build_services(self) -> None:
         self.selection_service = SelectionService(
             config=self.adaptive_config.selection,
@@ -392,3 +514,50 @@ class CandidateSelectionService:
             )
             for candidate in candidates
         }
+
+    @staticmethod
+    def _primary_pre_screen_reason(reason_codes: tuple[str, ...]) -> str:
+        for reason in (
+            "pre_screen_low_complexity",
+            "pre_screen_trivial_depth",
+            "pre_screen_low_operator_diversity",
+        ):
+            if reason in reason_codes:
+                return reason
+        return reason_codes[0] if reason_codes else "pre_screen_rejected"
+
+    @staticmethod
+    def _candidate_field_families(candidate, *, field_registry: FieldRegistry | None) -> tuple[str, ...]:
+        payload = candidate.generation_metadata.get("field_families")
+        if isinstance(payload, list) and payload:
+            resolved = [str(item) for item in payload if str(item)]
+            if resolved:
+                return tuple(dict.fromkeys(resolved))
+        if field_registry is None:
+            return ()
+        resolved = []
+        for field_name in candidate.fields_used:
+            if field_registry.contains(field_name):
+                resolved.append(str(field_registry.get(field_name).category))
+        return tuple(dict.fromkeys(item for item in resolved if item))
+
+    @staticmethod
+    def _pre_screen_selection_decision(score: CandidateScore) -> SelectionDecision:
+        return SelectionDecision(
+            alpha_id=score.candidate.alpha_id,
+            score_stage="pre_sim",
+            composite_score=0.0,
+            selected=False,
+            rank=None,
+            reason_codes=tuple(score.reason_codes),
+        )
+
+    def _candidate_operator_names(self, candidate) -> tuple[str, ...]:
+        explicit = tuple(dict.fromkeys(str(item) for item in candidate.operators_used if str(item)))
+        if len(explicit) >= 2:
+            return explicit
+        signature = self.memory_service.extract_signature(
+            candidate.expression,
+            generation_metadata=candidate.generation_metadata,
+        )
+        return tuple(dict.fromkeys(signature.operators))

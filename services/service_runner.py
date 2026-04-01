@@ -59,6 +59,7 @@ class ServiceRunner:
         self.scheduler = ServiceScheduler(config.service)
         self.heartbeat = HeartbeatReporter(repository.service_runtime)
         self.worker: ServiceWorker | None = None
+        self._last_tick_was_noop = False
 
     def run(self, *, max_ticks: int | None = None) -> ServiceRunSummary:
         environment = self._resolve_service_environment()
@@ -142,23 +143,55 @@ class ServiceRunner:
 
                 runtime = self.repository.service_runtime.get_state(self.config.service.lock_name) or runtime
                 tick_id = runtime.tick_id + 1
+                suppress_noop_progress = self._last_tick_was_noop
+
+                # --- Persona wait timeout auto-recovery ---
+                if runtime.persona_wait_started_at and runtime.status in (
+                    "waiting_persona",
+                    "waiting_persona_confirmation",
+                ):
+                    wait_started = datetime.fromisoformat(runtime.persona_wait_started_at)
+                    wait_elapsed = (datetime.now(UTC) - wait_started).total_seconds()
+                    max_wait = self.config.service.max_persona_wait_seconds
+                    if wait_elapsed > max_wait:
+                        logger.warning(
+                            "Persona wait exceeded max_persona_wait_seconds=%s (elapsed=%.0fs). "
+                            "Resetting persona state and forcing re-login attempt.",
+                            max_wait,
+                            wait_elapsed,
+                        )
+                        self.repository.service_runtime.update_state(
+                            runtime.service_name,
+                            status="running",
+                            persona_url=None,
+                            persona_wait_started_at=None,
+                            persona_last_notification_at=None,
+                            persona_confirmation_nonce=None,
+                            persona_confirmation_last_prompt_at=None,
+                            persona_confirmation_granted_at=None,
+                            updated_at=_utcnow(),
+                        )
+                        runtime = self.repository.service_runtime.get_state(self.config.service.lock_name) or runtime
+
                 logger.info("Service tick starting active_batch=%s pending=%s", runtime.active_batch_id, runtime.pending_job_count)
-                append_progress_event(
-                    self.config,
-                    environment,
-                    event="service_tick_started",
-                    stage="service",
-                    status=runtime.status,
-                    tick_id=tick_id,
-                    batch_id=runtime.active_batch_id,
-                    payload={"pending_job_count": runtime.pending_job_count},
-                )
+                if not suppress_noop_progress:
+                    append_progress_event(
+                        self.config,
+                        environment,
+                        event="service_tick_started",
+                        stage="service",
+                        status=runtime.status,
+                        tick_id=tick_id,
+                        batch_id=runtime.active_batch_id,
+                        payload={"pending_job_count": runtime.pending_job_count},
+                    )
                 try:
                     outcome = self.worker.run_tick(
                         runtime=runtime,
                         tick_id=tick_id,
                         stop_requested=self.stop_requested,
                     )
+                    self._last_tick_was_noop = self._is_noop_tick(outcome)
                     runtime = self.heartbeat.record_tick(runtime=runtime, outcome=outcome, tick_id=tick_id)
                     self.repository.update_run_status(environment.context.run_id, f"service_{outcome.status}")
                     final_status = f"service_{outcome.status}"
@@ -183,6 +216,7 @@ class ServiceRunner:
                         },
                     )
                 except Exception as exc:  # noqa: BLE001
+                    self._last_tick_was_noop = False
                     now = _utcnow()
                     consecutive_failures = runtime.consecutive_failures + 1
                     cooldown_until = None
@@ -218,18 +252,20 @@ class ServiceRunner:
                 ticks_executed += 1
                 if self.stop_requested:
                     break
+                self.scheduler.record_poll_result(outcome.new_result_count)
                 sleep_seconds = self.scheduler.next_sleep_seconds(runtime=runtime, outcome=self._runtime_to_outcome(runtime))
                 logger.info("Service sleeping for %ss", sleep_seconds)
-                append_progress_event(
-                    self.config,
-                    environment,
-                    event="service_sleeping",
-                    stage="service",
-                    status=runtime.status,
-                    tick_id=runtime.tick_id,
-                    batch_id=runtime.active_batch_id,
-                    payload={"sleep_seconds": sleep_seconds},
-                )
+                if not suppress_noop_progress:
+                    append_progress_event(
+                        self.config,
+                        environment,
+                        event="service_sleeping",
+                        stage="service",
+                        status=runtime.status,
+                        tick_id=runtime.tick_id,
+                        batch_id=runtime.active_batch_id,
+                        payload={"sleep_seconds": sleep_seconds},
+                    )
                 self._sleep_interruptibly(float(sleep_seconds))
         finally:
             runtime = self.repository.service_runtime.get_state(self.config.service.lock_name) or runtime
@@ -373,6 +409,15 @@ class ServiceRunner:
             active_batch_id=runtime.active_batch_id,
             cooldown_until=runtime.cooldown_until,
             persona_url=runtime.persona_url,
+        )
+
+    @staticmethod
+    def _is_noop_tick(outcome) -> bool:
+        return (
+            outcome.generated_count == 0
+            and outcome.completed_count == 0
+            and outcome.failed_count == 0
+            and outcome.submitted_count == 0
         )
 
 

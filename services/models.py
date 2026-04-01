@@ -350,6 +350,7 @@ class ServiceCounters:
 class ServiceTickOutcome:
     status: str
     pending_job_count: int = 0
+    new_result_count: int = 0
     active_batch_id: str | None = None
     next_sleep_seconds: int = 0
     generated_count: int = 0

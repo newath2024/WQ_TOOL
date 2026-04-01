@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
+from core.config import SelectionConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from generator.engine import AlphaCandidate
 from memory.pattern_memory import PatternMemorySnapshot
+from services.candidate_selection_service import CandidateSelectionService
 from services.models import CrowdingScore, DedupBatchResult, DedupDecision, SimulationResult
 from services.selection_service import SelectionService
-from core.config import SelectionConfig
 
 
 def test_pre_sim_score_prefers_lower_duplicate_and_crowding_risk() -> None:
@@ -120,6 +123,42 @@ def test_mutation_parent_score_can_boost_learnable_branch() -> None:
 
     assert selected[0].candidate_id == "alpha-b"
     assert mutation_decisions[0].alpha_id == "alpha-b"
+
+
+def test_pre_screen_candidates_wrap_rejections_with_priority_reason() -> None:
+    service = CandidateSelectionService()
+    candidate = replace(
+        _candidate("alpha-reject", "close", field_name="close"),
+        complexity=1,
+        depth=1,
+        operators_used=(),
+    )
+
+    passed, rejected = service.pre_screen_candidates([candidate], field_registry=_field_registry())
+
+    assert passed == []
+    assert len(rejected) == 1
+    rejected_score = rejected[0]
+    assert rejected_score.archive_reason == "pre_screen_low_complexity"
+    assert rejected_score.composite_score == 0.0
+    assert rejected_score.reason_codes == (
+        "pre_screen_low_complexity",
+        "pre_screen_trivial_depth",
+        "pre_screen_low_operator_diversity",
+        "pre_screen_low_field_diversity",
+    )
+    assert rejected_score.ranking_rationale["pre_screen_reasons"] == list(rejected_score.reason_codes)
+
+
+def test_pre_screen_candidates_keep_soft_low_field_diversity_candidates() -> None:
+    service = CandidateSelectionService()
+    candidate = _candidate("alpha-soft", "rank(ts_mean(close, 5))", field_name="close")
+
+    passed, rejected = service.pre_screen_candidates([candidate], field_registry=_field_registry())
+
+    assert passed == [candidate]
+    assert rejected == []
+    assert candidate.generation_metadata["pre_screen_flags"] == ["pre_screen_low_field_diversity"]
 
 
 def _field_registry() -> FieldRegistry:

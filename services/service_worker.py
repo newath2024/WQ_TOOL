@@ -276,6 +276,7 @@ class ServiceWorker:
         )
         completed_results: list[SimulationResult] = []
         failed_results: list[SimulationResult] = []
+        new_result_count = 0
         active_batch_id = batch_ids[0] if batch_ids else None
 
         for batch_id in batch_ids:
@@ -292,24 +293,26 @@ class ServiceWorker:
                 refreshed.pending_count,
                 len(refreshed.results),
             )
+            new_result_count += len(refreshed.results)
             completed_count = sum(1 for result in refreshed.results if result.status == "completed")
             failed_count = sum(1 for result in refreshed.results if result.status in {"failed", "rejected", "timeout"})
-            append_progress_event(
-                self.config,
-                self.environment,
-                event="batch_polled",
-                stage="service-poll",
-                status=refreshed.status,
-                tick_id=tick_id,
-                round_index=refreshed.jobs[0].round_index if refreshed.jobs else None,
-                batch_id=batch_id,
-                payload={
-                    "pending_count": refreshed.pending_count,
-                    "new_result_count": len(refreshed.results),
-                    "completed_count": completed_count,
-                    "failed_count": failed_count,
-                },
-            )
+            if refreshed.results or refreshed.status == "completed":
+                append_progress_event(
+                    self.config,
+                    self.environment,
+                    event="batch_polled",
+                    stage="service-poll",
+                    status=refreshed.status,
+                    tick_id=tick_id,
+                    round_index=refreshed.jobs[0].round_index if refreshed.jobs else None,
+                    batch_id=batch_id,
+                    payload={
+                        "pending_count": refreshed.pending_count,
+                        "new_result_count": len(refreshed.results),
+                        "completed_count": completed_count,
+                        "failed_count": failed_count,
+                    },
+                )
             for result in refreshed.results:
                 if result.status == "completed":
                     completed_results.append(result)
@@ -327,6 +330,7 @@ class ServiceWorker:
         return ServiceTickOutcome(
             status=status,
             pending_job_count=pending_count,
+            new_result_count=new_result_count,
             active_batch_id=next_active_batch,
             completed_count=len(completed_results),
             failed_count=len(failed_results),
@@ -345,6 +349,40 @@ class ServiceWorker:
             tick_id=tick_id,
         )
         mutation_parent_ids = self._select_mutation_parent_ids(run_id=runtime.service_run_id)
+        # --- Pre-submission auth probe on consecutive batch failures ---
+        threshold = self.config.service.max_consecutive_batch_failures_before_auth_check
+        recent_all_failed = self.repository.submissions.count_recent_all_failed_batches(
+            runtime.service_run_id, lookback=threshold + 1,
+        )
+        if recent_all_failed >= threshold:
+            logger.warning(
+                "Detected %s consecutive batches with 100%% job failures. "
+                "Probing auth session before submitting another batch.",
+                recent_all_failed,
+            )
+            session_state = self.session_manager.ensure_session(runtime=runtime, allow_new_login=False)
+            if session_state.status != "ready":
+                logger.warning(
+                    "Auth probe after batch failures detected session status=%s. "
+                    "Triggering re-authentication flow.",
+                    session_state.status,
+                )
+                now = datetime.now(UTC).isoformat()
+                self.repository.service_runtime.update_state(
+                    runtime.service_name,
+                    status="waiting_persona",
+                    persona_wait_started_at=now,
+                    updated_at=now,
+                )
+                pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+                return ServiceTickOutcome(
+                    status="waiting_persona",
+                    pending_job_count=pending_jobs,
+                    active_batch_id=runtime.active_batch_id,
+                    last_error=f"Auth re-check triggered after {recent_all_failed} consecutive all-failed batches.",
+                    next_sleep_seconds=self.config.service.persona_retry_interval_seconds,
+                )
+
         batch_result = self.batch_service.prepare_service_batch(
             config=self.config,
             environment=self.environment,
@@ -353,7 +391,8 @@ class ServiceWorker:
             round_index=tick_id,
         )
         candidates = list(batch_result.candidates)
-        selected_candidates = [item.candidate for item in batch_result.selected]
+        selected_scores = list(batch_result.selected)
+        selected_candidates = [item.candidate for item in selected_scores]
         logger.info("[generation-summary] %s", json.dumps(batch_result.generation_stage_metrics, sort_keys=True))
         if not selected_candidates:
             logger.info(
@@ -362,12 +401,30 @@ class ServiceWorker:
             )
             return ServiceTickOutcome(status="no_candidates", pending_job_count=0, generated_count=len(candidates))
 
+        recent_fail_rate = self._recent_job_failure_rate(runtime.service_run_id)
+        normal_count = min(
+            self.config.loop.simulation_batch_size,
+            self.config.service.max_pending_jobs,
+            len(selected_candidates),
+        )
+        adjusted_count = normal_count
+        if recent_fail_rate > 0.8:
+            adjusted_count = max(3, normal_count // 2)  # floor at 3 to avoid throughput collapse
+        elif recent_fail_rate > 0.5:
+            adjusted_count = max(3, normal_count * 2 // 3)
+        selected_scores = selected_scores[:adjusted_count]
+        selected_candidates = [item.candidate for item in selected_scores]
+        logger.info(
+            "Adaptive submission: recent_fail_rate=%.2f, adjusted_count=%s",
+            recent_fail_rate,
+            adjusted_count,
+        )
         batch = self.brain_service.submit_candidates(
             selected_candidates,
             config=self.config,
             environment=self.environment,
             round_index=tick_id,
-            batch_size=min(self.config.loop.simulation_batch_size, self.config.service.max_pending_jobs),
+            batch_size=adjusted_count,
         )
         pending_count = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
         logger.info(
@@ -632,6 +689,37 @@ class ServiceWorker:
                 "PERSONA",
             )
         )
+
+    def _recent_job_failure_rate(self, run_id: str, *, lookback_batches: int = 10) -> float:
+        completed_batches = self.repository.submissions.list_batches_by_status(
+            run_id=run_id,
+            statuses=("completed",),
+        )
+        if not completed_batches:
+            return 0.0
+        latest_batches = sorted(
+            completed_batches,
+            key=lambda item: (item.created_at, item.batch_id),
+            reverse=True,
+        )[:lookback_batches]
+        failed_jobs = 0
+        total_jobs = 0
+        for batch in latest_batches:
+            submissions = self.repository.submissions.list_submissions(
+                run_id=run_id,
+                batch_id=batch.batch_id,
+            )
+            if not submissions:
+                continue
+            total_jobs += len(submissions)
+            failed_jobs += sum(
+                1
+                for submission in submissions
+                if submission.status in {"failed", "rejected", "timeout"}
+            )
+        if total_jobs <= 0:
+            return 0.0
+        return float(failed_jobs) / float(total_jobs)
 
     def _update_persona_confirmation_state(
         self,

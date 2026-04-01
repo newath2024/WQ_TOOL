@@ -11,10 +11,13 @@ from adapters.brain_api_adapter import BiometricsThrottled, BrainApiAdapter, Per
 from core.config import load_config
 from core.run_context import RunContext
 from generator.engine import AlphaCandidate
+from memory.case_memory import ObjectiveVector
+from memory.pattern_memory import PatternMemoryService
 from services.brain_service import BrainService
-from services.models import CommandEnvironment
+from services.models import BatchPreparationResult, CandidateScore, CommandEnvironment, ServiceTickOutcome
 from services.notification_manager import NotificationManager
 from services.runtime_lock import RuntimeLock
+from services.service_scheduler import ServiceScheduler
 from services.service_runner import ServiceRunner
 from services.service_worker import ServiceWorker
 from services.session_manager import SessionManager
@@ -142,6 +145,16 @@ class FakeApiAdapter(BrainApiAdapter):
                 },
             },
         )
+
+
+class FakeBatchPreparationService:
+    def __init__(self, result: BatchPreparationResult) -> None:
+        self.result = result
+        self.calls: list[dict[str, object]] = []
+
+    def prepare_service_batch(self, **kwargs) -> BatchPreparationResult:
+        self.calls.append(dict(kwargs))
+        return self.result
 
 
 def test_runtime_lock_prevents_duplicate_instances_and_reclaims_stale_lease() -> None:
@@ -647,6 +660,274 @@ def test_service_worker_applies_backoff_after_transient_poll_failure() -> None:
     assert submission.service_failure_reason == "temporary network issue"
 
 
+def test_service_worker_uses_normal_submission_count_without_failure_history() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 3
+        config.service.max_pending_jobs = 5
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-adaptive-normal"
+        _seed_run(repository, run_id)
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(3))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._submit_new_batch(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.submitted_count == 3
+    assert len(adapter.submit_calls) == 3
+
+
+def test_service_worker_caps_submission_count_when_recent_fail_rate_exceeds_half() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 4
+        config.service.max_pending_jobs = 5
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-adaptive-half"
+        _seed_run(repository, run_id)
+        _seed_completed_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-a",
+            statuses=("failed", "failed", "failed"),
+            created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        _seed_completed_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-b",
+            statuses=("completed", "completed", "failed"),
+            created_at=datetime(2026, 1, 2, tzinfo=UTC),
+        )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(4))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._submit_new_batch(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.submitted_count == 2
+    assert len(adapter.submit_calls) == 2
+
+
+def test_service_worker_caps_submission_count_at_one_when_recent_fail_rate_is_extreme() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 4
+        config.service.max_pending_jobs = 5
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-adaptive-high"
+        _seed_run(repository, run_id)
+        _seed_completed_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-a",
+            statuses=("failed", "failed", "failed"),
+            created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        _seed_completed_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-b",
+            statuses=("failed", "failed", "timeout"),
+            created_at=datetime(2026, 1, 2, tzinfo=UTC),
+        )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(4))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._submit_new_batch(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.submitted_count == 1
+    assert len(adapter.submit_calls) == 1
+
+
+def test_service_worker_keeps_existing_normal_batch_cap_when_history_is_clean() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 2
+        config.service.max_pending_jobs = 5
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-adaptive-cap"
+        _seed_run(repository, run_id)
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(4))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._submit_new_batch(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.submitted_count == 2
+    assert len(adapter.submit_calls) == 2
+
+
+def test_service_worker_empty_poll_skips_progress_event_and_returns_zero_new_results(tmp_path: Path) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        run_id = "run-empty-poll"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "running"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        log_path = tmp_path / "progress" / f"{run_id}.jsonl"
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.new_result_count == 0
+    assert not log_path.exists()
+
+
+def test_service_worker_logs_completed_batch_poll_even_without_new_results(tmp_path: Path) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        run_id = "run-completed-no-results"
+        _seed_run(repository, run_id)
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="completed")
+        repository.submissions.update_batch_status("batch-1", status="completed", updated_at=_timestamp())
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._poll_pending_batches(
+            runtime=_runtime_record(run_id=run_id),
+            tick_id=1,
+            batch_ids=["batch-1"],
+        )
+        log_path = tmp_path / "progress" / f"{run_id}.jsonl"
+        progress_rows = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    finally:
+        repository.close()
+
+    assert outcome.status == "idle"
+    assert outcome.new_result_count == 0
+    assert any(row["event"] == "batch_polled" and row["status"] == "completed" for row in progress_rows)
+
+
+def test_service_scheduler_exponential_backoff_resets_after_results() -> None:
+    config = _service_config()
+    config.service.poll_interval_seconds = 5
+    scheduler = ServiceScheduler(config.service)
+    runtime = _runtime_record(run_id="run-scheduler")
+    outcome = ServiceTickOutcome(status="running", pending_job_count=1)
+
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 5
+
+    scheduler.record_poll_result(0)
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 10
+
+    scheduler.record_poll_result(0)
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 20
+
+    scheduler.record_poll_result(0)
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 30
+
+    scheduler.record_poll_result(0)
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 30
+
+    scheduler.record_poll_result(2)
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 5
+
+
+def test_service_runner_suppresses_noop_progress_events_after_first_empty_poll(tmp_path: Path) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        run_id = "run-noop-progress"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        repository.service_runtime.upsert_state(_runtime_record(run_id=run_id))
+        adapter = FakeApiAdapter(
+            status_plan={
+                "job-1": [
+                    {"job_id": "job-1", "status": "running"},
+                    {"job_id": "job-1", "status": "running"},
+                ]
+            }
+        )
+        runner = ServiceRunner(
+            repository,
+            config=config,
+            environment=_environment("fresh-run-id"),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            sleep_fn=lambda seconds: None,
+            install_signal_handlers=False,
+        )
+
+        summary = runner.run(max_ticks=2)
+        log_path = tmp_path / "progress" / f"{run_id}.jsonl"
+        progress_rows = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    finally:
+        repository.close()
+
+    assert summary.status == "service_running"
+    assert sum(1 for row in progress_rows if row["event"] == "service_tick_started") == 1
+    assert sum(1 for row in progress_rows if row["event"] == "service_sleeping") == 1
+    assert sum(1 for row in progress_rows if row["event"] == "service_tick_completed") == 2
+    assert not any(row["event"] == "batch_polled" for row in progress_rows)
+
+
 def test_service_runner_releases_lock_on_graceful_shutdown() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -897,6 +1178,105 @@ def _seed_pending_batch(
                 error_message=None,
             )
         ]
+    )
+
+
+def _seed_completed_batch(
+    repository: SQLiteRepository,
+    *,
+    run_id: str,
+    batch_id: str,
+    statuses: tuple[str, ...],
+    created_at: datetime,
+) -> None:
+    created_at_iso = created_at.isoformat()
+    repository.submissions.upsert_batch(
+        SubmissionBatchRecord(
+            batch_id=batch_id,
+            run_id=run_id,
+            round_index=1,
+            backend="api",
+            status="completed",
+            candidate_count=len(statuses),
+            sim_config_snapshot=json.dumps({"region": "USA"}),
+            export_path=None,
+            notes_json="{}",
+            created_at=created_at_iso,
+            updated_at=created_at_iso,
+        )
+    )
+    repository.submissions.upsert_submissions(
+        [
+            SubmissionRecord(
+                job_id=f"{batch_id}-job-{index}",
+                batch_id=batch_id,
+                run_id=run_id,
+                round_index=1,
+                candidate_id=f"{batch_id}-alpha-{index}",
+                expression=f"rank(close_{index})",
+                backend="api",
+                status=status,
+                sim_config_snapshot=json.dumps({"region": "USA"}),
+                submitted_at=created_at_iso,
+                updated_at=created_at_iso,
+                completed_at=created_at_iso,
+                export_path=None,
+                raw_submission_json="{}",
+                error_message=None,
+            )
+            for index, status in enumerate(statuses, start=1)
+        ]
+    )
+
+
+def _service_candidates(count: int) -> list[AlphaCandidate]:
+    return [
+        AlphaCandidate(
+            alpha_id=f"alpha-{index}",
+            expression=f"rank(ts_mean(close, {index + 1}))",
+            normalized_expression=f"rank(ts_mean(close, {index + 1}))",
+            generation_mode="template",
+            parent_ids=(),
+            complexity=3,
+            created_at=_timestamp(),
+            template_name="momentum",
+            fields_used=("close",),
+            operators_used=("rank", "ts_mean"),
+            depth=2,
+            generation_metadata={"field_families": ["price"]},
+        )
+        for index in range(1, count + 1)
+    ]
+
+
+def _batch_result(candidates: list[AlphaCandidate]) -> BatchPreparationResult:
+    memory_service = PatternMemoryService()
+    selected = []
+    for candidate in candidates:
+        signature = memory_service.extract_signature(
+            candidate.expression,
+            generation_metadata=candidate.generation_metadata,
+        )
+        selected.append(
+            CandidateScore(
+                candidate=candidate,
+                objective_vector=ObjectiveVector(),
+                local_heuristic_score=0.0,
+                novelty_score=0.0,
+                family_score=0.0,
+                diversity_score=0.0,
+                duplicate_risk=0.0,
+                crowding_penalty=0.0,
+                regime_fit=0.0,
+                composite_score=0.0,
+                structural_signature=signature,
+            )
+        )
+    return BatchPreparationResult(
+        candidates=tuple(candidates),
+        selected=tuple(selected),
+        regime_key="service-regime",
+        generation_stage_metrics={},
     )
 
 

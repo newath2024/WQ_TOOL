@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import json
 from collections import Counter
+from dataclasses import replace
 from pathlib import Path
 
 from adapters.brain_manual_adapter import BrainManualAdapter
@@ -333,6 +334,78 @@ def test_candidate_selection_enforces_template_diversity() -> None:
     assert len(selected) == 2
     assert {item.candidate.template_name for item in selected} == {"momentum", "volatility"}
     assert any(item.archive_reason == "template_diversity_cap" for item in archived)
+
+
+def test_pre_sim_pipeline_applies_conservative_pre_screen_before_scoring() -> None:
+    selector = CandidateSelectionService()
+    field_registry = FieldRegistry(
+        fields={
+            "close": FieldSpec(
+                name="close",
+                dataset="runtime",
+                field_type="matrix",
+                coverage=1.0,
+                alpha_usage_count=0,
+                category="price",
+                runtime_available=True,
+                category_weight=1.0,
+                field_score=1.0,
+            ),
+            "volume": FieldSpec(
+                name="volume",
+                dataset="runtime",
+                field_type="matrix",
+                coverage=1.0,
+                alpha_usage_count=0,
+                category="volume",
+                runtime_available=True,
+                category_weight=0.9,
+                field_score=0.9,
+            ),
+        }
+    )
+    eligible = _candidate(
+        "alpha-soft-field",
+        "rank(ts_mean(close, 5))",
+        template_name="momentum",
+        operators_used=("rank", "ts_mean"),
+    )
+    rejected = replace(
+        _candidate(
+            "alpha-pre-screen",
+            "rank(ts_mean(volume, 5))",
+            template_name="momentum",
+            fields_used=("volume",),
+            operators_used=("rank", "ts_mean"),
+        ),
+        complexity=1,
+    )
+
+    result = selector.run_pre_sim_pipeline(
+        [eligible, rejected],
+        snapshot=PatternMemorySnapshot(regime_key="regime"),
+        field_registry=field_registry,
+        batch_size=2,
+        min_pattern_support=1,
+        rejection_filters=[],
+    )
+
+    assert [item.candidate.alpha_id for item in result.selected] == ["alpha-soft-field"]
+    assert len(result.archived) == 1
+    archived = result.archived[0]
+    assert archived.candidate.alpha_id == "alpha-pre-screen"
+    assert archived.archive_reason == "pre_screen_low_complexity"
+    assert "pre_screen_low_field_diversity" in archived.reason_codes
+    assert result.stage_metrics["kept_after_pre_screen"] == 1
+    assert result.stage_metrics["rejected_by_pre_screen"] == 1
+    assert result.stage_metrics["warned_low_field_diversity"] == 2
+    assert result.stage_metrics["rejected_pre_screen_low_complexity"] == 1
+    pre_screen_decision = next(
+        decision for decision in result.selection_decisions if decision.alpha_id == "alpha-pre-screen"
+    )
+    assert pre_screen_decision.selected is False
+    assert pre_screen_decision.rank is None
+    assert pre_screen_decision.reason_codes == archived.reason_codes
 
 
 def test_brain_service_retries_then_completes(tmp_path: Path) -> None:

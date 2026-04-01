@@ -10,6 +10,13 @@ from storage.models import ServiceRuntimeRecord
 class ServiceScheduler:
     def __init__(self, config: ServiceConfig) -> None:
         self.config = config
+        self._consecutive_empty_polls = 0
+
+    def record_poll_result(self, new_result_count: int) -> None:
+        if int(new_result_count) == 0:
+            self._consecutive_empty_polls += 1
+            return
+        self._consecutive_empty_polls = 0
 
     def next_sleep_seconds(
         self,
@@ -34,7 +41,11 @@ class ServiceScheduler:
         if outcome.status == "paused_quarantine":
             return self.config.heartbeat_interval_seconds
         if outcome.pending_job_count > 0:
-            return self.config.poll_interval_seconds
+            base = int(self.config.poll_interval_seconds)
+            multiplier = 2 ** min(self._consecutive_empty_polls, 3)
+            interval = min(base * multiplier, 15)
+            return int(interval)
+        self._consecutive_empty_polls = 0
         if outcome.status in {"idle", "no_candidates"}:
             return self.config.idle_sleep_seconds
         return self.config.tick_interval_seconds

@@ -297,3 +297,32 @@ class SubmissionStore:
             (run_id,),
         ).fetchone()
         return SubmissionBatchRecord(**dict(row)) if row else None
+
+    def count_recent_all_failed_batches(self, run_id: str, lookback: int = 5) -> int:
+        """Count how many of the most recent completed batches had ALL jobs failed (zero successes).
+
+        This is used to detect auth session expiry before the system formally detects it.
+        """
+        rows = self.connection.execute(
+            """
+            SELECT sb.batch_id,
+                   COUNT(*) AS total_jobs,
+                   SUM(CASE WHEN s.status IN ('failed', 'rejected', 'timeout') THEN 1 ELSE 0 END) AS failed_jobs
+            FROM submission_batches sb
+            JOIN submissions s ON s.batch_id = sb.batch_id
+            WHERE sb.run_id = ? AND sb.status = 'completed'
+            GROUP BY sb.batch_id
+            ORDER BY sb.created_at DESC
+            LIMIT ?
+            """,
+            (run_id, lookback),
+        ).fetchall()
+        consecutive_all_failed = 0
+        for row in rows:
+            total = row["total_jobs"]
+            failed = row["failed_jobs"]
+            if total > 0 and failed == total:
+                consecutive_all_failed += 1
+            else:
+                break
+        return consecutive_all_failed

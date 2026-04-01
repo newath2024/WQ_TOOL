@@ -12,6 +12,8 @@ from services.models import CommandEnvironment
 logger = logging.getLogger(__name__)
 
 DEFAULT_PROGRESS_LOG_SUBDIR = "progress_logs"
+MAX_PROGRESS_LOG_BYTES = 5 * 1024 * 1024
+MAX_PROGRESS_LOG_ROTATIONS = 5
 
 
 def resolve_progress_log_path(
@@ -75,6 +77,7 @@ def append_progress_event(
 
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
+        _rotate_progress_log_if_needed(path)
         with path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(record, ensure_ascii=False, sort_keys=True, default=str))
             handle.write("\n")
@@ -86,3 +89,25 @@ def append_progress_event(
 
 def _resolve_path(path: Path) -> Path:
     return path if path.is_absolute() else (Path.cwd() / path).resolve()
+
+
+def _rotate_progress_log_if_needed(path: Path) -> None:
+    if not path.exists():
+        return
+    if path.stat().st_size <= MAX_PROGRESS_LOG_BYTES:
+        return
+
+    oldest = _rotation_path(path, MAX_PROGRESS_LOG_ROTATIONS)
+    if oldest.exists():
+        oldest.unlink()
+
+    for index in range(MAX_PROGRESS_LOG_ROTATIONS - 1, 0, -1):
+        current = _rotation_path(path, index)
+        if current.exists():
+            current.replace(_rotation_path(path, index + 1))
+
+    path.replace(_rotation_path(path, 1))
+
+
+def _rotation_path(path: Path, index: int) -> Path:
+    return path.with_name(f"{path.stem}.{index}{path.suffix}")
