@@ -19,6 +19,9 @@ from core.config import (
     StorageConfig,
     SubmissionTestConfig,
 )
+from generator.engine import AlphaCandidate
+from generator.genome import ComplexityGene, FeatureGene, Genome, HorizonGene, RegimeGene, TransformGene, TurnoverGene, WrapperGene
+from memory.case_memory import CaseMemoryRecord, CaseMemoryService, ObjectiveVector
 from memory.pattern_memory import FAIL_TAG_PENALTIES, PatternMemoryService, PatternMemorySnapshot, PatternScore
 from storage.alpha_history import AlphaHistoryStore
 from storage.sqlite import connect_sqlite
@@ -252,6 +255,141 @@ def test_alpha_history_get_outcome_score_returns_latest() -> None:
     assert result == 0.8
 
 
+def test_case_memory_snapshot_tracks_combo_stats_and_blends() -> None:
+    service = CaseMemoryService()
+    local = _make_case_record(
+        alpha_id="local-alpha",
+        outcome_score=2.0,
+        neutralization="sector",
+        decay=3,
+    )
+    global_case = _make_case_record(
+        alpha_id="global-alpha",
+        outcome_score=0.0,
+        neutralization="sector",
+        decay=3,
+        created_at="2026-01-02T00:00:00+00:00",
+    )
+
+    snapshot = service.build_snapshot(
+        "local-regime",
+        [local],
+        global_regime_key="shared-global",
+        global_records=[global_case],
+        blend=PatternMemoryService().compute_blend_diagnostics(
+            scope="case",
+            local_samples=1,
+            global_samples=1,
+            config=RegionLearningConfig(
+                min_local_case_samples=2,
+                full_local_case_samples=4,
+                min_local_pattern_samples=2,
+                full_local_pattern_samples=4,
+            ),
+        ),
+    )
+
+    motif_neutralization = snapshot.aggregate_for("motif_neutralization", "momentum|sector")
+    motif_decay = snapshot.aggregate_for("motif_decay", "momentum|3")
+    field_operator = snapshot.aggregate_for("field_operator", "close|ts_delta")
+    local_motif_neutralization = snapshot.aggregate_for("motif_neutralization", "momentum|sector", scope="local")
+    global_motif_neutralization = snapshot.aggregate_for("motif_neutralization", "momentum|sector", scope="global")
+
+    assert motif_neutralization is not None
+    assert motif_decay is not None
+    assert field_operator is not None
+    assert local_motif_neutralization is not None
+    assert global_motif_neutralization is not None
+    assert local_motif_neutralization.avg_outcome == 2.0
+    assert global_motif_neutralization.avg_outcome == 0.0
+    assert motif_decay.support == 1
+    assert field_operator.support == 1
+    assert "momentum|sector" in snapshot.stats_for_scope("motif_neutralization", scope="blended")
+
+
+def test_alpha_history_case_record_persists_combo_context() -> None:
+    connection = connect_sqlite(":memory:")
+    try:
+        store = AlphaHistoryStore(connection, PatternMemoryService())
+        genome = _make_genome()
+        candidate = AlphaCandidate(
+            alpha_id="alpha-1",
+            expression="rank(ts_delta(close,5))",
+            normalized_expression="rank(ts_delta(close,5))",
+            generation_mode="guided_exploit",
+            parent_ids=(),
+            complexity=4,
+            created_at="2026-01-01T00:00:00+00:00",
+            template_name="momentum",
+            fields_used=("close",),
+            operators_used=("rank", "ts_delta"),
+            depth=3,
+            generation_metadata={
+                "genome": genome.to_dict(),
+                "genome_hash": genome.stable_hash,
+                "motif": "momentum",
+                "mutation_mode": "guided_exploit",
+            },
+        )
+        signature = PatternMemoryService().extract_signature(candidate.expression, generation_metadata={"motif": "momentum"})
+
+        record = store._build_case_record(  # noqa: SLF001
+            run_id="run-1",
+            regime_key="regime-1",
+            region="USA",
+            global_regime_key="global-1",
+            market_regime_key="market-1",
+            effective_regime_key="effective-1",
+            regime_label="unknown",
+            regime_confidence=0.0,
+            candidate=candidate,
+            structural_signature=signature,
+            metric_source="local_backtest",
+            simulation_context={"neutralization": "SECTOR", "decay": 5},
+            fail_tags=(),
+            success_tags=("passed_validation_filters",),
+            objective_vector=ObjectiveVector(),
+            outcome_score=1.0,
+            created_at="2026-01-01T00:00:00+00:00",
+        )
+
+        payload = json.loads(record.genome_json)
+        restored = store.case_memory_service.record_from_persisted_payload(
+            row={
+                "run_id": record.run_id,
+                "alpha_id": record.alpha_id,
+                "region": record.region,
+                "regime_key": record.regime_key,
+                "global_regime_key": record.global_regime_key,
+                "metric_source": record.metric_source,
+                "family_signature": record.family_signature,
+                "genome_hash": record.genome_hash,
+                "genome_json": record.genome_json,
+                "motif": record.motif,
+                "field_families_json": record.field_families_json,
+                "operator_path_json": record.operator_path_json,
+                "complexity_bucket": record.complexity_bucket,
+                "turnover_bucket": record.turnover_bucket,
+                "horizon_bucket": record.horizon_bucket,
+                "mutation_mode": record.mutation_mode,
+                "parent_family_signatures_json": record.parent_family_signatures_json,
+                "fail_tags_json": record.fail_tags_json,
+                "success_tags_json": record.success_tags_json,
+                "objective_vector_json": record.objective_vector_json,
+                "outcome_score": record.outcome_score,
+                "created_at": record.created_at,
+            },
+            structural_signature=signature,
+        )
+    finally:
+        connection.close()
+
+    assert payload["_case_memory_context"]["neutralization"] == "sector"
+    assert payload["_case_memory_context"]["decay"] == 5
+    assert restored.neutralization == "sector"
+    assert restored.decay == 5
+
+
 def _make_pattern(pattern_id: str) -> PatternScore:
     return PatternScore(
         pattern_id=pattern_id,
@@ -264,6 +402,57 @@ def _make_pattern(pattern_id: str) -> PatternScore:
         avg_behavioral_novelty=0.5,
         fail_tag_counts={},
         pattern_score=0.4,
+    )
+
+
+def _make_genome() -> Genome:
+    return Genome(
+        feature_gene=FeatureGene(primary_field="close", primary_family="price"),
+        transform_gene=TransformGene(motif="momentum", primitive_transform="ts_delta"),
+        horizon_gene=HorizonGene(fast_window=5, slow_window=10),
+        wrapper_gene=WrapperGene(post_wrappers=("rank",)),
+        regime_gene=RegimeGene(),
+        turnover_gene=TurnoverGene(),
+        complexity_gene=ComplexityGene(),
+    )
+
+
+def _make_case_record(
+    *,
+    alpha_id: str,
+    outcome_score: float,
+    neutralization: str,
+    decay: int,
+    created_at: str = "2026-01-01T00:00:00+00:00",
+) -> CaseMemoryRecord:
+    signature = PatternMemoryService().extract_signature("rank(ts_delta(close,5))", generation_metadata={"motif": "momentum"})
+    genome = _make_genome()
+    return CaseMemoryRecord(
+        run_id="run-1",
+        alpha_id=alpha_id,
+        region="USA",
+        regime_key="local-regime",
+        global_regime_key="shared-global",
+        metric_source="local_backtest",
+        family_signature=signature.family_signature,
+        structural_signature=signature,
+        genome_hash=genome.stable_hash,
+        genome=genome,
+        motif="momentum",
+        field_families=("price",),
+        operator_path=("rank", "ts_delta"),
+        complexity_bucket=signature.complexity_bucket,
+        turnover_bucket=signature.turnover_bucket,
+        horizon_bucket=signature.horizon_bucket,
+        mutation_mode="guided_exploit",
+        parent_family_signatures=(),
+        fail_tags=(),
+        success_tags=("passed_validation_filters",) if outcome_score > 0 else (),
+        objective_vector=ObjectiveVector(fitness=outcome_score, sharpe=outcome_score),
+        outcome_score=outcome_score,
+        created_at=created_at,
+        neutralization=neutralization,
+        decay=decay,
     )
 
 

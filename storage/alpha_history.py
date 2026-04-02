@@ -179,6 +179,7 @@ class AlphaHistoryStore:
                         candidate=evaluation.candidate,
                         structural_signature=evaluation.structural_signature,
                         metric_source="local_backtest",
+                        simulation_context=evaluation.simulation_profile,
                         fail_tags=diagnosis.fail_tags,
                         success_tags=diagnosis.success_tags,
                         objective_vector=ObjectiveVector(
@@ -347,6 +348,7 @@ class AlphaHistoryStore:
                     candidate=candidate,
                     structural_signature=structural_signature,
                     metric_source=str(entry.get("metric_source") or "external_brain"),
+                    simulation_context={"neutralization": result.neutralization, "decay": result.decay},
                     fail_tags=diagnosis.fail_tags,
                     success_tags=diagnosis.success_tags,
                     objective_vector=ObjectiveVector(
@@ -1058,6 +1060,7 @@ class AlphaHistoryStore:
         candidate,
         structural_signature,
         metric_source: str,
+        simulation_context: dict[str, object] | None = None,
         fail_tags: list[str] | tuple[str, ...],
         success_tags: list[str] | tuple[str, ...],
         objective_vector: ObjectiveVector,
@@ -1065,7 +1068,12 @@ class AlphaHistoryStore:
         created_at: str,
     ) -> AlphaCaseRecord:
         metadata = dict(candidate.generation_metadata)
-        genome_payload = metadata.get("genome") if isinstance(metadata.get("genome"), dict) else {}
+        raw_genome_payload = metadata.get("genome") if isinstance(metadata.get("genome"), dict) else {}
+        genome_payload = dict(raw_genome_payload)
+        genome_payload["_case_memory_context"] = self._case_memory_context(
+            simulation_context=simulation_context,
+            generation_metadata=metadata,
+        )
         parent_family_signatures = [
             str(parent.get("family_signature") or "")
             for parent in metadata.get("parent_refs", [])
@@ -1100,6 +1108,38 @@ class AlphaHistoryStore:
             outcome_score=float(outcome_score),
             created_at=created_at,
         )
+
+    def _case_memory_context(
+        self,
+        *,
+        simulation_context: dict[str, object] | None,
+        generation_metadata: dict[str, object],
+    ) -> dict[str, object]:
+        payload = simulation_context if isinstance(simulation_context, dict) else {}
+        return {
+            "neutralization": self._normalize_case_neutralization(
+                payload.get("neutralization")
+                or generation_metadata.get("neutralization")
+                or generation_metadata.get("sim_neutralization")
+            ),
+            "decay": self._normalize_case_decay(
+                payload.get("decay")
+                or generation_metadata.get("decay")
+                or generation_metadata.get("sim_decay")
+            ),
+        }
+
+    @staticmethod
+    def _normalize_case_neutralization(value: object) -> str:
+        normalized = str(value or "").strip().lower()
+        return normalized or "none"
+
+    @staticmethod
+    def _normalize_case_decay(value: object) -> int:
+        try:
+            return max(0, int(value or 0))
+        except (TypeError, ValueError):
+            return 0
 
     def _structural_signature_from_json(self, payload: str) -> StructuralSignature:
         values = json.loads(payload or "{}")

@@ -61,6 +61,8 @@ class CaseMemoryRecord:
     objective_vector: ObjectiveVector
     outcome_score: float
     created_at: str
+    neutralization: str = ""
+    decay: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -88,6 +90,9 @@ class CaseMemorySnapshot:
     motif_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     mutation_mode_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     operator_path_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    motif_neutralization_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    motif_decay_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    field_operator_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     horizon_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     turnover_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     complexity_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
@@ -98,6 +103,9 @@ class CaseMemorySnapshot:
     global_motif_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     global_mutation_mode_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     global_operator_path_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_motif_neutralization_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_motif_decay_stats: dict[str, CaseAggregate] = field(default_factory=dict)
+    global_field_operator_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     global_horizon_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     global_turnover_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
     global_complexity_bucket_stats: dict[str, CaseAggregate] = field(default_factory=dict)
@@ -150,6 +158,9 @@ class CaseMemorySnapshot:
             "motif": f"{prefix}motif_stats",
             "mutation_mode": f"{prefix}mutation_mode_stats",
             "operator_path": f"{prefix}operator_path_stats",
+            "motif_neutralization": f"{prefix}motif_neutralization_stats",
+            "motif_decay": f"{prefix}motif_decay_stats",
+            "field_operator": f"{prefix}field_operator_stats",
             "horizon_bucket": f"{prefix}horizon_bucket_stats",
             "turnover_bucket": f"{prefix}turnover_bucket_stats",
             "complexity_bucket": f"{prefix}complexity_bucket_stats",
@@ -174,6 +185,9 @@ class CaseMemoryService:
         structural_signature: StructuralSignature,
     ) -> CaseMemoryRecord:
         genome_payload = json.loads(row["genome_json"] or "{}")
+        genome_context = genome_payload.get("_case_memory_context", {}) if isinstance(genome_payload, dict) else {}
+        if not isinstance(genome_context, dict):
+            genome_context = {}
         return CaseMemoryRecord(
             run_id=row["run_id"],
             alpha_id=row["alpha_id"],
@@ -184,7 +198,7 @@ class CaseMemoryService:
             family_signature=row["family_signature"],
             structural_signature=structural_signature,
             genome_hash=row["genome_hash"],
-            genome=Genome.from_dict(genome_payload) if genome_payload else None,
+            genome=self.genome_from_metadata({"genome": genome_payload}) if genome_payload else None,
             motif=row["motif"],
             field_families=tuple(json.loads(row["field_families_json"] or "[]")),
             operator_path=tuple(json.loads(row["operator_path_json"] or "[]")),
@@ -198,6 +212,8 @@ class CaseMemoryService:
             objective_vector=ObjectiveVector.from_dict(json.loads(row["objective_vector_json"] or "{}")),
             outcome_score=float(row["outcome_score"]),
             created_at=row["created_at"],
+            neutralization=self._normalize_neutralization(genome_context.get("neutralization")),
+            decay=self._normalize_decay(genome_context.get("decay")),
         )
 
     def build_snapshot(
@@ -221,6 +237,9 @@ class CaseMemoryService:
             motif_stats=self._aggregate(cases, key_fn=lambda case: case.motif),
             mutation_mode_stats=self._aggregate(cases, key_fn=lambda case: case.mutation_mode),
             operator_path_stats=self._aggregate(cases, key_fn=lambda case: ">".join(case.operator_path[:4])),
+            motif_neutralization_stats=self._aggregate(cases, key_fn=self._motif_neutralization_key),
+            motif_decay_stats=self._aggregate(cases, key_fn=self._motif_decay_key),
+            field_operator_stats=self._aggregate(cases, key_fn=self._field_operator_key),
             horizon_bucket_stats=self._aggregate(cases, key_fn=lambda case: case.horizon_bucket),
             turnover_bucket_stats=self._aggregate(cases, key_fn=lambda case: case.turnover_bucket),
             complexity_bucket_stats=self._aggregate(cases, key_fn=lambda case: case.complexity_bucket),
@@ -231,6 +250,9 @@ class CaseMemoryService:
             global_motif_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.motif),
             global_mutation_mode_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.mutation_mode),
             global_operator_path_stats=self._aggregate(fallback_cases, key_fn=lambda case: ">".join(case.operator_path[:4])),
+            global_motif_neutralization_stats=self._aggregate(fallback_cases, key_fn=self._motif_neutralization_key),
+            global_motif_decay_stats=self._aggregate(fallback_cases, key_fn=self._motif_decay_key),
+            global_field_operator_stats=self._aggregate(fallback_cases, key_fn=self._field_operator_key),
             global_horizon_bucket_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.horizon_bucket),
             global_turnover_bucket_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.turnover_bucket),
             global_complexity_bucket_stats=self._aggregate(fallback_cases, key_fn=lambda case: case.complexity_bucket),
@@ -387,6 +409,66 @@ class CaseMemoryService:
             )
             counts[key] = counts.get(key, 0) + 1
         return counts
+
+    def _motif_neutralization_key(self, case: CaseMemoryRecord) -> str:
+        return self._joined_key(case.motif, self._case_neutralization(case))
+
+    def _motif_decay_key(self, case: CaseMemoryRecord) -> str:
+        return self._joined_key(case.motif, str(self._case_decay(case)))
+
+    def _field_operator_key(self, case: CaseMemoryRecord) -> str:
+        return self._joined_key(self._primary_field(case), self._primary_operator(case))
+
+    def _case_neutralization(self, case: CaseMemoryRecord) -> str:
+        if case.neutralization:
+            return self._normalize_neutralization(case.neutralization)
+        wrappers = tuple(case.structural_signature.wrappers or ())
+        if wrappers:
+            return self._normalize_neutralization(wrappers[0])
+        if case.genome is not None and case.genome.regime_gene.conditioning_mode:
+            return self._normalize_neutralization(case.genome.regime_gene.conditioning_mode)
+        return "none"
+
+    def _case_decay(self, case: CaseMemoryRecord) -> int:
+        if case.decay > 0:
+            return int(case.decay)
+        if case.genome is not None and case.genome.turnover_gene.smoothing_window > 0:
+            return int(case.genome.turnover_gene.smoothing_window)
+        return 0
+
+    def _primary_field(self, case: CaseMemoryRecord) -> str:
+        if case.genome is not None and case.genome.feature_gene.primary_field:
+            return str(case.genome.feature_gene.primary_field)
+        if case.structural_signature.fields:
+            return str(case.structural_signature.fields[0])
+        return ""
+
+    def _primary_operator(self, case: CaseMemoryRecord) -> str:
+        if case.genome is not None and case.genome.transform_gene.primitive_transform:
+            return str(case.genome.transform_gene.primitive_transform)
+        operator_path = tuple(case.operator_path or case.structural_signature.operator_path)
+        wrappers = set(case.structural_signature.wrappers or ())
+        for operator in operator_path:
+            if operator and operator not in wrappers:
+                return str(operator)
+        return str(operator_path[0]) if operator_path else ""
+
+    @staticmethod
+    def _joined_key(*parts: str) -> str:
+        cleaned = [str(part or "").strip() for part in parts if str(part or "").strip()]
+        return "|".join(cleaned)
+
+    @staticmethod
+    def _normalize_neutralization(value: Any) -> str:
+        normalized = str(value or "").strip().lower()
+        return normalized or "none"
+
+    @staticmethod
+    def _normalize_decay(value: Any) -> int:
+        try:
+            return max(0, int(value or 0))
+        except (TypeError, ValueError):
+            return 0
 
     def _turnover_cost(self, turnover_bucket: str) -> float:
         return {
