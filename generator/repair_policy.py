@@ -2,10 +2,17 @@ from __future__ import annotations
 
 from dataclasses import replace
 
+from alpha.parser import parse_expression
+from alpha.validator import has_nesting_violation
 from core.config import GenerationConfig, RepairPolicyConfig
 from data.field_registry import FieldRegistry
 from features.registry import OperatorRegistry
 from generator.genome import Genome
+from generator.grammar import MotifGrammar
+
+_CROSS_SECTIONAL_WRAPPERS = frozenset(
+    {"rank", "zscore", "group_rank", "group_zscore", "group_neutralize", "normalize"}
+)
 
 
 class RepairPolicy:
@@ -21,6 +28,7 @@ class RepairPolicy:
         self.repair_config = repair_config
         self.field_registry = field_registry
         self.registry = registry
+        self._grammar = MotifGrammar()
 
     def repair(
         self,
@@ -101,6 +109,12 @@ class RepairPolicy:
 
             if not changed:
                 break
+
+        # Post-repair nesting safety: render and check for violations.
+        current, nesting_action = self._repair_nesting_violations(current)
+        if nesting_action:
+            actions.append(nesting_action)
+
         return current, tuple(actions)
 
     def _dedupe_wrappers(self, wrappers: tuple[str, ...]) -> tuple[str, ...]:
@@ -138,3 +152,29 @@ class RepairPolicy:
             return "ts_mean"
         candidates.sort(reverse=True)
         return candidates[0][1]
+
+    def _repair_nesting_violations(self, genome: Genome) -> tuple[Genome, str | None]:
+        """Render the genome and strip cross-sectional wrappers when needed."""
+        try:
+            render = self._grammar.render(genome)
+            node = parse_expression(render.expression)
+        except (ValueError, TypeError):
+            return genome, None
+
+        if not has_nesting_violation(node):
+            return genome, None
+
+        clean_pre = tuple(w for w in genome.wrapper_gene.pre_wrappers if w not in _CROSS_SECTIONAL_WRAPPERS)
+        clean_post = tuple(w for w in genome.wrapper_gene.post_wrappers if w not in _CROSS_SECTIONAL_WRAPPERS)
+        repaired = replace(genome, wrapper_gene=replace(genome.wrapper_gene, pre_wrappers=clean_pre, post_wrappers=clean_post))
+
+        try:
+            render2 = self._grammar.render(repaired)
+            node2 = parse_expression(render2.expression)
+        except (ValueError, TypeError):
+            return genome, "nesting_repair_failed"
+
+        if not has_nesting_violation(node2):
+            return repaired, "nesting_repair"
+
+        return genome, "nesting_repair_failed"

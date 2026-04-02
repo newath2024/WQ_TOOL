@@ -89,7 +89,7 @@ class ExpressionValidator:
             self._add_issue(
                 errors,
                 issues,
-                "validation_invalid_nesting",
+                "validation_depth_exceeded",
                 f"Expression depth exceeds max depth {self.max_depth}.",
             )
         if self.complexity_limit is not None and node_complexity(node) > self.complexity_limit:
@@ -452,6 +452,27 @@ def validate_expression(
         field_types=field_types,
         complexity_limit=complexity_limit,
     ).validate(node)
+
+
+def has_nesting_violation(node: ExprNode) -> bool:
+    """Fast check: is any cross-sectional operator nested inside a ts_* operator?
+
+    This is a lightweight alternative to the full validator, optimised for use
+    in hot generation loops where we only care about the nesting constraint.
+    """
+    return _scan_nesting(node, inside_ts=False)
+
+
+def _scan_nesting(node: ExprNode, *, inside_ts: bool) -> bool:
+    if isinstance(node, FunctionCallNode):
+        if inside_ts and node.name in _CROSS_SECTIONAL_NESTING_OPERATORS:
+            return True
+        child_context = node.name.startswith("ts_") or inside_ts
+        return any(_scan_nesting(child, inside_ts=child_context) for child in node.args)
+    for child in _iter_children(node):
+        if _scan_nesting(child, inside_ts=inside_ts):
+            return True
+    return False
 
 
 def _iter_children(node: ExprNode) -> tuple[ExprNode, ...]:

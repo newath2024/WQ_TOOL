@@ -9,7 +9,7 @@ from typing import Any, Iterable, Sequence
 
 from alpha.ast_nodes import to_expression
 from alpha.parser import parse_expression
-from alpha.validator import ValidationResult, validate_expression
+from alpha.validator import ValidationResult, has_nesting_violation, validate_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import OperatorRegistry
@@ -528,6 +528,9 @@ class AlphaGenerationEngine:
             node = parse_expression(expression)
         except ValueError:
             return CandidateBuildResult(candidate=None, failure_reason="parse_failed")
+
+        if has_nesting_violation(node):
+            return CandidateBuildResult(candidate=None, failure_reason="validation_invalid_nesting")
 
         prepared_validation_ctx = validation_ctx or self.prepare_validation_context()
         validation = validate_expression(

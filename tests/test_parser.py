@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
 from alpha.ast_nodes import FunctionCallNode
@@ -19,7 +21,7 @@ from generator.genome import (
     WrapperGene,
 )
 from generator.genome_builder import GenomeBuilder
-from generator.grammar import MotifGrammar
+from generator.grammar import MOTIF_LIBRARY, MotifGrammar
 
 
 def test_parse_nested_expression() -> None:
@@ -42,7 +44,7 @@ def test_validator_rejects_unknown_fields_and_depth() -> None:
     assert any("Unknown field 'foo'" in error for error in result.errors)
     assert any("depth exceeds" in error for error in result.errors)
     assert {issue.reason_code for issue in result.issues} == {
-        "validation_invalid_nesting",
+        "validation_depth_exceeded",
         "validation_disallowed_field",
     }
 
@@ -126,17 +128,18 @@ def test_validator_maps_field_type_resolution_failure_reason_code() -> None:
     assert result.primary_reason_code == "validation_field_type_resolution_failed"
 
 
-def test_validator_maps_invalid_nesting_reason_code() -> None:
-    registry = build_registry(["rank", "ts_mean"])
+def test_validator_maps_depth_exceeded_reason_code() -> None:
+    registry = build_registry(["sign", "rank", "ts_decay_linear", "ts_delta", "ts_mean"])
     result = validate_expression(
-        parse_expression("rank(ts_mean(close, 2))"),
+        parse_expression("sign(rank(ts_decay_linear((ts_delta(close,5)*ts_mean(volume,10)),10)))"),
         registry,
-        {"close"},
-        max_depth=1,
+        {"close", "volume"},
+        max_depth=5,
     )
 
     assert not result.is_valid
-    assert result.primary_reason_code == "validation_invalid_nesting"
+    assert result.primary_reason_code == "validation_depth_exceeded"
+    assert "validation_invalid_nesting" not in {issue.reason_code for issue in result.issues}
 
 
 @pytest.mark.parametrize(
@@ -427,6 +430,72 @@ def _build_regression_genome(motif: str, *, conditioning_mode: str = "none") -> 
             liquidity_field="adv20",
         )
         transform_gene = TransformGene(motif=motif, primitive_transform="ts_corr")
+    elif motif == "momentum":
+        feature_gene = FeatureGene(
+            primary_field="close",
+            primary_family="price",
+            auxiliary_field="adv20",
+            auxiliary_family="liquidity",
+            group_field="sector",
+            liquidity_field="adv20",
+        )
+        transform_gene = TransformGene(motif=motif, primitive_transform="ts_delta")
+    elif motif == "mean_reversion":
+        feature_gene = FeatureGene(
+            primary_field="close",
+            primary_family="price",
+            auxiliary_field="adv20",
+            auxiliary_family="liquidity",
+            group_field="sector",
+            liquidity_field="adv20",
+        )
+        transform_gene = TransformGene(motif=motif, primitive_transform="ts_mean")
+    elif motif == "volatility_adjusted_momentum":
+        feature_gene = FeatureGene(
+            primary_field="close",
+            primary_family="price",
+            auxiliary_field="adv20",
+            auxiliary_family="liquidity",
+            group_field="sector",
+            liquidity_field="adv20",
+        )
+        transform_gene = TransformGene(
+            motif=motif,
+            primitive_transform="ts_delta",
+            secondary_transform="ts_std_dev",
+        )
+    elif motif == "spread":
+        feature_gene = FeatureGene(
+            primary_field="close",
+            primary_family="price",
+            secondary_field="volume",
+            secondary_family="volume",
+            auxiliary_field="adv20",
+            auxiliary_family="liquidity",
+            group_field="sector",
+            liquidity_field="adv20",
+        )
+        transform_gene = TransformGene(
+            motif=motif,
+            primitive_transform="ts_mean",
+            secondary_transform="ts_mean",
+        )
+    elif motif == "ratio":
+        feature_gene = FeatureGene(
+            primary_field="close",
+            primary_family="price",
+            secondary_field="volume",
+            secondary_family="volume",
+            auxiliary_field="adv20",
+            auxiliary_family="liquidity",
+            group_field="sector",
+            liquidity_field="adv20",
+        )
+        transform_gene = TransformGene(
+            motif=motif,
+            primitive_transform="ts_mean",
+            secondary_transform="ts_mean",
+        )
     elif motif == "conditional_momentum":
         feature_gene = FeatureGene(
             primary_field="close",
@@ -441,6 +510,22 @@ def _build_regression_genome(motif: str, *, conditioning_mode: str = "none") -> 
         transform_gene = TransformGene(
             motif=motif,
             primitive_transform="ts_delta",
+            secondary_transform="ts_mean",
+        )
+    elif motif == "residualized_signal":
+        feature_gene = FeatureGene(
+            primary_field="close",
+            primary_family="price",
+            secondary_field="volume",
+            secondary_family="volume",
+            auxiliary_field="adv20",
+            auxiliary_family="liquidity",
+            group_field="sector",
+            liquidity_field="adv20",
+        )
+        transform_gene = TransformGene(
+            motif=motif,
+            primitive_transform="ts_mean",
             secondary_transform="ts_mean",
         )
     elif motif == "regime_conditioned_signal":
@@ -540,15 +625,21 @@ def _assert_no_cross_sectional_inside_time_series(expression: str) -> None:
 @pytest.mark.parametrize(
     ("motif", "conditioning_mode"),
     [
+        ("momentum", "none"),
+        ("mean_reversion", "none"),
+        ("volatility_adjusted_momentum", "none"),
+        ("spread", "none"),
+        ("ratio", "none"),
         ("quality_score", "none"),
         ("price_volume_divergence", "none"),
         ("conditional_momentum", "none"),
+        ("residualized_signal", "none"),
         ("regime_conditioned_signal", "none"),
+        ("group_relative_signal", "none"),
         ("liquidity_conditioned_signal", "none"),
         ("spread", "volatility_gate"),
         ("spread", "liquidity_gate"),
         ("quality_score", "group_neutralize"),
-        ("group_relative_signal", "none"),
         ("group_relative_signal", "group_neutralize"),
     ],
 )
@@ -562,7 +653,7 @@ def test_grammar_render_keeps_cross_sectional_ops_outside_time_series_after_smoo
     _assert_no_cross_sectional_inside_time_series(render.expression)
 
 
-def test_random_genome_render_never_nests_cross_sectional_ops_inside_time_series() -> None:
+def test_random_smoothed_genome_render_never_nests_cross_sectional_ops_inside_time_series() -> None:
     config = _build_generator_test_config()
     field_registry = _build_generator_test_field_registry()
     registry = build_registry(config.allowed_operators)
@@ -579,18 +670,46 @@ def test_random_genome_render_never_nests_cross_sectional_ops_inside_time_series
         seed=23,
     )
     grammar = MotifGrammar()
+    preferred_family_by_motif = {
+        "price_volume_divergence": "price",
+        "quality_score": "fundamental",
+        "conditional_momentum": "price",
+        "spread": "price",
+        "ratio": "price",
+        "residualized_signal": "price",
+        "regime_conditioned_signal": "price",
+        "group_relative_signal": "price",
+        "liquidity_conditioned_signal": "price",
+        "momentum": "price",
+        "mean_reversion": "price",
+        "volatility_adjusted_momentum": "price",
+    }
 
-    for index in range(250):
-        genome = builder.build_random_genome(
-            source_mode="nesting_regression",
-            novelty_bias=bool(index % 2),
-        )
-        render = grammar.render(genome)
-        result = validate_expression(
-            parse_expression(render.expression),
-            registry,
-            set(config.allowed_fields),
-            max_depth=20,
-            group_fields=group_fields,
-        )
-        assert "validation_invalid_nesting" not in {issue.reason_code for issue in result.issues}, render.expression
+    total_checked = 0
+    for motif in MOTIF_LIBRARY:
+        for _ in range(30):
+            genome = builder.build_parent_seeded_genome(
+                motif=motif,
+                primary_family=preferred_family_by_motif.get(motif, "price"),
+                source_mode="nesting_regression",
+            )
+            smoothed_genome = replace(
+                genome,
+                turnover_gene=TurnoverGene(
+                    smoothing_operator="ts_decay_linear",
+                    smoothing_window=max(2, genome.horizon_gene.slow_window or genome.horizon_gene.fast_window),
+                    turnover_hint=genome.turnover_gene.turnover_hint or -0.3,
+                ),
+            )
+            render = grammar.render(smoothed_genome)
+            result = validate_expression(
+                parse_expression(render.expression),
+                registry,
+                set(config.allowed_fields),
+                max_depth=20,
+                group_fields=group_fields,
+            )
+            assert "validation_invalid_nesting" not in {issue.reason_code for issue in result.issues}, render.expression
+            total_checked += 1
+
+    assert total_checked >= 300

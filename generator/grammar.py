@@ -5,7 +5,13 @@ import json
 from dataclasses import dataclass
 
 from alpha.ast_nodes import BinaryOpNode, ExprNode, FunctionCallNode, IdentifierNode, NumberNode, to_expression
+from alpha.validator import has_nesting_violation
 from generator.genome import Genome, GenomeRenderResult
+
+
+_CROSS_SECTIONAL_WRAPPERS = frozenset(
+    {"rank", "zscore", "group_rank", "group_zscore", "group_neutralize", "normalize"}
+)
 
 
 MOTIF_LIBRARY: tuple[str, ...] = (
@@ -165,9 +171,15 @@ class MotifGrammar:
         for group_field in deferred_group_neutralizers:
             signal = self._call("group_neutralize", signal, group_field)
         for wrapper in genome.wrapper_gene.pre_wrappers:
-            signal = self._call(wrapper, signal)
+            candidate = self._call(wrapper, signal)
+            if wrapper in _CROSS_SECTIONAL_WRAPPERS and has_nesting_violation(candidate):
+                continue
+            signal = candidate
         for wrapper in genome.wrapper_gene.post_wrappers:
-            signal = self._call(wrapper, signal)
+            candidate = self._call(wrapper, signal)
+            if wrapper in _CROSS_SECTIONAL_WRAPPERS and has_nesting_violation(candidate):
+                continue
+            signal = candidate
         return signal
 
     def _call(self, name: str, *args: ExprNode) -> FunctionCallNode:
@@ -178,4 +190,3 @@ class MotifGrammar:
 
     def _stabilize_divisor(self, node: ExprNode) -> ExprNode:
         return BinaryOpNode(operator="+", left=self._call("abs", node), right=NumberNode(1.0))
-
