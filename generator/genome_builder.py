@@ -36,6 +36,8 @@ COMPATIBLE_CATEGORIES: dict[str, set[str]] = {
     "risk": {"price", "risk", "volume"},
     "liquidity": {"volume", "liquidity", "price"},
 }
+_UNIT_SAFE_ARITHMETIC_MOTIFS = frozenset({"spread", "residualized_signal"})
+_UNIT_SAFE_CATEGORY_PAIRS = frozenset({frozenset({"fundamental", "analyst"})})
 
 
 class GenomeBuilder:
@@ -308,10 +310,10 @@ class GenomeBuilder:
                 motif_decay_support.get(f"{motif}|{decay_key}"),
                 novelty_bias=novelty_bias,
             )
+            if motif == "mean_reversion" and self.sim_neutralization_active:
+                weight *= 0.25
             if case_snapshot and not novelty_bias:
-                motif_failure_total = self._motif_failure_total(case_snapshot, motif)
-                if motif_failure_total >= 5:
-                    weight *= max(0.15, 1.0 - (min(motif_failure_total, 20) / 25.0))
+                weight *= self._motif_failure_penalty(case_snapshot, motif)
             if diversity_tracker is not None:
                 weight *= diversity_tracker.motif_weight(motif)
             weights.append(max(weight, 1e-6))
@@ -379,6 +381,7 @@ class GenomeBuilder:
         candidates = [spec for spec in self.allowed_numeric_fields if spec.name != primary.name]
         if not candidates:
             return None
+        candidates = self._filter_unit_safe_secondary_candidates(primary, candidates, motif=motif)
         preferred_category = primary.category if not novelty_bias else ""
         weights = []
         for spec in candidates:
@@ -635,6 +638,31 @@ class GenomeBuilder:
             return 1.0
         return 1.5 if normalized_candidate in compatible else 0.3
 
+    def _filter_unit_safe_secondary_candidates(
+        self,
+        primary: FieldSpec,
+        candidates: list[FieldSpec],
+        *,
+        motif: str,
+    ) -> list[FieldSpec]:
+        if not self.sim_neutralization_active or motif not in _UNIT_SAFE_ARITHMETIC_MOTIFS:
+            return candidates
+        safe_candidates = [
+            spec
+            for spec in candidates
+            if self._is_unit_safe_arithmetic_pair(primary.category, spec.category)
+        ]
+        return safe_candidates or candidates
+
+    def _is_unit_safe_arithmetic_pair(self, primary_category: str, candidate_category: str) -> bool:
+        left = str(primary_category or "").strip().lower()
+        right = str(candidate_category or "").strip().lower()
+        if not left or not right:
+            return False
+        if left == right:
+            return True
+        return frozenset({left, right}) in _UNIT_SAFE_CATEGORY_PAIRS
+
     def _motif_prior_weight(self, support) -> float:
         if support is None:
             return 1.0
@@ -664,7 +692,7 @@ class GenomeBuilder:
             return 1.0 + ((multiplier - 1.0) * 0.35)
         return multiplier
 
-    def _motif_failure_total(self, case_snapshot: CaseMemorySnapshot, motif: str) -> int:
+    def _motif_failure_penalty(self, case_snapshot: CaseMemorySnapshot, motif: str) -> float:
         local_failures = sum(
             count
             for key, count in case_snapshot.failure_combo_counts.items()
@@ -675,7 +703,12 @@ class GenomeBuilder:
             for key, count in case_snapshot.global_failure_combo_counts.items()
             if motif in key.split("|")
         )
-        return max(local_failures, global_failures)
+        penalty = 1.0
+        if local_failures >= 5:
+            penalty *= max(0.15, 1.0 - (min(local_failures, 20) / 25.0))
+        if global_failures >= 8:
+            penalty *= max(0.20, 1.0 - (min(global_failures, 30) / 35.0))
+        return penalty
 
     # ------------------------------------------------------------------
     # Depth constraint helpers
