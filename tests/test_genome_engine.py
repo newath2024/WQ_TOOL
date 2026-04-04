@@ -309,7 +309,7 @@ def test_motif_library_includes_new_entries() -> None:
 
 
 @pytest.mark.parametrize(
-    ("motif", "transform_gene", "expected_depth", "expected_fragment"),
+    ("motif", "transform_gene", "expected_render_depth", "expected_base_depth", "expected_fragment"),
     [
         (
             "quality_score",
@@ -319,6 +319,7 @@ def test_motif_library_includes_new_entries() -> None:
                 secondary_transform="",
             ),
             5,
+            4,
             "rank((close/(abs(volume)+1)))",
         ),
         (
@@ -329,6 +330,7 @@ def test_motif_library_includes_new_entries() -> None:
                 secondary_transform="",
             ),
             3,
+            2,
             "rank(ts_corr(close,volume,10))",
         ),
         (
@@ -339,14 +341,16 @@ def test_motif_library_includes_new_entries() -> None:
                 secondary_transform="ts_mean",
             ),
             4,
-            "(ts_delta(close,2)*rank(ts_mean(volume,10)))",
+            3,
+            "rank((ts_delta(close,2)*ts_mean(volume,10)))",
         ),
     ],
 )
 def test_new_motifs_render_to_parseable_expressions_and_match_expected_depth(
     motif: str,
     transform_gene: TransformGene,
-    expected_depth: int,
+    expected_render_depth: int,
+    expected_base_depth: int,
     expected_fragment: str,
 ) -> None:
     generation, adaptive = build_configs()
@@ -378,8 +382,126 @@ def test_new_motifs_render_to_parseable_expressions_and_match_expected_depth(
     reparsed = parse_expression(rendered.expression)
 
     assert rendered.expression == expected_fragment
-    assert node_depth(reparsed) == expected_depth
-    assert builder._base_render_depth(motif) == expected_depth  # noqa: SLF001
+    assert node_depth(reparsed) == expected_render_depth
+    assert builder._base_render_depth(motif) == expected_base_depth  # noqa: SLF001
+    assert builder._estimate_render_depth(genome) == expected_render_depth  # noqa: SLF001
+
+
+@pytest.mark.parametrize(
+    ("motif", "conditioning_mode", "apply_smoothing", "expected_depth"),
+    [
+        ("quality_score", "none", True, 6),
+        ("spread", "volatility_gate", True, 6),
+        ("group_relative_signal", "none", True, 4),
+        ("momentum", "group_neutralize", True, 4),
+    ],
+)
+def test_estimate_render_depth_tracks_post_smoothing_and_deferred_layers(
+    motif: str,
+    conditioning_mode: str,
+    apply_smoothing: bool,
+    expected_depth: int,
+) -> None:
+    generation, adaptive = build_configs()
+    field_registry = build_runtime_field_registry()
+    registry = build_registry(generation.allowed_operators)
+    builder = GenomeBuilder(
+        generation_config=generation,
+        adaptive_config=adaptive,
+        registry=registry,
+        field_registry=field_registry,
+        seed=83,
+    )
+    grammar = MotifGrammar()
+
+    genome = builder.build_parent_seeded_genome(
+        motif=motif,
+        primary_family="price",
+        source_mode="depth-estimate-regression",
+    )
+    conditioning_field = "pe_ratio" if conditioning_mode == "liquidity_gate" else ""
+    if conditioning_mode != genome.regime_gene.conditioning_mode:
+        genome = replace(
+            genome,
+            regime_gene=replace(
+                genome.regime_gene,
+                conditioning_mode=conditioning_mode,
+                conditioning_field=conditioning_field,
+            ),
+        )
+    if apply_smoothing:
+        genome = replace(
+            genome,
+            turnover_gene=replace(
+                genome.turnover_gene,
+                smoothing_operator="ts_decay_linear",
+                smoothing_window=max(2, genome.horizon_gene.slow_window or genome.horizon_gene.fast_window),
+            ),
+        )
+
+    estimate = builder._estimate_render_depth(genome)  # noqa: SLF001
+    actual = node_depth(parse_expression(grammar.render(genome).expression))
+
+    assert estimate == expected_depth
+    assert actual == expected_depth
+
+
+def test_random_smoothed_genome_depth_estimate_stays_within_one_layer_of_actual_depth() -> None:
+    generation, adaptive = build_configs()
+    generation = replace(generation, max_depth=5)
+    field_registry = build_runtime_field_registry()
+    registry = build_registry(generation.allowed_operators)
+    builder = GenomeBuilder(
+        generation_config=generation,
+        adaptive_config=adaptive,
+        registry=registry,
+        field_registry=field_registry,
+        seed=84,
+    )
+    grammar = MotifGrammar()
+    allowed_fields = field_registry.allowed_runtime_fields(generation.allowed_fields) | {"sector"}
+    field_types = field_registry.field_types(allowed=allowed_fields)
+
+    checked = 0
+    for _ in range(200):
+        genome = builder.build_random_genome(source_mode="depth-random")
+        smoothed = replace(
+            genome,
+            turnover_gene=replace(
+                genome.turnover_gene,
+                smoothing_operator=genome.turnover_gene.smoothing_operator or "ts_decay_linear",
+                smoothing_window=max(
+                    2,
+                    genome.turnover_gene.smoothing_window
+                    or genome.horizon_gene.slow_window
+                    or genome.horizon_gene.fast_window,
+                ),
+            ),
+        )
+
+        estimate = builder._estimate_render_depth(smoothed)  # noqa: SLF001
+        actual = node_depth(parse_expression(grammar.render(smoothed).expression))
+        assert abs(estimate - actual) <= 1
+
+        constrained = builder._constrain_by_actual_depth(smoothed)  # noqa: SLF001
+        constrained_expression = grammar.render(constrained).expression
+        constrained_node = parse_expression(constrained_expression)
+        assert node_depth(constrained_node) <= generation.max_depth
+
+        if estimate <= generation.max_depth:
+            validation = validate_expression(
+                node=constrained_node,
+                registry=registry,
+                allowed_fields=allowed_fields,
+                max_depth=generation.max_depth,
+                group_fields={"sector"},
+                field_types=field_types,
+                complexity_limit=generation.complexity_limit,
+            )
+            assert "validation_depth_exceeded" not in {issue.reason_code for issue in validation.issues}, constrained_expression
+        checked += 1
+
+    assert checked == 200
 
 
 def test_new_motif_builder_operator_defaults_are_stable() -> None:
@@ -490,7 +612,7 @@ def test_sim_decay_raises_smoothing_threshold_and_tags_genome(monkeypatch) -> No
         monkeypatch.setattr(builder, "_pick_primitive", lambda *args, **kwargs: "ts_delta")
         monkeypatch.setattr(builder, "_pick_secondary_transform", lambda *args, **kwargs: "")
         monkeypatch.setattr(builder, "_pick_conditioning_mode", lambda *args, **kwargs: "none")
-        monkeypatch.setattr(builder, "_pick_smoothing_operator", lambda: "ts_mean")
+        monkeypatch.setattr(builder, "_pick_smoothing_operator", lambda *args, **kwargs: "ts_mean")
         monkeypatch.setattr(builder, "_pick_wrappers", lambda **kwargs: ())
         monkeypatch.setattr(builder, "_estimate_turnover_hint", lambda *args, **kwargs: 0.20)
         monkeypatch.setattr(builder, "_constrain_by_actual_depth", lambda genome: genome)
@@ -734,11 +856,15 @@ def test_pick_motif_applies_minimum_weight_floor(monkeypatch) -> None:
     captured: dict[str, list[float]] = {}
 
     class Snapshot:
+        failure_combo_counts: dict[str, int] = {}
+        global_failure_combo_counts: dict[str, int] = {}
+
         def stats_for_scope(self, category: str, scope: str = "blended") -> dict[str, SimpleNamespace]:
-            assert category == "motif"
-            return {
-                "spread": SimpleNamespace(support=100, avg_outcome=2.0, success_rate=0.9),
-            }
+            if category == "motif":
+                return {
+                    "spread": SimpleNamespace(support=100, avg_outcome=2.0, success_rate=0.9),
+                }
+            return {}
 
     def fake_choices(labels, weights, k):
         del k
