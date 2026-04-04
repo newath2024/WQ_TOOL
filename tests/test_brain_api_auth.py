@@ -8,7 +8,7 @@ from pathlib import Path
 
 import requests
 
-from adapters.brain_api_adapter import BiometricsThrottled, BrainApiAdapter
+from adapters.brain_api_adapter import BiometricsThrottled, BrainApiAdapter, ConcurrentSimulationLimitExceeded
 from services.email_service import TelegramNotificationConfig, TelegramService
 
 
@@ -439,6 +439,42 @@ def test_brain_api_adapter_surfaces_biometrics_throttle(tmp_path: Path) -> None:
         adapter.ensure_authenticated(interactive=False)
 
     assert exc_info.value.retry_after_seconds == 45
+
+
+def test_brain_api_adapter_surfaces_concurrent_simulation_limit(tmp_path: Path, monkeypatch) -> None:
+    fake_session = FakeSession(
+        get_queue=[],
+        post_queue=[
+            FakeResponse(
+                429,
+                json_data={"detail": "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"},
+                text='{"detail":"CONCURRENT_SIMULATION_LIMIT_EXCEEDED"}',
+                url="https://api.worldquantbrain.com/simulations",
+            )
+        ],
+    )
+    adapter = BrainApiAdapter(
+        base_url="https://api.worldquantbrain.com",
+        session=fake_session,
+        session_path=str(tmp_path / "brain_session.json"),
+        open_browser_for_persona=False,
+    )
+    monkeypatch.setattr(adapter, "ensure_authenticated", lambda **kwargs: {"status": "ready"})
+
+    with pytest.raises(ConcurrentSimulationLimitExceeded) as exc_info:
+        adapter.submit_simulation(
+            "rank(close)",
+            {
+                "region": "USA",
+                "universe": "TOP3000",
+                "delay": 1,
+                "decay": 4,
+                "neutralization": "sector",
+                "truncation": 0.08,
+            },
+        )
+
+    assert exc_info.value.cooldown_seconds == 180
 
 
 def _success_login_response(session: FakeSession, url: str, kwargs: dict) -> FakeResponse:

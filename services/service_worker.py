@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from dataclasses import replace
+from datetime import UTC, datetime, timedelta
 
+from adapters.brain_api_adapter import ConcurrentSimulationLimitExceeded
 from core.config import AppConfig
 from core.logging import get_logger
 from services.brain_batch_service import BrainBatchService
@@ -16,7 +18,7 @@ from services.models import CommandEnvironment, ServiceTickOutcome, SimulationRe
 from services.notification_manager import NotificationManager
 from services.progress_log import append_progress_event
 from services.session_manager import SessionManager
-from storage.models import BrainResultRecord, ServiceRuntimeRecord
+from storage.models import BrainResultRecord, ServiceRuntimeRecord, SubmissionBatchRecord, SubmissionRecord
 from storage.repository import SQLiteRepository
 
 
@@ -60,7 +62,7 @@ class ServiceWorker:
         runtime: ServiceRuntimeRecord,
         tick_id: int,
         stop_requested: bool = False,
-    ) -> ServiceTickOutcome:
+        ) -> ServiceTickOutcome:
         now = datetime.now(UTC).isoformat()
         logger = get_logger(
             __name__,
@@ -69,13 +71,11 @@ class ServiceWorker:
             tick_id=tick_id,
         )
         should_probe_auth = self._should_probe_session_during_cooldown(runtime)
-        if runtime.cooldown_until and runtime.cooldown_until > now and not should_probe_auth:
-            logger.info("Service is cooling down until %s", runtime.cooldown_until)
-            return ServiceTickOutcome(
-                status="cooldown",
-                pending_job_count=len(self.repository.submissions.list_pending_submissions(runtime.service_run_id)),
-                active_batch_id=runtime.active_batch_id,
-                cooldown_until=runtime.cooldown_until,
+        submission_cooldown_active = bool(runtime.cooldown_until and runtime.cooldown_until > now and not should_probe_auth)
+        if submission_cooldown_active:
+            logger.info(
+                "Service is cooling down until %s; polling existing work but skipping new submissions.",
+                runtime.cooldown_until,
             )
         if runtime.cooldown_until and runtime.cooldown_until > now and should_probe_auth:
             logger.info("Auth-related cooldown detected; probing session state before waiting out cooldown.")
@@ -111,6 +111,38 @@ class ServiceWorker:
                 )
             session_state = self.session_manager.ensure_session(runtime=runtime, allow_new_login=True)
         if session_state.status == "waiting_persona":
+            if self.notification_manager.requires_fresh_persona_confirmation_for_url(
+                runtime=runtime,
+                persona_url=str(session_state.persona_url or ""),
+                now=now,
+            ):
+                confirmation = self.notification_manager.request_persona_confirmation(
+                    runtime=runtime,
+                    service_name=runtime.service_name,
+                )
+                self._update_persona_confirmation_state(
+                    service_name=runtime.service_name,
+                    now=now,
+                    nonce=confirmation.nonce,
+                    last_prompt_at=confirmation.last_prompt_at,
+                    granted_at=confirmation.granted_at,
+                    last_update_id=confirmation.last_update_id,
+                )
+                runtime = self.repository.service_runtime.get_state(runtime.service_name) or runtime
+                if confirmation.status == "pending":
+                    pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+                    logger.warning(
+                        "Waiting for Telegram confirmation before delivering Persona link; pending_jobs=%s",
+                        pending_jobs,
+                    )
+                    return ServiceTickOutcome(
+                        status="waiting_persona_confirmation",
+                        pending_job_count=pending_jobs,
+                        active_batch_id=runtime.active_batch_id,
+                        persona_url=None,
+                        last_error=confirmation.detail,
+                        next_sleep_seconds=self.config.service.persona_confirmation_poll_interval_seconds,
+                    )
             persona_wait_started_at = runtime.persona_wait_started_at or now
             if session_state.persona_url and session_state.persona_url != runtime.persona_url:
                 persona_wait_started_at = now
@@ -210,29 +242,30 @@ class ServiceWorker:
                 updated_at=now,
             )
 
+        try:
+            recovered_batch_ids, failed_batch_ids, resubmitted_batch_ids, quarantined_batch_ids = self._recover_submitting_batches(
+                service_name=runtime.service_name,
+                run_id=runtime.service_run_id,
+                now=now,
+                allow_resubmit=not submission_cooldown_active,
+            )
+        except ConcurrentSimulationLimitExceeded as exc:
+            return self._submission_cooldown_outcome(runtime=runtime, now=now, error=exc, logger=logger)
+        if recovered_batch_ids:
+            logger.info("Recovered %s interrupted submitting batches", len(recovered_batch_ids))
+        if failed_batch_ids:
+            logger.warning("Marked %s ambiguous batches as failed to unblock service.", len(failed_batch_ids))
+        if resubmitted_batch_ids:
+            logger.warning("Resubmitted %s ambiguous batches after interrupted submission.", len(resubmitted_batch_ids))
         paused_batches = self.repository.submissions.list_batches_by_status(
             run_id=runtime.service_run_id,
             statuses=("paused_quarantine",),
         )
+        if submission_cooldown_active:
+            paused_batches = [batch for batch in paused_batches if not self._is_ambiguous_batch(batch)]
         if paused_batches:
             active_batch_id = paused_batches[0].batch_id
             logger.error("Service remains paused because batch=%s is quarantined.", active_batch_id)
-            return ServiceTickOutcome(
-                status="paused_quarantine",
-                pending_job_count=len(self.repository.submissions.list_pending_submissions(runtime.service_run_id)),
-                active_batch_id=active_batch_id,
-            )
-
-        recovered_batch_ids, quarantined_batch_ids = self._recover_submitting_batches(
-            service_name=runtime.service_name,
-            run_id=runtime.service_run_id,
-            now=now,
-        )
-        if recovered_batch_ids:
-            logger.info("Recovered %s interrupted submitting batches", len(recovered_batch_ids))
-        if quarantined_batch_ids:
-            active_batch_id = quarantined_batch_ids[0]
-            logger.error("Paused service after quarantining ambiguous batch %s", active_batch_id)
             return ServiceTickOutcome(
                 status="paused_quarantine",
                 pending_job_count=len(self.repository.submissions.list_pending_submissions(runtime.service_run_id)),
@@ -242,14 +275,17 @@ class ServiceWorker:
 
         pending_batches = self.repository.submissions.list_batches_by_status(
             run_id=runtime.service_run_id,
-            statuses=("submitted", "running"),
+            statuses=("submitting", "submitted", "running"),
         )
         if pending_batches:
-            return self._poll_pending_batches(
+            outcome = self._poll_pending_batches(
                 runtime=runtime,
                 tick_id=tick_id,
                 batch_ids=[batch.batch_id for batch in pending_batches],
             )
+            if submission_cooldown_active:
+                return replace(outcome, status="cooldown", cooldown_until=runtime.cooldown_until)
+            return outcome
 
         reconciled_batches = self._reconcile_completed_batches(run_id=runtime.service_run_id)
         if reconciled_batches:
@@ -258,8 +294,18 @@ class ServiceWorker:
         if stop_requested:
             logger.info("Shutdown requested; skipping new batch submission.")
             return ServiceTickOutcome(status="idle", pending_job_count=0)
+        if submission_cooldown_active:
+            return ServiceTickOutcome(
+                status="cooldown",
+                pending_job_count=0,
+                active_batch_id=None,
+                cooldown_until=runtime.cooldown_until,
+            )
 
-        return self._submit_new_batch(runtime=runtime, tick_id=tick_id)
+        try:
+            return self._submit_new_batch(runtime=runtime, tick_id=tick_id)
+        except ConcurrentSimulationLimitExceeded as exc:
+            return self._submission_cooldown_outcome(runtime=runtime, now=now, error=exc, logger=logger)
 
     def _poll_pending_batches(
         self,
@@ -458,17 +504,50 @@ class ServiceWorker:
             submitted_count=batch.submitted_count,
         )
 
+    def _submission_cooldown_outcome(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        now: str,
+        error: ConcurrentSimulationLimitExceeded,
+        logger,
+    ) -> ServiceTickOutcome:
+        cooldown_seconds = max(int(error.cooldown_seconds), 1)
+        cooldown_until = (datetime.fromisoformat(now) + timedelta(seconds=cooldown_seconds)).isoformat()
+        pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+        logger.warning(
+            "BRAIN concurrent simulation limit hit; pausing submissions for %ss pending_jobs=%s",
+            cooldown_seconds,
+            pending_jobs,
+        )
+        return ServiceTickOutcome(
+            status="cooldown",
+            pending_job_count=pending_jobs,
+            active_batch_id=runtime.active_batch_id,
+            next_sleep_seconds=cooldown_seconds,
+            last_error=str(error),
+            cooldown_until=cooldown_until,
+        )
+
     def _recover_submitting_batches(
         self,
         *,
         service_name: str,
         run_id: str,
         now: str,
-    ) -> tuple[list[str], list[str]]:
+        allow_resubmit: bool = True,
+    ) -> tuple[list[str], list[str], list[str], list[str]]:
         recovered: list[str] = []
+        failed: list[str] = []
+        resubmitted: list[str] = []
         quarantined: list[str] = []
-        batches = self.repository.submissions.list_batches_by_status(run_id=run_id, statuses=("submitting",))
+        policy = self.config.service.ambiguous_submission_policy
+        statuses: tuple[str, ...] = ("submitting", "paused_quarantine") if policy in {"fail", "resubmit"} else ("submitting",)
+        batches = self.repository.submissions.list_batches_by_status(run_id=run_id, statuses=statuses)
         for batch in batches:
+            if batch.status == "paused_quarantine" and not self._is_ambiguous_batch(batch):
+                quarantined.append(batch.batch_id)
+                continue
             submissions = self.repository.submissions.list_submissions(run_id=run_id, batch_id=batch.batch_id)
             if batch.candidate_count > 0 and len(submissions) >= batch.candidate_count:
                 recovered_status = "manual_pending" if all(
@@ -482,21 +561,195 @@ class ServiceWorker:
                 )
                 recovered.append(batch.batch_id)
                 continue
-            self.repository.submissions.update_batch_status(
-                batch.batch_id,
-                status="paused_quarantine",
+            if policy == "resubmit" and not allow_resubmit:
+                continue
+            if policy == "resubmit":
+                resubmitted_batch_id = self._resubmit_ambiguous_batch(
+                    run_id=run_id,
+                    batch=batch,
+                    submissions=submissions,
+                )
+                if resubmitted_batch_id:
+                    resubmitted.append(resubmitted_batch_id)
+                else:
+                    self._mark_ambiguous_batch_failed(
+                        batch=batch,
+                        submissions=submissions,
+                        updated_at=now,
+                        reason="ambiguous_submission_missing_candidates",
+                    )
+                    failed.append(batch.batch_id)
+                continue
+            if policy == "quarantine":
+                self.repository.submissions.update_batch_status(
+                    batch.batch_id,
+                    status="paused_quarantine",
+                    updated_at=now,
+                    service_status_reason="ambiguous_submission",
+                    quarantined_at=now,
+                )
+                self.repository.service_runtime.update_state(
+                    service_name,
+                    status="paused_quarantine",
+                    active_batch_id=batch.batch_id,
+                    updated_at=now,
+                )
+                quarantined.append(batch.batch_id)
+                continue
+            self._mark_ambiguous_batch_failed(
+                batch=batch,
+                submissions=submissions,
                 updated_at=now,
-                service_status_reason="ambiguous_submission",
-                quarantined_at=now,
+                reason="ambiguous_submission_assumed_failed",
             )
-            self.repository.service_runtime.update_state(
-                service_name,
-                status="paused_quarantine",
-                active_batch_id=batch.batch_id,
-                updated_at=now,
+            failed.append(batch.batch_id)
+        return recovered, failed, resubmitted, quarantined
+
+    @staticmethod
+    def _is_ambiguous_batch(batch: SubmissionBatchRecord) -> bool:
+        reason = str(batch.service_status_reason or "")
+        return batch.status == "submitting" or reason.startswith("ambiguous_submission")
+
+    def _resubmit_ambiguous_batch(
+        self,
+        *,
+        run_id: str,
+        batch: SubmissionBatchRecord,
+        submissions: list[SubmissionRecord],
+    ) -> str | None:
+        candidates = self._load_candidates_for_batch(run_id=run_id, batch=batch, submissions=submissions)
+        if not candidates:
+            return None
+        sim_config_override = self._decode_json_object(batch.sim_config_snapshot)
+        resubmitted_batch = self.brain_service.submit_candidates(
+            candidates,
+            config=self.config,
+            environment=self.environment,
+            round_index=batch.round_index,
+            batch_size=len(candidates),
+            sim_config_override=sim_config_override,
+            note_overrides={"resubmitted_from_batch_id": batch.batch_id},
+        )
+        self._mark_ambiguous_batch_failed(
+            batch=batch,
+            submissions=submissions,
+            updated_at=datetime.now(UTC).isoformat(),
+            reason=f"ambiguous_submission_resubmitted:{resubmitted_batch.batch_id}",
+        )
+        return resubmitted_batch.batch_id
+
+    def _mark_ambiguous_batch_failed(
+        self,
+        *,
+        batch: SubmissionBatchRecord,
+        submissions: list[SubmissionRecord],
+        updated_at: str,
+        reason: str,
+    ) -> None:
+        for submission in submissions:
+            if submission.status not in {"submitted", "running", "manual_pending"}:
+                continue
+            self.repository.submissions.update_submission_runtime(
+                submission.job_id,
+                status="failed",
+                updated_at=updated_at,
+                completed_at=updated_at,
+                error_message=reason,
+                last_polled_at=updated_at,
+                next_poll_after=None,
+                stuck_since=None,
+                service_failure_reason=reason,
             )
-            quarantined.append(batch.batch_id)
-        return recovered, quarantined
+        self.repository.submissions.update_batch_status(
+            batch.batch_id,
+            status="failed",
+            updated_at=updated_at,
+            service_status_reason=reason,
+            quarantined_at=None,
+        )
+
+    def _load_candidates_for_batch(
+        self,
+        *,
+        run_id: str,
+        batch: SubmissionBatchRecord,
+        submissions: list[SubmissionRecord],
+    ) -> list[AlphaCandidate]:
+        candidate_ids = self._candidate_ids_for_batch(batch=batch, submissions=submissions)
+        if not candidate_ids:
+            return []
+        payloads_by_candidate = self._batch_payloads_by_candidate(batch)
+        submissions_by_candidate = {submission.candidate_id: submission for submission in submissions if submission.candidate_id}
+        parent_refs_map = self.repository.get_parent_refs(run_id)
+        records_by_id = {
+            record.alpha_id: alpha_candidate_from_record(record, parent_refs=parent_refs_map.get(record.alpha_id))
+            for record in self.repository.list_alpha_records(run_id)
+            if record.alpha_id in set(candidate_ids)
+        }
+        candidates: list[AlphaCandidate] = []
+        for candidate_id in candidate_ids:
+            candidate = records_by_id.get(candidate_id)
+            if candidate is None:
+                payload = payloads_by_candidate.get(candidate_id, {})
+                submission = submissions_by_candidate.get(candidate_id)
+                expression = str(payload.get("expression") or (submission.expression if submission else "")).strip()
+                if not expression:
+                    continue
+                generation_metadata = payload.get("generation_metadata")
+                candidate = AlphaCandidate(
+                    alpha_id=candidate_id,
+                    expression=expression,
+                    normalized_expression=expression,
+                    generation_mode=str(payload.get("generation_mode") or "recovered"),
+                    parent_ids=(),
+                    complexity=int(payload.get("complexity") or 0),
+                    created_at=batch.created_at,
+                    template_name=str(payload.get("template_name") or ""),
+                    fields_used=tuple(str(item) for item in (payload.get("fields_used") or ()) if str(item)),
+                    operators_used=tuple(str(item) for item in (payload.get("operators_used") or ()) if str(item)),
+                    depth=int(payload.get("depth") or 0),
+                    generation_metadata=generation_metadata if isinstance(generation_metadata, dict) else {},
+                )
+            candidates.append(candidate)
+        return candidates
+
+    def _candidate_ids_for_batch(
+        self,
+        *,
+        batch: SubmissionBatchRecord,
+        submissions: list[SubmissionRecord],
+    ) -> list[str]:
+        candidate_ids: list[str] = []
+        for payload in self._decode_json_object(batch.sim_config_snapshot).get("candidate_payloads", []):
+            if isinstance(payload, dict) and payload.get("candidate_id"):
+                candidate_ids.append(str(payload["candidate_id"]))
+        if not candidate_ids:
+            for candidate_id in self._decode_json_object(batch.notes_json).get("candidate_ids", []):
+                if candidate_id:
+                    candidate_ids.append(str(candidate_id))
+        if not candidate_ids:
+            candidate_ids.extend(submission.candidate_id for submission in submissions if submission.candidate_id)
+        return list(dict.fromkeys(candidate_ids))
+
+    def _batch_payloads_by_candidate(self, batch: SubmissionBatchRecord) -> dict[str, dict[str, object]]:
+        payloads = self._decode_json_object(batch.sim_config_snapshot).get("candidate_payloads", [])
+        if not isinstance(payloads, list):
+            return {}
+        return {
+            str(item.get("candidate_id")): dict(item)
+            for item in payloads
+            if isinstance(item, dict) and item.get("candidate_id")
+        }
+
+    @staticmethod
+    def _decode_json_object(payload: str | None) -> dict[str, object]:
+        if not payload:
+            return {}
+        try:
+            decoded = json.loads(payload)
+        except json.JSONDecodeError:
+            return {}
+        return decoded if isinstance(decoded, dict) else {}
 
     def _learn_from_completed_batch(self, *, run_id: str, batch_id: str) -> None:
         results = [

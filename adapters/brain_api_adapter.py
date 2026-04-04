@@ -49,6 +49,13 @@ class BiometricsThrottled(RuntimeError):
         self.retry_after_seconds = retry_after_seconds
 
 
+class ConcurrentSimulationLimitExceeded(RuntimeError):
+    def __init__(self, detail: str, *, cooldown_seconds: int = 180) -> None:
+        super().__init__(f"BRAIN concurrent simulation limit exceeded: {detail}")
+        self.detail = detail
+        self.cooldown_seconds = cooldown_seconds
+
+
 class BrainApiAdapter(SimulationAdapter):
     """
     BRAIN API adapter with interactive authentication support.
@@ -485,6 +492,9 @@ class BrainApiAdapter(SimulationAdapter):
         return headers
 
     def _response_json(self, response) -> dict | list:
+        detail = self._extract_response_detail(response)
+        if response.status_code == 429 and detail == "CONCURRENT_SIMULATION_LIMIT_EXCEEDED":
+            raise ConcurrentSimulationLimitExceeded(detail, cooldown_seconds=180)
         if response.status_code >= 400:
             raise RuntimeError(f"BRAIN API request failed with status {response.status_code}: {response.text}")
         if not response.text.strip():
@@ -583,14 +593,28 @@ class BrainApiAdapter(SimulationAdapter):
             f"Waiting for Persona verification to complete "
             f"(timeout={self.persona_timeout_seconds}s, poll={self.persona_poll_interval_seconds}s)..."
         )
+        import os
         deadline = time.monotonic() + float(self.persona_timeout_seconds)
         last_response = None
         while time.monotonic() < deadline:
+            # Check for generic stop request markers if applicable.
+            if getattr(self, "stop_requested", False) or os.getenv("WQ_TOOL_STOP_REQUESTED") == "1":
+                print("Persona wait interrupted by stop request.")
+                raise KeyboardInterrupt("Stop requested during Persona wait")
+            
             result = self._poll_persona_verification(persona_url)
             if result.get("status") == "callback_complete":
                 return result
             last_response = result
-            time.sleep(float(self.persona_poll_interval_seconds))
+            
+            # Interruptible sleep implementation
+            sleep_deadline = time.monotonic() + float(self.persona_poll_interval_seconds)
+            while time.monotonic() < sleep_deadline:
+                if getattr(self, "stop_requested", False) or os.getenv("WQ_TOOL_STOP_REQUESTED") == "1":
+                    print("Persona wait interrupted by stop request.")
+                    raise KeyboardInterrupt("Stop requested during Persona sleep")
+                time.sleep(0.5)
+                
         last_status = "unknown"
         last_text = ""
         if isinstance(last_response, dict):

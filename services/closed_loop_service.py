@@ -260,6 +260,30 @@ class ClosedLoopService:
                         break
                     elif state.status == "waiting_persona":
                         now = datetime.now(UTC).isoformat()
+                        if (
+                            notification_manager is not None
+                            and notification_manager.requires_fresh_persona_confirmation_for_url(
+                                runtime=fake_runtime,
+                                persona_url=str(state.persona_url or ""),
+                                now=now,
+                            )
+                        ):
+                            confirmation = notification_manager.request_persona_confirmation(
+                                runtime=fake_runtime,
+                                service_name=environment.command_name,
+                            )
+                            fake_runtime = replace(
+                                fake_runtime,
+                                persona_confirmation_nonce=confirmation.nonce,
+                                persona_confirmation_last_prompt_at=confirmation.last_prompt_at,
+                                persona_confirmation_granted_at=confirmation.granted_at,
+                                persona_confirmation_last_update_id=confirmation.last_update_id,
+                                updated_at=now,
+                            )
+                            if confirmation.status == "pending":
+                                logger.info("%s", confirmation.detail)
+                                time.sleep(config.service.persona_confirmation_poll_interval_seconds)
+                                continue
                         persona_wait_started_at = fake_runtime.persona_wait_started_at or now
                         if state.persona_url and state.persona_url != fake_runtime.persona_url:
                             persona_wait_started_at = now

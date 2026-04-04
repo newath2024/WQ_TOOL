@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from datetime import UTC, datetime
 
 from core.config import ServiceConfig
@@ -31,7 +32,7 @@ class ServiceScheduler:
         current = datetime.fromisoformat(now) if now else datetime.now(UTC)
         if outcome.cooldown_until:
             cooldown_until = datetime.fromisoformat(outcome.cooldown_until)
-            remaining = max(int((cooldown_until - current).total_seconds()), 0)
+            remaining = max(math.ceil((cooldown_until - current).total_seconds()), 0)
             if remaining > 0:
                 return max(1, min(remaining, self.config.heartbeat_interval_seconds))
         if outcome.status == "waiting_persona_confirmation":

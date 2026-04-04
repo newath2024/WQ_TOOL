@@ -47,6 +47,26 @@ class NotificationManager:
             print("Persona notification is not configured; skipping alert.")
         return sent, now
 
+    def requires_fresh_persona_confirmation_for_url(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        persona_url: str,
+        now: str | None = None,
+    ) -> bool:
+        if not self.persona_confirmation_required:
+            return False
+        if not self.adapter.supports_persona_confirmation():
+            return False
+        next_url = str(persona_url or "").strip()
+        if not next_url:
+            return False
+        current_url = str(runtime.persona_url or "").strip()
+        if current_url and current_url == next_url:
+            return False
+        reference_now = now or datetime.now(UTC).isoformat()
+        return self._active_granted_at(runtime=runtime, now=reference_now) is None
+
     def request_persona_confirmation(
         self,
         *,
@@ -93,44 +113,44 @@ class NotificationManager:
                 detail=f"Telegram confirmation check failed: {exc}",
             )
 
-        last_update_id = poll_result.get("last_update_id")
-        if last_update_id is None:
-            last_update_id = runtime.persona_confirmation_last_update_id
-        if bool(poll_result.get("approved")):
-            return PersonaConfirmationDecision(
-                status="approved",
-                nonce=nonce,
-                last_prompt_at=runtime.persona_confirmation_last_prompt_at,
-                granted_at=now,
-                last_update_id=last_update_id,
-                detail="Telegram confirmation received; requesting Persona link now.",
-            )
-
         last_prompt_at = runtime.persona_confirmation_last_prompt_at
         detail = "Waiting for Telegram confirmation before requesting a new Persona link."
-        if self._should_send_confirmation_prompt(runtime=runtime, now=now, nonce=nonce):
-            try:
-                sent = self.adapter.send_persona_confirmation_prompt(
-                    prompt_token=nonce,
-                    service_name=service_name,
-                )
-            except Exception as exc:  # noqa: BLE001
-                sent = False
-                detail = f"Telegram confirmation prompt failed: {exc}"
-            if sent:
-                last_prompt_at = now
-                detail = (
-                    "Sent Telegram readiness prompt. "
-                    "No Persona link will be requested until confirmation arrives."
-                )
+        
+        # Nếu chưa ai đồng ý, và đã qua thời gian cooldown, gửi lại câu hỏi "Bạn đã sẵn sàng chưa?"
+        if not bool(poll_result.get("approved")):
+            if self._should_send_confirmation_prompt(runtime=runtime, now=now, nonce=nonce):
+                try:
+                    sent = self.adapter.send_persona_confirmation_prompt(
+                        prompt_token=nonce,
+                        service_name=service_name,
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    sent = False
+                    detail = f"Telegram confirmation prompt failed: {exc}"
+                if sent:
+                    last_prompt_at = now
+                    detail = (
+                        "Sent Telegram readiness prompt. "
+                        "No Persona link will be requested until confirmation arrives."
+                    )
+            
+            return PersonaConfirmationDecision(
+                status="pending",
+                nonce=nonce,
+                last_prompt_at=last_prompt_at,
+                granted_at=None,
+                last_update_id=last_update_id,
+                detail=detail,
+            )
 
+        # Nếu đã có người đồng ý, đi tiếp
         return PersonaConfirmationDecision(
-            status="pending",
+            status="approved",
             nonce=nonce,
             last_prompt_at=last_prompt_at,
-            granted_at=None,
+            granted_at=now,
             last_update_id=last_update_id,
-            detail=detail,
+            detail="Telegram confirmation received; requesting Persona link now.",
         )
 
     def _should_send(self, runtime: ServiceRuntimeRecord, now: str, persona_url: str) -> bool:
@@ -138,6 +158,8 @@ class NotificationManager:
         next_url = str(persona_url or "").strip()
         if next_url and next_url != current_url:
             return True
+        if current_url and next_url == current_url:
+            return not bool(str(runtime.persona_last_notification_at or "").strip())
         if not runtime.persona_last_notification_at:
             return True
         elapsed = datetime.fromisoformat(now) - datetime.fromisoformat(runtime.persona_last_notification_at)

@@ -7,7 +7,12 @@ from pathlib import Path
 
 import requests
 
-from adapters.brain_api_adapter import BiometricsThrottled, BrainApiAdapter, PersonaVerificationRequired
+from adapters.brain_api_adapter import (
+    BiometricsThrottled,
+    BrainApiAdapter,
+    ConcurrentSimulationLimitExceeded,
+    PersonaVerificationRequired,
+)
 from core.config import load_config
 from core.run_context import RunContext
 from generator.engine import AlphaCandidate
@@ -317,6 +322,48 @@ def test_service_worker_requests_persona_link_only_after_telegram_confirmation()
     assert final_runtime.persona_confirmation_granted_at is None
 
 
+def test_notification_manager_does_not_resend_same_persona_url_once_delivered() -> None:
+    adapter = FakeApiAdapter()
+    manager = NotificationManager(adapter, persona_email_cooldown_seconds=1)
+    runtime = replace(
+        _runtime_record(run_id="run-persona-no-resend"),
+        persona_url="https://persona.example/scan-same",
+        persona_last_notification_at=(datetime.now(UTC) - timedelta(hours=1)).isoformat(),
+    )
+
+    sent, _ = manager.notify_persona_required(
+        runtime=runtime,
+        persona_url="https://persona.example/scan-same",
+    )
+
+    assert sent is False
+    assert adapter.persona_notifications == []
+
+
+def test_notification_manager_requires_fresh_confirmation_for_new_persona_url_without_active_grant() -> None:
+    adapter = FakeApiAdapter()
+    manager = NotificationManager(
+        adapter,
+        persona_email_cooldown_seconds=999999,
+        persona_confirmation_required=True,
+    )
+    runtime = replace(
+        _runtime_record(run_id="run-persona-gate"),
+        persona_url="https://persona.example/scan-old",
+    )
+
+    assert manager.requires_fresh_persona_confirmation_for_url(
+        runtime=runtime,
+        persona_url="https://persona.example/scan-new",
+        now=datetime.now(UTC).isoformat(),
+    )
+    assert not manager.requires_fresh_persona_confirmation_for_url(
+        runtime=runtime,
+        persona_url="https://persona.example/scan-old",
+        now=datetime.now(UTC).isoformat(),
+    )
+
+
 def test_service_worker_resends_notification_when_persona_url_changes() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -565,6 +612,53 @@ def test_service_worker_rechecks_auth_during_auth_related_cooldown() -> None:
     assert outcome.completed_count == 1
 
 
+def test_service_worker_polls_submitting_batch_during_submission_cooldown() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        run_id = "run-submit-cooldown-poll"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        repository.submissions.update_batch_status(
+            "batch-1",
+            status="submitting",
+            updated_at=_timestamp(),
+            service_status_reason="submission_failed:ConcurrentSimulationLimitExceeded",
+        )
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+        now = datetime.now(UTC)
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            status="cooldown",
+            cooldown_until=(now + timedelta(seconds=60)).isoformat(),
+            last_error="BRAIN concurrent simulation limit exceeded: CONCURRENT_SIMULATION_LIMIT_EXCEEDED",
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        batch = repository.submissions.get_batch("batch-1")
+        result = repository.brain_results.get_result("job-1")
+    finally:
+        repository.close()
+
+    assert outcome.status == "cooldown"
+    assert outcome.completed_count == 1
+    assert outcome.pending_job_count == 0
+    assert outcome.cooldown_until == runtime.cooldown_until
+    assert batch is not None
+    assert batch.status == "completed"
+    assert result is not None
+    assert result.status == "completed"
+
+
 def test_service_runner_resumes_pending_jobs_without_duplicate_submission() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -726,8 +820,8 @@ def test_service_worker_caps_submission_count_when_recent_fail_rate_exceeds_half
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 2
-    assert len(adapter.submit_calls) == 2
+    assert outcome.submitted_count == 3
+    assert len(adapter.submit_calls) == 3
 
 
 def test_service_worker_caps_submission_count_at_one_when_recent_fail_rate_is_extreme() -> None:
@@ -768,8 +862,8 @@ def test_service_worker_caps_submission_count_at_one_when_recent_fail_rate_is_ex
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 1
-    assert len(adapter.submit_calls) == 1
+    assert outcome.submitted_count == 3
+    assert len(adapter.submit_calls) == 3
 
 
 def test_service_worker_keeps_existing_normal_batch_cap_when_history_is_clean() -> None:
@@ -798,6 +892,41 @@ def test_service_worker_keeps_existing_normal_batch_cap_when_history_is_clean() 
 
     assert outcome.submitted_count == 2
     assert len(adapter.submit_calls) == 2
+
+
+def test_service_worker_pauses_three_minutes_after_concurrent_submission_limit() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        run_id = "run-submit-limit"
+        _seed_run(repository, run_id)
+        adapter = FakeApiAdapter()
+
+        def fail_submit(expression: str, sim_config: dict) -> dict:
+            adapter.submit_calls.append((expression, sim_config))
+            raise ConcurrentSimulationLimitExceeded("CONCURRENT_SIMULATION_LIMIT_EXCEEDED")
+
+        adapter.submit_simulation = fail_submit  # type: ignore[method-assign]
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(1))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.status == "cooldown"
+    assert outcome.next_sleep_seconds == 180
+    assert outcome.cooldown_until is not None
+    assert outcome.last_error is not None
+    assert "CONCURRENT_SIMULATION_LIMIT_EXCEEDED" in outcome.last_error
+    assert len(adapter.submit_calls) == 1
 
 
 def test_service_worker_empty_poll_skips_progress_event_and_returns_zero_new_results(tmp_path: Path) -> None:
@@ -876,16 +1005,33 @@ def test_service_scheduler_exponential_backoff_resets_after_results() -> None:
     assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 10
 
     scheduler.record_poll_result(0)
-    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 20
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 15
 
     scheduler.record_poll_result(0)
-    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 30
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 15
 
     scheduler.record_poll_result(0)
-    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 30
+    assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 15
 
     scheduler.record_poll_result(2)
     assert scheduler.next_sleep_seconds(runtime=runtime, outcome=outcome) == 5
+
+
+def test_service_scheduler_uses_one_second_sleep_for_fractional_cooldown_tail() -> None:
+    config = _service_config()
+    scheduler = ServiceScheduler(config.service)
+    runtime = _runtime_record(run_id="run-scheduler-cooldown-tail")
+    outcome = ServiceTickOutcome(
+        status="cooldown",
+        pending_job_count=10,
+        cooldown_until="2026-01-01T00:00:00.300000+00:00",
+    )
+
+    assert scheduler.next_sleep_seconds(
+        runtime=runtime,
+        outcome=outcome,
+        now="2026-01-01T00:00:00+00:00",
+    ) == 1
 
 
 def test_service_runner_suppresses_noop_progress_events_after_first_empty_poll(tmp_path: Path) -> None:
@@ -991,7 +1137,7 @@ def test_service_runner_interruptible_sleep_stops_without_waiting_full_interval(
     assert len(sleep_calls) == 1
 
 
-def test_service_quarantines_ambiguous_submitting_batch_without_duplicate_submission() -> None:
+def test_service_marks_ambiguous_submitting_batch_failed_when_policy_is_fail() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
@@ -1035,25 +1181,165 @@ def test_service_quarantines_ambiguous_submitting_batch_without_duplicate_submis
         )
         repository.service_runtime.upsert_state(_runtime_record(run_id=run_id))
         adapter = FakeApiAdapter()
-        runner = ServiceRunner(
+        worker = ServiceWorker(
             repository,
             config=config,
-            environment=_environment("fresh-run-id"),
+            environment=_environment(run_id),
             brain_service=BrainService(repository, config.brain, adapter=adapter),
-            sleep_fn=lambda seconds: None,
-            install_signal_handlers=False,
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
         )
 
-        summary = runner.run(max_ticks=1)
+        summary = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1, stop_requested=True)
+        batch = repository.submissions.get_batch("batch-ambiguous")
+        submission = repository.submissions.get_submission("job-1")
+    finally:
+        repository.close()
+
+    assert summary.status == "idle"
+    assert batch is not None
+    assert batch.status == "failed"
+    assert batch.service_status_reason == "ambiguous_submission_assumed_failed"
+    assert submission is not None
+    assert submission.status == "failed"
+    assert len(adapter.submit_calls) == 0
+
+
+def test_service_resubmits_ambiguous_batch_when_policy_is_resubmit() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-1", "rank(close)"),
+                _candidate("alpha-2", "rank(open)"),
+            ],
+        )
+        timestamp = _timestamp()
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-ambiguous",
+                run_id=run_id,
+                round_index=1,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "old-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "old-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=timestamp,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        )
+        repository.service_runtime.upsert_state(_runtime_record(run_id=run_id))
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        batches = repository.submissions.list_batches(run_id)
+        old_batch = repository.submissions.get_batch("batch-ambiguous")
+        new_batches = [batch for batch in batches if batch.batch_id != "batch-ambiguous"]
+    finally:
+        repository.close()
+
+    assert outcome.status in {"idle", "running"}
+    assert old_batch is not None
+    assert old_batch.status == "failed"
+    assert old_batch.service_status_reason.startswith("ambiguous_submission_resubmitted:")
+    assert len(adapter.submit_calls) == 2
+    assert len(new_batches) == 1
+    assert new_batches[0].status in {"submitted", "running", "completed"}
+
+
+def test_service_resubmit_pauses_after_concurrent_submission_limit() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit-limit"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-1", "rank(close)"),
+                _candidate("alpha-2", "rank(open)"),
+            ],
+        )
+        timestamp = _timestamp()
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-ambiguous",
+                run_id=run_id,
+                round_index=1,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "old-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "old-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=timestamp,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        )
+        repository.service_runtime.upsert_state(_runtime_record(run_id=run_id))
+        adapter = FakeApiAdapter()
+
+        def fail_submit(expression: str, sim_config: dict) -> dict:
+            adapter.submit_calls.append((expression, sim_config))
+            raise ConcurrentSimulationLimitExceeded("CONCURRENT_SIMULATION_LIMIT_EXCEEDED")
+
+        adapter.submit_simulation = fail_submit  # type: ignore[method-assign]
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
         batch = repository.submissions.get_batch("batch-ambiguous")
     finally:
         repository.close()
 
-    assert summary.status == "service_paused_quarantine"
+    assert outcome.status == "cooldown"
+    assert outcome.next_sleep_seconds == 180
+    assert outcome.cooldown_until is not None
     assert batch is not None
     assert batch.status == "paused_quarantine"
-    assert batch.service_status_reason == "ambiguous_submission"
-    assert len(adapter.submit_calls) == 0
+    assert len(adapter.submit_calls) == 1
 
 
 def _service_config():
@@ -1064,6 +1350,7 @@ def _service_config():
     config.service.max_consecutive_failures = 2
     config.service.cooldown_seconds = 60
     config.service.persona_confirmation_required = False
+    config.service.ambiguous_submission_policy = "fail"
     return config
 
 

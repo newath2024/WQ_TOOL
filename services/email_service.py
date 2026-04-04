@@ -157,18 +157,24 @@ class TelegramService:
                     continue
                 if data == f"persona_ready:{prompt_token}":
                     approved = True
-                    self._answer_callback_query(
-                        callback_query_id=str(callback_query.get("id") or ""),
-                        text="Da nhan xac nhan. Dang xin Persona link...",
-                        telegram_config=telegram_config,
-                    )
+                    try:
+                        self._answer_callback_query(
+                            callback_query_id=str(callback_query.get("id") or ""),
+                            text="Da nhan xac nhan. Dang xin Persona link...",
+                            telegram_config=telegram_config,
+                        )
+                    except Exception:
+                        pass
                 elif data == f"persona_later:{prompt_token}":
                     declined = True
-                    self._answer_callback_query(
-                        callback_query_id=str(callback_query.get("id") or ""),
-                        text="OK, tool se cho ban san sang roi moi xin link.",
-                        telegram_config=telegram_config,
-                    )
+                    try:
+                        self._answer_callback_query(
+                            callback_query_id=str(callback_query.get("id") or ""),
+                            text="OK, tool se cho ban san sang roi moi xin link.",
+                            telegram_config=telegram_config,
+                        )
+                    except Exception:
+                        pass
                 continue
 
             message = update.get("message")
