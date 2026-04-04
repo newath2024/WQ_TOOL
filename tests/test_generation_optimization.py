@@ -199,6 +199,17 @@ def test_generation_session_stats_omits_failure_samples_at_info() -> None:
     assert "failure_samples" not in metrics
 
 
+def test_generation_session_stats_persists_redundant_samples_at_info() -> None:
+    session = GenerationSessionStats()
+    session.record_failure("redundant_expression", expression="rank(rank(close))")
+    session.record_failure("validation_disallowed_field", expression="rank(foo)")
+
+    metrics = session.to_metrics(generated_count=0, selected_for_simulation=0, include_debug_samples=False)
+
+    assert metrics["redundant_expression_samples"] == ["rank(rank(close))"]
+    assert "failure_samples" not in metrics
+
+
 def test_generation_session_stats_limits_failure_samples_in_debug() -> None:
     session = GenerationSessionStats()
     for expression in ("rank(foo)", "rank(bar)", "rank(baz)", "rank(qux)"):
@@ -751,3 +762,51 @@ def test_brain_batch_service_persists_generation_stage_metrics(tmp_path: Path) -
     assert "load_research_context_ms" in metrics
     assert "resolve_field_registry_ms" in metrics
     assert "top_fail_reasons" in metrics
+
+
+def test_brain_batch_service_persists_redundant_expression_samples(tmp_path: Path, monkeypatch) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        config.storage.path = ":memory:"
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        environment = _environment("config/dev.yaml", "generation-redundant-samples")
+        init_run(repository, config, environment, status="running")
+
+        service = BrainBatchService(repository)
+        redundant_stats = GenerationSessionStats()
+        redundant_stats.record_failure("redundant_expression", expression="rank(rank(close))")
+
+        monkeypatch.setattr(
+            service,
+            "_generate_mutation_candidates",
+            lambda **kwargs: ([], GenerationSessionStats()),
+        )
+        monkeypatch.setattr(
+            service,
+            "_generate_fresh_candidates",
+            lambda **kwargs: ([], redundant_stats),
+        )
+
+        service.prepare_service_batch(
+            config=config,
+            environment=environment,
+            count=1,
+            mutation_parent_ids=None,
+            round_index=1,
+        )
+        stage_metrics = repository.get_stage_metrics(environment.context.run_id)
+        log_path = tmp_path / "progress" / f"{environment.context.run_id}.jsonl"
+        progress_rows = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    finally:
+        repository.close()
+
+    generation_rows = [row for row in stage_metrics if row["stage"] == "generation"]
+    assert generation_rows
+    metrics = json.loads(generation_rows[-1]["metrics_json"])
+    assert metrics["redundant_expression_samples"] == ["rank(rank(close))"]
+    prepared_rows = [row for row in progress_rows if row["event"] == "batch_prepared"]
+    assert prepared_rows
+    assert prepared_rows[-1]["payload"]["generation_stage_metrics"]["redundant_expression_samples"] == [
+        "rank(rank(close))"
+    ]

@@ -170,6 +170,9 @@ class GenerationSessionStats:
             "failure_reason_counts": dict(failure_reason_counts),
             "top_fail_reasons": self.top_fail_reasons(),
         }
+        redundant_samples = list(self.failure_samples.get("redundant_expression") or [])
+        if redundant_samples:
+            metrics["redundant_expression_samples"] = redundant_samples
         if include_debug_samples:
             metrics["failure_samples"] = {
                 reason: list(samples)
