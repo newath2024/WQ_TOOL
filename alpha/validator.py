@@ -74,6 +74,7 @@ class ExpressionValidator:
         group_fields: set[str] | None = None,
         field_types: dict[str, str] | None = None,
         complexity_limit: int | None = None,
+        exact_field_types: dict[str, str] | None = None,
     ) -> None:
         self.registry = registry
         self.allowed_fields = allowed_fields
@@ -81,6 +82,7 @@ class ExpressionValidator:
         self.group_fields = group_fields or set()
         self.field_types = field_types or {}
         self.complexity_limit = complexity_limit
+        self.exact_field_types = exact_field_types or {}
 
     def validate(self, node: ExprNode) -> ValidationResult:
         errors: list[str] = []
@@ -190,6 +192,7 @@ class ExpressionValidator:
                 )
                 return None
             self._validate_operator_parameters(node, spec, errors, issues)
+            self._validate_operator_field_types(node, spec, errors, issues)
             return spec.resolve_output_type(tuple(arg_types))
         self._add_issue(
             errors,
@@ -228,6 +231,23 @@ class ExpressionValidator:
             f"Binary operator '{node.operator}' received incompatible types {(left_type, right_type)}.",
         )
         return None
+
+    def _validate_operator_field_types(
+        self,
+        node: FunctionCallNode,
+        spec,
+        errors: list[str],
+        issues: list[ValidationIssue],
+    ) -> None:
+        if node.name in {"group_neutralize", "group_rank", "group_zscore", "ts_mean", "ts_std_dev", "ts_sum", "ts_rank"}:
+            for arg in node.args:
+                if isinstance(arg, IdentifierNode) and self.exact_field_types.get(arg.name) == "event":
+                    self._add_issue(
+                        errors,
+                        issues,
+                        "validation_semantic_invalid",
+                        f"Operator '{node.name}' does not support event inputs.",
+                    )
 
     def _validate_operator_parameters(
         self,
@@ -443,6 +463,7 @@ def validate_expression(
     group_fields: set[str] | None = None,
     field_types: dict[str, str] | None = None,
     complexity_limit: int | None = None,
+    exact_field_types: dict[str, str] | None = None,
 ) -> ValidationResult:
     return ExpressionValidator(
         registry=registry,
@@ -451,6 +472,7 @@ def validate_expression(
         group_fields=group_fields,
         field_types=field_types,
         complexity_limit=complexity_limit,
+        exact_field_types=exact_field_types,
     ).validate(node)
 
 

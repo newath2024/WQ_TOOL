@@ -126,11 +126,36 @@ class BrainLearningService:
         family_observation = self.memory_service.build_observations(signature)[0]
         prior_pattern = snapshot.get_pattern(family_observation.pattern_id, scope="blended")
 
-        if result.status == "rejected" or result.rejection_reason:
+        rejection = str(result.rejection_reason or "").strip()
+        if result.status == "rejected" or rejection:
             diagnosis.fail_tags.append("brain_rejected")
-            diagnosis.mutation_hints.append(
-                MutationHint(hint="simplify_and_retarget", reason="Rejected by BRAIN, simplify and change structure.")
-            )
+            if "unknown variable" in rejection.lower():
+                import re
+                match = re.search(r'unknown variable "([^"]+)"', rejection)
+                if match:
+                    bad_field = match.group(1)
+                    diagnosis.fail_tags.append(f"invalid_field:{bad_field}")
+                    diagnosis.mutation_hints.append(
+                        MutationHint(hint="remove_invalid_field", reason=f"BRAIN rejected field: {bad_field}")
+                    )
+            elif "does not support event inputs" in rejection.lower():
+                diagnosis.fail_tags.append("operator_event_type_mismatch")
+                diagnosis.mutation_hints.append(
+                    MutationHint(hint="fix_event_operator_mismatch", reason="Operator does not support event inputs")
+                )
+            elif "invalid data field" in rejection.lower():
+                import re
+                match = re.search(r'invalid data field ([a-zA-Z0-9_]+)', rejection, re.IGNORECASE)
+                if match:
+                    bad_field = match.group(1)
+                    diagnosis.fail_tags.append(f"invalid_field:{bad_field}")
+                    diagnosis.mutation_hints.append(
+                        MutationHint(hint="remove_invalid_field", reason=f"BRAIN rejected field: {bad_field}")
+                    )
+            else:
+                diagnosis.mutation_hints.append(
+                    MutationHint(hint="simplify_and_retarget", reason="Rejected by BRAIN, simplify and change structure.")
+                )
         if fitness is None or fitness < 0:
             diagnosis.fail_tags.append("poor_fitness")
             diagnosis.mutation_hints.append(

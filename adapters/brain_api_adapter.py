@@ -404,6 +404,7 @@ class BrainApiAdapter(SimulationAdapter):
         return {
             "job_id": job_id,
             "status": self._map_simulation_status(payload.get("status")),
+            "error_message": payload.get("message"),
             "raw_status": payload,
         }
 

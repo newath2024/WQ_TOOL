@@ -141,6 +141,14 @@ class FieldRegistry:
             mapping[spec.name] = spec.operator_type
         return mapping
 
+    def exact_field_types(self, allowed: set[str] | None = None) -> dict[str, str]:
+        mapping: dict[str, str] = {}
+        for spec in self.fields.values():
+            if allowed is not None and spec.name not in allowed:
+                continue
+            mapping[spec.name] = spec.field_type
+        return mapping
+
     def allowed_runtime_fields(self, allowed_fields: list[str]) -> set[str]:
         if allowed_fields:
             return {name for name in allowed_fields if name in self.fields and self.fields[name].runtime_available}
@@ -205,6 +213,11 @@ def load_field_catalog(
     fields: dict[str, FieldSpec] = {}
     field_ranks: dict[str, tuple[int, int, float, float, int]] = {}
     for record in records:
+        if preferred_region:
+            rec_region = str(record.get("region") or "").strip().upper()
+            pref_region = preferred_region.strip().upper()
+            if rec_region and rec_region != pref_region and rec_region not in {"GLB", "GLOBAL"}:
+                continue
         spec = _field_spec_from_catalog_row(record, max_alpha_usage=max_alpha_usage, category_weights=category_weights, score_weights=score_weights)
         rank = (
             *_catalog_preference_rank(

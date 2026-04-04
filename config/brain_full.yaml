@@ -60,7 +60,7 @@ generation:
       "group_neutralize",
     ]
   lookbacks: [2, 3, 5, 10]
-  max_depth: 4
+  max_depth: 5
   complexity_limit: 20
   template_count: 30
   grammar_count: 30
@@ -69,7 +69,11 @@ generation:
   random_seed: 42
   engine_validation_cache_enabled: true
   field_catalog_paths:
-    - inputs/wq_snapshots/2026-03-29
+    - inputs/wq_snapshots/2026-03-29/Price Volumn
+    - inputs/wq_snapshots/2026-03-29/Fundamental
+    - inputs/wq_snapshots/2026-03-29/Earnings
+    - inputs/wq_snapshots/2026-03-29/Analyst
+    - inputs/wq_snapshots/2026-03-29/Model
   operator_catalog_paths:
     - inputs/wq_snapshots/2026-03-29/operators/brain_operator_catalog.json
   allow_catalog_fields_without_runtime: true
@@ -202,16 +206,25 @@ brain:
   region: USA
   universe: TOP3000
   delay: 1
-  neutralization: sector
-  decay: 0
-  truncation: 0.08
+  neutralization: SUBINDUSTRY
+  decay: 5
+  truncation: 0.01
   pasteurization: true
   unit_handling: verify
   nan_handling: off
+  simulation_profiles:
+    - name: fixed_laboratory_usa
+      region: USA
+      universe: TOP3000
+      delay: 1
+      neutralization: SUBINDUSTRY
+      decay: 5
+      truncation: 0.01
+      weight: 1.0
   poll_interval_seconds: 5
   timeout_seconds: 120
   max_retries: 2
-  batch_size: 3
+  batch_size: 10
   manual_export_dir: outputs/brain_manual
   api_base_url: "https://api.worldquantbrain.com"
   api_auth_env: BRAIN_API_TOKEN
@@ -220,17 +233,17 @@ brain:
   credentials_file: secrets/brain_credentials.json
   session_path: outputs/brain_api_session.json
   auth_expiry_seconds: 14400
-  open_browser_for_persona: true
+  open_browser_for_persona: false
   persona_poll_interval_seconds: 15
   persona_timeout_seconds: 1800
   rate_limit_per_minute: 60
 
 loop:
   rounds: 3
-  generation_batch_size: 40
-  simulation_batch_size: 3
+  generation_batch_size: 60
+  simulation_batch_size: 10
   poll_interval_seconds: 5
-  timeout_seconds: 120
+  timeout_seconds: 300
   mutate_top_k: 5
   max_children_per_parent: 3
   rejection_filters: []
@@ -241,15 +254,15 @@ service:
   tick_interval_seconds: 5
   idle_sleep_seconds: 15
   poll_interval_seconds: 5
-  max_pending_jobs: 3
-  max_consecutive_failures: 5
-  cooldown_seconds: 120
+  max_pending_jobs: 10
+  max_consecutive_failures: 50
+  cooldown_seconds: 10
   heartbeat_interval_seconds: 15
   lock_name: brain-service
   lock_lease_seconds: 60
   resume_incomplete_jobs: true
   shutdown_grace_period_seconds: 30
-  stuck_job_after_seconds: 600
+  stuck_job_after_seconds: 900
   persona_retry_interval_seconds: 30
   persona_email_cooldown_seconds: 600
   persona_confirmation_required: true
