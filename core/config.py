@@ -466,14 +466,68 @@ class StorageConfig:
 
 
 @dataclass(slots=True)
+class SimulationProfile:
+    name: str
+    region: str = "USA"
+    universe: str = "TOP3000"
+    delay: int = 1
+    neutralization: str = "SUBINDUSTRY"
+    decay: int = 3
+    truncation: float = 0.01
+    weight: float = 1.0
+
+    def __post_init__(self) -> None:
+        self.name = str(self.name or "").strip()
+        if not self.name:
+            raise ValueError("brain.simulation_profiles[].name must not be empty")
+        self.region = str(self.region).strip().upper()
+        self.universe = str(self.universe).strip().upper()
+        self.neutralization = _normalize_brain_enum(self.neutralization, true_value="ON", false_value="OFF")
+        if self.delay < 0:
+            raise ValueError("brain.simulation_profiles[].delay must be >= 0")
+        if self.decay < 0:
+            raise ValueError("brain.simulation_profiles[].decay must be >= 0")
+        if self.truncation < 0:
+            raise ValueError("brain.simulation_profiles[].truncation must be >= 0")
+        if self.weight < 0:
+            raise ValueError("brain.simulation_profiles[].weight must be >= 0")
+
+
+def _default_simulation_profiles() -> list[SimulationProfile]:
+    return [
+        SimulationProfile(
+            name="stable",
+            region="USA",
+            universe="TOP1000",
+            delay=1,
+            neutralization="SUBINDUSTRY",
+            decay=3,
+            truncation=0.01,
+            weight=0.6,
+        ),
+        SimulationProfile(
+            name="aggressive_short",
+            region="USA",
+            universe="TOP500",
+            delay=1,
+            neutralization="SUBINDUSTRY",
+            decay=1,
+            truncation=0.02,
+            weight=0.4,
+        ),
+    ]
+
+
+@dataclass(slots=True)
 class BrainConfig:
     backend: str = "manual"
     region: str = "USA"
     universe: str = "TOP3000"
     delay: int = 1
-    neutralization: str = "sector"
-    decay: int = 0
-    truncation: float = 0.08
+    neutralization: str = "SUBINDUSTRY"
+    decay: int = 3
+    truncation: float = 0.01
+    simulation_profiles: list[SimulationProfile] = field(default_factory=_default_simulation_profiles)
     pasteurization: bool = True
     unit_handling: str = "verify"
     nan_handling: str = "off"
@@ -499,6 +553,12 @@ class BrainConfig:
         self.region = str(self.region).strip().upper()
         self.universe = str(self.universe).strip().upper()
         self.neutralization = _normalize_brain_enum(self.neutralization, true_value="ON", false_value="OFF")
+        self.simulation_profiles = [
+            item
+            if isinstance(item, SimulationProfile)
+            else SimulationProfile(**item)
+            for item in self.simulation_profiles
+        ]
         self.unit_handling = _normalize_brain_enum(self.unit_handling, true_value="VERIFY", false_value="IGNORE")
         self.nan_handling = _normalize_brain_enum(self.nan_handling, true_value="ON", false_value="OFF")
         allowed_backends = {"manual", "api"}
@@ -576,10 +636,12 @@ class ServiceConfig:
     persona_confirmation_granted_ttl_seconds: int = 300
     max_persona_wait_seconds: int = 1800
     max_consecutive_batch_failures_before_auth_check: int = 2
+    ambiguous_submission_policy: str = "fail"
     research_context_cache_enabled: bool = True
     research_context_cache_ttl_seconds: int = 0
 
     def __post_init__(self) -> None:
+        self.ambiguous_submission_policy = str(self.ambiguous_submission_policy or "fail").strip().lower()
         if self.tick_interval_seconds <= 0:
             raise ValueError("service.tick_interval_seconds must be > 0")
         if self.idle_sleep_seconds <= 0:
@@ -616,6 +678,10 @@ class ServiceConfig:
             raise ValueError("service.max_persona_wait_seconds must be > 0")
         if self.max_consecutive_batch_failures_before_auth_check <= 0:
             raise ValueError("service.max_consecutive_batch_failures_before_auth_check must be > 0")
+        if self.ambiguous_submission_policy not in {"quarantine", "fail", "resubmit"}:
+            raise ValueError(
+                "service.ambiguous_submission_policy must be one of: quarantine, fail, resubmit"
+            )
         if self.research_context_cache_ttl_seconds < 0:
             raise ValueError("service.research_context_cache_ttl_seconds must be >= 0")
 
@@ -761,7 +827,38 @@ def _build_runtime_config(payload: dict[str, Any] | None, config_path: Path) -> 
 
 
 def _build_brain_config(payload: dict[str, Any] | None) -> BrainConfig:
-    return BrainConfig(**(payload or {}))
+    if payload is None:
+        return BrainConfig()
+    brain_payload = dict(payload)
+    profiles_payload = brain_payload.get("simulation_profiles")
+    if profiles_payload is None:
+        brain_payload["simulation_profiles"] = []
+    else:
+        brain_payload["simulation_profiles"] = [
+            item if isinstance(item, SimulationProfile) else SimulationProfile(**item)
+            for item in profiles_payload
+        ]
+    return BrainConfig(**brain_payload)
+
+
+def _resolve_generation_simulation_defaults(brain: BrainConfig) -> tuple[str, int]:
+    if brain.simulation_profiles:
+        reference = brain.simulation_profiles[0]
+        return reference.neutralization, int(reference.decay)
+    return brain.neutralization, int(brain.decay)
+
+
+def _apply_generation_simulation_defaults(
+    generation: GenerationConfig,
+    generation_payload: dict[str, Any],
+    brain: BrainConfig,
+) -> GenerationConfig:
+    neutralization, decay = _resolve_generation_simulation_defaults(brain)
+    if "sim_neutralization" not in generation_payload:
+        generation.sim_neutralization = str(neutralization)
+    if "sim_decay" not in generation_payload:
+        generation.sim_decay = int(decay)
+    return generation
 
 
 def _normalize_brain_enum(value: Any, *, true_value: str, false_value: str) -> str:
@@ -807,6 +904,12 @@ def load_config(path: str | Path) -> AppConfig:
         backtest = BacktestConfig(**payload["backtest"])
         evaluation = _build_evaluation_config(payload["evaluation"])
         brain = _build_brain_config(payload.get("brain"))
+        generation_payload = dict(payload["generation"])
+        generation = _apply_generation_simulation_defaults(
+            GenerationConfig(**generation_payload),
+            generation_payload,
+            brain,
+        )
         return AppConfig(
             data=DataConfig(**payload["data"]),
             aux_data=AuxDataConfig(**payload.get("aux_data", {})),
@@ -815,7 +918,7 @@ def load_config(path: str | Path) -> AppConfig:
                 validation=_period_from_mapping(payload["splits"], "validation"),
                 test=_period_from_mapping(payload["splits"], "test"),
             ),
-            generation=GenerationConfig(**payload["generation"]),
+            generation=generation,
             adaptive_generation=_build_adaptive_generation_config(payload.get("adaptive_generation")),
             simulation=_build_simulation_config(payload.get("simulation"), backtest),
             backtest=backtest,

@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from core.config import load_config
+from core.config import BrainConfig, load_config
 
 
 def test_grouped_evaluation_config_builds_submission_thresholds(tmp_path: Path) -> None:
@@ -92,10 +92,12 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert default_config.brain.nan_handling == "OFF"
     assert default_config.brain.unit_handling == "VERIFY"
     assert default_config.brain.neutralization == "SECTOR"
+    assert default_config.brain.simulation_profiles == []
     assert default_config.loop.simulation_batch_size == default_config.brain.batch_size
     assert default_config.service.poll_interval_seconds == default_config.brain.poll_interval_seconds
     assert default_config.service.max_pending_jobs == default_config.brain.batch_size
     assert default_config.service.lock_name == "brain-service"
+    assert default_config.service.ambiguous_submission_policy == "fail"
     assert default_config.brain.credentials_file == "secrets/brain_credentials.json"
     assert default_config.brain.session_path == "outputs/brain_api_session.json"
     assert default_config.brain.persona_poll_interval_seconds == 15
@@ -108,7 +110,7 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert "delta" not in default_config.generation.allowed_operators
     assert "correlation" not in default_config.generation.allowed_operators
     assert default_config.generation.operator_catalog_paths
-    assert default_config.generation.sim_neutralization == "none"
+    assert default_config.generation.sim_neutralization == "SECTOR"
     assert default_config.generation.sim_decay == 0
     assert default_config.adaptive_generation.region_learning.enabled is True
     assert default_config.adaptive_generation.region_learning.local_scope == "region_regime"
@@ -126,6 +128,19 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert default_config.adaptive_generation.min_candidates_before_early_exit == 5
     assert default_config.service.research_context_cache_enabled is True
     assert default_config.service.research_context_cache_ttl_seconds == 0
+
+
+def test_brain_config_code_defaults_include_weighted_simulation_profiles() -> None:
+    brain = BrainConfig()
+
+    assert brain.neutralization == "SUBINDUSTRY"
+    assert brain.decay == 3
+    assert brain.truncation == 0.01
+    assert [profile.name for profile in brain.simulation_profiles] == ["stable", "aggressive_short"]
+    assert brain.simulation_profiles[0].universe == "TOP1000"
+    assert brain.simulation_profiles[0].weight == 0.6
+    assert brain.simulation_profiles[1].universe == "TOP500"
+    assert brain.simulation_profiles[1].weight == 0.4
 
 
 def test_region_learning_config_loads_and_legacy_yaml_keeps_defaults(tmp_path: Path) -> None:
@@ -321,6 +336,19 @@ def test_generation_config_can_override_simulation_awareness_fields(tmp_path: Pa
     config = load_config(config_path)
 
     assert config.generation.sim_neutralization == "sector"
+    assert config.generation.sim_decay == 5
+
+
+def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_awareness() -> None:
+    config = load_config("config/brain_full.yaml")
+
+    assert config.brain.neutralization == "SUBINDUSTRY"
+    assert config.brain.decay == 5
+    assert config.brain.truncation == 0.01
+    assert [profile.name for profile in config.brain.simulation_profiles] == ["fixed_laboratory_usa"]
+    assert config.brain.simulation_profiles[0].universe == "TOP3000"
+    assert config.service.ambiguous_submission_policy == "resubmit"
+    assert config.generation.sim_neutralization == "SUBINDUSTRY"
     assert config.generation.sim_decay == 5
 
 

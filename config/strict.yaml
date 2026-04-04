@@ -59,7 +59,7 @@ generation:
       "group_neutralize",
     ]
   lookbacks: [3, 5, 10, 15, 20]
-  max_depth: 4
+  max_depth: 5
   complexity_limit: 18
   template_count: 30
   grammar_count: 30

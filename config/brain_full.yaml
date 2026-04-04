@@ -59,8 +59,8 @@ generation:
       "group_zscore",
       "group_neutralize",
     ]
-  lookbacks: [2, 3, 5, 10]
-  max_depth: 5
+  lookbacks: [10, 20, 60, 100, 250]
+  max_depth: 7
   complexity_limit: 20
   template_count: 30
   grammar_count: 30
@@ -222,7 +222,7 @@ brain:
       truncation: 0.01
       weight: 1.0
   poll_interval_seconds: 5
-  timeout_seconds: 120
+  timeout_seconds: 300
   max_retries: 2
   batch_size: 10
   manual_export_dir: outputs/brain_manual
@@ -240,8 +240,8 @@ brain:
 
 loop:
   rounds: 3
-  generation_batch_size: 60
-  simulation_batch_size: 10
+  generation_batch_size: 100
+  simulation_batch_size: 20
   poll_interval_seconds: 5
   timeout_seconds: 300
   mutate_top_k: 5
@@ -261,13 +261,14 @@ service:
   lock_name: brain-service
   lock_lease_seconds: 60
   resume_incomplete_jobs: true
+  ambiguous_submission_policy: resubmit
   shutdown_grace_period_seconds: 30
   stuck_job_after_seconds: 900
   persona_retry_interval_seconds: 30
   persona_email_cooldown_seconds: 600
   persona_confirmation_required: true
   persona_confirmation_poll_interval_seconds: 30
-  persona_confirmation_prompt_cooldown_seconds: 3600
+  persona_confirmation_prompt_cooldown_seconds: 600
   persona_confirmation_granted_ttl_seconds: 300
   research_context_cache_enabled: true
   research_context_cache_ttl_seconds: 0

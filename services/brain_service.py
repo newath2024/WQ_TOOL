@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import random
 import time
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
@@ -70,6 +71,8 @@ class BrainService:
         environment: CommandEnvironment,
         round_index: int = 0,
         batch_size: int | None = None,
+        sim_config_override: dict[str, object] | None = None,
+        note_overrides: dict[str, object] | None = None,
     ) -> BrainSimulationBatch:
         logger = get_logger(__name__, run_id=environment.context.run_id, stage="brain-submit")
         selected = list(candidates[: (batch_size or self.brain_config.batch_size)])
@@ -83,15 +86,32 @@ class BrainService:
             )
 
         batch_id = f"brain-{environment.context.run_id[:8]}-r{round_index:02d}-{uuid4().hex[:8]}"
-        sim_config = self.build_simulation_config(
-            config=config,
-            environment=environment,
-            round_index=round_index,
-            batch_id=batch_id,
-            candidates=selected,
+        sim_config = (
+            self._restore_simulation_config(
+                sim_config=sim_config_override,
+                environment=environment,
+                round_index=round_index,
+                batch_id=batch_id,
+                candidates=selected,
+                config_profile=config.runtime.profile_name,
+            )
+            if sim_config_override is not None
+            else self.build_simulation_config(
+                config=config,
+                environment=environment,
+                round_index=round_index,
+                batch_id=batch_id,
+                candidates=selected,
+            )
         )
         timestamp = datetime.now(UTC).isoformat()
         snapshot_json = json.dumps(sim_config, sort_keys=True)
+        notes_payload = {
+            "backend": self.brain_config.backend,
+            "candidate_ids": [candidate.alpha_id for candidate in selected],
+        }
+        if note_overrides:
+            notes_payload.update(note_overrides)
         self.repository.submissions.upsert_batch(
             SubmissionBatchRecord(
                 batch_id=batch_id,
@@ -102,13 +122,7 @@ class BrainService:
                 candidate_count=len(selected),
                 sim_config_snapshot=snapshot_json,
                 export_path=None,
-                notes_json=json.dumps(
-                    {
-                        "backend": self.brain_config.backend,
-                        "candidate_ids": [candidate.alpha_id for candidate in selected],
-                    },
-                    sort_keys=True,
-                ),
+                notes_json=json.dumps(notes_payload, sort_keys=True),
                 created_at=timestamp,
                 updated_at=timestamp,
             )
@@ -195,6 +209,54 @@ class BrainService:
             results=(),
             export_path=export_path,
         )
+
+    def _restore_simulation_config(
+        self,
+        *,
+        sim_config: dict[str, object],
+        environment: CommandEnvironment,
+        round_index: int,
+        batch_id: str,
+        candidates: list[AlphaCandidate],
+        config_profile: str,
+    ) -> dict[str, object]:
+        restored = dict(sim_config)
+        existing_payloads = restored.get("candidate_payloads")
+        payloads_by_candidate = {
+            str(item.get("candidate_id")): dict(item)
+            for item in (existing_payloads if isinstance(existing_payloads, list) else [])
+            if isinstance(item, dict) and item.get("candidate_id")
+        }
+        restored["backend"] = self.brain_config.backend
+        restored["manual_export_dir"] = self.brain_config.manual_export_dir
+        restored["batch_id"] = batch_id
+        restored["run_id"] = environment.context.run_id
+        restored["round_index"] = round_index
+        restored["config_profile"] = config_profile
+        restored["candidate_payloads"] = [
+            {
+                **payloads_by_candidate.get(candidate.alpha_id, {}),
+                "job_id": f"{batch_id}-{index:04d}",
+                "candidate_id": candidate.alpha_id,
+                "expression": candidate.expression,
+                "template_name": payloads_by_candidate.get(candidate.alpha_id, {}).get("template_name")
+                or candidate.template_name,
+                "fields_used": list(payloads_by_candidate.get(candidate.alpha_id, {}).get("fields_used") or candidate.fields_used),
+                "operators_used": list(
+                    payloads_by_candidate.get(candidate.alpha_id, {}).get("operators_used") or candidate.operators_used
+                ),
+                "generation_mode": str(
+                    payloads_by_candidate.get(candidate.alpha_id, {}).get("generation_mode") or candidate.generation_mode
+                ),
+                "generation_metadata": payloads_by_candidate.get(candidate.alpha_id, {}).get("generation_metadata")
+                if isinstance(payloads_by_candidate.get(candidate.alpha_id, {}).get("generation_metadata"), dict)
+                else candidate.generation_metadata,
+                "run_id": environment.context.run_id,
+                "round_index": round_index,
+            }
+            for index, candidate in enumerate(candidates, start=1)
+        ]
+        return restored
 
     def poll_batch(
         self,
@@ -497,14 +559,25 @@ class BrainService:
             }
             for index, candidate in enumerate(candidates, start=1)
         ]
-        return {
+        selected_profile = self._select_simulation_profile()
+        region = selected_profile.region if selected_profile is not None else self.brain_config.region
+        universe = selected_profile.universe if selected_profile is not None else self.brain_config.universe
+        delay = selected_profile.delay if selected_profile is not None else self.brain_config.delay
+        neutralization = (
+            selected_profile.neutralization
+            if selected_profile is not None
+            else self.brain_config.neutralization
+        )
+        decay = selected_profile.decay if selected_profile is not None else self.brain_config.decay
+        truncation = selected_profile.truncation if selected_profile is not None else self.brain_config.truncation
+        sim_config = {
             "backend": self.brain_config.backend,
-            "region": self.brain_config.region,
-            "universe": self.brain_config.universe,
-            "delay": self.brain_config.delay,
-            "neutralization": self.brain_config.neutralization,
-            "decay": self.brain_config.decay,
-            "truncation": self.brain_config.truncation,
+            "region": region,
+            "universe": universe,
+            "delay": delay,
+            "neutralization": neutralization,
+            "decay": decay,
+            "truncation": truncation,
             "pasteurization": self.brain_config.pasteurization,
             "unit_handling": self.brain_config.unit_handling,
             "nan_handling": self.brain_config.nan_handling,
@@ -520,6 +593,18 @@ class BrainService:
             "candidate_payloads": candidate_payloads,
             "config_profile": config.runtime.profile_name,
         }
+        if selected_profile is not None:
+            sim_config["simulation_profile"] = selected_profile.name
+        return sim_config
+
+    def _select_simulation_profile(self):
+        profiles = list(self.brain_config.simulation_profiles)
+        if not profiles:
+            return None
+        weights = [max(float(profile.weight), 0.0) for profile in profiles]
+        if sum(weights) <= 0:
+            return random.choice(profiles)
+        return random.choices(profiles, weights=weights, k=1)[0]
 
     def normalize_result(
         self,

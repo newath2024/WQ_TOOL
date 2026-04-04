@@ -8,13 +8,14 @@ from pathlib import Path
 
 from adapters.brain_manual_adapter import BrainManualAdapter
 from adapters.simulation_adapter import SimulationAdapter
-from core.config import load_config
+from core.config import SimulationProfile, load_config
 from core.run_context import RunContext
 from data.field_registry import FieldRegistry, FieldSpec
 from evaluation.critic import AlphaDiagnosis
 from generator.engine import AlphaCandidate
 from memory.case_memory import CaseMemoryService
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
+import services.brain_service as brain_service_module
 from services.brain_service import BrainService
 from services.candidate_selection_service import CandidateSelectionService
 from services.closed_loop_service import ClosedLoopService
@@ -197,6 +198,92 @@ def test_brain_service_normalizes_missing_metrics_safely(tmp_path: Path) -> None
     assert result.metrics["sharpe"] is None
     assert result.submission_eligible is False
     assert result.region == "USA"
+
+
+def test_brain_service_build_simulation_config_selects_weighted_profile(monkeypatch) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        config.storage.path = ":memory:"
+        config.brain.simulation_profiles = [
+            SimulationProfile(
+                name="stable",
+                region="USA",
+                universe="TOP1000",
+                delay=1,
+                neutralization="SUBINDUSTRY",
+                decay=3,
+                truncation=0.01,
+                weight=0.6,
+            ),
+            SimulationProfile(
+                name="aggressive_short",
+                region="USA",
+                universe="TOP500",
+                delay=1,
+                neutralization="SUBINDUSTRY",
+                decay=1,
+                truncation=0.02,
+                weight=0.4,
+            ),
+        ]
+        environment = _init_environment(repository, config, "run-brain-sim")
+        service = BrainService(repository, config.brain, adapter=FakeCompletedAdapter())
+        captured: dict[str, list[float]] = {}
+
+        def fake_choices(population, *, weights, k):
+            assert k == 1
+            captured["weights"] = list(weights)
+            return [population[1]]
+
+        monkeypatch.setattr(brain_service_module.random, "choices", fake_choices)
+
+        sim_config = service.build_simulation_config(
+            config=config,
+            environment=environment,
+            round_index=1,
+            batch_id="batch-1",
+            candidates=[_candidate("alpha-1", "rank(close)")],
+        )
+    finally:
+        repository.close()
+
+    assert captured["weights"] == [0.6, 0.4]
+    assert sim_config["simulation_profile"] == "aggressive_short"
+    assert sim_config["region"] == "USA"
+    assert sim_config["universe"] == "TOP500"
+    assert sim_config["delay"] == 1
+    assert sim_config["neutralization"] == "SUBINDUSTRY"
+    assert sim_config["decay"] == 1
+    assert sim_config["truncation"] == 0.02
+
+
+def test_brain_service_build_simulation_config_falls_back_when_profiles_empty() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        config.storage.path = ":memory:"
+        config.brain.simulation_profiles = []
+        environment = _init_environment(repository, config, "run-brain-sim")
+        service = BrainService(repository, config.brain, adapter=FakeCompletedAdapter())
+
+        sim_config = service.build_simulation_config(
+            config=config,
+            environment=environment,
+            round_index=1,
+            batch_id="batch-1",
+            candidates=[_candidate("alpha-1", "rank(close)")],
+        )
+    finally:
+        repository.close()
+
+    assert "simulation_profile" not in sim_config
+    assert sim_config["region"] == config.brain.region
+    assert sim_config["universe"] == config.brain.universe
+    assert sim_config["delay"] == config.brain.delay
+    assert sim_config["neutralization"] == config.brain.neutralization
+    assert sim_config["decay"] == config.brain.decay
+    assert sim_config["truncation"] == config.brain.truncation
 
 
 def test_submission_and_result_stores_persist_traceability(tmp_path: Path) -> None:
