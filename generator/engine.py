@@ -541,6 +541,7 @@ class AlphaGenerationEngine:
             group_fields=prepared_validation_ctx.group_fields,
             field_types=prepared_validation_ctx.field_types,
             complexity_limit=self.config.complexity_limit,
+            exact_field_types=self.field_registry.exact_field_types() if hasattr(self.field_registry, "exact_field_types") else None,
         )
         if not validation.is_valid:
             return CandidateBuildResult(

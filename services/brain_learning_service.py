@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+from core.brain_rejections import extract_invalid_field_from_rejection
 from evaluation.critic import AlphaDiagnosis, MutationHint
 from generator.engine import AlphaCandidate
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
@@ -129,29 +130,21 @@ class BrainLearningService:
         rejection = str(result.rejection_reason or "").strip()
         if result.status == "rejected" or rejection:
             diagnosis.fail_tags.append("brain_rejected")
-            if "unknown variable" in rejection.lower():
-                import re
-                match = re.search(r'unknown variable "([^"]+)"', rejection)
-                if match:
-                    bad_field = match.group(1)
-                    diagnosis.fail_tags.append(f"invalid_field:{bad_field}")
-                    diagnosis.mutation_hints.append(
-                        MutationHint(hint="remove_invalid_field", reason=f"BRAIN rejected field: {bad_field}")
-                    )
+            invalid_field = extract_invalid_field_from_rejection(rejection)
+            if invalid_field:
+                diagnosis.fail_tags.append(f"invalid_field:{invalid_field}")
+                diagnosis.mutation_hints.append(
+                    MutationHint(hint="remove_invalid_field", reason=f"BRAIN rejected field: {invalid_field}")
+                )
+            elif "unknown variable" in rejection.lower():
+                diagnosis.mutation_hints.append(
+                    MutationHint(hint="remove_invalid_field", reason="BRAIN rejected one field in the expression.")
+                )
             elif "does not support event inputs" in rejection.lower():
                 diagnosis.fail_tags.append("operator_event_type_mismatch")
                 diagnosis.mutation_hints.append(
                     MutationHint(hint="fix_event_operator_mismatch", reason="Operator does not support event inputs")
                 )
-            elif "invalid data field" in rejection.lower():
-                import re
-                match = re.search(r'invalid data field ([a-zA-Z0-9_]+)', rejection, re.IGNORECASE)
-                if match:
-                    bad_field = match.group(1)
-                    diagnosis.fail_tags.append(f"invalid_field:{bad_field}")
-                    diagnosis.mutation_hints.append(
-                        MutationHint(hint="remove_invalid_field", reason=f"BRAIN rejected field: {bad_field}")
-                    )
             else:
                 diagnosis.mutation_hints.append(
                     MutationHint(hint="simplify_and_retarget", reason="Rejected by BRAIN, simplify and change structure.")

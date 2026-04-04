@@ -496,6 +496,67 @@ def resolve_field_registry(
     return research_context.field_registry
 
 
+def resolve_generation_field_registry(
+    repository: SQLiteRepository,
+    config: AppConfig,
+    research_context: ResearchContext,
+    environment: CommandEnvironment,
+    *,
+    stage: str,
+) -> FieldRegistry:
+    field_registry = resolve_field_registry(config, research_context)
+    invalid_fields = repository.brain_results.list_invalid_generation_fields(
+        region=config.brain.region,
+        universe=config.brain.universe,
+        delay=config.brain.delay,
+    )
+    filtered_registry, blocked_fields = filter_generation_field_registry(
+        field_registry,
+        blocked_fields=invalid_fields,
+    )
+    if blocked_fields:
+        logger = get_logger(__name__, run_id=environment.context.run_id, stage=stage)
+        logger.info(
+            "Applied invalid-field blacklist to generation registry: blocked=%s sample=%s",
+            len(blocked_fields),
+            list(blocked_fields[:8]),
+        )
+        numeric_fields = filtered_registry.generation_numeric_fields(
+            config.generation.allowed_fields,
+            include_catalog_fields=config.generation.allow_catalog_fields_without_runtime,
+        )
+        if numeric_fields:
+            return filtered_registry
+        profile = (
+            f"region={config.brain.region or '-'} "
+            f"universe={config.brain.universe or '-'} "
+            f"delay={config.brain.delay}"
+        )
+        raise ValueError(
+            "Generation blacklist removed all numeric fields for BRAIN profile "
+            f"{profile}. blocked_count={len(blocked_fields)}"
+        )
+    return filtered_registry
+
+
+def filter_generation_field_registry(
+    field_registry: FieldRegistry,
+    *,
+    blocked_fields: set[str],
+) -> tuple[FieldRegistry, tuple[str, ...]]:
+    if not blocked_fields:
+        return field_registry, ()
+    blocked = tuple(sorted(name for name in field_registry.fields if name in blocked_fields))
+    if not blocked:
+        return field_registry, ()
+    filtered = {
+        name: spec
+        for name, spec in field_registry.fields.items()
+        if name not in blocked_fields
+    }
+    return FieldRegistry(fields=filtered), blocked
+
+
 def _align_runtime_fields(
     matrices,
     numeric_fields: dict[str, pd.DataFrame],

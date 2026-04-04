@@ -13,7 +13,7 @@ from generator.guided_generator import GuidedGenerator
 from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.candidate_selection_service import CandidateSelectionService
-from services.data_service import CachedResearchContextProvider, resolve_field_registry
+from services.data_service import CachedResearchContextProvider, resolve_generation_field_registry
 from services.evaluation_service import alpha_candidate_from_record
 from services.models import BatchPreparationResult, CandidateScore, CommandEnvironment
 from services.progress_log import append_progress_event
@@ -70,7 +70,13 @@ class BrainBatchService:
             round_index=round_index,
         )
         resolve_field_registry_started = time.perf_counter()
-        field_registry = resolve_field_registry(config, research_context)
+        field_registry = resolve_generation_field_registry(
+            self.repository,
+            config,
+            research_context,
+            environment,
+            stage="brain-sim-data",
+        )
         resolve_field_registry_ms = (time.perf_counter() - resolve_field_registry_started) * 1000.0
         registry = build_registry(
             config.generation.allowed_operators,

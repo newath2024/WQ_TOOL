@@ -6,7 +6,11 @@ from features.registry import build_registry
 from generator.engine import AlphaGenerationEngine
 from generator.guided_generator import GuidedGenerator
 from memory.pattern_memory import PatternMemoryService
-from services.data_service import load_research_context, persist_research_metadata, resolve_field_registry
+from services.data_service import (
+    load_research_context,
+    persist_research_metadata,
+    resolve_generation_field_registry,
+)
 from services.evaluation_service import alpha_candidate_from_record
 from services.models import CommandEnvironment, GenerationServiceResult
 from storage.repository import SQLiteRepository
@@ -32,7 +36,13 @@ def mutate_and_persist(
         operator_catalog_paths=config.generation.operator_catalog_paths,
     )
     research_context = load_research_context(config, environment, stage="mutate-data")
-    field_registry = resolve_field_registry(config, research_context)
+    field_registry = resolve_generation_field_registry(
+        repository,
+        config,
+        research_context,
+        environment,
+        stage="mutate",
+    )
     persist_research_metadata(repository, config, environment, research_context)
 
     regime_key: str | None = None

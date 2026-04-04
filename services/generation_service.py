@@ -6,7 +6,11 @@ from features.registry import build_registry
 from generator.engine import AlphaGenerationEngine
 from generator.guided_generator import GuidedGenerator
 from memory.pattern_memory import PatternMemoryService
-from services.data_service import load_research_context, persist_research_metadata, resolve_field_registry
+from services.data_service import (
+    load_research_context,
+    persist_research_metadata,
+    resolve_generation_field_registry,
+)
 from services.export_service import export_generated_alphas
 from services.models import CommandEnvironment, GenerationServiceResult
 from storage.repository import SQLiteRepository
@@ -27,7 +31,13 @@ def generate_and_persist(
     existing = repository.list_existing_normalized_expressions(environment.context.run_id)
     total_count = count or (config.generation.template_count + config.generation.grammar_count)
     research_context = load_research_context(config, environment, stage="generate-data")
-    field_registry = resolve_field_registry(config, research_context)
+    field_registry = resolve_generation_field_registry(
+        repository,
+        config,
+        research_context,
+        environment,
+        stage="generate",
+    )
     persist_research_metadata(repository, config, environment, research_context)
 
     regime_key: str | None = None

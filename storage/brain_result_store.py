@@ -3,6 +3,7 @@ from __future__ import annotations
 import sqlite3
 from collections.abc import Iterable
 
+from core.brain_rejections import extract_invalid_field_from_rejection
 from storage.models import BrainResultRecord, ClosedLoopRoundRecord, ClosedLoopRunRecord
 
 
@@ -121,6 +122,43 @@ class BrainResultStore:
             (run_id, run_id),
         ).fetchall()
         return [self._row_to_result(row) for row in rows]
+
+    def list_invalid_generation_fields(
+        self,
+        *,
+        region: str,
+        universe: str,
+        delay: int,
+    ) -> set[str]:
+        clauses = [
+            "rejection_reason IS NOT NULL",
+            "rejection_reason <> ''",
+            "delay = ?",
+        ]
+        params: list[object] = [int(delay)]
+        normalized_region = str(region or "").strip().upper()
+        normalized_universe = str(universe or "").strip().upper()
+        if normalized_region:
+            clauses.append("UPPER(region) = ?")
+            params.append(normalized_region)
+        if normalized_universe:
+            clauses.append("UPPER(universe) = ?")
+            params.append(normalized_universe)
+        rows = self.connection.execute(
+            f"""
+            SELECT rejection_reason
+            FROM brain_results
+            WHERE {" AND ".join(clauses)}
+            ORDER BY simulated_at DESC, created_at DESC, job_id DESC
+            """,
+            tuple(params),
+        ).fetchall()
+        blocked_fields: set[str] = set()
+        for row in rows:
+            field_name = extract_invalid_field_from_rejection(row["rejection_reason"])
+            if field_name:
+                blocked_fields.add(field_name)
+        return blocked_fields
 
     def upsert_closed_loop_run(self, record: ClosedLoopRunRecord) -> None:
         self.connection.execute(
