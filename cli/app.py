@@ -9,6 +9,7 @@ from cli.commands import (
     benchmark_generation,
     brain_login,
     evaluate,
+    evolution_report,
     export_brain_candidates,
     generate,
     import_brain_results,
@@ -34,6 +35,7 @@ _SUBCOMMANDS = {
     "evaluate",
     "top",
     "report",
+    "evolution-report",
     "memory-top-patterns",
     "memory-failed-patterns",
     "memory-top-genes",
@@ -107,6 +109,7 @@ def build_parser() -> argparse.ArgumentParser:
     service_status.register(subparsers, common)
     brain_login.register(subparsers, common)
     benchmark_generation.register(subparsers, common)
+    evolution_report.register(subparsers, common)
     return parser
 
 
