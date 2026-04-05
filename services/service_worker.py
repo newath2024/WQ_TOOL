@@ -566,12 +566,31 @@ class ServiceWorker:
         policy = self.config.service.ambiguous_submission_policy
         statuses: tuple[str, ...] = ("submitting", "paused_quarantine") if policy in {"fail", "resubmit"} else ("submitting",)
         batches = self.repository.submissions.list_batches_by_status(run_id=run_id, statuses=statuses)
+        submissions_by_batch = {
+            batch.batch_id: self.repository.submissions.list_submissions(run_id=run_id, batch_id=batch.batch_id)
+            for batch in batches
+        }
+        superseded_batch_ids = self._resubmitted_source_batch_ids(run_id=run_id)
+        latest_resubmit_batch_id = None
+        if policy == "resubmit" and allow_resubmit:
+            latest_resubmit_batch_id = self._latest_resubmittable_ambiguous_batch_id(
+                batches=batches,
+                submissions_by_batch=submissions_by_batch,
+                superseded_batch_ids=superseded_batch_ids,
+            )
         for batch in batches:
             if batch.status == "paused_quarantine" and not self._is_ambiguous_batch(batch):
                 quarantined.append(batch.batch_id)
                 continue
-            submissions = self.repository.submissions.list_submissions(run_id=run_id, batch_id=batch.batch_id)
-            if batch.candidate_count > 0 and len(submissions) >= batch.candidate_count:
+            submissions = submissions_by_batch[batch.batch_id]
+            should_recover = bool(
+                submissions
+                and (
+                    policy == "resubmit"
+                    or (batch.candidate_count > 0 and len(submissions) >= batch.candidate_count)
+                )
+            )
+            if should_recover:
                 recovered_status = "manual_pending" if all(
                     submission.status == "manual_pending" for submission in submissions
                 ) else "submitted"
@@ -583,7 +602,29 @@ class ServiceWorker:
                 )
                 recovered.append(batch.batch_id)
                 continue
+            if policy == "resubmit" and batch.batch_id in superseded_batch_ids:
+                self._mark_ambiguous_batch_failed(
+                    batch=batch,
+                    submissions=submissions,
+                    updated_at=now,
+                    reason="ambiguous_submission_superseded",
+                )
+                failed.append(batch.batch_id)
+                continue
             if policy == "resubmit" and not allow_resubmit:
+                continue
+            if (
+                policy == "resubmit"
+                and latest_resubmit_batch_id is not None
+                and batch.batch_id != latest_resubmit_batch_id
+            ):
+                self._mark_ambiguous_batch_failed(
+                    batch=batch,
+                    submissions=submissions,
+                    updated_at=now,
+                    reason="ambiguous_submission_stale",
+                )
+                failed.append(batch.batch_id)
                 continue
             if policy == "resubmit":
                 resubmitted_batch_id = self._resubmit_ambiguous_batch(
@@ -762,6 +803,52 @@ class ServiceWorker:
             for item in payloads
             if isinstance(item, dict) and item.get("candidate_id")
         }
+
+    def _resubmitted_source_batch_ids(self, *, run_id: str) -> set[str]:
+        source_batch_ids: set[str] = set()
+        for batch in self.repository.submissions.list_batches(run_id):
+            resubmitted_from = str(
+                self._decode_json_object(batch.notes_json).get("resubmitted_from_batch_id") or ""
+            ).strip()
+            if resubmitted_from:
+                source_batch_ids.add(resubmitted_from)
+        return source_batch_ids
+
+    def _latest_resubmittable_ambiguous_batch_id(
+        self,
+        *,
+        batches: list[SubmissionBatchRecord],
+        submissions_by_batch: dict[str, list[SubmissionRecord]],
+        superseded_batch_ids: set[str],
+    ) -> str | None:
+        candidates: list[SubmissionBatchRecord] = []
+        for batch in batches:
+            if not self._is_ambiguous_batch(batch):
+                continue
+            if batch.batch_id in superseded_batch_ids:
+                continue
+            submissions = submissions_by_batch.get(batch.batch_id, [])
+            if batch.candidate_count > 0 and len(submissions) >= batch.candidate_count:
+                continue
+            candidates.append(batch)
+        if not candidates:
+            return None
+        latest = max(candidates, key=self._batch_recency_key)
+        return latest.batch_id
+
+    @staticmethod
+    def _batch_recency_key(batch: SubmissionBatchRecord) -> tuple[datetime, datetime, int, str]:
+        baseline = datetime.min.replace(tzinfo=UTC)
+
+        def _parse(timestamp: str | None) -> datetime:
+            if not timestamp:
+                return baseline
+            try:
+                return datetime.fromisoformat(timestamp)
+            except ValueError:
+                return baseline
+
+        return (_parse(batch.created_at), _parse(batch.updated_at), int(batch.round_index), batch.batch_id)
 
     @staticmethod
     def _decode_json_object(payload: str | None) -> dict[str, object]:

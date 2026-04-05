@@ -1401,6 +1401,102 @@ def test_service_resubmits_ambiguous_batch_when_policy_is_resubmit() -> None:
     assert new_batches[0].status in {"submitted", "running", "completed"}
 
 
+def test_service_recovers_partial_ambiguous_batch_without_duplicate_resubmit() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit-partial"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-1", "rank(close)"),
+                _candidate("alpha-2", "rank(open)"),
+            ],
+        )
+        timestamp = _timestamp()
+        sim_snapshot = json.dumps(
+            {
+                "region": "USA",
+                "universe": "TOP3000",
+                "delay": 1,
+                "neutralization": "sector",
+                "decay": 0,
+                "candidate_payloads": [
+                    {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "job-1"},
+                    {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "job-2"},
+                ],
+            }
+        )
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-ambiguous",
+                run_id=run_id,
+                round_index=1,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=sim_snapshot,
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=timestamp,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        )
+        repository.submissions.upsert_submissions(
+            [
+                SubmissionRecord(
+                    job_id="job-1",
+                    batch_id="batch-ambiguous",
+                    run_id=run_id,
+                    round_index=1,
+                    candidate_id="alpha-1",
+                    expression="rank(close)",
+                    backend="api",
+                    status="submitted",
+                    sim_config_snapshot=sim_snapshot,
+                    submitted_at=timestamp,
+                    updated_at=timestamp,
+                    completed_at=None,
+                    export_path=None,
+                    raw_submission_json="{}",
+                    error_message=None,
+                )
+            ]
+        )
+        repository.service_runtime.upsert_state(_runtime_record(run_id=run_id))
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        batch = repository.submissions.get_batch("batch-ambiguous")
+        submission = repository.submissions.get_submission("job-1")
+        result = repository.brain_results.get_result("job-1")
+    finally:
+        repository.close()
+
+    assert outcome.status == "idle"
+    assert outcome.completed_count == 1
+    assert batch is not None
+    assert batch.status == "completed"
+    assert batch.service_status_reason is None
+    assert submission is not None
+    assert submission.status == "completed"
+    assert result is not None
+    assert result.status == "completed"
+    assert len(adapter.submit_calls) == 0
+
+
 def test_service_resubmit_pauses_after_concurrent_submission_limit() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -1469,6 +1565,225 @@ def test_service_resubmit_pauses_after_concurrent_submission_limit() -> None:
     assert batch is not None
     assert batch.status == "paused_quarantine"
     assert len(adapter.submit_calls) == 1
+
+
+def test_service_only_resubmits_latest_ambiguous_leaf_batch() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit-latest-only"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-1", "rank(close)"),
+                _candidate("alpha-2", "rank(open)"),
+            ],
+        )
+        first = datetime(2026, 1, 1, tzinfo=UTC).isoformat()
+        second = datetime(2026, 1, 1, 0, 5, tzinfo=UTC).isoformat()
+        third = datetime(2026, 1, 1, 0, 10, tzinfo=UTC).isoformat()
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-root",
+                run_id=run_id,
+                round_index=1,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "old-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "old-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=first,
+                created_at=first,
+                updated_at=first,
+            )
+        )
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-middle",
+                run_id=run_id,
+                round_index=1,
+                backend="api",
+                status="completed",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps({"region": "USA"}),
+                export_path=None,
+                notes_json=json.dumps(
+                    {
+                        "candidate_ids": ["alpha-1", "alpha-2"],
+                        "resubmitted_from_batch_id": "batch-root",
+                    }
+                ),
+                service_status_reason="submission_failed:ConcurrentSimulationLimitExceeded",
+                created_at=second,
+                updated_at=second,
+            )
+        )
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-leaf",
+                run_id=run_id,
+                round_index=1,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "leaf-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "leaf-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps(
+                    {
+                        "candidate_ids": ["alpha-1", "alpha-2"],
+                        "resubmitted_from_batch_id": "batch-middle",
+                    }
+                ),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=third,
+                created_at=third,
+                updated_at=third,
+            )
+        )
+        repository.service_runtime.upsert_state(_runtime_record(run_id=run_id))
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        root_batch = repository.submissions.get_batch("batch-root")
+        leaf_batch = repository.submissions.get_batch("batch-leaf")
+        batches = repository.submissions.list_batches(run_id)
+        new_batches = [batch for batch in batches if batch.batch_id not in {"batch-root", "batch-middle", "batch-leaf"}]
+    finally:
+        repository.close()
+
+    assert outcome.status in {"idle", "running"}
+    assert root_batch is not None
+    assert root_batch.status == "failed"
+    assert root_batch.service_status_reason == "ambiguous_submission_superseded"
+    assert leaf_batch is not None
+    assert leaf_batch.status == "failed"
+    assert leaf_batch.service_status_reason.startswith("ambiguous_submission_resubmitted:")
+    assert len(adapter.submit_calls) == 2
+    assert len(new_batches) == 1
+
+
+def test_service_only_resubmits_newest_ambiguous_batch() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit-newest-only"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-1", "rank(close)"),
+                _candidate("alpha-2", "rank(open)"),
+            ],
+        )
+        older = datetime(2026, 1, 1, tzinfo=UTC).isoformat()
+        newer = datetime(2026, 1, 1, 0, 10, tzinfo=UTC).isoformat()
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-older",
+                run_id=run_id,
+                round_index=1,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "old-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "old-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=older,
+                created_at=older,
+                updated_at=older,
+            )
+        )
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-newer",
+                run_id=run_id,
+                round_index=2,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "new-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "new-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=newer,
+                created_at=newer,
+                updated_at=newer,
+            )
+        )
+        repository.service_runtime.upsert_state(_runtime_record(run_id=run_id))
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        older_batch = repository.submissions.get_batch("batch-older")
+        newer_batch = repository.submissions.get_batch("batch-newer")
+        batches = repository.submissions.list_batches(run_id)
+        new_batches = [batch for batch in batches if batch.batch_id not in {"batch-older", "batch-newer"}]
+    finally:
+        repository.close()
+
+    assert outcome.status in {"idle", "running"}
+    assert older_batch is not None
+    assert older_batch.status == "failed"
+    assert older_batch.service_status_reason == "ambiguous_submission_stale"
+    assert newer_batch is not None
+    assert newer_batch.status == "failed"
+    assert newer_batch.service_status_reason.startswith("ambiguous_submission_resubmitted:")
+    assert len(adapter.submit_calls) == 2
+    assert len(new_batches) == 1
 
 
 def _service_config():
