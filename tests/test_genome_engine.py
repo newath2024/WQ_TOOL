@@ -76,6 +76,52 @@ def build_runtime_field_registry():
     )
 
 
+def build_mixed_group_key_field_registry() -> FieldRegistry:
+    def spec(
+        name: str,
+        category: str,
+        *,
+        field_type: str = "matrix",
+        runtime_available: bool = True,
+        field_score: float = 1.0,
+    ) -> FieldSpec:
+        return FieldSpec(
+            name=name,
+            dataset="runtime" if runtime_available else "catalog",
+            field_type=field_type,
+            coverage=1.0,
+            alpha_usage_count=0,
+            category=category,
+            runtime_available=runtime_available,
+            field_score=field_score,
+            category_weight=1.0,
+        )
+
+    return FieldRegistry(
+        fields={
+            "close": spec("close", "price"),
+            "volume": spec("volume", "volume"),
+            "pe_ratio": spec("pe_ratio", "fundamental"),
+            "sector": spec("sector", "group", field_type="vector", field_score=0.92),
+            "industry": spec("industry", "group", field_type="vector", field_score=0.88),
+            "country": spec("country", "group", field_type="vector", runtime_available=False, field_score=0.84),
+            "forecast_currency_tangible_book_value_per_share": spec(
+                "forecast_currency_tangible_book_value_per_share",
+                "analyst",
+                field_type="vector",
+                field_score=0.99,
+            ),
+            "anl69_best_pe_ratio": spec(
+                "anl69_best_pe_ratio",
+                "analyst",
+                field_type="vector",
+                runtime_available=False,
+                field_score=0.97,
+            ),
+        }
+    )
+
+
 def build_compatibility_field_registry() -> FieldRegistry:
     def spec(name: str, category: str) -> FieldSpec:
         return FieldSpec(
@@ -218,6 +264,89 @@ def test_secondary_field_prefers_compatible_categories_for_fundamental_primary(m
     assert captured["volume"] == pytest.approx(0.3)
     assert captured["analyst_score"] / captured["volume"] == pytest.approx(5.0)
     assert captured["close"] / captured["volume"] == pytest.approx(5.0)
+
+
+def test_generation_group_key_fields_only_return_true_group_categories() -> None:
+    field_registry = build_mixed_group_key_field_registry()
+
+    runtime_names = [spec.name for spec in field_registry.generation_group_key_fields()]
+    all_names = [spec.name for spec in field_registry.generation_group_key_fields(include_catalog_fields=True)]
+
+    assert runtime_names == ["sector", "industry"]
+    assert all_names == ["sector", "industry", "country"]
+    assert "forecast_currency_tangible_book_value_per_share" not in runtime_names
+    assert "forecast_currency_tangible_book_value_per_share" not in all_names
+    assert "anl69_best_pe_ratio" not in all_names
+
+
+def test_builder_allowed_group_fields_exclude_non_group_vectors() -> None:
+    generation, adaptive = build_configs()
+    generation = replace(generation, allow_catalog_fields_without_runtime=True)
+    field_registry = build_mixed_group_key_field_registry()
+    registry = build_registry(generation.allowed_operators)
+
+    builder = GenomeBuilder(
+        generation_config=generation,
+        adaptive_config=adaptive,
+        registry=registry,
+        field_registry=field_registry,
+        seed=22,
+    )
+
+    assert [spec.name for spec in builder.allowed_group_fields] == ["sector", "industry", "country"]
+
+
+def test_pick_group_field_never_uses_non_group_vector(monkeypatch) -> None:
+    generation, adaptive = build_configs()
+    generation = replace(generation, allow_catalog_fields_without_runtime=True)
+    field_registry = build_mixed_group_key_field_registry()
+    registry = build_registry(generation.allowed_operators)
+
+    builder = GenomeBuilder(
+        generation_config=generation,
+        adaptive_config=adaptive,
+        registry=registry,
+        field_registry=field_registry,
+        seed=23,
+    )
+    captured: dict[str, list[str]] = {}
+
+    def fake_choice(options):
+        captured["options"] = list(options)
+        return options[0]
+
+    monkeypatch.setattr(builder.random, "choice", fake_choice)
+
+    assert builder._pick_group_field() == "sector"  # noqa: SLF001
+    assert captured["options"] == ["sector", "industry", "country"]
+
+
+def test_group_relative_signal_render_uses_true_group_key_only() -> None:
+    generation, adaptive = build_configs()
+    generation = replace(generation, allow_catalog_fields_without_runtime=True)
+    field_registry = build_mixed_group_key_field_registry()
+    registry = build_registry(generation.allowed_operators)
+
+    builder = GenomeBuilder(
+        generation_config=generation,
+        adaptive_config=adaptive,
+        registry=registry,
+        field_registry=field_registry,
+        seed=24,
+    )
+    grammar = MotifGrammar()
+
+    genome = builder.build_parent_seeded_genome(
+        motif="group_relative_signal",
+        primary_family="price",
+        source_mode="true-group-key-regression",
+    )
+    expression = grammar.render(genome).expression
+
+    assert "group_neutralize(" in expression
+    assert "forecast_currency_tangible_book_value_per_share" not in expression
+    assert "anl69_best_pe_ratio" not in expression
+    assert any(f",{name})" in expression or f", {name})" in expression for name in ("sector", "industry", "country"))
 
 
 def test_auxiliary_field_uses_soft_compatibility_without_hard_block(monkeypatch) -> None:

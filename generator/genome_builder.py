@@ -74,7 +74,7 @@ class GenomeBuilder:
             generation_config.allowed_fields,
             include_catalog_fields=generation_config.allow_catalog_fields_without_runtime,
         )
-        self.allowed_group_fields = self.field_registry.generation_group_fields(
+        self.allowed_group_fields = self.field_registry.generation_group_key_fields(
             include_catalog_fields=generation_config.allow_catalog_fields_without_runtime,
         )
         self.fields_by_category = self._fields_by_category(self.allowed_numeric_fields)

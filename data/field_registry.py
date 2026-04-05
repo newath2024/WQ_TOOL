@@ -112,6 +112,13 @@ class FieldRegistry:
     ) -> list[FieldSpec]:
         return self._sorted_fields("group", allowed=None, runtime_only=not include_catalog_fields)
 
+    def generation_group_key_fields(
+        self,
+        *,
+        include_catalog_fields: bool = False,
+    ) -> list[FieldSpec]:
+        return self._sorted_group_key_fields(runtime_only=not include_catalog_fields)
+
     def generation_allowed_fields(
         self,
         allowed_fields: list[str],
@@ -159,6 +166,18 @@ class FieldRegistry:
 
     def _sorted_runtime_fields(self, operator_type: str, allowed: set[str] | None = None) -> list[FieldSpec]:
         return self._sorted_fields(operator_type, allowed=allowed, runtime_only=True)
+
+    def _sorted_group_key_fields(self, *, runtime_only: bool) -> list[FieldSpec]:
+        candidates = [
+            spec
+            for spec in self.fields.values()
+            if (spec.runtime_available or not runtime_only) and spec.operator_type == "group" and spec.category == "group"
+        ]
+        return sorted(
+            candidates,
+            key=lambda item: (item.field_score, item.coverage, item.alpha_usage_count, item.name),
+            reverse=True,
+        )
 
     def _sorted_fields(
         self,
