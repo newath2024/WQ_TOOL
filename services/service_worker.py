@@ -429,6 +429,22 @@ class ServiceWorker:
                     next_sleep_seconds=self.config.service.persona_retry_interval_seconds,
                 )
 
+        pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+        current_pending = len(pending_submissions)
+        available_slots = max(self.config.service.max_pending_jobs - current_pending, 0)
+        if available_slots <= 0:
+            active_batch_id = pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id
+            logger.info(
+                "Skipping new submission because pending capacity is full. current_pending=%s max_pending_jobs=%s",
+                current_pending,
+                self.config.service.max_pending_jobs,
+            )
+            return ServiceTickOutcome(
+                status="running" if current_pending else "idle",
+                pending_job_count=current_pending,
+                active_batch_id=active_batch_id,
+            )
+
         batch_result = self.batch_service.prepare_service_batch(
             config=self.config,
             environment=self.environment,
@@ -445,24 +461,30 @@ class ServiceWorker:
                 "No simulation-worthy candidates generated on this tick. top_fail_reasons=%s",
                 batch_result.generation_stage_metrics.get("top_fail_reasons", {}),
             )
-            return ServiceTickOutcome(status="no_candidates", pending_job_count=0, generated_count=len(candidates))
+            return ServiceTickOutcome(
+                status="no_candidates",
+                pending_job_count=current_pending,
+                generated_count=len(candidates),
+            )
 
         recent_fail_rate = self._recent_job_failure_rate(runtime.service_run_id)
         normal_count = min(
             self.config.loop.simulation_batch_size,
-            self.config.service.max_pending_jobs,
+            available_slots,
             len(selected_candidates),
         )
         adjusted_count = normal_count
-        if recent_fail_rate > 0.8:
+        if recent_fail_rate > 0.8 and normal_count > 3:
             adjusted_count = max(3, normal_count // 2)  # floor at 3 to avoid throughput collapse
-        elif recent_fail_rate > 0.5:
+        elif recent_fail_rate > 0.5 and normal_count > 3:
             adjusted_count = max(3, normal_count * 2 // 3)
         selected_scores = selected_scores[:adjusted_count]
         selected_candidates = [item.candidate for item in selected_scores]
         logger.info(
-            "Adaptive submission: recent_fail_rate=%.2f, adjusted_count=%s",
+            "Adaptive submission: recent_fail_rate=%.2f, current_pending=%s, available_slots=%s, adjusted_count=%s",
             recent_fail_rate,
+            current_pending,
+            available_slots,
             adjusted_count,
         )
         batch = self.brain_service.submit_candidates(

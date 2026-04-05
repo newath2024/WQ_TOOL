@@ -782,6 +782,94 @@ def test_service_worker_uses_normal_submission_count_without_failure_history() -
     assert len(adapter.submit_calls) == 3
 
 
+def test_service_worker_limits_submission_count_to_available_pending_slots() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 4
+        config.service.max_pending_jobs = 5
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-available-slots"
+        _seed_run(repository, run_id)
+        for index in range(1, 5):
+            _seed_pending_batch(
+                repository,
+                run_id=run_id,
+                batch_id=f"batch-{index}",
+                job_id=f"job-{index}",
+                status="submitted",
+            )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(4))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._submit_new_batch(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.submitted_count == 1
+    assert outcome.pending_job_count == 5
+    assert len(adapter.submit_calls) == 1
+
+
+def test_service_worker_respects_available_slots_even_with_extreme_fail_history() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 4
+        config.service.max_pending_jobs = 5
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-available-slots-fail-history"
+        _seed_run(repository, run_id)
+        for index in range(1, 5):
+            _seed_pending_batch(
+                repository,
+                run_id=run_id,
+                batch_id=f"batch-{index}",
+                job_id=f"job-{index}",
+                status="submitted",
+            )
+        _seed_completed_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-a",
+            statuses=("failed", "failed", "failed"),
+            created_at=datetime(2026, 1, 1, tzinfo=UTC),
+        )
+        _seed_completed_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-b",
+            statuses=("failed", "failed", "timeout"),
+            created_at=datetime(2026, 1, 2, tzinfo=UTC),
+        )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(4))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._submit_new_batch(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.submitted_count == 1
+    assert outcome.pending_job_count == 5
+    assert len(adapter.submit_calls) == 1
+
+
 def test_service_worker_caps_submission_count_when_recent_fail_rate_exceeds_half() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -892,6 +980,47 @@ def test_service_worker_keeps_existing_normal_batch_cap_when_history_is_clean() 
 
     assert outcome.submitted_count == 2
     assert len(adapter.submit_calls) == 2
+
+
+def test_service_worker_skips_new_submission_when_pending_capacity_is_full() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 4
+        config.service.max_pending_jobs = 2
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-capacity-full"
+        _seed_run(repository, run_id)
+        for index in range(1, 3):
+            _seed_pending_batch(
+                repository,
+                run_id=run_id,
+                batch_id=f"batch-{index}",
+                job_id=f"job-{index}",
+                status="submitted",
+            )
+        batch_service = FakeBatchPreparationService(_batch_result(_service_candidates(4)))
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=batch_service,
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._submit_new_batch(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.submitted_count == 0
+    assert outcome.pending_job_count == 2
+    assert outcome.active_batch_id == "batch-1"
+    assert len(batch_service.calls) == 0
+    assert len(adapter.submit_calls) == 0
 
 
 def test_service_worker_pauses_three_minutes_after_concurrent_submission_limit() -> None:
