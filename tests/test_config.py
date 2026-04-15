@@ -116,6 +116,12 @@ def test_default_and_research_profiles_normalize_to_same_thresholds() -> None:
     assert default_config.adaptive_generation.region_learning.local_scope == "region_regime"
     assert default_config.adaptive_generation.region_learning.global_prior_scope == "match_non_region_regime"
     assert default_config.adaptive_generation.region_learning.blend_mode == "linear_ramp"
+    assert default_config.adaptive_generation.meta_model.enabled is True
+    assert default_config.adaptive_generation.meta_model.rollout_mode == "blend"
+    assert default_config.adaptive_generation.meta_model.target == "positive_outcome"
+    assert default_config.adaptive_generation.learned_regime.enabled is True
+    assert default_config.adaptive_generation.learned_regime.model_type == "minibatch_kmeans"
+    assert default_config.adaptive_generation.learned_regime.tsfresh_profile == "minimal"
     assert default_config.generation.engine_validation_cache_enabled is True
     assert default_config.adaptive_generation.max_generation_seconds == 20.0
     assert default_config.adaptive_generation.max_attempt_multiplier == 12

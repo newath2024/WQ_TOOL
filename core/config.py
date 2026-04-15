@@ -245,6 +245,72 @@ class RegimeDetectionConfig:
 
 
 @dataclass(slots=True)
+class MetaModelConfig:
+    enabled: bool = True
+    rollout_mode: str = "blend"
+    target: str = "positive_outcome"
+    model_type: str = "logistic_regression"
+    blend_weight: float = 0.20
+    min_train_rows: int = 500
+    min_positive_rows: int = 50
+    lookback_rounds: int = 1500
+    use_cross_run_history: bool = True
+
+    def __post_init__(self) -> None:
+        self.rollout_mode = str(self.rollout_mode or "blend").strip().lower()
+        self.target = str(self.target or "positive_outcome").strip().lower()
+        self.model_type = str(self.model_type or "logistic_regression").strip().lower()
+        if self.rollout_mode != "blend":
+            raise ValueError("adaptive_generation.meta_model.rollout_mode must be 'blend'")
+        if self.target != "positive_outcome":
+            raise ValueError("adaptive_generation.meta_model.target must be 'positive_outcome'")
+        if self.model_type != "logistic_regression":
+            raise ValueError("adaptive_generation.meta_model.model_type must be 'logistic_regression'")
+        if not 0.0 <= float(self.blend_weight) <= 1.0:
+            raise ValueError("adaptive_generation.meta_model.blend_weight must be between 0 and 1")
+        if self.min_train_rows <= 0:
+            raise ValueError("adaptive_generation.meta_model.min_train_rows must be > 0")
+        if self.min_positive_rows <= 0:
+            raise ValueError("adaptive_generation.meta_model.min_positive_rows must be > 0")
+        if self.lookback_rounds <= 0:
+            raise ValueError("adaptive_generation.meta_model.lookback_rounds must be > 0")
+
+
+@dataclass(slots=True)
+class LearnedRegimeConfig:
+    enabled: bool = True
+    model_type: str = "minibatch_kmeans"
+    cluster_count: int = 6
+    history_window: int = 252
+    feature_window: int = 63
+    min_train_windows: int = 120
+    confidence_floor: float = 0.35
+    tsfresh_profile: str = "minimal"
+
+    def __post_init__(self) -> None:
+        self.model_type = str(self.model_type or "minibatch_kmeans").strip().lower()
+        self.tsfresh_profile = str(self.tsfresh_profile or "minimal").strip().lower()
+        if self.model_type != "minibatch_kmeans":
+            raise ValueError("adaptive_generation.learned_regime.model_type must be 'minibatch_kmeans'")
+        if self.cluster_count <= 1:
+            raise ValueError("adaptive_generation.learned_regime.cluster_count must be > 1")
+        if self.history_window <= 0:
+            raise ValueError("adaptive_generation.learned_regime.history_window must be > 0")
+        if self.feature_window <= 1:
+            raise ValueError("adaptive_generation.learned_regime.feature_window must be > 1")
+        if self.history_window < self.feature_window:
+            raise ValueError(
+                "adaptive_generation.learned_regime.history_window must be >= feature_window"
+            )
+        if self.min_train_windows <= 0:
+            raise ValueError("adaptive_generation.learned_regime.min_train_windows must be > 0")
+        if not 0.0 <= float(self.confidence_floor) <= 1.0:
+            raise ValueError("adaptive_generation.learned_regime.confidence_floor must be between 0 and 1")
+        if self.tsfresh_profile != "minimal":
+            raise ValueError("adaptive_generation.learned_regime.tsfresh_profile must be 'minimal'")
+
+
+@dataclass(slots=True)
 class MutationLearningConfig:
     enabled: bool = True
     min_support: int = 3
@@ -279,6 +345,8 @@ class AdaptiveGenerationConfig:
     crowding: CrowdingConfig = field(default_factory=CrowdingConfig)
     selection: SelectionConfig = field(default_factory=SelectionConfig)
     regime_detection: RegimeDetectionConfig = field(default_factory=RegimeDetectionConfig)
+    meta_model: MetaModelConfig = field(default_factory=MetaModelConfig)
+    learned_regime: LearnedRegimeConfig = field(default_factory=LearnedRegimeConfig)
     mutation_learning: MutationLearningConfig = field(default_factory=MutationLearningConfig)
     max_generation_seconds: float = 20.0
     max_attempt_multiplier: int = 12
@@ -776,6 +844,10 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     )
     adaptive_payload["regime_detection"] = RegimeDetectionConfig(
         **adaptive_payload.get("regime_detection", {})
+    )
+    adaptive_payload["meta_model"] = MetaModelConfig(**adaptive_payload.get("meta_model", {}))
+    adaptive_payload["learned_regime"] = LearnedRegimeConfig(
+        **adaptive_payload.get("learned_regime", {})
     )
     adaptive_payload["mutation_learning"] = MutationLearningConfig(
         **adaptive_payload.get("mutation_learning", {})

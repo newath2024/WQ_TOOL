@@ -4,6 +4,7 @@ import json
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from io import StringIO
+from typing import Any
 
 import pandas as pd
 
@@ -311,6 +312,93 @@ class SQLiteRepository:
             (run_id,),
         ).fetchall()
         return {row["normalized_expression"] for row in rows}
+
+    def list_run_field_scores(self, run_id: str) -> dict[str, float]:
+        rows = self.connection.execute(
+            """
+            SELECT field_name, field_score
+            FROM run_field_scores
+            WHERE run_id = ?
+            """,
+            (run_id,),
+        ).fetchall()
+        return {str(row["field_name"]): float(row["field_score"] or 0.0) for row in rows}
+
+    def list_run_field_scores_for_runs(self, run_ids: Iterable[str]) -> dict[str, dict[str, float]]:
+        normalized = tuple(sorted({str(run_id).strip() for run_id in run_ids if str(run_id).strip()}))
+        if not normalized:
+            return {}
+        placeholders = ", ".join("?" for _ in normalized)
+        rows = self.connection.execute(
+            f"""
+            SELECT run_id, field_name, field_score
+            FROM run_field_scores
+            WHERE run_id IN ({placeholders})
+            """,
+            normalized,
+        ).fetchall()
+        scores: dict[str, dict[str, float]] = {}
+        for row in rows:
+            run_score_map = scores.setdefault(str(row["run_id"]), {})
+            run_score_map[str(row["field_name"])] = float(row["field_score"] or 0.0)
+        return scores
+
+    def list_meta_model_training_rows(
+        self,
+        *,
+        run_id: str,
+        round_index: int,
+        lookback_rounds: int,
+        use_cross_run_history: bool,
+    ) -> list[dict[str, Any]]:
+        start_round = max(0, int(round_index) - int(lookback_rounds))
+        params: list[object] = []
+        history_clause = (
+            "(s.run_id = ? AND s.round_index < ? AND s.round_index >= ?)"
+            if not use_cross_run_history
+            else "((s.run_id = ? AND s.round_index < ? AND s.round_index >= ?) OR s.run_id <> ?)"
+        )
+        params.extend([run_id, int(round_index), start_round])
+        if use_cross_run_history:
+            params.append(run_id)
+        rows = self.connection.execute(
+            f"""
+            SELECT
+                s.run_id,
+                s.round_index,
+                s.alpha_id,
+                s.selected,
+                s.composite_score,
+                s.reason_codes_json,
+                s.breakdown_json,
+                a.generation_mode,
+                a.template_name,
+                a.fields_used_json,
+                a.depth,
+                a.complexity,
+                a.generation_metadata,
+                c.metric_source,
+                c.motif,
+                c.field_families_json,
+                c.operator_path_json,
+                c.complexity_bucket,
+                c.turnover_bucket,
+                c.horizon_bucket,
+                c.effective_regime_key,
+                c.outcome_score,
+                c.created_at
+            FROM alpha_selection_scores s
+            JOIN alphas a
+              ON a.run_id = s.run_id AND a.alpha_id = s.alpha_id
+            JOIN alpha_cases c
+              ON c.run_id = s.run_id AND c.alpha_id = s.alpha_id AND c.metric_source = 'external_brain'
+            WHERE s.score_stage = 'pre_sim'
+              AND {history_clause}
+            ORDER BY s.run_id ASC, s.round_index ASC, s.alpha_id ASC
+            """,
+            tuple(params),
+        ).fetchall()
+        return [dict(row) for row in rows]
 
     def save_metrics(self, metric_records: list[MetricRecord]) -> None:
         for record in metric_records:

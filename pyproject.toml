@@ -13,6 +13,8 @@ dependencies = [
   "pandas>=2.1",
   "PyYAML>=6.0",
   "requests>=2.32",
+  "scikit-learn>=1.5",
+  "tsfresh>=0.20",
 ]
 
 [project.optional-dependencies]

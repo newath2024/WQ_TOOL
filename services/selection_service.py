@@ -8,6 +8,7 @@ from generator.engine import AlphaCandidate
 from memory.case_memory import CaseMemorySnapshot, CaseMemoryService, ObjectiveVector
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot, StructuralSignature
 from services.diversity_manager import DiversityManager
+from services.meta_model_service import MetaModelFeatureInput, MetaModelService
 from services.models import (
     CandidateScore,
     CrowdingScore,
@@ -26,10 +27,12 @@ class SelectionService:
         config: SelectionConfig,
         memory_service: PatternMemoryService | None = None,
         case_memory_service: CaseMemoryService | None = None,
+        meta_model_service: MetaModelService | None = None,
     ) -> None:
         self.config = config
         self.memory_service = memory_service or PatternMemoryService()
         self.case_memory_service = case_memory_service or CaseMemoryService()
+        self.meta_model_service = meta_model_service
         self.multi_objective = MultiObjectiveSelectionService()
 
     def score_pre_sim_candidates(
@@ -42,9 +45,13 @@ class SelectionService:
         case_snapshot: CaseMemorySnapshot | None = None,
         crowding_scores: dict[str, CrowdingScore] | None = None,
         dedup_result: DedupBatchResult | None = None,
+        run_id: str = "",
+        round_index: int = 0,
+        effective_regime_key: str = "",
     ) -> list[CandidateScore]:
         crowding_scores = dict(crowding_scores or {})
         duplicate_metrics = self._duplicate_metrics_by_id(dedup_result)
+        prepared_inputs: list[dict[str, object]] = []
         ranked_items: list[RankedItem[CandidateScore]] = []
         score_by_id: dict[str, CandidateScore] = {}
         field_categories = {name: spec.category for name, spec in field_registry.fields.items()}
@@ -77,42 +84,103 @@ class SelectionService:
             )
             regime_fit = self._regime_fit(candidate)
             field_score = self._average_field_score(candidate, field_registry)
-            predicted_quality = self._predicted_quality(objective_vector, field_score=field_score)
+            heuristic_predicted_quality = self._predicted_quality(objective_vector, field_score=field_score)
             family_diversity = self._family_diversity_bonus(signature, case_snapshot)
             exploration_bonus = self._exploration_bonus(candidate)
             complexity_cost = max(
                 float(objective_vector.complexity_cost),
                 min(1.0, float(signature.complexity) / 20.0),
             )
+            prepared_inputs.append(
+                {
+                    "candidate": candidate,
+                    "family_score": float(family_score),
+                    "novelty_score": float(novelty_score),
+                    "signature": signature,
+                    "diversity_score": float(diversity_score),
+                    "objective_vector": objective_vector,
+                    "duplicate_risk": float(duplicate_risk),
+                    "crowding_penalty": float(crowding_penalty),
+                    "regime_fit": float(regime_fit),
+                    "field_score": float(field_score),
+                    "heuristic_predicted_quality": float(heuristic_predicted_quality),
+                    "family_diversity": float(family_diversity),
+                    "exploration_bonus": float(exploration_bonus),
+                    "complexity_cost": float(complexity_cost),
+                    "meta_model_input": MetaModelService.feature_input_from_candidate(
+                        candidate=candidate,
+                        structural_signature=signature,
+                        effective_regime_key=effective_regime_key or snapshot.regime_key,
+                        field_score=field_score,
+                        novelty_score=novelty_score,
+                        family_diversity=family_diversity,
+                        duplicate_risk=duplicate_risk,
+                        crowding_penalty=crowding_penalty,
+                        regime_fit=regime_fit,
+                        heuristic_predicted_quality=heuristic_predicted_quality,
+                    ),
+                }
+            )
+        meta_predictions = self._meta_model_predictions(
+            feature_inputs=[
+                item["meta_model_input"]
+                for item in prepared_inputs
+                if isinstance(item.get("meta_model_input"), MetaModelFeatureInput)
+            ],
+            run_id=run_id,
+            round_index=round_index,
+            effective_regime_key=effective_regime_key or snapshot.regime_key,
+        )
+        for item in prepared_inputs:
+            candidate = item["candidate"]
+            assert isinstance(candidate, AlphaCandidate)
+            objective_vector = item["objective_vector"]
+            assert isinstance(objective_vector, ObjectiveVector)
+            signature = item["signature"]
+            assert isinstance(signature, StructuralSignature)
+            heuristic_predicted_quality = float(item["heuristic_predicted_quality"])
+            meta_prediction = meta_predictions.get(candidate.alpha_id)
+            predicted_quality = (
+                float(meta_prediction.blended_predicted_quality)
+                if meta_prediction is not None
+                else heuristic_predicted_quality
+            )
             weights = self.config.pre_sim
             composite_score = (
                 weights.predicted_quality * predicted_quality
-                + weights.novelty * novelty_score
-                + weights.family_diversity * family_diversity
-                + weights.regime_fit * regime_fit
-                + weights.exploration_bonus * exploration_bonus
-                - weights.duplicate_risk * duplicate_risk
-                - weights.crowding_penalty * crowding_penalty
-                - weights.complexity_cost * complexity_cost
+                + weights.novelty * float(item["novelty_score"])
+                + weights.family_diversity * float(item["family_diversity"])
+                + weights.regime_fit * float(item["regime_fit"])
+                + weights.exploration_bonus * float(item["exploration_bonus"])
+                - weights.duplicate_risk * float(item["duplicate_risk"])
+                - weights.crowding_penalty * float(item["crowding_penalty"])
+                - weights.complexity_cost * float(item["complexity_cost"])
             )
             breakdown = SelectionBreakdown(
                 score_stage="pre_sim",
                 composite_score=float(composite_score),
                 components={
                     "predicted_quality": float(predicted_quality),
-                    "novelty": float(novelty_score),
-                    "family_diversity": float(family_diversity),
-                    "regime_fit": float(regime_fit),
-                    "exploration_bonus": float(exploration_bonus),
-                    "duplicate_risk": float(duplicate_risk),
-                    "crowding_penalty": float(crowding_penalty),
-                    "complexity_cost": float(complexity_cost),
+                    "heuristic_predicted_quality": float(heuristic_predicted_quality),
+                    "ml_positive_outcome_prob": float(meta_prediction.ml_positive_outcome_prob if meta_prediction else 0.0),
+                    "blended_predicted_quality": float(predicted_quality),
+                    "meta_model_train_rows": int(meta_prediction.train_rows if meta_prediction else 0),
+                    "meta_model_positive_rows": int(meta_prediction.positive_rows if meta_prediction else 0),
+                    "meta_model_used": 1.0 if (meta_prediction is not None and meta_prediction.used) else 0.0,
+                    "field_score": float(item["field_score"]),
+                    "novelty": float(item["novelty_score"]),
+                    "family_diversity": float(item["family_diversity"]),
+                    "regime_fit": float(item["regime_fit"]),
+                    "exploration_bonus": float(item["exploration_bonus"]),
+                    "duplicate_risk": float(item["duplicate_risk"]),
+                    "crowding_penalty": float(item["crowding_penalty"]),
+                    "complexity_cost": float(item["complexity_cost"]),
                 },
                 reason_codes=self._pre_sim_reason_codes(
                     candidate=candidate,
-                    duplicate_risk=duplicate_risk,
+                    duplicate_risk=float(item["duplicate_risk"]),
                     crowding_score=crowding_scores.get(candidate.alpha_id),
-                    exploration_bonus=exploration_bonus,
+                    exploration_bonus=float(item["exploration_bonus"]),
                 ),
             )
             memory_context = candidate.generation_metadata.get("memory_context")
@@ -124,20 +192,26 @@ class SelectionService:
             if case_snapshot is not None and case_snapshot.blend is not None:
                 memory_context["case_blend"] = case_snapshot.blend.to_dict()
             candidate.generation_metadata["selection_objectives"] = objective_vector.to_dict()
-            candidate.generation_metadata["duplicate_risk"] = duplicate_risk
-            candidate.generation_metadata["crowding_penalty"] = crowding_penalty
-            candidate.generation_metadata["regime_fit"] = regime_fit
+            candidate.generation_metadata["duplicate_risk"] = float(item["duplicate_risk"])
+            candidate.generation_metadata["crowding_penalty"] = float(item["crowding_penalty"])
+            candidate.generation_metadata["regime_fit"] = float(item["regime_fit"])
+            candidate.generation_metadata["heuristic_predicted_quality"] = float(heuristic_predicted_quality)
+            candidate.generation_metadata["ml_positive_outcome_prob"] = float(
+                meta_prediction.ml_positive_outcome_prob if meta_prediction else 0.0
+            )
+            candidate.generation_metadata["blended_predicted_quality"] = float(predicted_quality)
+            candidate.generation_metadata["meta_model_used"] = bool(meta_prediction.used) if meta_prediction else False
             candidate.generation_metadata["pre_sim_composite_score"] = float(composite_score)
             candidate_score = CandidateScore(
                 candidate=candidate,
                 objective_vector=objective_vector,
                 local_heuristic_score=float(predicted_quality),
-                novelty_score=float(novelty_score),
-                family_score=float(family_score),
-                diversity_score=float(diversity_score),
-                duplicate_risk=float(duplicate_risk),
-                crowding_penalty=float(crowding_penalty),
-                regime_fit=float(regime_fit),
+                novelty_score=float(item["novelty_score"]),
+                family_score=float(item["family_score"]),
+                diversity_score=float(item["diversity_score"]),
+                duplicate_risk=float(item["duplicate_risk"]),
+                crowding_penalty=float(item["crowding_penalty"]),
+                regime_fit=float(item["regime_fit"]),
                 composite_score=float(composite_score),
                 structural_signature=signature,
                 reason_codes=breakdown.reason_codes,
@@ -448,6 +522,23 @@ class SelectionService:
             diversity_score=item.diversity_score,
             exploration_candidate=self._exploration_bonus(item.candidate) > 0.0,
             rationale=item.ranking_rationale,
+        )
+
+    def _meta_model_predictions(
+        self,
+        *,
+        feature_inputs: list[MetaModelFeatureInput],
+        run_id: str,
+        round_index: int,
+        effective_regime_key: str,
+    ) -> dict[str, object]:
+        if self.meta_model_service is None or not feature_inputs:
+            return {}
+        return self.meta_model_service.score_candidates(
+            run_id=run_id,
+            round_index=round_index,
+            effective_regime_key=effective_regime_key,
+            feature_inputs=feature_inputs,
         )
 
     def _with_ranked_rationale(self, score: CandidateScore, ranked: RankedItem[CandidateScore]) -> CandidateScore:

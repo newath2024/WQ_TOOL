@@ -262,6 +262,7 @@ def _build_research_context(
         region=region_learning_context.region,
         legacy_regime_key=region_learning_context.regime_key,
         global_regime_key=region_learning_context.global_regime_key,
+        learned_config=config.adaptive_generation.learned_regime,
     )
     score_weights = FieldScoreWeights(
         coverage=float(config.generation.field_score_weights.get("coverage", 0.50)),

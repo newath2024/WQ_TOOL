@@ -125,6 +125,25 @@ adaptive_generation:
     min_local_case_samples: 10
     full_local_case_samples: 50
     allow_global_parent_fallback: false
+  meta_model:
+    enabled: true
+    rollout_mode: blend
+    target: positive_outcome
+    model_type: logistic_regression
+    blend_weight: 0.20
+    min_train_rows: 500
+    min_positive_rows: 50
+    lookback_rounds: 1500
+    use_cross_run_history: true
+  learned_regime:
+    enabled: true
+    model_type: minibatch_kmeans
+    cluster_count: 6
+    history_window: 252
+    feature_window: 63
+    min_train_windows: 120
+    confidence_floor: 0.35
+    tsfresh_profile: minimal
 
 simulation:
   delay_mode: d1

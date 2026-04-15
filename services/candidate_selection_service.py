@@ -10,6 +10,7 @@ from memory.case_memory import CaseMemoryService, CaseMemorySnapshot, ObjectiveV
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.crowding_service import CrowdingService
 from services.duplicate_service import DuplicateService
+from services.meta_model_service import MetaModelService
 from services.models import (
     CandidateScore,
     CrowdingScore,
@@ -66,6 +67,9 @@ class CandidateSelectionService:
         case_snapshot: CaseMemorySnapshot | None = None,
         crowding_scores: dict[str, CrowdingScore] | None = None,
         dedup_result: DedupBatchResult | None = None,
+        run_id: str = "",
+        round_index: int = 0,
+        effective_regime_key: str = "",
     ) -> list[CandidateScore]:
         return self.selection_service.score_pre_sim_candidates(
             list(candidates),
@@ -75,6 +79,9 @@ class CandidateSelectionService:
             case_snapshot=case_snapshot,
             crowding_scores=crowding_scores,
             dedup_result=dedup_result,
+            run_id=run_id,
+            round_index=round_index,
+            effective_regime_key=effective_regime_key,
         )
 
     def run_pre_sim_pipeline(
@@ -132,6 +139,9 @@ class CandidateSelectionService:
             case_snapshot=case_snapshot,
             crowding_scores=crowding_scores,
             dedup_result=dedup_result,
+            run_id=run_id,
+            round_index=round_index,
+            effective_regime_key=effective_regime_key,
         )
         selected, archived, selection_decisions = self.selection_service.select_pre_sim(
             scored,
@@ -400,6 +410,10 @@ class CandidateSelectionService:
             config=self.adaptive_config.selection,
             memory_service=self.memory_service,
             case_memory_service=self.case_memory_service,
+            meta_model_service=MetaModelService(
+                self.repository,
+                config=self.adaptive_config.meta_model,
+            ),
         )
         self.duplicate_service = (
             DuplicateService(
