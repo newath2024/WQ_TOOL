@@ -241,6 +241,8 @@ def test_extract_invalid_field_from_rejection_parses_supported_errors() -> None:
     assert extract_invalid_field_from_rejection('Attempted to use unknown variable "beta".') == "beta"
     assert extract_invalid_field_from_rejection("Invalid data field anl46_indicator") == "anl46_indicator"
     assert extract_invalid_field_from_rejection("poll_timeout") is None
+    assert extract_invalid_field_from_rejection("poll_timeout_live") is None
+    assert extract_invalid_field_from_rejection("poll_timeout_after_downtime") is None
 
 
 def test_brain_result_store_lists_invalid_generation_fields_by_profile() -> None:
@@ -272,6 +274,18 @@ def test_brain_result_store_lists_invalid_generation_fields_by_profile() -> None
             run_id=environment.context.run_id,
             job_id="job-timeout",
             rejection_reason="poll_timeout",
+        )
+        _save_result(
+            repository,
+            run_id=environment.context.run_id,
+            job_id="job-timeout-live",
+            rejection_reason="poll_timeout_live",
+        )
+        _save_result(
+            repository,
+            run_id=environment.context.run_id,
+            job_id="job-timeout-downtime",
+            rejection_reason="poll_timeout_after_downtime",
         )
         _save_result(
             repository,

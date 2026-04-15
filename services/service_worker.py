@@ -524,21 +524,25 @@ class ServiceWorker:
             )
 
         recent_fail_rate = self._recent_job_failure_rate(runtime.service_run_id)
+        recent_live_timeout_rate = self._recent_live_timeout_rate(runtime.service_run_id)
         normal_count = min(
             self.config.loop.simulation_batch_size,
             available_slots,
             len(selected_candidates),
         )
         adjusted_count = normal_count
-        if recent_fail_rate > 0.8 and normal_count > 3:
-            adjusted_count = max(3, normal_count // 2)  # floor at 3 to avoid throughput collapse
-        elif recent_fail_rate > 0.5 and normal_count > 3:
-            adjusted_count = max(3, normal_count * 2 // 3)
+        if recent_live_timeout_rate >= 0.4 and normal_count > 2:
+            adjusted_count = min(adjusted_count, 2)
+        elif recent_fail_rate > 0.8 and normal_count > 2:
+            adjusted_count = max(2, normal_count // 2)
+        elif recent_fail_rate > 0.5 and normal_count > 2:
+            adjusted_count = max(2, normal_count * 2 // 3)
         selected_scores = selected_scores[:adjusted_count]
         selected_candidates = [item.candidate for item in selected_scores]
         logger.info(
-            "Adaptive submission: recent_fail_rate=%.2f, current_pending=%s, available_slots=%s, effective_pending_cap=%s, adjusted_count=%s",
+            "Adaptive submission: recent_fail_rate=%.2f recent_live_timeout_rate=%.2f current_pending=%s available_slots=%s effective_pending_cap=%s adjusted_count=%s",
             recent_fail_rate,
+            recent_live_timeout_rate,
             current_pending,
             available_slots,
             effective_pending_cap,
@@ -559,6 +563,7 @@ class ServiceWorker:
             generated_count=len(candidates),
             validated_count=batch_result.validated_count or len(candidates),
             submitted_count=batch.submitted_count,
+            mutated_children_count=batch_result.mutated_children_count,
             status_override=batch.status,
             note_overrides={
                 "archived_count": batch_result.archived_count,
@@ -1384,6 +1389,7 @@ class ServiceWorker:
         validated_count: int | None = None,
         submitted_count: int | None = None,
         selected_for_mutation_count: int | None = None,
+        mutated_children_count: int | None = None,
         status_override: str | None = None,
         note_overrides: dict[str, object] | None = None,
     ) -> None:
@@ -1439,6 +1445,9 @@ class ServiceWorker:
                 run_id=run_id,
                 candidate_ids=[submission.candidate_id for submission in submissions if submission.candidate_id],
             )
+        mutated_total = mutated_children_count
+        if mutated_total is None:
+            mutated_total = existing.mutated_children_count if existing is not None else 0
 
         self.repository.brain_results.upsert_closed_loop_round(
             ClosedLoopRoundRecord(
@@ -1450,7 +1459,7 @@ class ServiceWorker:
                 submitted_count=int(submitted_total or 0),
                 completed_count=int(terminal_submission_count),
                 selected_for_mutation_count=int(selected_total or 0),
-                mutated_children_count=existing.mutated_children_count if existing is not None else 0,
+                mutated_children_count=int(mutated_total or 0),
                 summary_json=json.dumps(summary_payload, sort_keys=True),
                 created_at=existing.created_at if existing is not None else timestamp,
                 updated_at=timestamp,
@@ -1527,6 +1536,38 @@ class ServiceWorker:
         if total_jobs <= 0:
             return 0.0
         return float(failed_jobs) / float(total_jobs)
+
+    def _recent_live_timeout_rate(self, run_id: str, *, lookback_batches: int = 10) -> float:
+        completed_batches = self.repository.submissions.list_batches_by_status(
+            run_id=run_id,
+            statuses=("completed",),
+        )
+        if not completed_batches:
+            return 0.0
+        latest_batches = sorted(
+            completed_batches,
+            key=lambda item: (item.created_at, item.batch_id),
+            reverse=True,
+        )[:lookback_batches]
+        live_timeout_jobs = 0
+        total_jobs = 0
+        for batch in latest_batches:
+            submissions = self.repository.submissions.list_submissions(
+                run_id=run_id,
+                batch_id=batch.batch_id,
+            )
+            if not submissions:
+                continue
+            total_jobs += len(submissions)
+            live_timeout_jobs += sum(
+                1
+                for submission in submissions
+                if submission.status == "timeout"
+                and str(submission.service_failure_reason or submission.error_message or "") == "poll_timeout_live"
+            )
+        if total_jobs <= 0:
+            return 0.0
+        return float(live_timeout_jobs) / float(total_jobs)
 
     def _update_persona_confirmation_state(
         self,

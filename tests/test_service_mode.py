@@ -911,8 +911,8 @@ def test_service_worker_caps_submission_count_when_recent_fail_rate_exceeds_half
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 3
-    assert len(adapter.submit_calls) == 3
+    assert outcome.submitted_count == 2
+    assert len(adapter.submit_calls) == 2
 
 
 def test_service_worker_caps_submission_count_at_one_when_recent_fail_rate_is_extreme() -> None:
@@ -953,8 +953,52 @@ def test_service_worker_caps_submission_count_at_one_when_recent_fail_rate_is_ex
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 3
-    assert len(adapter.submit_calls) == 3
+    assert outcome.submitted_count == 2
+    assert len(adapter.submit_calls) == 2
+
+
+def test_service_worker_caps_submission_count_at_two_when_recent_live_timeout_rate_is_high() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 4
+        config.service.max_pending_jobs = 5
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-adaptive-live-timeout"
+        _seed_run(repository, run_id)
+        _seed_completed_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-a",
+            statuses=("timeout", "timeout", "timeout"),
+            created_at=datetime(2026, 1, 1, tzinfo=UTC),
+            timeout_reason="poll_timeout_live",
+        )
+        _seed_completed_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-b",
+            statuses=("completed", "timeout", "timeout"),
+            created_at=datetime(2026, 1, 2, tzinfo=UTC),
+            timeout_reason="poll_timeout_live",
+        )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(4))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker._submit_new_batch(runtime=_runtime_record(run_id=run_id), tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.submitted_count == 2
+    assert len(adapter.submit_calls) == 2
 
 
 def test_service_worker_keeps_existing_normal_batch_cap_when_history_is_clean() -> None:
@@ -1140,6 +1184,40 @@ def test_service_worker_syncs_closed_loop_rounds_for_service_batches() -> None:
     assert completed_round.status == "completed"
     assert completed_round.completed_count == 1
     assert json.loads(completed_round.summary_json)["terminal_submission_count"] == 1
+
+
+def test_service_worker_preserves_mutated_children_count_for_service_batches() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 1
+        config.service.max_pending_jobs = 1
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-service-mutation-sync"
+        _seed_run(repository, run_id)
+        batch_service = FakeBatchPreparationService(_batch_result(_service_candidates(1), mutated_children_count=2))
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=batch_service,
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        submitted_round = repository.brain_results.get_closed_loop_round(run_id, 1)
+        worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=2)
+        completed_round = repository.brain_results.get_closed_loop_round(run_id, 1)
+    finally:
+        repository.close()
+
+    assert submitted_round is not None
+    assert submitted_round.mutated_children_count == 2
+    assert completed_round is not None
+    assert completed_round.mutated_children_count == 2
 
 
 def test_service_worker_skips_new_submission_when_stop_requested() -> None:
@@ -1463,10 +1541,16 @@ def test_service_runner_suppresses_noop_progress_events_after_first_empty_poll(t
         summary = runner.run(max_ticks=2)
         log_path = tmp_path / "progress" / f"{run_id}.jsonl"
         progress_rows = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+        runtime = repository.service_runtime.get_state(config.service.lock_name)
+        run = repository.get_run(run_id)
     finally:
         repository.close()
 
-    assert summary.status == "service_running"
+    assert summary.status == "service_stopped_pending"
+    assert runtime is not None
+    assert runtime.status == "service_stopped_pending"
+    assert run is not None
+    assert run.finished_at is None
     assert sum(1 for row in progress_rows if row["event"] == "service_tick_started") == 1
     assert sum(1 for row in progress_rows if row["event"] == "service_sleeping") == 1
     assert sum(1 for row in progress_rows if row["event"] == "service_tick_completed") == 2
@@ -2637,6 +2721,7 @@ def _seed_completed_batch(
     batch_id: str,
     statuses: tuple[str, ...],
     created_at: datetime,
+    timeout_reason: str | None = None,
 ) -> None:
     created_at_iso = created_at.isoformat()
     repository.submissions.upsert_batch(
@@ -2671,7 +2756,8 @@ def _seed_completed_batch(
                 completed_at=created_at_iso,
                 export_path=None,
                 raw_submission_json="{}",
-                error_message=None,
+                error_message=timeout_reason if status == "timeout" else None,
+                service_failure_reason=timeout_reason if status == "timeout" else None,
             )
             for index, status in enumerate(statuses, start=1)
         ]
@@ -2698,7 +2784,11 @@ def _service_candidates(count: int) -> list[AlphaCandidate]:
     ]
 
 
-def _batch_result(candidates: list[AlphaCandidate]) -> BatchPreparationResult:
+def _batch_result(
+    candidates: list[AlphaCandidate],
+    *,
+    mutated_children_count: int = 0,
+) -> BatchPreparationResult:
     memory_service = PatternMemoryService()
     selected = []
     for candidate in candidates:
@@ -2727,6 +2817,7 @@ def _batch_result(candidates: list[AlphaCandidate]) -> BatchPreparationResult:
         regime_key="service-regime",
         validated_count=len(candidates),
         archived_count=0,
+        mutated_children_count=mutated_children_count,
         generation_stage_metrics={},
     )
 

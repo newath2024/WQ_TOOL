@@ -130,6 +130,7 @@ class BatchPreparationResult:
     regime_key: str
     validated_count: int = 0
     archived_count: int = 0
+    mutated_children_count: int = 0
     generation_stage_metrics: dict[str, Any] = field(default_factory=dict)
 
 

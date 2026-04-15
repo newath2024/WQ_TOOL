@@ -273,16 +273,21 @@ class ServiceRunner:
         finally:
             runtime = self.repository.service_runtime.get_state(self.config.service.lock_name) or runtime
             pending_on_shutdown = int(runtime.pending_job_count or 0)
-            if self.stop_requested:
-                stopped_status = "service_stopped_pending" if pending_on_shutdown > 0 else "service_stopped"
+            if pending_on_shutdown > 0:
+                stopped_status = "service_stopped_pending"
+                finished = False
+            elif self.stop_requested:
+                stopped_status = "service_stopped"
+                finished = True
             else:
                 stopped_status = final_status
+                finished = True
             self.heartbeat.record_shutdown(runtime=runtime, status=stopped_status)
             runtime_lock.release(status=stopped_status)
             self.repository.update_run_status(
                 environment.context.run_id,
                 stopped_status,
-                finished=not (self.stop_requested and pending_on_shutdown > 0),
+                finished=finished,
             )
             append_progress_event(
                 self.config,

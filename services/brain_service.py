@@ -336,7 +336,7 @@ class BrainService:
 
         timeout_results = self.timeout_pending_batch_jobs(
             current.batch_id,
-            reason="poll_timeout",
+            reason="poll_timeout_live",
             updated_at=datetime.now(UTC).isoformat(),
         )
         for result in timeout_results:
@@ -394,7 +394,17 @@ class BrainService:
                 and _is_same_or_after(now, timeout_deadline)
             ):
                 logger.warning("Marking job %s as timeout after %.1fs", job.job_id, elapsed_seconds)
-                results.append(self._timeout_job(job, updated_at=now, reason="poll_timeout"))
+                results.append(
+                    self._timeout_job(
+                        job,
+                        updated_at=now,
+                        reason=self._classify_poll_timeout_reason(
+                            submission=submission,
+                            now=now,
+                            config=config,
+                        ),
+                    )
+                )
                 continue
 
             try:
@@ -1012,6 +1022,20 @@ class BrainService:
         if baseline is None or seconds in (None, 0):
             return baseline
         return _shift_iso(baseline, float(seconds))
+
+    def _classify_poll_timeout_reason(
+        self,
+        *,
+        submission: SubmissionRecord,
+        now: str,
+        config: AppConfig,
+    ) -> str:
+        poll_reference = submission.next_poll_after or submission.last_polled_at or submission.submitted_at
+        overdue_seconds = _seconds_since(poll_reference, now)
+        downtime_threshold = max(float(config.service.poll_interval_seconds) * 2.0, 30.0)
+        if overdue_seconds > downtime_threshold:
+            return "poll_timeout_after_downtime"
+        return "poll_timeout_live"
 
     def _prune_invalid_field_metadata(self, reason: str | None, *, run_id: str) -> None:
         field_name = extract_invalid_field_from_rejection(reason)

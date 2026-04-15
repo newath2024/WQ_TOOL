@@ -543,7 +543,35 @@ def test_brain_service_marks_timeout_when_jobs_never_finish(tmp_path: Path) -> N
         repository.close()
 
     assert batch.results[0].status == "timeout"
-    assert batch.results[0].rejection_reason == "poll_timeout"
+    assert batch.results[0].rejection_reason == "poll_timeout_live"
+
+
+def test_brain_service_marks_timeout_after_downtime_when_deadline_is_already_stale(tmp_path: Path) -> None:
+    config = load_config("config/dev.yaml")
+    config.storage.path = ":memory:"
+    config.service.poll_interval_seconds = 5
+    repository = SQLiteRepository(":memory:")
+    try:
+        environment = _init_environment(repository, config, "run-brain-timeout-downtime")
+        service = BrainService(repository, config.brain, adapter=NeverCompletesAdapter())
+        candidate = _candidate("alpha-1", "rank(close)")
+        batch = service.submit_candidates([candidate], config=config, environment=environment, round_index=1, batch_size=1)
+        submission = repository.submissions.get_submission(batch.jobs[0].job_id)
+        assert submission is not None
+        repository.submissions.update_submission_runtime(
+            submission.job_id,
+            updated_at=submission.updated_at,
+            next_poll_after="2000-01-01T00:00:00+00:00",
+            timeout_deadline_at="2000-01-01T00:00:30+00:00",
+        )
+
+        refreshed = service.poll_batch_once(batch.batch_id, config=config, environment=environment)
+    finally:
+        repository.close()
+
+    assert len(refreshed.results) == 1
+    assert refreshed.results[0].status == "timeout"
+    assert refreshed.results[0].rejection_reason == "poll_timeout_after_downtime"
 
 
 def test_brain_service_recover_jobs_ignores_local_timeout_deadline_and_finalizes_terminal_results(tmp_path: Path) -> None:
