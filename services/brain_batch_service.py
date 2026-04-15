@@ -208,6 +208,8 @@ class BrainBatchService:
             candidates=tuple(candidates),
             selected=tuple(pre_sim_result.selected),
             regime_key=active_regime_key,
+            validated_count=int(pre_sim_result.stage_metrics.get("kept_after_dedup", len(candidates))),
+            archived_count=len(pre_sim_result.archived),
             generation_stage_metrics=generation_metrics,
         )
 

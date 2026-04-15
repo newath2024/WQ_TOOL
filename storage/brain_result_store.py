@@ -195,6 +195,13 @@ class BrainResultStore:
         ).fetchone()
         return ClosedLoopRunRecord(**dict(row)) if row else None
 
+    def get_closed_loop_round(self, run_id: str, round_index: int) -> ClosedLoopRoundRecord | None:
+        row = self.connection.execute(
+            "SELECT * FROM closed_loop_rounds WHERE run_id = ? AND round_index = ?",
+            (run_id, round_index),
+        ).fetchone()
+        return ClosedLoopRoundRecord(**dict(row)) if row else None
+
     def upsert_closed_loop_round(self, record: ClosedLoopRoundRecord) -> None:
         self.connection.execute(
             """

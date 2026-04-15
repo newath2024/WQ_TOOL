@@ -1099,6 +1099,49 @@ def test_service_worker_submits_on_next_idle_tick_after_pending_batch_completes(
     assert len(adapter.submit_calls) == 2
 
 
+def test_service_worker_syncs_closed_loop_rounds_for_service_batches() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 1
+        config.service.max_pending_jobs = 1
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-service-round-sync"
+        _seed_run(repository, run_id)
+        batch_service = FakeBatchPreparationService(_batch_result(_service_candidates(1)))
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=batch_service,
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        submitted = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        submitted_round = repository.brain_results.get_closed_loop_round(run_id, 1)
+        polled = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=2)
+        completed_round = repository.brain_results.get_closed_loop_round(run_id, 1)
+    finally:
+        repository.close()
+
+    assert submitted.status == "running"
+    assert submitted_round is not None
+    assert submitted_round.status == "submitted"
+    assert submitted_round.generated_count == 1
+    assert submitted_round.validated_count == 1
+    assert submitted_round.submitted_count == 1
+    assert submitted_round.completed_count == 0
+    assert json.loads(submitted_round.summary_json)["source"] == "service"
+    assert polled.status == "idle"
+    assert completed_round is not None
+    assert completed_round.status == "completed"
+    assert completed_round.completed_count == 1
+    assert json.loads(completed_round.summary_json)["terminal_submission_count"] == 1
+
+
 def test_service_worker_skips_new_submission_when_stop_requested() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -1458,16 +1501,20 @@ def test_service_runner_releases_lock_on_graceful_shutdown() -> None:
 
         summary = runner.run(max_ticks=2)
         runtime = repository.service_runtime.get_state(config.service.lock_name)
+        run = repository.get_run(run_id)
     finally:
         repository.close()
 
-    assert summary.status == "service_stopped"
+    assert summary.status == "service_stopped_pending"
     assert runtime is not None
     assert runtime.owner_token == ""
-    assert runtime.status == "service_stopped"
+    assert runtime.status == "service_stopped_pending"
+    assert runtime.pending_job_count == 1
     assert runtime.persona_url is None
     assert runtime.persona_wait_started_at is None
     assert runtime.persona_last_notification_at is None
+    assert run is not None
+    assert run.finished_at is None
 
 
 def test_service_runner_interruptible_sleep_stops_without_waiting_full_interval() -> None:
@@ -2678,6 +2725,8 @@ def _batch_result(candidates: list[AlphaCandidate]) -> BatchPreparationResult:
         candidates=tuple(candidates),
         selected=tuple(selected),
         regime_key="service-regime",
+        validated_count=len(candidates),
+        archived_count=0,
         generation_stage_metrics={},
     )
 

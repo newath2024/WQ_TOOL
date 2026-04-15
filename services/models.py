@@ -128,6 +128,8 @@ class BatchPreparationResult:
     candidates: tuple[AlphaCandidate, ...]
     selected: tuple["CandidateScore", ...]
     regime_key: str
+    validated_count: int = 0
+    archived_count: int = 0
     generation_stage_metrics: dict[str, Any] = field(default_factory=dict)
 
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import time
+from collections import Counter
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
@@ -19,7 +20,13 @@ from services.models import CommandEnvironment, ServiceTickOutcome, SimulationRe
 from services.notification_manager import NotificationManager
 from services.progress_log import append_progress_event
 from services.session_manager import SessionManager
-from storage.models import BrainResultRecord, ServiceRuntimeRecord, SubmissionBatchRecord, SubmissionRecord
+from storage.models import (
+    BrainResultRecord,
+    ClosedLoopRoundRecord,
+    ServiceRuntimeRecord,
+    SubmissionBatchRecord,
+    SubmissionRecord,
+)
 from storage.repository import SQLiteRepository
 
 
@@ -399,6 +406,11 @@ class ServiceWorker:
                     failed_results.append(result)
             if refreshed.status == "completed":
                 self._learn_from_completed_batch(run_id=runtime.service_run_id, batch_id=batch_id)
+            self._sync_service_round(
+                run_id=runtime.service_run_id,
+                batch_id=batch_id,
+                status_override=refreshed.status,
+            )
 
         pending_count = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
         next_active_batch = None
@@ -541,6 +553,18 @@ class ServiceWorker:
             batch_size=adjusted_count,
         )
         submit_batch_ms = (time.perf_counter() - submit_started) * 1000.0
+        self._sync_service_round(
+            run_id=runtime.service_run_id,
+            batch_id=batch.batch_id,
+            generated_count=len(candidates),
+            validated_count=batch_result.validated_count or len(candidates),
+            submitted_count=batch.submitted_count,
+            status_override=batch.status,
+            note_overrides={
+                "archived_count": batch_result.archived_count,
+                "generation_stage_metrics": batch_result.generation_stage_metrics,
+            },
+        )
         pending_count = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
         logger.info(
             "Submitted batch=%s generated=%s submitted=%s pending=%s",
@@ -1234,6 +1258,11 @@ class ServiceWorker:
             results=[self._simulation_result_from_record(result) for result in results],
             selected_parent_ids=selected_parent_ids,
         )
+        self._sync_service_round(
+            run_id=run_id,
+            batch_id=batch_id,
+            selected_for_mutation_count=len(selected_parent_ids),
+        )
 
     def _reconcile_completed_batches(self, *, run_id: str) -> int:
         reconciled = 0
@@ -1345,6 +1374,106 @@ class ServiceWorker:
         ).fetchone()
         learned_total = int(learned_rows["total"] or 0)
         return learned_total < len(candidate_ids)
+
+    def _sync_service_round(
+        self,
+        *,
+        run_id: str,
+        batch_id: str,
+        generated_count: int | None = None,
+        validated_count: int | None = None,
+        submitted_count: int | None = None,
+        selected_for_mutation_count: int | None = None,
+        status_override: str | None = None,
+        note_overrides: dict[str, object] | None = None,
+    ) -> None:
+        batch = self.repository.submissions.get_batch(batch_id)
+        if batch is None:
+            return
+        round_index = int(batch.round_index)
+        existing = self.repository.brain_results.get_closed_loop_round(run_id, round_index)
+        submissions = self.repository.submissions.list_submissions(run_id=run_id, batch_id=batch_id)
+        terminal_statuses = {"completed", "failed", "rejected", "timeout"}
+        terminal_submission_count = sum(1 for submission in submissions if submission.status in terminal_statuses)
+        timestamp = datetime.now(UTC).isoformat()
+
+        summary_payload: dict[str, object] = {}
+        if existing is not None and existing.summary_json:
+            try:
+                decoded = json.loads(existing.summary_json)
+            except json.JSONDecodeError:
+                decoded = {}
+            if isinstance(decoded, dict):
+                summary_payload.update(decoded)
+        summary_payload.update(
+            {
+                "source": "service",
+                "batch_id": batch.batch_id,
+                "backend": batch.backend,
+                "export_path": batch.export_path,
+                "service_status_reason": batch.service_status_reason,
+                "candidate_count": int(batch.candidate_count or 0),
+                "terminal_submission_count": terminal_submission_count,
+                "submission_status_counts": dict(
+                    Counter(submission.status for submission in submissions if submission.status)
+                ),
+            }
+        )
+        if note_overrides:
+            summary_payload.update(note_overrides)
+
+        generated_total = generated_count
+        if generated_total is None:
+            generated_total = existing.generated_count if existing is not None else int(batch.candidate_count or 0)
+        validated_total = validated_count
+        if validated_total is None:
+            validated_total = existing.validated_count if existing is not None else generated_total
+        submitted_total = submitted_count
+        if submitted_total is None:
+            submitted_total = len(submissions) or (
+                existing.submitted_count if existing is not None else int(batch.candidate_count or 0)
+            )
+        selected_total = selected_for_mutation_count
+        if selected_total is None:
+            selected_total = existing.selected_for_mutation_count if existing is not None else self._round_selected_parent_count(
+                run_id=run_id,
+                candidate_ids=[submission.candidate_id for submission in submissions if submission.candidate_id],
+            )
+
+        self.repository.brain_results.upsert_closed_loop_round(
+            ClosedLoopRoundRecord(
+                run_id=run_id,
+                round_index=round_index,
+                status=status_override or batch.status,
+                generated_count=int(generated_total or 0),
+                validated_count=int(validated_total or 0),
+                submitted_count=int(submitted_total or 0),
+                completed_count=int(terminal_submission_count),
+                selected_for_mutation_count=int(selected_total or 0),
+                mutated_children_count=existing.mutated_children_count if existing is not None else 0,
+                summary_json=json.dumps(summary_payload, sort_keys=True),
+                created_at=existing.created_at if existing is not None else timestamp,
+                updated_at=timestamp,
+            )
+        )
+
+    def _round_selected_parent_count(self, *, run_id: str, candidate_ids: list[str]) -> int:
+        normalized_candidate_ids = tuple(dict.fromkeys(candidate_id for candidate_id in candidate_ids if candidate_id))
+        if not normalized_candidate_ids:
+            return 0
+        placeholders = ", ".join("?" for _ in normalized_candidate_ids)
+        row = self.repository.connection.execute(
+            f"""
+            SELECT COUNT(DISTINCT alpha_id) AS total
+            FROM alpha_history
+            WHERE run_id = ?
+              AND metric_source = 'external_brain'
+              AND selected = 1
+              AND alpha_id IN ({placeholders})
+            """,
+            (run_id, *normalized_candidate_ids),
+        ).fetchone()
+        return int(row["total"] or 0) if row is not None else 0
 
     @staticmethod
     def _should_probe_session_during_cooldown(runtime: ServiceRuntimeRecord) -> bool:
