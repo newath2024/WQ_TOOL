@@ -102,7 +102,7 @@ def test_validator_maps_operator_arity_mismatch_reason_code() -> None:
 def test_validator_maps_unsupported_combination_reason_code() -> None:
     registry = build_registry(["group_neutralize"])
     result = validate_expression(
-        parse_expression("group_neutralize(close, close)"),
+        parse_expression("group_neutralize(sector, sector)"),
         registry,
         {"close"},
         max_depth=4,
@@ -112,6 +112,33 @@ def test_validator_maps_unsupported_combination_reason_code() -> None:
 
     assert not result.is_valid
     assert result.primary_reason_code == "validation_unsupported_combination"
+
+
+def test_validator_rejects_non_group_field_for_group_operator_argument() -> None:
+    registry = build_registry(["group_neutralize"])
+    result = validate_expression(
+        parse_expression("group_neutralize(close, forecast_currency_tangible_book_value_per_share)"),
+        registry,
+        {"close"},
+        max_depth=4,
+        group_fields={"sector"},
+        field_types={"close": "matrix", "sector": "group"},
+        field_categories={
+            "close": "price",
+            "sector": "group",
+            "forecast_currency_tangible_book_value_per_share": "analyst",
+        },
+        exact_field_types={
+            "close": "matrix",
+            "sector": "vector",
+            "forecast_currency_tangible_book_value_per_share": "vector",
+        },
+    )
+
+    assert not result.is_valid
+    assert result.primary_reason_code == "validation_invalid_group_field"
+    assert result.detail is not None
+    assert "forecast_currency_tangible_book_value_per_share" in result.detail
 
 
 def test_validator_maps_field_type_resolution_failure_reason_code() -> None:

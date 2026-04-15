@@ -9,7 +9,8 @@ from memory.pattern_memory import PatternMemoryService
 from services.data_service import (
     load_research_context,
     persist_research_metadata,
-    resolve_generation_field_registry,
+    resolve_field_registry,
+    sanitize_generation_research_context,
 )
 from services.export_service import export_generated_alphas
 from services.models import CommandEnvironment, GenerationServiceResult
@@ -31,14 +32,21 @@ def generate_and_persist(
     existing = repository.list_existing_normalized_expressions(environment.context.run_id)
     total_count = count or (config.generation.template_count + config.generation.grammar_count)
     research_context = load_research_context(config, environment, stage="generate-data")
-    field_registry = resolve_generation_field_registry(
+    research_context, blocked_fields = sanitize_generation_research_context(
         repository,
         config,
         research_context,
         environment,
         stage="generate",
     )
-    persist_research_metadata(repository, config, environment, research_context)
+    field_registry = resolve_field_registry(config, research_context)
+    persist_research_metadata(
+        repository,
+        config,
+        environment,
+        research_context,
+        removed_field_names=blocked_fields,
+    )
 
     regime_key: str | None = None
     pattern_count = 0

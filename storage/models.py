@@ -280,6 +280,7 @@ class SubmissionRecord:
     retry_count: int = 0
     last_polled_at: str | None = None
     next_poll_after: str | None = None
+    timeout_deadline_at: str | None = None
     stuck_since: str | None = None
     service_failure_reason: str | None = None
 

@@ -361,6 +361,9 @@ class ServiceTickOutcome:
     last_error: str | None = None
     persona_url: str | None = None
     cooldown_until: str | None = None
+    poll_pending_ms: float = 0.0
+    prepare_batch_ms: float = 0.0
+    submit_batch_ms: float = 0.0
 
 
 @dataclass(slots=True, frozen=True)

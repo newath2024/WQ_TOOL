@@ -9,7 +9,8 @@ from memory.pattern_memory import PatternMemoryService
 from services.data_service import (
     load_research_context,
     persist_research_metadata,
-    resolve_generation_field_registry,
+    resolve_field_registry,
+    sanitize_generation_research_context,
 )
 from services.evaluation_service import alpha_candidate_from_record
 from services.models import CommandEnvironment, GenerationServiceResult
@@ -36,14 +37,21 @@ def mutate_and_persist(
         operator_catalog_paths=config.generation.operator_catalog_paths,
     )
     research_context = load_research_context(config, environment, stage="mutate-data")
-    field_registry = resolve_generation_field_registry(
+    research_context, blocked_fields = sanitize_generation_research_context(
         repository,
         config,
         research_context,
         environment,
         stage="mutate",
     )
-    persist_research_metadata(repository, config, environment, research_context)
+    field_registry = resolve_field_registry(config, research_context)
+    persist_research_metadata(
+        repository,
+        config,
+        environment,
+        research_context,
+        removed_field_names=blocked_fields,
+    )
 
     regime_key: str | None = None
     if config.adaptive_generation.enabled:

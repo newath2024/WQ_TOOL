@@ -9,6 +9,7 @@ from uuid import uuid4
 from adapters.brain_api_adapter import ApiEndpointConfig, BrainApiAdapter, BiometricsThrottled, PersonaVerificationRequired
 from adapters.brain_manual_adapter import BrainManualAdapter
 from adapters.simulation_adapter import SimulationAdapter
+from core.brain_rejections import extract_invalid_field_from_rejection
 from core.config import AppConfig, BrainConfig
 from core.logging import get_logger
 from generator.engine import AlphaCandidate
@@ -40,6 +41,10 @@ class BrainService:
         self.repository = repository
         self.brain_config = brain_config
         self.adapter = adapter or self._build_adapter(brain_config)
+        if self.brain_config.timeout_seconds > 0:
+            self.repository.submissions.backfill_timeout_deadlines(
+                timeout_seconds=float(self.brain_config.timeout_seconds),
+            )
 
     def simulate_candidates(
         self,
@@ -168,6 +173,7 @@ class BrainService:
                             export_path=job.export_path,
                             raw_submission_json=json.dumps(job.raw_submission, sort_keys=True),
                             error_message=job.error_message,
+                            timeout_deadline_at=self._initial_timeout_deadline(job.submitted_at),
                         )
                     ]
                 )
@@ -180,12 +186,34 @@ class BrainService:
         except Exception as exc:
             error_at = datetime.now(UTC).isoformat()
             failed_status = "failed" if not jobs else "submitting"
+            update_kwargs: dict[str, object] = {
+                "status": failed_status,
+                "updated_at": error_at,
+                "export_path": export_path,
+                "service_status_reason": f"submission_failed:{type(exc).__name__}",
+            }
+            if jobs:
+                submitted_candidate_ids = [job.candidate_id for job in jobs if job.candidate_id]
+                interrupted_sim_config = self._sim_config_for_candidate_ids(
+                    sim_config=sim_config,
+                    candidate_ids=submitted_candidate_ids,
+                )
+                notes_payload.update(
+                    {
+                        "candidate_ids": submitted_candidate_ids,
+                        "planned_candidate_count": len(selected),
+                        "submitted_candidate_count": len(submitted_candidate_ids),
+                        "submission_interrupted": True,
+                    }
+                )
+                update_kwargs.update(
+                    candidate_count=len(submitted_candidate_ids),
+                    sim_config_snapshot=json.dumps(interrupted_sim_config, sort_keys=True),
+                    notes_json=json.dumps(notes_payload, sort_keys=True),
+                )
             self.repository.submissions.update_batch_status(
                 batch_id,
-                status=failed_status,
-                updated_at=error_at,
-                export_path=export_path,
-                service_status_reason=f"submission_failed:{type(exc).__name__}",
+                **update_kwargs,
             )
             logger.exception("Batch submission interrupted for batch=%s", batch_id)
             raise
@@ -209,6 +237,25 @@ class BrainService:
             results=(),
             export_path=export_path,
         )
+
+    @staticmethod
+    def _sim_config_for_candidate_ids(
+        *,
+        sim_config: dict[str, object],
+        candidate_ids: list[str],
+    ) -> dict[str, object]:
+        candidate_id_set = set(candidate_ids)
+        updated = dict(sim_config)
+        payloads = sim_config.get("candidate_payloads")
+        if not isinstance(payloads, list):
+            updated["candidate_payloads"] = []
+            return updated
+        updated["candidate_payloads"] = [
+            dict(item)
+            for item in payloads
+            if isinstance(item, dict) and str(item.get("candidate_id") or "") in candidate_id_set
+        ]
+        return updated
 
     def _restore_simulation_config(
         self,
@@ -311,6 +358,8 @@ class BrainService:
         config: AppConfig,
         environment: CommandEnvironment,
         stuck_job_after_seconds: int | None = None,
+        ignore_timeout_deadline: bool = False,
+        job_ids: set[str] | None = None,
     ) -> BrainSimulationBatch:
         batch = self.load_batch(batch_id)
         if batch is None:
@@ -327,6 +376,8 @@ class BrainService:
         results: list[SimulationResult] = []
         now = datetime.now(UTC).isoformat()
         for job in batch.jobs:
+            if job_ids is not None and job.job_id not in job_ids:
+                continue
             if job.status not in PENDING_STATUSES:
                 continue
             submission = self.repository.submissions.get_submission(job.job_id)
@@ -336,7 +387,12 @@ class BrainService:
                 continue
 
             elapsed_seconds = _seconds_since(submission.submitted_at, now)
-            if self.brain_config.timeout_seconds > 0 and elapsed_seconds >= float(self.brain_config.timeout_seconds):
+            timeout_deadline = self._submission_timeout_deadline(submission)
+            if (
+                not ignore_timeout_deadline
+                and timeout_deadline is not None
+                and _is_same_or_after(now, timeout_deadline)
+            ):
                 logger.warning("Marking job %s as timeout after %.1fs", job.job_id, elapsed_seconds)
                 results.append(self._timeout_job(job, updated_at=now, reason="poll_timeout"))
                 continue
@@ -356,6 +412,7 @@ class BrainService:
                         retry_count=submission.retry_count,
                         last_polled_at=now,
                         next_poll_after=next_poll_after,
+                        timeout_deadline_at=self._extended_timeout_deadline(submission, delay),
                         service_failure_reason=str(exc),
                     )
                     logger.warning("Job %s polling delayed by auth: %s", job.job_id, type(exc).__name__)
@@ -373,6 +430,7 @@ class BrainService:
                     retry_count=retry_count,
                     last_polled_at=now,
                     next_poll_after=next_poll_after,
+                    timeout_deadline_at=self._extended_timeout_deadline(submission, _backoff_seconds(retry_count)),
                     service_failure_reason=str(exc),
                     error_message=str(exc),
                 )
@@ -403,29 +461,20 @@ class BrainService:
                 retry_count=submission.retry_count,
                 last_polled_at=now,
                 next_poll_after=next_poll_after,
+                timeout_deadline_at=(
+                    self._extended_timeout_deadline(submission, retry_after)
+                    if retry_after is not None
+                    else timeout_deadline
+                ),
                 stuck_since=stuck_since,
                 service_failure_reason="stuck_job_detected" if stuck_since else None,
             )
 
-        refreshed = self.load_batch(batch_id) or batch
-        if refreshed.jobs and all(job.status in TERMINAL_STATUSES or job.status == "manual_pending" for job in refreshed.jobs):
-            batch_status = "manual_pending" if all(job.status == "manual_pending" for job in refreshed.jobs) else "completed"
-        elif any(job.status in PENDING_STATUSES for job in refreshed.jobs):
-            batch_status = "running"
-        else:
-            batch_status = refreshed.status
-
-        self.repository.submissions.update_batch_status(
-            batch_id,
-            status=batch_status,
-            updated_at=now,
-            last_polled_at=now,
-        )
-        refreshed = self.load_batch(batch_id) or refreshed
+        refreshed = self._refresh_batch_status(batch_id, updated_at=now, fallback=batch)
         return BrainSimulationBatch(
             batch_id=refreshed.batch_id,
             backend=refreshed.backend,
-            status=batch_status,
+            status=refreshed.status,
             jobs=refreshed.jobs,
             results=tuple(results),
             export_path=refreshed.export_path,
@@ -440,13 +489,57 @@ class BrainService:
             if job.status in PENDING_STATUSES:
                 results.append(self._timeout_job(job, updated_at=updated_at, reason=reason))
         if results:
-            self.repository.submissions.update_batch_status(
-                batch_id,
-                status="completed",
-                updated_at=updated_at,
-                last_polled_at=updated_at,
-            )
+            self._refresh_batch_status(batch_id, updated_at=updated_at, fallback=batch)
         return results
+
+    def defer_pending_timeouts(self, *, run_id: str, seconds: float, updated_at: str | None = None) -> int:
+        return self.repository.submissions.extend_pending_timeout_deadlines(
+            run_id=run_id,
+            seconds=seconds,
+            default_timeout_seconds=float(self.brain_config.timeout_seconds),
+            updated_at=updated_at,
+        )
+
+    def recover_jobs(
+        self,
+        job_ids: list[str],
+        *,
+        config: AppConfig,
+        environment: CommandEnvironment,
+    ) -> list[SubmissionRecord]:
+        unique_job_ids = list(dict.fromkeys(job_ids))
+        submissions = [self.repository.submissions.get_submission(job_id) for job_id in unique_job_ids]
+        missing_job_ids = [
+            job_id for job_id, submission in zip(unique_job_ids, submissions, strict=True) if submission is None
+        ]
+        if missing_job_ids:
+            raise ValueError(f"Unknown submission job ids: {', '.join(missing_job_ids)}")
+
+        pending_submissions = [submission for submission in submissions if submission is not None]
+        non_pending = [submission.job_id for submission in pending_submissions if submission.status not in PENDING_STATUSES]
+        if non_pending:
+            raise ValueError(f"Recovery only supports pending jobs: {', '.join(non_pending)}")
+
+        batch_job_ids: dict[str, set[str]] = {}
+        for submission in pending_submissions:
+            batch_job_ids.setdefault(submission.batch_id, set()).add(submission.job_id)
+
+        for batch_id, scoped_job_ids in batch_job_ids.items():
+            self.poll_batch_once(
+                batch_id,
+                config=config,
+                environment=environment,
+                ignore_timeout_deadline=True,
+                job_ids=scoped_job_ids,
+            )
+
+        refreshed: list[SubmissionRecord] = []
+        for job_id in unique_job_ids:
+            submission = self.repository.submissions.get_submission(job_id)
+            if submission is None:
+                raise RuntimeError(f"Missing submission after recovery for job_id={job_id}")
+            refreshed.append(submission)
+        return refreshed
 
     def load_batch(self, batch_id: str) -> BrainSimulationBatch | None:
         batch_record = self.repository.submissions.get_batch(batch_id)
@@ -513,6 +606,7 @@ class BrainService:
                 error_message=result.rejection_reason,
                 last_polled_at=timestamp,
                 next_poll_after=None,
+                timeout_deadline_at=None,
                 service_failure_reason=None,
             )
             records.append(self.to_result_record(result=result, job=job, created_at=timestamp))
@@ -796,9 +890,11 @@ class BrainService:
             error_message=result.rejection_reason,
             last_polled_at=updated_at,
             next_poll_after=None,
+            timeout_deadline_at=None,
             service_failure_reason=None,
         )
         self.repository.brain_results.save_results([self.to_result_record(result=result, job=job, created_at=updated_at)])
+        self._prune_invalid_field_metadata(result.rejection_reason, run_id=job.run_id)
         return result
 
     def _failed_job(self, job: SimulationJob, *, updated_at: str, error_message: str) -> SimulationResult:
@@ -822,9 +918,11 @@ class BrainService:
             retry_count=self.brain_config.max_retries,
             last_polled_at=updated_at,
             next_poll_after=None,
+            timeout_deadline_at=None,
             service_failure_reason=error_message,
         )
         self.repository.brain_results.save_results([self.to_result_record(result=result, job=job, created_at=updated_at)])
+        self._prune_invalid_field_metadata(result.rejection_reason, run_id=job.run_id)
         return result
 
     def _timeout_job(self, job: SimulationJob, *, updated_at: str, reason: str) -> SimulationResult:
@@ -856,10 +954,70 @@ class BrainService:
             error_message=reason,
             last_polled_at=updated_at,
             next_poll_after=None,
+            timeout_deadline_at=None,
             service_failure_reason=reason,
         )
         self.repository.brain_results.save_results([self.to_result_record(result=result, job=job, created_at=updated_at)])
         return result
+
+    def _refresh_batch_status(
+        self,
+        batch_id: str,
+        *,
+        updated_at: str,
+        fallback: BrainSimulationBatch | None = None,
+    ) -> BrainSimulationBatch:
+        refreshed = self.load_batch(batch_id) or fallback
+        if refreshed is None:
+            raise ValueError(f"Unknown submission batch: {batch_id}")
+        if refreshed.jobs and all(job.status in TERMINAL_STATUSES or job.status == "manual_pending" for job in refreshed.jobs):
+            batch_status = "manual_pending" if all(job.status == "manual_pending" for job in refreshed.jobs) else "completed"
+        elif any(job.status in PENDING_STATUSES for job in refreshed.jobs):
+            batch_status = "running"
+        else:
+            batch_status = refreshed.status
+        self.repository.submissions.update_batch_status(
+            batch_id,
+            status=batch_status,
+            updated_at=updated_at,
+            last_polled_at=updated_at,
+        )
+        final = self.load_batch(batch_id) or refreshed
+        return BrainSimulationBatch(
+            batch_id=final.batch_id,
+            backend=final.backend,
+            status=batch_status,
+            jobs=final.jobs,
+            results=(),
+            export_path=final.export_path,
+        )
+
+    def _initial_timeout_deadline(self, submitted_at: str) -> str | None:
+        if self.brain_config.timeout_seconds <= 0:
+            return None
+        return _shift_iso(submitted_at, float(self.brain_config.timeout_seconds))
+
+    def _submission_timeout_deadline(self, submission: SubmissionRecord) -> str | None:
+        timeout_deadline = submission.timeout_deadline_at or self._initial_timeout_deadline(submission.submitted_at)
+        if timeout_deadline is not None and submission.timeout_deadline_at != timeout_deadline:
+            self.repository.submissions.update_submission_runtime(
+                submission.job_id,
+                updated_at=submission.updated_at,
+                timeout_deadline_at=timeout_deadline,
+            )
+        return timeout_deadline
+
+    def _extended_timeout_deadline(self, submission: SubmissionRecord, seconds: float | None) -> str | None:
+        baseline = self._submission_timeout_deadline(submission)
+        if baseline is None or seconds in (None, 0):
+            return baseline
+        return _shift_iso(baseline, float(seconds))
+
+    def _prune_invalid_field_metadata(self, reason: str | None, *, run_id: str) -> None:
+        field_name = extract_invalid_field_from_rejection(reason)
+        if not field_name:
+            return
+        self.repository.delete_field_metadata((field_name,), run_id=run_id)
 
     def _build_adapter(self, brain_config: BrainConfig) -> SimulationAdapter:
         if brain_config.backend == "manual":
@@ -939,3 +1097,7 @@ def _shift_iso(timestamp: str, seconds: float) -> str:
 
 def _backoff_seconds(retry_count: int) -> float:
     return float(min(2**retry_count, 300))
+
+
+def _is_same_or_after(timestamp: str, reference: str) -> bool:
+    return datetime.fromisoformat(timestamp) >= datetime.fromisoformat(reference)

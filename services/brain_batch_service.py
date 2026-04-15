@@ -14,6 +14,7 @@ from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.candidate_selection_service import CandidateSelectionService
 from services.data_service import CachedResearchContextProvider, resolve_generation_field_registry
+from services.data_service import sanitize_generation_research_context
 from services.evaluation_service import alpha_candidate_from_record
 from services.models import BatchPreparationResult, CandidateScore, CommandEnvironment
 from services.progress_log import append_progress_event
@@ -60,7 +61,13 @@ class BrainBatchService:
     ) -> BatchPreparationResult:
         provider = self._get_research_context_provider(config)
         cache_result = provider.load(config, environment, stage="brain-sim-data")
-        research_context = cache_result.research_context
+        research_context, blocked_fields = sanitize_generation_research_context(
+            self.repository,
+            config,
+            cache_result.research_context,
+            environment,
+            stage="brain-sim-data",
+        )
         active_regime_key = research_context.effective_regime_key or research_context.regime_key
         persistence = provider.persist_metadata(
             self.repository,
@@ -68,6 +75,8 @@ class BrainBatchService:
             environment,
             cache_result,
             round_index=round_index,
+            research_context_override=research_context,
+            removed_field_names=blocked_fields,
         )
         resolve_field_registry_started = time.perf_counter()
         field_registry = resolve_generation_field_registry(

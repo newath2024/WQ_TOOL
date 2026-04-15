@@ -20,7 +20,9 @@ class HeartbeatReporter:
         tick_id: int,
     ) -> ServiceRuntimeRecord:
         now = datetime.now(UTC).isoformat()
-        counters = json.loads(runtime.counters_json or "{}")
+        current = self.store.get_state(runtime.service_name)
+        counters_source = current.counters_json if current is not None else runtime.counters_json
+        counters = json.loads(counters_source or "{}")
         counters["generated"] = int(counters.get("generated", 0)) + outcome.generated_count
         counters["submitted"] = int(counters.get("submitted", 0)) + outcome.submitted_count
         counters["completed"] = int(counters.get("completed", 0)) + outcome.completed_count

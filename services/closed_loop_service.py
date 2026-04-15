@@ -20,7 +20,8 @@ from services.candidate_selection_service import CandidateSelectionService
 from services.data_service import (
     load_research_context,
     persist_research_metadata,
-    resolve_generation_field_registry,
+    resolve_field_registry,
+    sanitize_generation_research_context,
 )
 from services.notification_manager import NotificationManager
 from services.models import (
@@ -65,19 +66,27 @@ class ClosedLoopService:
         if progress_log_path_str:
             logger.info("Progress log path=%s", progress_log_path_str)
         research_context = load_research_context(config, environment, stage="closed-loop-data")
-        active_regime_key = research_context.effective_regime_key or research_context.regime_key
-        self.selection_service.configure_runtime(
-            repository=self.repository,
-            adaptive_config=config.adaptive_generation,
-        )
-        field_registry = resolve_generation_field_registry(
+        research_context, blocked_fields = sanitize_generation_research_context(
             self.repository,
             config,
             research_context,
             environment,
             stage="closed-loop",
         )
-        persist_research_metadata(self.repository, config, environment, research_context, round_index=0)
+        active_regime_key = research_context.effective_regime_key or research_context.regime_key
+        self.selection_service.configure_runtime(
+            repository=self.repository,
+            adaptive_config=config.adaptive_generation,
+        )
+        field_registry = resolve_field_registry(config, research_context)
+        persist_research_metadata(
+            self.repository,
+            config,
+            environment,
+            research_context,
+            round_index=0,
+            removed_field_names=blocked_fields,
+        )
         registry = build_registry(
             config.generation.allowed_operators,
             operator_catalog_paths=config.generation.operator_catalog_paths,

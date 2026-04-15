@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import time
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
@@ -62,7 +63,7 @@ class ServiceWorker:
         runtime: ServiceRuntimeRecord,
         tick_id: int,
         stop_requested: bool = False,
-        ) -> ServiceTickOutcome:
+    ) -> ServiceTickOutcome:
         now = datetime.now(UTC).isoformat()
         logger = get_logger(
             __name__,
@@ -101,13 +102,17 @@ class ServiceWorker:
                     "Waiting for Telegram confirmation before requesting Persona link; pending_jobs=%s",
                     pending_jobs,
                 )
-                return ServiceTickOutcome(
-                    status="waiting_persona_confirmation",
-                    pending_job_count=pending_jobs,
-                    active_batch_id=runtime.active_batch_id,
-                    persona_url=None,
-                    last_error=confirmation.detail,
-                    next_sleep_seconds=self.config.service.persona_confirmation_poll_interval_seconds,
+                return self._defer_pending_timeouts_for_wait(
+                    run_id=runtime.service_run_id,
+                    updated_at=now,
+                    outcome=ServiceTickOutcome(
+                        status="waiting_persona_confirmation",
+                        pending_job_count=pending_jobs,
+                        active_batch_id=runtime.active_batch_id,
+                        persona_url=None,
+                        last_error=confirmation.detail,
+                        next_sleep_seconds=self.config.service.persona_confirmation_poll_interval_seconds,
+                    ),
                 )
             session_state = self.session_manager.ensure_session(runtime=runtime, allow_new_login=True)
         if session_state.status == "waiting_persona":
@@ -135,13 +140,17 @@ class ServiceWorker:
                         "Waiting for Telegram confirmation before delivering Persona link; pending_jobs=%s",
                         pending_jobs,
                     )
-                    return ServiceTickOutcome(
-                        status="waiting_persona_confirmation",
-                        pending_job_count=pending_jobs,
-                        active_batch_id=runtime.active_batch_id,
-                        persona_url=None,
-                        last_error=confirmation.detail,
-                        next_sleep_seconds=self.config.service.persona_confirmation_poll_interval_seconds,
+                    return self._defer_pending_timeouts_for_wait(
+                        run_id=runtime.service_run_id,
+                        updated_at=now,
+                        outcome=ServiceTickOutcome(
+                            status="waiting_persona_confirmation",
+                            pending_job_count=pending_jobs,
+                            active_batch_id=runtime.active_batch_id,
+                            persona_url=None,
+                            last_error=confirmation.detail,
+                            next_sleep_seconds=self.config.service.persona_confirmation_poll_interval_seconds,
+                        ),
                     )
             persona_wait_started_at = runtime.persona_wait_started_at or now
             if session_state.persona_url and session_state.persona_url != runtime.persona_url:
@@ -163,14 +172,18 @@ class ServiceWorker:
             )
             pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
             logger.warning("Persona verification required; pending_jobs=%s", pending_jobs)
-            return ServiceTickOutcome(
-                status="waiting_persona",
-                pending_job_count=pending_jobs,
-                active_batch_id=runtime.active_batch_id,
-                persona_url=session_state.persona_url,
-                last_error=session_state.detail,
-                next_sleep_seconds=(
-                    session_state.retry_after_seconds or self.config.service.persona_retry_interval_seconds
+            return self._defer_pending_timeouts_for_wait(
+                run_id=runtime.service_run_id,
+                updated_at=now,
+                outcome=ServiceTickOutcome(
+                    status="waiting_persona",
+                    pending_job_count=pending_jobs,
+                    active_batch_id=runtime.active_batch_id,
+                    persona_url=session_state.persona_url,
+                    last_error=session_state.detail,
+                    next_sleep_seconds=(
+                        session_state.retry_after_seconds or self.config.service.persona_retry_interval_seconds
+                    ),
                 ),
             )
         if session_state.status == "auth_throttled":
@@ -187,14 +200,18 @@ class ServiceWorker:
                 pending_jobs,
                 session_state.retry_after_seconds,
             )
-            return ServiceTickOutcome(
-                status="auth_throttled",
-                pending_job_count=pending_jobs,
-                active_batch_id=runtime.active_batch_id,
-                persona_url=None,
-                last_error=session_state.detail,
-                next_sleep_seconds=(
-                    session_state.retry_after_seconds or self.config.service.persona_retry_interval_seconds
+            return self._defer_pending_timeouts_for_wait(
+                run_id=runtime.service_run_id,
+                updated_at=now,
+                outcome=ServiceTickOutcome(
+                    status="auth_throttled",
+                    pending_job_count=pending_jobs,
+                    active_batch_id=runtime.active_batch_id,
+                    persona_url=None,
+                    last_error=session_state.detail,
+                    next_sleep_seconds=(
+                        session_state.retry_after_seconds or self.config.service.persona_retry_interval_seconds
+                    ),
                 ),
             )
         if session_state.status == "auth_unavailable":
@@ -212,13 +229,17 @@ class ServiceWorker:
                 pending_jobs,
                 session_state.detail,
             )
-            return ServiceTickOutcome(
-                status="auth_unavailable",
-                pending_job_count=pending_jobs,
-                active_batch_id=runtime.active_batch_id,
-                persona_url=None,
-                last_error=session_state.detail,
-                next_sleep_seconds=self.config.service.tick_interval_seconds,
+            return self._defer_pending_timeouts_for_wait(
+                run_id=runtime.service_run_id,
+                updated_at=now,
+                outcome=ServiceTickOutcome(
+                    status="auth_unavailable",
+                    pending_job_count=pending_jobs,
+                    active_batch_id=runtime.active_batch_id,
+                    persona_url=None,
+                    last_error=session_state.detail,
+                    next_sleep_seconds=self.config.service.tick_interval_seconds,
+                ),
             )
 
         if runtime.cooldown_until and runtime.cooldown_until > now and should_probe_auth:
@@ -278,14 +299,21 @@ class ServiceWorker:
             statuses=("submitting", "submitted", "running"),
         )
         if pending_batches:
-            outcome = self._poll_pending_batches(
+            poll_outcome = self._poll_pending_batches(
                 runtime=runtime,
                 tick_id=tick_id,
                 batch_ids=[batch.batch_id for batch in pending_batches],
             )
+            if poll_outcome.pending_job_count == 0:
+                reconciled_batches = self._reconcile_completed_batches(run_id=runtime.service_run_id)
+                if reconciled_batches:
+                    logger.info("Reconciled learning for %s completed batches after polling.", reconciled_batches)
             if submission_cooldown_active:
-                return replace(outcome, status="cooldown", cooldown_until=runtime.cooldown_until)
-            return outcome
+                return replace(poll_outcome, status="cooldown", cooldown_until=runtime.cooldown_until)
+            if stop_requested:
+                logger.info("Shutdown requested after polling; skipping top-up submission.")
+                return poll_outcome
+            return poll_outcome
 
         reconciled_batches = self._reconcile_completed_batches(run_id=runtime.service_run_id)
         if reconciled_batches:
@@ -303,7 +331,11 @@ class ServiceWorker:
             )
 
         try:
-            return self._submit_new_batch(runtime=runtime, tick_id=tick_id)
+            return self._submit_new_batch(
+                runtime=runtime,
+                tick_id=tick_id,
+                pending_cap=self._effective_pending_cap(runtime=runtime),
+            )
         except ConcurrentSimulationLimitExceeded as exc:
             return self._submission_cooldown_outcome(runtime=runtime, now=now, error=exc, logger=logger)
 
@@ -320,6 +352,7 @@ class ServiceWorker:
             stage="service-poll",
             tick_id=tick_id,
         )
+        poll_started = time.perf_counter()
         completed_results: list[SimulationResult] = []
         failed_results: list[SimulationResult] = []
         new_result_count = 0
@@ -380,6 +413,7 @@ class ServiceWorker:
             active_batch_id=next_active_batch,
             completed_count=len(completed_results),
             failed_count=len(failed_results),
+            poll_pending_ms=(time.perf_counter() - poll_started) * 1000.0,
         )
 
     def _submit_new_batch(
@@ -387,6 +421,7 @@ class ServiceWorker:
         *,
         runtime: ServiceRuntimeRecord,
         tick_id: int,
+        pending_cap: int | None = None,
     ) -> ServiceTickOutcome:
         logger = get_logger(
             __name__,
@@ -421,22 +456,28 @@ class ServiceWorker:
                     updated_at=now,
                 )
                 pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
-                return ServiceTickOutcome(
-                    status="waiting_persona",
-                    pending_job_count=pending_jobs,
-                    active_batch_id=runtime.active_batch_id,
-                    last_error=f"Auth re-check triggered after {recent_all_failed} consecutive all-failed batches.",
-                    next_sleep_seconds=self.config.service.persona_retry_interval_seconds,
+                return self._defer_pending_timeouts_for_wait(
+                    run_id=runtime.service_run_id,
+                    updated_at=now,
+                    outcome=ServiceTickOutcome(
+                        status="waiting_persona",
+                        pending_job_count=pending_jobs,
+                        active_batch_id=runtime.active_batch_id,
+                        last_error=f"Auth re-check triggered after {recent_all_failed} consecutive all-failed batches.",
+                        next_sleep_seconds=self.config.service.persona_retry_interval_seconds,
+                    ),
                 )
 
         pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
         current_pending = len(pending_submissions)
-        available_slots = max(self.config.service.max_pending_jobs - current_pending, 0)
+        effective_pending_cap = max(int(pending_cap or self.config.service.max_pending_jobs), 0)
+        available_slots = max(effective_pending_cap - current_pending, 0)
         if available_slots <= 0:
             active_batch_id = pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id
             logger.info(
-                "Skipping new submission because pending capacity is full. current_pending=%s max_pending_jobs=%s",
+                "Skipping new submission because pending capacity is full. current_pending=%s effective_pending_cap=%s max_pending_jobs=%s",
                 current_pending,
+                effective_pending_cap,
                 self.config.service.max_pending_jobs,
             )
             return ServiceTickOutcome(
@@ -445,6 +486,7 @@ class ServiceWorker:
                 active_batch_id=active_batch_id,
             )
 
+        prepare_started = time.perf_counter()
         batch_result = self.batch_service.prepare_service_batch(
             config=self.config,
             environment=self.environment,
@@ -452,6 +494,7 @@ class ServiceWorker:
             mutation_parent_ids=mutation_parent_ids,
             round_index=tick_id,
         )
+        prepare_batch_ms = (time.perf_counter() - prepare_started) * 1000.0
         candidates = list(batch_result.candidates)
         selected_scores = list(batch_result.selected)
         selected_candidates = [item.candidate for item in selected_scores]
@@ -465,6 +508,7 @@ class ServiceWorker:
                 status="no_candidates",
                 pending_job_count=current_pending,
                 generated_count=len(candidates),
+                prepare_batch_ms=prepare_batch_ms,
             )
 
         recent_fail_rate = self._recent_job_failure_rate(runtime.service_run_id)
@@ -481,12 +525,14 @@ class ServiceWorker:
         selected_scores = selected_scores[:adjusted_count]
         selected_candidates = [item.candidate for item in selected_scores]
         logger.info(
-            "Adaptive submission: recent_fail_rate=%.2f, current_pending=%s, available_slots=%s, adjusted_count=%s",
+            "Adaptive submission: recent_fail_rate=%.2f, current_pending=%s, available_slots=%s, effective_pending_cap=%s, adjusted_count=%s",
             recent_fail_rate,
             current_pending,
             available_slots,
+            effective_pending_cap,
             adjusted_count,
         )
+        submit_started = time.perf_counter()
         batch = self.brain_service.submit_candidates(
             selected_candidates,
             config=self.config,
@@ -494,6 +540,7 @@ class ServiceWorker:
             round_index=tick_id,
             batch_size=adjusted_count,
         )
+        submit_batch_ms = (time.perf_counter() - submit_started) * 1000.0
         pending_count = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
         logger.info(
             "Submitted batch=%s generated=%s submitted=%s pending=%s",
@@ -524,6 +571,8 @@ class ServiceWorker:
             active_batch_id=batch.batch_id,
             generated_count=len(candidates),
             submitted_count=batch.submitted_count,
+            prepare_batch_ms=prepare_batch_ms,
+            submit_batch_ms=submit_batch_ms,
         )
 
     def _submission_cooldown_outcome(
@@ -536,19 +585,152 @@ class ServiceWorker:
     ) -> ServiceTickOutcome:
         cooldown_seconds = max(int(error.cooldown_seconds), 1)
         cooldown_until = (datetime.fromisoformat(now) + timedelta(seconds=cooldown_seconds)).isoformat()
-        pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+        pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+        pending_jobs = len(pending_submissions)
+        learned_safe_cap = self._derive_learned_safe_cap(
+            runtime=runtime,
+            pending_jobs=pending_jobs,
+        )
+        self._persist_learned_safe_cap(
+            runtime=runtime,
+            learned_safe_cap=learned_safe_cap,
+            cooldown_until=cooldown_until,
+            last_error=str(error),
+            updated_at=now,
+        )
         logger.warning(
-            "BRAIN concurrent simulation limit hit; pausing submissions for %ss pending_jobs=%s",
+            "BRAIN concurrent simulation limit hit; pausing submissions for %ss pending_jobs=%s learned_safe_cap=%s",
             cooldown_seconds,
             pending_jobs,
+            learned_safe_cap,
         )
         return ServiceTickOutcome(
             status="cooldown",
             pending_job_count=pending_jobs,
-            active_batch_id=runtime.active_batch_id,
+            active_batch_id=pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id,
             next_sleep_seconds=cooldown_seconds,
             last_error=str(error),
             cooldown_until=cooldown_until,
+        )
+
+    @staticmethod
+    def _merge_tick_outcomes(
+        *,
+        poll_outcome: ServiceTickOutcome,
+        submit_outcome: ServiceTickOutcome,
+    ) -> ServiceTickOutcome:
+        status = submit_outcome.status
+        if status == "no_candidates" and submit_outcome.pending_job_count > 0:
+            status = "running"
+        return ServiceTickOutcome(
+            status=status,
+            pending_job_count=submit_outcome.pending_job_count,
+            new_result_count=poll_outcome.new_result_count + submit_outcome.new_result_count,
+            active_batch_id=submit_outcome.active_batch_id or poll_outcome.active_batch_id,
+            next_sleep_seconds=submit_outcome.next_sleep_seconds,
+            generated_count=submit_outcome.generated_count,
+            submitted_count=submit_outcome.submitted_count,
+            completed_count=poll_outcome.completed_count + submit_outcome.completed_count,
+            failed_count=poll_outcome.failed_count + submit_outcome.failed_count,
+            quarantined_count=poll_outcome.quarantined_count + submit_outcome.quarantined_count,
+            last_error=submit_outcome.last_error or poll_outcome.last_error,
+            persona_url=submit_outcome.persona_url or poll_outcome.persona_url,
+            cooldown_until=submit_outcome.cooldown_until or poll_outcome.cooldown_until,
+            poll_pending_ms=poll_outcome.poll_pending_ms + submit_outcome.poll_pending_ms,
+            prepare_batch_ms=poll_outcome.prepare_batch_ms + submit_outcome.prepare_batch_ms,
+            submit_batch_ms=poll_outcome.submit_batch_ms + submit_outcome.submit_batch_ms,
+        )
+
+    def _defer_pending_timeouts_for_wait(
+        self,
+        *,
+        run_id: str,
+        updated_at: str,
+        outcome: ServiceTickOutcome,
+    ) -> ServiceTickOutcome:
+        if outcome.pending_job_count > 0 and outcome.next_sleep_seconds > 0:
+            self.brain_service.defer_pending_timeouts(
+                run_id=run_id,
+                seconds=float(outcome.next_sleep_seconds),
+                updated_at=updated_at,
+            )
+        return outcome
+
+    def _effective_pending_cap(self, *, runtime: ServiceRuntimeRecord) -> int:
+        learned_safe_cap = self._learned_safe_cap(runtime=runtime)
+        if learned_safe_cap is None:
+            return max(int(self.config.service.max_pending_jobs), 0)
+        return max(min(int(self.config.service.max_pending_jobs), learned_safe_cap), 0)
+
+    def _learned_safe_cap(self, *, runtime: ServiceRuntimeRecord) -> int | None:
+        value = self._decode_json_object(runtime.counters_json).get("learned_safe_cap")
+        if value is None:
+            return None
+        try:
+            parsed = int(value)
+        except (TypeError, ValueError):
+            return None
+        return parsed if parsed > 0 else None
+
+    def _derive_learned_safe_cap(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        pending_jobs: int,
+    ) -> int:
+        if pending_jobs > 0:
+            return min(
+                int(self.config.service.max_pending_jobs),
+                max(pending_jobs, 3),
+            )
+        partial_batch = self._latest_interrupted_limit_batch(run_id=runtime.service_run_id)
+        partial_count = 0
+        if partial_batch is not None:
+            partial_count = self._partial_submitted_count(batch=partial_batch)
+        return min(
+            int(self.config.service.max_pending_jobs),
+            max(partial_count, 3),
+        )
+
+    def _latest_interrupted_limit_batch(self, *, run_id: str) -> SubmissionBatchRecord | None:
+        candidates = [
+            batch
+            for batch in self.repository.submissions.list_batches(run_id)
+            if str(batch.service_status_reason or "") == "submission_failed:ConcurrentSimulationLimitExceeded"
+        ]
+        if not candidates:
+            return None
+        return max(candidates, key=lambda batch: (batch.updated_at, batch.created_at, batch.batch_id))
+
+    def _partial_submitted_count(self, *, batch: SubmissionBatchRecord) -> int:
+        notes = self._decode_json_object(batch.notes_json)
+        submitted_count = notes.get("submitted_candidate_count")
+        try:
+            parsed = int(submitted_count)
+        except (TypeError, ValueError):
+            parsed = int(batch.candidate_count or 0)
+        return max(parsed, 0)
+
+    def _persist_learned_safe_cap(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        learned_safe_cap: int,
+        cooldown_until: str,
+        last_error: str,
+        updated_at: str,
+    ) -> None:
+        current = self.repository.service_runtime.get_state(runtime.service_name)
+        if current is None:
+            return
+        counters = self._decode_json_object(current.counters_json)
+        counters["learned_safe_cap"] = learned_safe_cap
+        self.repository.service_runtime.update_state(
+            runtime.service_name,
+            counters_json=json.dumps(counters, sort_keys=True),
+            cooldown_until=cooldown_until,
+            last_error=last_error,
+            updated_at=updated_at,
         )
 
     def _recover_submitting_batches(
@@ -635,12 +817,6 @@ class ServiceWorker:
                 if resubmitted_batch_id:
                     resubmitted.append(resubmitted_batch_id)
                 else:
-                    self._mark_ambiguous_batch_failed(
-                        batch=batch,
-                        submissions=submissions,
-                        updated_at=now,
-                        reason="ambiguous_submission_missing_candidates",
-                    )
                     failed.append(batch.batch_id)
                 continue
             if policy == "quarantine":
@@ -680,24 +856,98 @@ class ServiceWorker:
         batch: SubmissionBatchRecord,
         submissions: list[SubmissionRecord],
     ) -> str | None:
-        candidates = self._load_candidates_for_batch(run_id=run_id, batch=batch, submissions=submissions)
-        if not candidates:
+        candidate_ids = self._candidate_ids_for_batch(batch=batch, submissions=submissions)
+        loaded_candidates, skipped_candidates = self._load_candidates_for_batch(
+            run_id=run_id,
+            batch=batch,
+            submissions=submissions,
+        )
+        active_submissions = self._active_submissions_by_candidate(run_id=run_id, excluding_batch_id=batch.batch_id)
+        terminal_results = self._terminal_results_by_candidate(run_id=run_id)
+        candidate_failure_reasons = {
+            str(item["candidate_id"]): str(item["reason"])
+            for item in skipped_candidates
+            if item.get("candidate_id") and item.get("reason")
+        }
+        resubmittable_candidates: list[AlphaCandidate] = []
+        for candidate_id in candidate_ids:
+            if candidate_id in candidate_failure_reasons:
+                continue
+            active_submission = active_submissions.get(candidate_id)
+            if active_submission is not None:
+                skipped_candidates.append(
+                    {
+                        "candidate_id": candidate_id,
+                        "reason": "ambiguous_replay_guard_active_submission",
+                        "blocking_batch_id": active_submission.batch_id,
+                        "blocking_job_id": active_submission.job_id,
+                        "blocking_status": active_submission.status,
+                    }
+                )
+                candidate_failure_reasons[candidate_id] = "ambiguous_replay_guard_active_submission"
+                continue
+            terminal_result = terminal_results.get(candidate_id)
+            if terminal_result is not None:
+                skipped_candidates.append(
+                    {
+                        "candidate_id": candidate_id,
+                        "reason": "ambiguous_replay_guard_terminal_result",
+                        "blocking_batch_id": terminal_result.batch_id,
+                        "blocking_job_id": terminal_result.job_id,
+                        "blocking_status": terminal_result.status,
+                    }
+                )
+                candidate_failure_reasons[candidate_id] = "ambiguous_replay_guard_terminal_result"
+                continue
+            candidate = loaded_candidates.get(candidate_id)
+            if candidate is None:
+                skipped_candidates.append(
+                    {
+                        "candidate_id": candidate_id,
+                        "reason": "ambiguous_submission_missing_candidate",
+                    }
+                )
+                candidate_failure_reasons[candidate_id] = "ambiguous_submission_missing_candidate"
+                continue
+            resubmittable_candidates.append(candidate)
+        recovery_notes = self._ambiguous_recovery_notes(
+            source_candidate_ids=candidate_ids,
+            skipped_candidates=skipped_candidates,
+        )
+        updated_at = datetime.now(UTC).isoformat()
+        if not resubmittable_candidates:
+            self._mark_ambiguous_batch_failed(
+                batch=batch,
+                submissions=submissions,
+                updated_at=updated_at,
+                reason="ambiguous_submission_no_resubmittable_candidates",
+                note_overrides=recovery_notes,
+                candidate_failure_reasons=candidate_failure_reasons,
+            )
             return None
         sim_config_override = self._decode_json_object(batch.sim_config_snapshot)
         resubmitted_batch = self.brain_service.submit_candidates(
-            candidates,
+            resubmittable_candidates,
             config=self.config,
             environment=self.environment,
             round_index=batch.round_index,
-            batch_size=len(candidates),
+            batch_size=len(resubmittable_candidates),
             sim_config_override=sim_config_override,
-            note_overrides={"resubmitted_from_batch_id": batch.batch_id},
+            note_overrides={
+                "resubmitted_from_batch_id": batch.batch_id,
+                **recovery_notes,
+            },
         )
         self._mark_ambiguous_batch_failed(
             batch=batch,
             submissions=submissions,
-            updated_at=datetime.now(UTC).isoformat(),
+            updated_at=updated_at,
             reason=f"ambiguous_submission_resubmitted:{resubmitted_batch.batch_id}",
+            note_overrides={
+                **recovery_notes,
+                "resubmitted_batch_id": resubmitted_batch.batch_id,
+            },
+            candidate_failure_reasons=candidate_failure_reasons,
         )
         return resubmitted_batch.batch_id
 
@@ -708,27 +958,40 @@ class ServiceWorker:
         submissions: list[SubmissionRecord],
         updated_at: str,
         reason: str,
+        note_overrides: dict[str, object] | None = None,
+        candidate_failure_reasons: dict[str, str] | None = None,
     ) -> None:
         for submission in submissions:
             if submission.status not in {"submitted", "running", "manual_pending"}:
                 continue
+            submission_reason = (
+                candidate_failure_reasons.get(submission.candidate_id, reason)
+                if candidate_failure_reasons is not None
+                else reason
+            )
             self.repository.submissions.update_submission_runtime(
                 submission.job_id,
                 status="failed",
                 updated_at=updated_at,
                 completed_at=updated_at,
-                error_message=reason,
+                error_message=submission_reason,
                 last_polled_at=updated_at,
                 next_poll_after=None,
                 stuck_since=None,
-                service_failure_reason=reason,
+                service_failure_reason=submission_reason,
             )
+        notes_json = self._merged_batch_notes(batch=batch, note_overrides=note_overrides)
+        update_kwargs: dict[str, object] = {
+            "status": "failed",
+            "updated_at": updated_at,
+            "service_status_reason": reason,
+            "quarantined_at": None,
+        }
+        if notes_json is not None:
+            update_kwargs["notes_json"] = notes_json
         self.repository.submissions.update_batch_status(
             batch.batch_id,
-            status="failed",
-            updated_at=updated_at,
-            service_status_reason=reason,
-            quarantined_at=None,
+            **update_kwargs,
         )
 
     def _load_candidates_for_batch(
@@ -737,10 +1000,10 @@ class ServiceWorker:
         run_id: str,
         batch: SubmissionBatchRecord,
         submissions: list[SubmissionRecord],
-    ) -> list[AlphaCandidate]:
+    ) -> tuple[dict[str, AlphaCandidate], list[dict[str, str]]]:
         candidate_ids = self._candidate_ids_for_batch(batch=batch, submissions=submissions)
         if not candidate_ids:
-            return []
+            return {}, []
         payloads_by_candidate = self._batch_payloads_by_candidate(batch)
         submissions_by_candidate = {submission.candidate_id: submission for submission in submissions if submission.candidate_id}
         parent_refs_map = self.repository.get_parent_refs(run_id)
@@ -749,7 +1012,8 @@ class ServiceWorker:
             for record in self.repository.list_alpha_records(run_id)
             if record.alpha_id in set(candidate_ids)
         }
-        candidates: list[AlphaCandidate] = []
+        candidates: dict[str, AlphaCandidate] = {}
+        skipped: list[dict[str, str]] = []
         for candidate_id in candidate_ids:
             candidate = records_by_id.get(candidate_id)
             if candidate is None:
@@ -757,6 +1021,12 @@ class ServiceWorker:
                 submission = submissions_by_candidate.get(candidate_id)
                 expression = str(payload.get("expression") or (submission.expression if submission else "")).strip()
                 if not expression:
+                    skipped.append(
+                        {
+                            "candidate_id": candidate_id,
+                            "reason": "ambiguous_submission_missing_candidate",
+                        }
+                    )
                     continue
                 generation_metadata = payload.get("generation_metadata")
                 candidate = AlphaCandidate(
@@ -773,8 +1043,8 @@ class ServiceWorker:
                     depth=int(payload.get("depth") or 0),
                     generation_metadata=generation_metadata if isinstance(generation_metadata, dict) else {},
                 )
-            candidates.append(candidate)
-        return candidates
+            candidates[candidate_id] = candidate
+        return candidates, skipped
 
     def _candidate_ids_for_batch(
         self,
@@ -803,6 +1073,52 @@ class ServiceWorker:
             for item in payloads
             if isinstance(item, dict) and item.get("candidate_id")
         }
+
+    def _active_submissions_by_candidate(
+        self,
+        *,
+        run_id: str,
+        excluding_batch_id: str,
+    ) -> dict[str, SubmissionRecord]:
+        active: dict[str, SubmissionRecord] = {}
+        for submission in self.repository.submissions.list_pending_submissions(run_id):
+            if not submission.candidate_id or submission.batch_id == excluding_batch_id:
+                continue
+            active.setdefault(submission.candidate_id, submission)
+        return active
+
+    def _terminal_results_by_candidate(self, *, run_id: str) -> dict[str, BrainResultRecord]:
+        terminal_statuses = {"completed", "failed", "rejected", "timeout"}
+        return {
+            result.candidate_id: result
+            for result in self.repository.brain_results.list_latest_results_by_candidate(run_id)
+            if result.candidate_id and result.status in terminal_statuses
+        }
+
+    @staticmethod
+    def _ambiguous_recovery_notes(
+        *,
+        source_candidate_ids: list[str],
+        skipped_candidates: list[dict[str, str]],
+    ) -> dict[str, object]:
+        notes: dict[str, object] = {
+            "recovery_source_candidate_ids": list(source_candidate_ids),
+        }
+        if skipped_candidates:
+            notes["recovery_skipped_candidates"] = [dict(item) for item in skipped_candidates]
+        return notes
+
+    def _merged_batch_notes(
+        self,
+        *,
+        batch: SubmissionBatchRecord,
+        note_overrides: dict[str, object] | None,
+    ) -> str | None:
+        if note_overrides is None:
+            return None
+        notes = self._decode_json_object(batch.notes_json)
+        notes.update(note_overrides)
+        return json.dumps(notes, sort_keys=True)
 
     def _resubmitted_source_batch_ids(self, *, run_id: str) -> set[str]:
         source_batch_ids: set[str] = set()

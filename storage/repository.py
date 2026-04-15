@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from collections.abc import Iterable
 from datetime import UTC, datetime
 from io import StringIO
 
@@ -41,6 +42,27 @@ class SQLiteRepository:
 
     def close(self) -> None:
         self.connection.close()
+
+    def delete_field_metadata(self, field_names: Iterable[str], *, run_id: str | None = None) -> None:
+        normalized = tuple(sorted({str(name).strip() for name in field_names if str(name).strip()}))
+        if not normalized:
+            return
+        placeholders = ", ".join("?" for _ in normalized)
+        self.connection.execute(
+            f"DELETE FROM field_catalog WHERE field_name IN ({placeholders})",
+            normalized,
+        )
+        if run_id:
+            self.connection.execute(
+                f"DELETE FROM run_field_scores WHERE run_id = ? AND field_name IN ({placeholders})",
+                (run_id, *normalized),
+            )
+        else:
+            self.connection.execute(
+                f"DELETE FROM run_field_scores WHERE field_name IN ({placeholders})",
+                normalized,
+            )
+        self.connection.commit()
 
     def upsert_run(
         self,

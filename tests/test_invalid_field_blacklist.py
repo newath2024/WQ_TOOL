@@ -13,13 +13,16 @@ from data.field_registry import FieldRegistry, FieldSpec
 from generator.engine import GenerationSessionStats
 from memory.pattern_memory import PatternMemoryService, RegionLearningContext
 from services.brain_batch_service import BrainBatchService
+from services.brain_service import BrainService
 from services.closed_loop_service import ClosedLoopService
 from services.data_service import (
     CachedResearchContextResult,
     ResearchContextLoadProfile,
+    persist_research_metadata,
     resolve_generation_field_registry,
+    sanitize_generation_research_context,
 )
-from services.models import DedupBatchResult, PreSimulationSelectionResult, ResearchContext
+from services.models import DedupBatchResult, PreSimulationSelectionResult, ResearchContext, SimulationJob
 from services.runtime_service import build_command_environment, init_run
 from storage.models import AlphaRecord, BrainResultRecord, SubmissionBatchRecord, SubmissionRecord
 from storage.repository import SQLiteRepository
@@ -215,8 +218,18 @@ class _FakeResearchContextProvider:
             ),
         )
 
-    def persist_metadata(self, repository, config, environment, cache_result, *, round_index: int = 0) -> dict[str, bool]:
-        del repository, config, environment, cache_result, round_index
+    def persist_metadata(
+        self,
+        repository,
+        config,
+        environment,
+        cache_result,
+        *,
+        round_index: int = 0,
+        research_context_override=None,
+        removed_field_names=(),
+    ) -> dict[str, bool]:
+        del repository, config, environment, cache_result, round_index, research_context_override, removed_field_names
         return {
             "dataset_summary_persisted": False,
             "field_catalog_persisted": False,
@@ -317,6 +330,134 @@ def test_resolve_generation_field_registry_filters_blacklisted_fields_and_fails_
             )
     finally:
         repository.close()
+
+
+def test_persist_research_metadata_prunes_invalid_fields_from_catalog_tables() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _config()
+        environment = _environment("generate", "persist-blacklist")
+        init_run(repository, config, environment, status="running")
+        research_context = _research_context(_build_field_registry("close", "volume", "sector"))
+
+        persist_research_metadata(
+            repository,
+            config,
+            environment,
+            research_context,
+            persist_dataset_summary=False,
+        )
+        _save_result(
+            repository,
+            run_id=environment.context.run_id,
+            job_id="job-close",
+            rejection_reason='Attempted to use unknown variable "close".',
+        )
+        sanitized_context, blocked_fields = sanitize_generation_research_context(
+            repository,
+            config,
+            research_context,
+            environment,
+            stage="generate",
+        )
+        persist_research_metadata(
+            repository,
+            config,
+            environment,
+            sanitized_context,
+            persist_dataset_summary=False,
+            removed_field_names=blocked_fields,
+        )
+        catalog_rows = repository.connection.execute("SELECT field_name FROM field_catalog").fetchall()
+        score_rows = repository.connection.execute(
+            "SELECT field_name FROM run_field_scores WHERE run_id = ?",
+            (environment.context.run_id,),
+        ).fetchall()
+    finally:
+        repository.close()
+
+    assert {row["field_name"] for row in catalog_rows} == {"volume", "sector"}
+    assert {row["field_name"] for row in score_rows} == {"volume", "sector"}
+
+
+def test_brain_service_prunes_invalid_field_metadata_on_unknown_variable_failure() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _config()
+        environment = _environment("run-service", "brain-prune")
+        init_run(repository, config, environment, status="running")
+        research_context = _research_context(_build_field_registry("close", "volume"))
+        persist_research_metadata(
+            repository,
+            config,
+            environment,
+            research_context,
+            persist_dataset_summary=False,
+        )
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-close",
+                run_id=environment.context.run_id,
+                round_index=1,
+                backend="api",
+                status="submitted",
+                candidate_count=1,
+                sim_config_snapshot="{}",
+                export_path=None,
+                notes_json="{}",
+                created_at="2026-04-15T00:00:00+00:00",
+                updated_at="2026-04-15T00:00:00+00:00",
+            )
+        )
+        repository.submissions.upsert_submissions(
+            [
+                SubmissionRecord(
+                    job_id="job-close",
+                    batch_id="batch-close",
+                    run_id=environment.context.run_id,
+                    round_index=1,
+                    candidate_id="candidate-close",
+                    expression="rank(close)",
+                    backend="api",
+                    status="submitted",
+                    sim_config_snapshot="{}",
+                    submitted_at="2026-04-15T00:00:00+00:00",
+                    updated_at="2026-04-15T00:00:00+00:00",
+                    completed_at=None,
+                    export_path=None,
+                    raw_submission_json="{}",
+                    error_message=None,
+                )
+            ]
+        )
+
+        service = BrainService(repository, config.brain, adapter=SimpleNamespace())
+        service._failed_job(
+            SimulationJob(
+                job_id="job-close",
+                candidate_id="candidate-close",
+                expression="rank(close)",
+                backend="api",
+                status="submitted",
+                submitted_at="2026-04-15T00:00:00+00:00",
+                sim_config_snapshot={"region": "USA", "universe": "TOP3000", "delay": 1},
+                run_id=environment.context.run_id,
+                batch_id="batch-close",
+                round_index=1,
+            ),
+            updated_at="2026-04-15T00:01:00+00:00",
+            error_message='Attempted to use unknown variable "close".',
+        )
+        catalog_rows = repository.connection.execute("SELECT field_name FROM field_catalog").fetchall()
+        score_rows = repository.connection.execute(
+            "SELECT field_name FROM run_field_scores WHERE run_id = ?",
+            (environment.context.run_id,),
+        ).fetchall()
+    finally:
+        repository.close()
+
+    assert {row["field_name"] for row in catalog_rows} == {"volume"}
+    assert {row["field_name"] for row in score_rows} == {"volume"}
 
 
 def test_generate_and_persist_uses_filtered_generation_field_registry(monkeypatch) -> None:

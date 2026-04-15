@@ -53,12 +53,13 @@ class SubmissionStore:
         for record in records:
             self.connection.execute(
                 """
-                INSERT INTO submissions
-                (job_id, batch_id, run_id, round_index, candidate_id, expression, backend, status,
-                 sim_config_snapshot, submitted_at, updated_at, completed_at, export_path,
-                 raw_submission_json, error_message, retry_count, last_polled_at, next_poll_after,
-                 stuck_since, service_failure_reason)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO submissions
+            (job_id, batch_id, run_id, round_index, candidate_id, expression, backend, status,
+             sim_config_snapshot, submitted_at, updated_at, completed_at, export_path,
+             raw_submission_json, error_message, retry_count, last_polled_at, next_poll_after,
+             timeout_deadline_at,
+             stuck_since, service_failure_reason)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(job_id) DO UPDATE SET
                     batch_id = excluded.batch_id,
                     status = excluded.status,
@@ -70,6 +71,7 @@ class SubmissionStore:
                     retry_count = excluded.retry_count,
                     last_polled_at = excluded.last_polled_at,
                     next_poll_after = excluded.next_poll_after,
+                    timeout_deadline_at = COALESCE(excluded.timeout_deadline_at, submissions.timeout_deadline_at),
                     stuck_since = excluded.stuck_since,
                     service_failure_reason = excluded.service_failure_reason
                 """,
@@ -92,6 +94,7 @@ class SubmissionStore:
                     record.retry_count,
                     record.last_polled_at,
                     record.next_poll_after,
+                    record.timeout_deadline_at,
                     record.stuck_since,
                     record.service_failure_reason,
                 ),
@@ -131,6 +134,7 @@ class SubmissionStore:
         retry_count: int | object = _UNSET,
         last_polled_at: str | None | object = _UNSET,
         next_poll_after: str | None | object = _UNSET,
+        timeout_deadline_at: str | None | object = _UNSET,
         stuck_since: str | None | object = _UNSET,
         service_failure_reason: str | None | object = _UNSET,
     ) -> None:
@@ -147,6 +151,8 @@ class SubmissionStore:
             updates["last_polled_at"] = last_polled_at
         if next_poll_after is not _UNSET:
             updates["next_poll_after"] = next_poll_after
+        if timeout_deadline_at is not _UNSET:
+            updates["timeout_deadline_at"] = timeout_deadline_at
         if stuck_since is not _UNSET:
             updates["stuck_since"] = stuck_since
         if service_failure_reason is not _UNSET:
@@ -165,6 +171,8 @@ class SubmissionStore:
         *,
         status: str,
         updated_at: str,
+        candidate_count: int | object = _UNSET,
+        sim_config_snapshot: str | object = _UNSET,
         export_path: str | None | object = _UNSET,
         notes_json: str | None | object = _UNSET,
         service_status_reason: str | None | object = _UNSET,
@@ -172,6 +180,10 @@ class SubmissionStore:
         quarantined_at: str | None | object = _UNSET,
     ) -> None:
         updates: dict[str, object] = {"status": status, "updated_at": updated_at}
+        if candidate_count is not _UNSET:
+            updates["candidate_count"] = candidate_count
+        if sim_config_snapshot is not _UNSET:
+            updates["sim_config_snapshot"] = sim_config_snapshot
         if export_path is not _UNSET:
             updates["export_path"] = export_path
         if notes_json is not _UNSET:
@@ -231,6 +243,54 @@ class SubmissionStore:
 
     def list_pending_submissions(self, run_id: str) -> list[SubmissionRecord]:
         return self.list_submissions(run_id=run_id, statuses=("submitted", "running"))
+
+    def backfill_timeout_deadlines(self, *, timeout_seconds: float) -> int:
+        rows = self.connection.execute(
+            """
+            SELECT job_id, submitted_at
+            FROM submissions
+            WHERE timeout_deadline_at IS NULL
+            """
+        ).fetchall()
+        if not rows:
+            return 0
+        for row in rows:
+            submitted_at = str(row["submitted_at"] or "")
+            timeout_deadline_at = _shift_iso(submitted_at, timeout_seconds)
+            self.connection.execute(
+                "UPDATE submissions SET timeout_deadline_at = ? WHERE job_id = ?",
+                (timeout_deadline_at, row["job_id"]),
+            )
+        self.connection.commit()
+        return len(rows)
+
+    def extend_pending_timeout_deadlines(
+        self,
+        *,
+        run_id: str,
+        seconds: float,
+        default_timeout_seconds: float,
+        updated_at: str | None = None,
+    ) -> int:
+        if seconds <= 0:
+            return 0
+        now = updated_at or _utcnow()
+        rows = self.list_pending_submissions(run_id)
+        if not rows:
+            return 0
+        for row in rows:
+            baseline = row.timeout_deadline_at or _shift_iso(row.submitted_at, default_timeout_seconds)
+            extended_deadline = _shift_iso(baseline, seconds)
+            self.connection.execute(
+                """
+                UPDATE submissions
+                SET timeout_deadline_at = ?, updated_at = ?
+                WHERE job_id = ?
+                """,
+                (extended_deadline, now, row.job_id),
+            )
+        self.connection.commit()
+        return len(rows)
 
     def list_batches_by_status(
         self,
@@ -326,3 +386,15 @@ class SubmissionStore:
             else:
                 break
         return consecutive_all_failed
+
+
+def _utcnow() -> str:
+    from datetime import UTC, datetime
+
+    return datetime.now(UTC).isoformat()
+
+
+def _shift_iso(timestamp: str, seconds: float) -> str:
+    from datetime import datetime, timedelta
+
+    return (datetime.fromisoformat(timestamp) + timedelta(seconds=float(seconds))).isoformat()

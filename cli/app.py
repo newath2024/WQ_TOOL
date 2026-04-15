@@ -18,6 +18,7 @@ from cli.commands import (
     memory,
     mutate,
     pipeline,
+    recover_brain_jobs,
     report,
     run_brain_sim,
     run_closed_loop,
@@ -49,6 +50,7 @@ _SUBCOMMANDS = {
     "run-closed-loop",
     "run-service",
     "service-status",
+    "recover-brain-jobs",
     "brain-login",
     "benchmark-generation",
 }
@@ -107,6 +109,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_closed_loop.register(subparsers, common)
     run_service.register(subparsers, common)
     service_status.register(subparsers, common)
+    recover_brain_jobs.register(subparsers, common)
     brain_login.register(subparsers, common)
     benchmark_generation.register(subparsers, common)
     evolution_report.register(subparsers, common)

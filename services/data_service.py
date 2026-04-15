@@ -176,11 +176,14 @@ class CachedResearchContextProvider:
         cache_result: CachedResearchContextResult,
         *,
         round_index: int = 0,
+        research_context_override: ResearchContext | None = None,
+        removed_field_names: tuple[str, ...] = (),
     ) -> dict[str, bool]:
         run_id = environment.context.run_id
         state = self._persisted_metadata.get(run_id)
-        dataset_fingerprint = cache_result.research_context.bundle.fingerprint
-        field_registry_fingerprint = cache_result.profile.field_registry_fingerprint
+        effective_context = research_context_override or cache_result.research_context
+        dataset_fingerprint = effective_context.bundle.fingerprint
+        field_registry_fingerprint = _fingerprint_field_registry(effective_context.field_registry)
         persist_dataset_summary = (
             state is None
             or state.dataset_fingerprint != dataset_fingerprint
@@ -194,11 +197,12 @@ class CachedResearchContextProvider:
             repository,
             config,
             environment,
-            cache_result.research_context,
+            effective_context,
             round_index=round_index,
             persist_dataset_summary=persist_dataset_summary,
             persist_field_catalog=persist_field_catalog,
             persist_run_field_scores=persist_field_catalog,
+            removed_field_names=removed_field_names,
         )
         self._persisted_metadata[run_id] = _PersistedResearchMetadataState(
             cache_key=cache_result.profile.cache_key,
@@ -321,6 +325,7 @@ def persist_research_metadata(
     persist_dataset_summary: bool = True,
     persist_field_catalog: bool = True,
     persist_run_field_scores: bool = True,
+    removed_field_names: tuple[str, ...] = (),
 ) -> dict[str, bool]:
     """Persist dataset summary and research context metadata for the active run."""
     if persist_dataset_summary:
@@ -355,6 +360,11 @@ def persist_research_metadata(
             )
         ]
     )
+    if removed_field_names:
+        repository.delete_field_metadata(
+            removed_field_names,
+            run_id=environment.context.run_id,
+        )
     if persist_field_catalog:
         repository.save_field_catalog(
             [
@@ -436,7 +446,20 @@ def resolve_regime_key(
     if run and run.regime_key:
         return run.regime_key
     research_context = load_research_context(config, environment, stage=stage)
-    persist_research_metadata(repository, config, environment, research_context)
+    sanitized_context, blocked_fields = sanitize_generation_research_context(
+        repository,
+        config,
+        research_context,
+        environment,
+        stage=stage,
+    )
+    persist_research_metadata(
+        repository,
+        config,
+        environment,
+        sanitized_context,
+        removed_field_names=blocked_fields,
+    )
     return research_context.regime_key
 
 
@@ -454,7 +477,20 @@ def resolve_region_learning_context(
             global_regime_key=str(run.global_regime_key),
         )
     research_context = load_research_context(config, environment, stage=stage)
-    persist_research_metadata(repository, config, environment, research_context)
+    sanitized_context, blocked_fields = sanitize_generation_research_context(
+        repository,
+        config,
+        research_context,
+        environment,
+        stage=stage,
+    )
+    persist_research_metadata(
+        repository,
+        config,
+        environment,
+        sanitized_context,
+        removed_field_names=blocked_fields,
+    )
     return research_context.region_learning_context
 
 
@@ -504,39 +540,80 @@ def resolve_generation_field_registry(
     *,
     stage: str,
 ) -> FieldRegistry:
-    field_registry = resolve_field_registry(config, research_context)
-    invalid_fields = repository.brain_results.list_invalid_generation_fields(
+    sanitized_context, _ = sanitize_generation_research_context(
+        repository,
+        config,
+        research_context,
+        environment,
+        stage=stage,
+    )
+    return resolve_field_registry(config, sanitized_context)
+
+
+def list_invalid_generation_fields(
+    repository: SQLiteRepository,
+    config: AppConfig,
+) -> set[str]:
+    return repository.brain_results.list_invalid_generation_fields(
         region=config.brain.region,
         universe=config.brain.universe,
         delay=config.brain.delay,
     )
+
+
+def sanitize_generation_research_context(
+    repository: SQLiteRepository,
+    config: AppConfig,
+    research_context: ResearchContext,
+    environment: CommandEnvironment,
+    *,
+    stage: str,
+) -> tuple[ResearchContext, tuple[str, ...]]:
+    invalid_fields = list_invalid_generation_fields(repository, config)
     filtered_registry, blocked_fields = filter_generation_field_registry(
-        field_registry,
+        research_context.field_registry,
         blocked_fields=invalid_fields,
     )
-    if blocked_fields:
-        logger = get_logger(__name__, run_id=environment.context.run_id, stage=stage)
-        logger.info(
-            "Applied invalid-field blacklist to generation registry: blocked=%s sample=%s",
-            len(blocked_fields),
-            list(blocked_fields[:8]),
-        )
-        numeric_fields = filtered_registry.generation_numeric_fields(
-            config.generation.allowed_fields,
-            include_catalog_fields=config.generation.allow_catalog_fields_without_runtime,
-        )
-        if numeric_fields:
-            return filtered_registry
-        profile = (
-            f"region={config.brain.region or '-'} "
-            f"universe={config.brain.universe or '-'} "
-            f"delay={config.brain.delay}"
-        )
-        raise ValueError(
-            "Generation blacklist removed all numeric fields for BRAIN profile "
-            f"{profile}. blocked_count={len(blocked_fields)}"
-        )
-    return filtered_registry
+    if not blocked_fields:
+        return research_context, ()
+    logger = get_logger(__name__, run_id=environment.context.run_id, stage=stage)
+    logger.info(
+        "Pruned invalid fields from source field registry: blocked=%s sample=%s",
+        len(blocked_fields),
+        list(blocked_fields[:8]),
+    )
+    sanitized_context = ResearchContext(
+        bundle=research_context.bundle,
+        matrices=research_context.matrices,
+        region=research_context.region,
+        regime_key=research_context.regime_key,
+        global_regime_key=research_context.global_regime_key,
+        region_learning_context=research_context.region_learning_context,
+        memory_service=research_context.memory_service,
+        field_registry=filtered_registry,
+        legacy_regime_key=research_context.legacy_regime_key,
+        market_regime_key=research_context.market_regime_key,
+        effective_regime_key=research_context.effective_regime_key,
+        regime_label=research_context.regime_label,
+        regime_confidence=research_context.regime_confidence,
+        regime_features=dict(research_context.regime_features),
+    )
+    generation_registry = resolve_field_registry(config, sanitized_context)
+    numeric_fields = generation_registry.generation_numeric_fields(
+        config.generation.allowed_fields,
+        include_catalog_fields=config.generation.allow_catalog_fields_without_runtime,
+    )
+    if numeric_fields:
+        return sanitized_context, blocked_fields
+    profile = (
+        f"region={config.brain.region or '-'} "
+        f"universe={config.brain.universe or '-'} "
+        f"delay={config.brain.delay}"
+    )
+    raise ValueError(
+        "Generation blacklist removed all numeric fields for BRAIN profile "
+        f"{profile}. blocked_count={len(blocked_fields)}"
+    )
 
 
 def filter_generation_field_registry(

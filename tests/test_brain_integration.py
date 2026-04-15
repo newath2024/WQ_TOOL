@@ -6,6 +6,7 @@ from collections import Counter
 from dataclasses import replace
 from pathlib import Path
 
+from adapters.brain_api_adapter import ConcurrentSimulationLimitExceeded
 from adapters.brain_manual_adapter import BrainManualAdapter
 from adapters.simulation_adapter import SimulationAdapter
 from core.config import SimulationProfile, load_config
@@ -93,6 +94,19 @@ class NeverCompletesAdapter(FakeCompletedAdapter):
 class SubmitFailsAdapter(FakeCompletedAdapter):
     def submit_simulation(self, expression: str, sim_config: dict) -> dict:
         raise RuntimeError('BRAIN API request failed with status 400: {"settings":{"nanHandling":["\\"FALSE\\" is not a valid choice."]}}')
+
+
+class PartialSubmitLimitAdapter(FakeCompletedAdapter):
+    def __init__(self, *, fail_on_call: int) -> None:
+        super().__init__()
+        self.fail_on_call = fail_on_call
+        self.submit_attempts = 0
+
+    def submit_simulation(self, expression: str, sim_config: dict) -> dict:
+        self.submit_attempts += 1
+        if self.submit_attempts >= self.fail_on_call:
+            raise ConcurrentSimulationLimitExceeded("CONCURRENT_SIMULATION_LIMIT_EXCEEDED")
+        return super().submit_simulation(expression, sim_config)
 
 
 def test_manual_adapter_export_and_import_round_trip(tmp_path: Path) -> None:
@@ -532,6 +546,66 @@ def test_brain_service_marks_timeout_when_jobs_never_finish(tmp_path: Path) -> N
     assert batch.results[0].rejection_reason == "poll_timeout"
 
 
+def test_brain_service_recover_jobs_ignores_local_timeout_deadline_and_finalizes_terminal_results(tmp_path: Path) -> None:
+    config = load_config("config/dev.yaml")
+    config.storage.path = ":memory:"
+    repository = SQLiteRepository(":memory:")
+    try:
+        environment = _init_environment(repository, config, "run-brain-sim")
+        service = BrainService(repository, config.brain, adapter=FakeCompletedAdapter())
+        candidate = _candidate("alpha-1", "rank(close)")
+        batch = service.submit_candidates([candidate], config=config, environment=environment, round_index=1, batch_size=1)
+        submission = repository.submissions.get_submission(batch.jobs[0].job_id)
+        assert submission is not None
+        assert submission.timeout_deadline_at is not None
+        repository.submissions.update_submission_runtime(
+            submission.job_id,
+            updated_at=submission.updated_at,
+            timeout_deadline_at="2000-01-01T00:00:00+00:00",
+        )
+
+        recovered = service.recover_jobs([submission.job_id], config=config, environment=environment)
+        refreshed_batch = repository.submissions.get_batch(batch.batch_id)
+        results = repository.brain_results.list_results(run_id=environment.context.run_id)
+    finally:
+        repository.close()
+
+    assert recovered[0].status == "completed"
+    assert recovered[0].timeout_deadline_at is None
+    assert refreshed_batch is not None
+    assert refreshed_batch.status == "completed"
+    assert len(results) == 1
+
+
+def test_brain_service_recover_jobs_keeps_remote_running_jobs_pending(tmp_path: Path) -> None:
+    config = load_config("config/dev.yaml")
+    config.storage.path = ":memory:"
+    repository = SQLiteRepository(":memory:")
+    try:
+        environment = _init_environment(repository, config, "run-brain-sim")
+        service = BrainService(repository, config.brain, adapter=NeverCompletesAdapter())
+        candidate = _candidate("alpha-1", "rank(close)")
+        batch = service.submit_candidates([candidate], config=config, environment=environment, round_index=1, batch_size=1)
+        submission = repository.submissions.get_submission(batch.jobs[0].job_id)
+        assert submission is not None
+        repository.submissions.update_submission_runtime(
+            submission.job_id,
+            updated_at=submission.updated_at,
+            timeout_deadline_at="2000-01-01T00:00:00+00:00",
+        )
+
+        recovered = service.recover_jobs([submission.job_id], config=config, environment=environment)
+        refreshed = repository.submissions.get_submission(submission.job_id)
+        results = repository.brain_results.list_results(run_id=environment.context.run_id)
+    finally:
+        repository.close()
+
+    assert recovered[0].status == "running"
+    assert refreshed is not None
+    assert refreshed.status == "running"
+    assert results == []
+
+
 def test_brain_service_marks_batch_failed_when_submit_fails_before_any_job(tmp_path: Path) -> None:
     config = load_config("config/dev.yaml")
     config.storage.path = ":memory:"
@@ -553,6 +627,46 @@ def test_brain_service_marks_batch_failed_when_submit_fails_before_any_job(tmp_p
     assert batch is not None
     assert batch.status == "failed"
     assert batch.service_status_reason == "submission_failed:RuntimeError"
+
+
+def test_brain_service_records_actual_submitted_count_when_limit_interrupts_batch(tmp_path: Path) -> None:
+    config = load_config("config/dev.yaml")
+    config.storage.path = ":memory:"
+    repository = SQLiteRepository(":memory:")
+    try:
+        environment = _init_environment(repository, config, "run-brain-partial-submit")
+        service = BrainService(repository, config.brain, adapter=PartialSubmitLimitAdapter(fail_on_call=3))
+        candidates = [
+            _candidate("alpha-1", "rank(close)"),
+            _candidate("alpha-2", "rank(open)"),
+            _candidate("alpha-3", "rank(volume)"),
+        ]
+        try:
+            service.submit_candidates(candidates, config=config, environment=environment, round_index=1, batch_size=3)
+        except ConcurrentSimulationLimitExceeded as exc:
+            assert exc.detail == "CONCURRENT_SIMULATION_LIMIT_EXCEEDED"
+        else:
+            raise AssertionError("Expected concurrent simulation limit")
+        batch = repository.submissions.get_latest_batch(environment.context.run_id)
+        assert batch is not None
+        submissions = repository.submissions.list_submissions(
+            run_id=environment.context.run_id,
+            batch_id=batch.batch_id,
+        )
+    finally:
+        repository.close()
+
+    assert batch.status == "submitting"
+    assert batch.candidate_count == 2
+    assert batch.service_status_reason == "submission_failed:ConcurrentSimulationLimitExceeded"
+    assert len(submissions) == 2
+    notes = json.loads(batch.notes_json)
+    assert notes["candidate_ids"] == ["alpha-1", "alpha-2"]
+    assert notes["planned_candidate_count"] == 3
+    assert notes["submitted_candidate_count"] == 2
+    assert notes["submission_interrupted"] is True
+    snapshot = json.loads(batch.sim_config_snapshot)
+    assert [payload["candidate_id"] for payload in snapshot["candidate_payloads"]] == ["alpha-1", "alpha-2"]
 
 
 def test_closed_loop_service_runs_with_mocked_adapter(tmp_path: Path) -> None:

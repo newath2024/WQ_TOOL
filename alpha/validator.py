@@ -25,6 +25,7 @@ _CROSS_SECTIONAL_NESTING_OPERATORS = frozenset(
         "normalize",
     }
 )
+_STRICT_GROUP_ARGUMENT_OPERATORS = frozenset({"group_rank", "group_zscore", "group_neutralize"})
 _PRICE_FIELDS = frozenset({"close", "open", "high", "low", "vwap"})
 _QUANTITY_FIELDS = frozenset({"volume", "adv20", "sharesout"})
 _CURRENCY_FIELDS = frozenset({"sales", "assets", "debt", "equity", "ebitda", "net_income", "revenue", "cash", "capex"})
@@ -73,6 +74,7 @@ class ExpressionValidator:
         max_depth: int,
         group_fields: set[str] | None = None,
         field_types: dict[str, str] | None = None,
+        field_categories: dict[str, str] | None = None,
         complexity_limit: int | None = None,
         exact_field_types: dict[str, str] | None = None,
     ) -> None:
@@ -81,6 +83,7 @@ class ExpressionValidator:
         self.max_depth = max_depth
         self.group_fields = group_fields or set()
         self.field_types = field_types or {}
+        self.field_categories = field_categories or {}
         self.complexity_limit = complexity_limit
         self.exact_field_types = exact_field_types or {}
 
@@ -176,6 +179,8 @@ class ExpressionValidator:
                     f"received {len(node.args)}.",
                 )
                 return None
+            if not self._validate_group_operator_argument(node, errors, issues):
+                return None
             arg_types: list[str] = []
             for argument in node.args:
                 inferred = self._infer_node_type(argument, errors, issues)
@@ -232,6 +237,43 @@ class ExpressionValidator:
         )
         return None
 
+    def _validate_group_operator_argument(
+        self,
+        node: FunctionCallNode,
+        errors: list[str],
+        issues: list[ValidationIssue],
+    ) -> bool:
+        if node.name not in _STRICT_GROUP_ARGUMENT_OPERATORS or len(node.args) < 2:
+            return True
+        group_arg = node.args[1]
+        if not isinstance(group_arg, IdentifierNode):
+            self._add_issue(
+                errors,
+                issues,
+                "validation_invalid_group_field",
+                (
+                    f"Operator '{node.name}' requires a valid group field identifier, "
+                    f"received '{to_expression(group_arg)}'."
+                ),
+            )
+            return False
+        if group_arg.name in self.group_fields:
+            return True
+        if (
+            group_arg.name in self.field_categories
+            or group_arg.name in self.exact_field_types
+            or group_arg.name in self.field_types
+            or group_arg.name in self.allowed_fields
+        ):
+            self._add_issue(
+                errors,
+                issues,
+                "validation_invalid_group_field",
+                f"Operator '{node.name}' requires a valid group field, received '{group_arg.name}'.",
+            )
+            return False
+        return True
+
     def _validate_operator_field_types(
         self,
         node: FunctionCallNode,
@@ -240,7 +282,9 @@ class ExpressionValidator:
         issues: list[ValidationIssue],
     ) -> None:
         if node.name in {"group_neutralize", "group_rank", "group_zscore", "ts_mean", "ts_std_dev", "ts_sum", "ts_rank"}:
-            for arg in node.args:
+            for index, arg in enumerate(node.args):
+                if node.name in _STRICT_GROUP_ARGUMENT_OPERATORS and index == 1:
+                    continue
                 if isinstance(arg, IdentifierNode) and self.exact_field_types.get(arg.name) == "event":
                     self._add_issue(
                         errors,
@@ -462,6 +506,7 @@ def validate_expression(
     max_depth: int,
     group_fields: set[str] | None = None,
     field_types: dict[str, str] | None = None,
+    field_categories: dict[str, str] | None = None,
     complexity_limit: int | None = None,
     exact_field_types: dict[str, str] | None = None,
 ) -> ValidationResult:
@@ -471,6 +516,7 @@ def validate_expression(
         max_depth=max_depth,
         group_fields=group_fields,
         field_types=field_types,
+        field_categories=field_categories,
         complexity_limit=complexity_limit,
         exact_field_types=exact_field_types,
     ).validate(node)

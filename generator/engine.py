@@ -543,6 +543,7 @@ class AlphaGenerationEngine:
             max_depth=self.config.max_depth,
             group_fields=prepared_validation_ctx.group_fields,
             field_types=prepared_validation_ctx.field_types,
+            field_categories=prepared_validation_ctx.field_categories,
             complexity_limit=self.config.complexity_limit,
             exact_field_types=self.field_registry.exact_field_types() if hasattr(self.field_registry, "exact_field_types") else None,
         )
@@ -797,7 +798,7 @@ class AlphaGenerationEngine:
         }
         group_fields = {
             spec.name
-            for spec in self.field_registry.generation_group_fields(
+            for spec in self.field_registry.generation_group_key_fields(
                 include_catalog_fields=self.config.allow_catalog_fields_without_runtime,
             )
         }

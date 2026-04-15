@@ -24,6 +24,7 @@ RESUMABLE_COMMANDS = {
     "run-closed-loop",
     "brain-login",
     "service-status",
+    "recover-brain-jobs",
 }
 
 

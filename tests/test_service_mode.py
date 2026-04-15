@@ -26,7 +26,7 @@ from services.service_scheduler import ServiceScheduler
 from services.service_runner import ServiceRunner
 from services.service_worker import ServiceWorker
 from services.session_manager import SessionManager
-from storage.models import ServiceRuntimeRecord, SubmissionBatchRecord, SubmissionRecord
+from storage.models import BrainResultRecord, ServiceRuntimeRecord, SubmissionBatchRecord, SubmissionRecord
 from storage.repository import SQLiteRepository
 
 
@@ -580,6 +580,7 @@ def test_service_worker_rechecks_auth_during_auth_related_cooldown() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
+        config.service.max_pending_jobs = 0
         run_id = "run-auth-cooldown"
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
@@ -663,6 +664,7 @@ def test_service_runner_resumes_pending_jobs_without_duplicate_submission() -> N
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
+        config.service.max_pending_jobs = 0
         run_id = "run-resume"
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
@@ -694,6 +696,7 @@ def test_service_runner_writes_progress_log_jsonl(tmp_path: Path) -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
+        config.service.max_pending_jobs = 0
         config.runtime.progress_log_dir = str(tmp_path / "progress")
         run_id = "run-progress-log"
         _seed_run(repository, run_id)
@@ -1023,6 +1026,182 @@ def test_service_worker_skips_new_submission_when_pending_capacity_is_full() -> 
     assert len(adapter.submit_calls) == 0
 
 
+def test_service_worker_does_not_top_up_while_pending_batches_exist() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 2
+        config.service.max_pending_jobs = 2
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-top-up-after-poll"
+        _seed_run(repository, run_id)
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "running"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(2))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        pending = repository.submissions.list_pending_submissions(run_id)
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.new_result_count == 0
+    assert outcome.submitted_count == 0
+    assert outcome.pending_job_count == 1
+    assert len(pending) == 1
+    assert len(adapter.submit_calls) == 0
+
+
+def test_service_worker_submits_on_next_idle_tick_after_pending_batch_completes() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 2
+        config.service.max_pending_jobs = 2
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-idle-after-poll"
+        _seed_run(repository, run_id)
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        batch_service = FakeBatchPreparationService(_batch_result(_service_candidates(2)))
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=batch_service,
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        first = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        second = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=2)
+        pending = repository.submissions.list_pending_submissions(run_id)
+    finally:
+        repository.close()
+
+    assert first.status == "idle"
+    assert first.new_result_count == 1
+    assert first.submitted_count == 0
+    assert len(batch_service.calls) == 1
+    assert second.status == "running"
+    assert second.submitted_count == 2
+    assert second.pending_job_count == 2
+    assert len(pending) == 2
+    assert len(adapter.submit_calls) == 2
+
+
+def test_service_worker_skips_new_submission_when_stop_requested() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 2
+        config.service.max_pending_jobs = 2
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-stop-requested"
+        _seed_run(repository, run_id)
+        batch_service = FakeBatchPreparationService(_batch_result(_service_candidates(2)))
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=batch_service,
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1, stop_requested=True)
+        pending = repository.submissions.list_pending_submissions(run_id)
+    finally:
+        repository.close()
+
+    assert outcome.status == "idle"
+    assert outcome.submitted_count == 0
+    assert outcome.pending_job_count == 0
+    assert len(pending) == 0
+    assert len(batch_service.calls) == 0
+    assert len(adapter.submit_calls) == 0
+
+
+def test_service_worker_extends_pending_timeout_deadline_while_waiting_for_confirmation() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.persona_confirmation_required = True
+        config.service.persona_confirmation_poll_interval_seconds = 45
+        run_id = "run-wait-extends-timeout"
+        _seed_run(repository, run_id)
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        adapter = FakeApiAdapter(persona_confirmation_plan=[{"approved": False, "last_update_id": 101}])
+        brain_service = BrainService(repository, config.brain, adapter=adapter)
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=brain_service,
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(
+                adapter,
+                persona_email_cooldown_seconds=999999,
+                persona_confirmation_required=True,
+            ),
+        )
+        before = repository.submissions.get_submission("job-1")
+        assert before is not None
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        after = repository.submissions.get_submission("job-1")
+    finally:
+        repository.close()
+
+    assert outcome.status == "waiting_persona_confirmation"
+    assert after is not None
+    assert before.timeout_deadline_at is not None
+    assert after.timeout_deadline_at is not None
+    assert datetime.fromisoformat(after.timeout_deadline_at) > datetime.fromisoformat(before.timeout_deadline_at)
+
+
+def test_service_worker_respects_learned_safe_cap_when_submitting_new_batch() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 10
+        config.service.max_pending_jobs = 10
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-learned-safe-cap"
+        _seed_run(repository, run_id)
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(10))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        runtime = replace(_runtime_record(run_id=run_id), counters_json=json.dumps({"learned_safe_cap": 4}))
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.submitted_count == 4
+    assert outcome.pending_job_count == 4
+    assert len(adapter.submit_calls) == 4
+
+
 def test_service_worker_pauses_three_minutes_after_concurrent_submission_limit() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -1058,10 +1237,57 @@ def test_service_worker_pauses_three_minutes_after_concurrent_submission_limit()
     assert len(adapter.submit_calls) == 1
 
 
+def test_service_worker_persists_learned_safe_cap_after_partial_limit_hit() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 3
+        config.service.max_pending_jobs = 10
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-submit-limit-partial"
+        _seed_run(repository, run_id)
+        runtime = _runtime_record(run_id=run_id)
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter()
+        original_submit = adapter.submit_simulation
+
+        def fail_after_partial(expression: str, sim_config: dict) -> dict:
+            if len(adapter.submit_calls) >= 2:
+                adapter.submit_calls.append((expression, sim_config))
+                raise ConcurrentSimulationLimitExceeded("CONCURRENT_SIMULATION_LIMIT_EXCEEDED")
+            return original_submit(expression, sim_config)
+
+        adapter.submit_simulation = fail_after_partial  # type: ignore[method-assign]
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(3))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert outcome.status == "cooldown"
+    assert outcome.pending_job_count == 2
+    assert len(adapter.submit_calls) == 3
+    assert refreshed is not None
+    counters = json.loads(refreshed.counters_json)
+    assert counters["learned_safe_cap"] == 3
+    assert refreshed.cooldown_until is not None
+    assert refreshed.last_error is not None
+
+
 def test_service_worker_empty_poll_skips_progress_event_and_returns_zero_new_results(tmp_path: Path) -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
+        config.service.max_pending_jobs = 1
         config.runtime.progress_log_dir = str(tmp_path / "progress")
         run_id = "run-empty-poll"
         _seed_run(repository, run_id)
@@ -1167,6 +1393,7 @@ def test_service_runner_suppresses_noop_progress_events_after_first_empty_poll(t
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
+        config.service.max_pending_jobs = 1
         config.runtime.progress_log_dir = str(tmp_path / "progress")
         run_id = "run-noop-progress"
         _seed_run(repository, run_id)
@@ -1339,6 +1566,7 @@ def test_service_resubmits_ambiguous_batch_when_policy_is_resubmit() -> None:
     try:
         config = _service_config()
         config.service.ambiguous_submission_policy = "resubmit"
+        config.service.max_pending_jobs = 0
         run_id = "run-resubmit"
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(
@@ -1401,11 +1629,368 @@ def test_service_resubmits_ambiguous_batch_when_policy_is_resubmit() -> None:
     assert new_batches[0].status in {"submitted", "running", "completed"}
 
 
+def test_service_replay_guard_skips_candidates_with_active_submission_during_ambiguous_resubmit() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit-replay-active"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-1", "rank(close)"),
+                _candidate("alpha-2", "rank(open)"),
+            ],
+        )
+        _seed_pending_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-active",
+            job_id="job-active",
+            status="submitted",
+            candidate_id="alpha-1",
+            expression="rank(close)",
+        )
+        timestamp = _timestamp()
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-ambiguous",
+                run_id=run_id,
+                round_index=2,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "old-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "old-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=timestamp,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        _, _, resubmitted, _ = worker._recover_submitting_batches(  # noqa: SLF001
+            service_name=config.service.lock_name,
+            run_id=run_id,
+            now=_timestamp(),
+            allow_resubmit=True,
+        )
+        source_batch = repository.submissions.get_batch("batch-ambiguous")
+        new_batch = repository.submissions.get_batch(resubmitted[0]) if resubmitted else None
+        pending_alpha_1 = [
+            submission
+            for submission in repository.submissions.list_pending_submissions(run_id)
+            if submission.candidate_id == "alpha-1"
+        ]
+    finally:
+        repository.close()
+
+    assert len(resubmitted) == 1
+    assert len(adapter.submit_calls) == 1
+    assert source_batch is not None
+    assert source_batch.status == "failed"
+    assert source_batch.service_status_reason.startswith("ambiguous_submission_resubmitted:")
+    source_notes = json.loads(source_batch.notes_json)
+    assert source_notes["recovery_source_candidate_ids"] == ["alpha-1", "alpha-2"]
+    assert source_notes["recovery_skipped_candidates"] == [
+        {
+            "candidate_id": "alpha-1",
+            "reason": "ambiguous_replay_guard_active_submission",
+            "blocking_batch_id": "batch-active",
+            "blocking_job_id": "job-active",
+            "blocking_status": "submitted",
+        }
+    ]
+    assert new_batch is not None
+    assert new_batch.candidate_count == 1
+    new_notes = json.loads(new_batch.notes_json)
+    assert new_notes["candidate_ids"] == ["alpha-2"]
+    assert new_notes["resubmitted_from_batch_id"] == "batch-ambiguous"
+    assert new_notes["recovery_skipped_candidates"] == source_notes["recovery_skipped_candidates"]
+    assert len(pending_alpha_1) == 1
+    assert pending_alpha_1[0].batch_id == "batch-active"
+
+
+def test_service_replay_guard_skips_candidates_with_terminal_result_during_ambiguous_resubmit() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit-replay-terminal"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-1", "rank(close)"),
+                _candidate("alpha-2", "rank(open)"),
+            ],
+        )
+        _seed_terminal_result(
+            repository,
+            run_id=run_id,
+            batch_id="batch-terminal",
+            job_id="job-terminal",
+            candidate_id="alpha-1",
+            expression="rank(close)",
+            status="failed",
+        )
+        timestamp = _timestamp()
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-ambiguous",
+                run_id=run_id,
+                round_index=2,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "old-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "old-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=timestamp,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        _, _, resubmitted, _ = worker._recover_submitting_batches(  # noqa: SLF001
+            service_name=config.service.lock_name,
+            run_id=run_id,
+            now=_timestamp(),
+            allow_resubmit=True,
+        )
+        source_batch = repository.submissions.get_batch("batch-ambiguous")
+        new_batch = repository.submissions.get_batch(resubmitted[0]) if resubmitted else None
+    finally:
+        repository.close()
+
+    assert len(resubmitted) == 1
+    assert len(adapter.submit_calls) == 1
+    assert source_batch is not None
+    source_notes = json.loads(source_batch.notes_json)
+    assert source_notes["recovery_skipped_candidates"] == [
+        {
+            "candidate_id": "alpha-1",
+            "reason": "ambiguous_replay_guard_terminal_result",
+            "blocking_batch_id": "batch-terminal",
+            "blocking_job_id": "job-terminal",
+            "blocking_status": "failed",
+        }
+    ]
+    assert new_batch is not None
+    new_notes = json.loads(new_batch.notes_json)
+    assert new_notes["candidate_ids"] == ["alpha-2"]
+    assert "alpha-1" not in new_notes["candidate_ids"]
+
+
+def test_service_replay_guard_fails_ambiguous_batch_when_no_candidates_remain_resubmittable() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit-replay-empty"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-1", "rank(close)"),
+                _candidate("alpha-2", "rank(open)"),
+            ],
+        )
+        _seed_pending_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-active",
+            job_id="job-active",
+            status="running",
+            candidate_id="alpha-1",
+            expression="rank(close)",
+        )
+        _seed_terminal_result(
+            repository,
+            run_id=run_id,
+            batch_id="batch-terminal",
+            job_id="job-terminal",
+            candidate_id="alpha-2",
+            expression="rank(open)",
+            status="completed",
+        )
+        timestamp = _timestamp()
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-ambiguous",
+                run_id=run_id,
+                round_index=2,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "expression": "rank(close)", "job_id": "old-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "old-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=timestamp,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        _, failed, resubmitted, _ = worker._recover_submitting_batches(  # noqa: SLF001
+            service_name=config.service.lock_name,
+            run_id=run_id,
+            now=_timestamp(),
+            allow_resubmit=True,
+        )
+        source_batch = repository.submissions.get_batch("batch-ambiguous")
+        batches = repository.submissions.list_batches(run_id)
+    finally:
+        repository.close()
+
+    assert resubmitted == []
+    assert failed == ["batch-ambiguous"]
+    assert len(adapter.submit_calls) == 0
+    assert len([batch for batch in batches if batch.batch_id not in {"batch-active", "batch-ambiguous", "batch-terminal"}]) == 0
+    assert source_batch is not None
+    assert source_batch.status == "failed"
+    assert source_batch.service_status_reason == "ambiguous_submission_no_resubmittable_candidates"
+    source_notes = json.loads(source_batch.notes_json)
+    assert {item["reason"] for item in source_notes["recovery_skipped_candidates"]} == {
+        "ambiguous_replay_guard_active_submission",
+        "ambiguous_replay_guard_terminal_result",
+    }
+
+
+def test_service_replay_guard_skips_missing_candidate_payload_without_copying_it_to_new_batch() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.service.ambiguous_submission_policy = "resubmit"
+        run_id = "run-resubmit-replay-missing"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(run_id, [_candidate("alpha-2", "rank(open)")])
+        timestamp = _timestamp()
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-ambiguous",
+                run_id=run_id,
+                round_index=2,
+                backend="api",
+                status="paused_quarantine",
+                candidate_count=2,
+                sim_config_snapshot=json.dumps(
+                    {
+                        "region": "USA",
+                        "candidate_payloads": [
+                            {"candidate_id": "alpha-1", "job_id": "old-job-1"},
+                            {"candidate_id": "alpha-2", "expression": "rank(open)", "job_id": "old-job-2"},
+                        ],
+                    }
+                ),
+                export_path=None,
+                notes_json=json.dumps({"candidate_ids": ["alpha-1", "alpha-2"]}),
+                service_status_reason="ambiguous_submission",
+                quarantined_at=timestamp,
+                created_at=timestamp,
+                updated_at=timestamp,
+            )
+        )
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        _, _, resubmitted, _ = worker._recover_submitting_batches(  # noqa: SLF001
+            service_name=config.service.lock_name,
+            run_id=run_id,
+            now=_timestamp(),
+            allow_resubmit=True,
+        )
+        source_batch = repository.submissions.get_batch("batch-ambiguous")
+        new_batch = repository.submissions.get_batch(resubmitted[0]) if resubmitted else None
+    finally:
+        repository.close()
+
+    assert len(resubmitted) == 1
+    assert len(adapter.submit_calls) == 1
+    assert source_batch is not None
+    source_notes = json.loads(source_batch.notes_json)
+    assert source_notes["recovery_skipped_candidates"] == [
+        {
+            "candidate_id": "alpha-1",
+            "reason": "ambiguous_submission_missing_candidate",
+        }
+    ]
+    assert new_batch is not None
+    assert new_batch.candidate_count == 1
+    new_notes = json.loads(new_batch.notes_json)
+    assert new_notes["candidate_ids"] == ["alpha-2"]
+    snapshot = json.loads(new_batch.sim_config_snapshot)
+    assert [payload["candidate_id"] for payload in snapshot["candidate_payloads"]] == ["alpha-2"]
+
+
 def test_service_recovers_partial_ambiguous_batch_without_duplicate_resubmit() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
         config.service.ambiguous_submission_policy = "resubmit"
+        config.service.max_pending_jobs = 0
         run_id = "run-resubmit-partial"
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(
@@ -1572,6 +2157,7 @@ def test_service_only_resubmits_latest_ambiguous_leaf_batch() -> None:
     try:
         config = _service_config()
         config.service.ambiguous_submission_policy = "resubmit"
+        config.service.max_pending_jobs = 0
         run_id = "run-resubmit-latest-only"
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(
@@ -1695,6 +2281,7 @@ def test_service_only_resubmits_newest_ambiguous_batch() -> None:
     try:
         config = _service_config()
         config.service.ambiguous_submission_policy = "resubmit"
+        config.service.max_pending_jobs = 0
         run_id = "run-resubmit-newest-only"
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(
@@ -1857,7 +2444,19 @@ def _seed_pending_batch(
     batch_id: str,
     job_id: str,
     status: str,
+    candidate_id: str = "alpha-1",
+    expression: str = "rank(close)",
 ) -> None:
+    timestamp = _timestamp()
+    sim_config_snapshot = json.dumps(
+        {
+            "region": "USA",
+            "universe": "TOP3000",
+            "delay": 1,
+            "neutralization": "sector",
+            "decay": 0,
+        }
+    )
     repository.submissions.upsert_batch(
         SubmissionBatchRecord(
             batch_id=batch_id,
@@ -1866,19 +2465,11 @@ def _seed_pending_batch(
             backend="api",
             status="submitted",
             candidate_count=1,
-            sim_config_snapshot=json.dumps(
-                {
-                    "region": "USA",
-                    "universe": "TOP3000",
-                    "delay": 1,
-                    "neutralization": "sector",
-                    "decay": 0,
-                }
-            ),
+            sim_config_snapshot=sim_config_snapshot,
             export_path=None,
             notes_json="{}",
-            created_at=_timestamp(),
-            updated_at=_timestamp(),
+            created_at=timestamp,
+            updated_at=timestamp,
         )
     )
     repository.submissions.upsert_submissions(
@@ -1888,25 +2479,105 @@ def _seed_pending_batch(
                 batch_id=batch_id,
                 run_id=run_id,
                 round_index=1,
-                candidate_id="alpha-1",
-                expression="rank(close)",
+                candidate_id=candidate_id,
+                expression=expression,
                 backend="api",
                 status=status,
-                sim_config_snapshot=json.dumps(
-                    {
-                        "region": "USA",
-                        "universe": "TOP3000",
-                        "delay": 1,
-                        "neutralization": "sector",
-                        "decay": 0,
-                    }
-                ),
-                submitted_at=_timestamp(),
-                updated_at=_timestamp(),
+                sim_config_snapshot=sim_config_snapshot,
+                submitted_at=timestamp,
+                updated_at=timestamp,
                 completed_at=None,
                 export_path=None,
                 raw_submission_json="{}",
                 error_message=None,
+            )
+        ]
+    )
+
+
+def _seed_terminal_result(
+    repository: SQLiteRepository,
+    *,
+    run_id: str,
+    batch_id: str,
+    job_id: str,
+    candidate_id: str,
+    expression: str,
+    status: str,
+) -> None:
+    timestamp = _timestamp()
+    sim_config_snapshot = json.dumps(
+        {
+            "region": "USA",
+            "universe": "TOP3000",
+            "delay": 1,
+            "neutralization": "sector",
+            "decay": 0,
+        }
+    )
+    repository.submissions.upsert_batch(
+        SubmissionBatchRecord(
+            batch_id=batch_id,
+            run_id=run_id,
+            round_index=1,
+            backend="api",
+            status="completed",
+            candidate_count=1,
+            sim_config_snapshot=sim_config_snapshot,
+            export_path=None,
+            notes_json=json.dumps({"candidate_ids": [candidate_id]}),
+            created_at=timestamp,
+            updated_at=timestamp,
+        )
+    )
+    repository.submissions.upsert_submissions(
+        [
+            SubmissionRecord(
+                job_id=job_id,
+                batch_id=batch_id,
+                run_id=run_id,
+                round_index=1,
+                candidate_id=candidate_id,
+                expression=expression,
+                backend="api",
+                status=status,
+                sim_config_snapshot=sim_config_snapshot,
+                submitted_at=timestamp,
+                updated_at=timestamp,
+                completed_at=timestamp,
+                export_path=None,
+                raw_submission_json="{}",
+                error_message=None,
+            )
+        ]
+    )
+    repository.brain_results.save_results(
+        [
+            BrainResultRecord(
+                job_id=job_id,
+                run_id=run_id,
+                round_index=1,
+                batch_id=batch_id,
+                candidate_id=candidate_id,
+                expression=expression,
+                status=status,
+                region="USA",
+                universe="TOP3000",
+                delay=1,
+                neutralization="sector",
+                decay=0,
+                sharpe=1.2 if status == "completed" else None,
+                fitness=0.9 if status == "completed" else None,
+                turnover=0.5 if status == "completed" else None,
+                drawdown=0.2 if status == "completed" else None,
+                returns=0.07 if status == "completed" else None,
+                margin=0.04 if status == "completed" else None,
+                submission_eligible=(status == "completed"),
+                rejection_reason=None,
+                raw_result_json="{}",
+                metric_source="external_brain",
+                simulated_at=timestamp,
+                created_at=timestamp,
             )
         ]
     )

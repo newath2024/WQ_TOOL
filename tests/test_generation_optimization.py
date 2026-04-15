@@ -35,22 +35,43 @@ def _build_generation_config() -> GenerationConfig:
 
 
 def _build_field_registry() -> FieldRegistry:
-    return FieldRegistry(
-        fields={
-            name: FieldSpec(
-                name=name,
-                dataset="test",
-                field_type="matrix",
-                coverage=1.0,
-                alpha_usage_count=10,
-                category="price" if name != "volume" else "volume",
-                runtime_available=True,
-                field_score=0.8,
-                category_weight=0.8,
-            )
-            for name in ["close", "volume", "returns"]
-        }
+    fields = {
+        name: FieldSpec(
+            name=name,
+            dataset="test",
+            field_type="matrix",
+            coverage=1.0,
+            alpha_usage_count=10,
+            category="price" if name != "volume" else "volume",
+            runtime_available=True,
+            field_score=0.8,
+            category_weight=0.8,
+        )
+        for name in ["close", "volume", "returns"]
+    }
+    fields["sector"] = FieldSpec(
+        name="sector",
+        dataset="test",
+        field_type="vector",
+        coverage=1.0,
+        alpha_usage_count=6,
+        category="group",
+        runtime_available=True,
+        field_score=0.9,
+        category_weight=0.8,
     )
+    fields["forecast_currency_tangible_book_value_per_share"] = FieldSpec(
+        name="forecast_currency_tangible_book_value_per_share",
+        dataset="test",
+        field_type="vector",
+        coverage=1.0,
+        alpha_usage_count=4,
+        category="analyst",
+        runtime_available=True,
+        field_score=0.7,
+        category_weight=0.8,
+    )
+    return FieldRegistry(fields=fields)
 
 
 def _build_guided_generator(adaptive_config: AdaptiveGenerationConfig | None = None) -> GuidedGenerator:
@@ -83,7 +104,7 @@ def test_engine_validation_context_cache_reuses_field_resolution(monkeypatch) ->
     counts = {"numeric": 0, "group": 0, "types": 0}
     field_registry_type = type(field_registry)
     original_numeric = field_registry_type.generation_numeric_fields
-    original_group = field_registry_type.generation_group_fields
+    original_group = field_registry_type.generation_group_key_fields
     original_types = field_registry_type.field_types
 
     def counted_numeric(self, *args, **kwargs):
@@ -99,12 +120,29 @@ def test_engine_validation_context_cache_reuses_field_resolution(monkeypatch) ->
         return original_types(self, *args, **kwargs)
 
     monkeypatch.setattr(field_registry_type, "generation_numeric_fields", counted_numeric)
-    monkeypatch.setattr(field_registry_type, "generation_group_fields", counted_group)
+    monkeypatch.setattr(field_registry_type, "generation_group_key_fields", counted_group)
     monkeypatch.setattr(field_registry_type, "field_types", counted_types)
 
     assert engine.build_candidate("rank(close)", mode="test", parent_ids=()) is not None
     assert engine.build_candidate("rank(volume)", mode="test", parent_ids=()) is not None
     assert counts == {"numeric": 1, "group": 1, "types": 1}
+
+
+def test_engine_validation_context_uses_only_true_group_keys() -> None:
+    config = _build_generation_config()
+    engine = AlphaGenerationEngine(
+        config=config,
+        adaptive_config=AdaptiveGenerationConfig(),
+        registry=build_registry(["group_neutralize", *config.allowed_operators]),
+        field_registry=_build_field_registry(),
+    )
+
+    context = engine.prepare_validation_context()
+
+    assert context.group_fields == {"sector"}
+    assert "sector" in context.allowed_generation_fields
+    assert "forecast_currency_tangible_book_value_per_share" not in context.group_fields
+    assert "forecast_currency_tangible_book_value_per_share" not in context.allowed_generation_fields
 
 
 def test_engine_validation_context_cache_invalidates_when_field_registry_changes() -> None:
@@ -165,11 +203,17 @@ def test_candidate_build_result_maps_validation_sub_reasons() -> None:
 
     unknown_operator = engine._build_candidate_result("mystery(close)", mode="test", parent_ids=())  # noqa: SLF001
     arity_mismatch = engine._build_candidate_result("rank(close, 1)", mode="test", parent_ids=())  # noqa: SLF001
-    unsupported = engine._build_candidate_result("group_neutralize(close, close)", mode="test", parent_ids=())  # noqa: SLF001
+    invalid_group = engine._build_candidate_result(
+        "group_neutralize(close, forecast_currency_tangible_book_value_per_share)",
+        mode="test",
+        parent_ids=(),
+    )  # noqa: SLF001
+    unsupported = engine._build_candidate_result("group_neutralize(sector, sector)", mode="test", parent_ids=())  # noqa: SLF001
     semantic_invalid = engine._build_candidate_result("ts_mean(close, 0)", mode="test", parent_ids=())  # noqa: SLF001
 
     assert unknown_operator.failure_reason == "validation_unknown_operator"
     assert arity_mismatch.failure_reason == "validation_operator_arity_mismatch"
+    assert invalid_group.failure_reason == "validation_invalid_group_field"
     assert unsupported.failure_reason == "validation_unsupported_combination"
     assert semantic_invalid.failure_reason == "validation_semantic_invalid"
 
