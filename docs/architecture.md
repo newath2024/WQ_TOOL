@@ -1,5 +1,7 @@
 # Architecture
 
+> Normative note: lifecycle, orchestration, timeout, and recovery contracts are defined in `docs/alpha_pipeline_spec.md`. This file remains an architecture overview and does not override the execution spec.
+
 ## Muc tieu
 
 Repo nay duoc chia thanh 3 lop:

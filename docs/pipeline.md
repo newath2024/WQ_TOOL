@@ -1,5 +1,7 @@
 # Pipeline
 
+> Normative note: lifecycle, orchestration, timeout, BRAIN recovery, and observability behavior is governed by `docs/alpha_pipeline_spec.md`. This file is explanatory context, not the behavioral source of truth.
+
 ## 1. Local research pipeline
 
 Luong local cu van ton tai:
