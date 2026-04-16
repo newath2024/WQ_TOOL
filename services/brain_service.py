@@ -31,6 +31,20 @@ TERMINAL_STATUSES = {"completed", "failed", "rejected", "timeout"}
 PENDING_STATUSES = {"submitted", "running"}
 
 
+# ---------------------------------------------------------------------------
+# Lazy executor access: BrainExecutor init cần BrainApiAdapter,
+# nhưng BrainService là nơi tạo adapter → dùng protocol để tránh circular import.
+# ---------------------------------------------------------------------------
+
+
+class _BrainExecutorAuthProtocol:
+    """Protocol cho BrainService để BrainExecutor lấy auth_adapter."""
+
+    def ensure_authenticated(self, *, force: bool = False, show_password: bool = False,
+                            interactive: bool = True) -> dict:
+        ...
+
+
 class BrainService:
     def __init__(
         self,
@@ -45,6 +59,29 @@ class BrainService:
             self.repository.submissions.backfill_timeout_deadlines(
                 timeout_seconds=float(self.brain_config.timeout_seconds),
             )
+
+        # BrainExecutor: dùng queue + concurrent polling từ brain_client/
+        # Auth delegate qua BrainApiAdapter (không thay đổi auth logic).
+        self._executor: "BrainExecutor | None" = None
+
+    def _get_executor(self) -> "BrainExecutor":
+        """Lazy-init BrainExecutor với auth delegate qua BrainApiAdapter."""
+        if self._executor is not None:
+            return self._executor
+
+        # Import here to avoid circular dependency
+        from services.brain_executor import BrainExecutor
+
+        auth_adapter: "BrainApiAdapter | None" = None
+        if isinstance(self.adapter, BrainApiAdapter):
+            auth_adapter = self.adapter
+
+        self._executor = BrainExecutor(
+            repository=self.repository,
+            brain_config=self.brain_config,
+            auth_adapter=auth_adapter,
+        )
+        return self._executor
 
     def simulate_candidates(
         self,

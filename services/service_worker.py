@@ -6,10 +6,11 @@ from collections import Counter
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 
-from adapters.brain_api_adapter import ConcurrentSimulationLimitExceeded
+from adapters.brain_api_adapter import BrainApiAdapter, ConcurrentSimulationLimitExceeded
 from core.config import AppConfig
 from core.logging import get_logger
 from services.brain_batch_service import BrainBatchService
+from services.brain_executor import BrainExecutor
 from services.brain_learning_service import BrainLearningService
 from services.brain_service import BrainService
 from services.candidate_selection_service import CandidateSelectionService
@@ -63,6 +64,37 @@ class ServiceWorker:
         )
         self.session_manager = session_manager
         self.notification_manager = notification_manager
+
+        # BrainExecutor: queue-based pooling từ brain_client/
+        # Auth delegate qua BrainApiAdapter (không thay đổi auth logic).
+        self._brain_executor: BrainExecutor | None = None
+
+    def _get_brain_executor(self) -> BrainExecutor:
+        """Lazy-init BrainExecutor với auth delegate qua BrainApiAdapter."""
+        if self._brain_executor is not None:
+            return self._brain_executor
+
+        auth_adapter = BrainApiAdapter(
+            base_url=self.config.brain.api_base_url or "https://api.worldquantbrain.com",
+            auth_env=self.config.brain.api_auth_env,
+            email_env=self.config.brain.email_env,
+            password_env=self.config.brain.password_env,
+            credentials_file=self.config.brain.credentials_file,
+            session_path=self.config.brain.session_path,
+            auth_expiry_seconds=self.config.brain.auth_expiry_seconds,
+            open_browser_for_persona=self.config.brain.open_browser_for_persona,
+            persona_poll_interval_seconds=self.config.brain.persona_poll_interval_seconds,
+            persona_timeout_seconds=self.config.brain.persona_timeout_seconds,
+            max_retries=self.config.brain.max_retries,
+            rate_limit_per_minute=self.config.brain.rate_limit_per_minute,
+        )
+
+        self._brain_executor = BrainExecutor(
+            repository=self.repository,
+            brain_config=self.config.brain,
+            auth_adapter=auth_adapter,
+        )
+        return self._brain_executor
 
     def run_tick(
         self,
