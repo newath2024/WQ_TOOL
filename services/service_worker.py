@@ -10,7 +10,6 @@ from adapters.brain_api_adapter import BrainApiAdapter, ConcurrentSimulationLimi
 from core.config import AppConfig
 from core.logging import get_logger
 from services.brain_batch_service import BrainBatchService
-from services.brain_executor import BrainExecutor
 from services.brain_learning_service import BrainLearningService
 from services.brain_service import BrainService
 from services.candidate_selection_service import CandidateSelectionService
@@ -67,12 +66,14 @@ class ServiceWorker:
 
         # BrainExecutor: queue-based pooling từ brain_client/
         # Auth delegate qua BrainApiAdapter (không thay đổi auth logic).
-        self._brain_executor: BrainExecutor | None = None
+        self._brain_executor: object | None = None
 
-    def _get_brain_executor(self) -> BrainExecutor:
+    def _get_brain_executor(self) -> object:
         """Lazy-init BrainExecutor với auth delegate qua BrainApiAdapter."""
         if self._brain_executor is not None:
             return self._brain_executor
+
+        from services.brain_executor import BrainExecutor
 
         auth_adapter = BrainApiAdapter(
             base_url=self.config.brain.api_base_url or "https://api.worldquantbrain.com",
