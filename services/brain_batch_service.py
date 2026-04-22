@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import time
+from collections import Counter
 from dataclasses import replace
 from datetime import UTC, datetime
 
@@ -13,8 +14,16 @@ from generator.guided_generator import GuidedGenerator
 from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.candidate_selection_service import CandidateSelectionService
-from services.data_service import CachedResearchContextProvider, resolve_generation_field_registry
-from services.data_service import sanitize_generation_research_context
+from services.data_service import (
+    CachedResearchContextProvider,
+    apply_local_validation_field_penalties,
+    build_generation_guardrails,
+    filter_generation_alpha_records,
+    filter_generation_case_snapshot,
+    filter_generation_pattern_snapshot,
+    resolve_generation_field_registry,
+    sanitize_generation_research_context,
+)
 from services.evaluation_service import alpha_candidate_from_record
 from services.models import BatchPreparationResult, CandidateScore, CommandEnvironment
 from services.progress_log import append_progress_event
@@ -68,6 +77,14 @@ class BrainBatchService:
             environment,
             stage="brain-sim-data",
         )
+        research_context, local_validation_penalty = apply_local_validation_field_penalties(
+            self.repository,
+            config,
+            research_context,
+            environment,
+            stage="brain-sim-data",
+            before_round_index=round_index,
+        )
         active_regime_key = research_context.effective_regime_key or research_context.regime_key
         persistence = provider.persist_metadata(
             self.repository,
@@ -87,24 +104,32 @@ class BrainBatchService:
             stage="brain-sim-data",
         )
         resolve_field_registry_ms = (time.perf_counter() - resolve_field_registry_started) * 1000.0
+        blocked_field_set = set(blocked_fields)
+        generation_guardrails = build_generation_guardrails(self.repository, config, field_registry)
         registry = build_registry(
             config.generation.allowed_operators,
             operator_catalog_paths=config.generation.operator_catalog_paths,
         )
-        snapshot = self.repository.alpha_history.load_snapshot(
-            regime_key=active_regime_key,
-            region=research_context.region,
-            global_regime_key=research_context.global_regime_key,
-            parent_pool_size=config.adaptive_generation.parent_pool_size,
-            region_learning_config=config.adaptive_generation.region_learning,
-            pattern_decay=config.adaptive_generation.pattern_decay,
-            prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+        snapshot = filter_generation_pattern_snapshot(
+            self.repository.alpha_history.load_snapshot(
+                regime_key=active_regime_key,
+                region=research_context.region,
+                global_regime_key=research_context.global_regime_key,
+                parent_pool_size=config.adaptive_generation.parent_pool_size,
+                region_learning_config=config.adaptive_generation.region_learning,
+                pattern_decay=config.adaptive_generation.pattern_decay,
+                prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+            ),
+            blocked_fields=blocked_field_set,
         )
-        case_snapshot = self.repository.alpha_history.load_case_snapshot(
-            active_regime_key,
-            region=research_context.region,
-            global_regime_key=research_context.global_regime_key,
-            region_learning_config=config.adaptive_generation.region_learning,
+        case_snapshot = filter_generation_case_snapshot(
+            self.repository.alpha_history.load_case_snapshot(
+                active_regime_key,
+                region=research_context.region,
+                global_regime_key=research_context.global_regime_key,
+                region_learning_config=config.adaptive_generation.region_learning,
+            ),
+            blocked_fields=blocked_field_set,
         )
         existing_normalized = self.repository.list_existing_normalized_expressions(environment.context.run_id)
         generation_count = count or config.loop.generation_batch_size
@@ -119,6 +144,9 @@ class BrainBatchService:
             mutation_parent_ids=mutation_parent_ids or set(),
             existing_normalized=existing_normalized,
             round_index=round_index,
+            generation_guardrails=generation_guardrails,
+            blocked_fields=blocked_field_set,
+            field_penalty_multipliers=local_validation_penalty.multipliers,
         )
         fresh_budget = max(0, generation_count - len(mutation_candidates))
         fresh_candidates, fresh_stats = self._generate_fresh_candidates(
@@ -134,6 +162,8 @@ class BrainBatchService:
             region_learning_context=research_context.region_learning_context,
             run_id=environment.context.run_id,
             round_index=round_index,
+            generation_guardrails=generation_guardrails,
+            field_penalty_multipliers=local_validation_penalty.multipliers,
         )
         candidates = [*mutation_candidates, *fresh_candidates]
         self.repository.save_alpha_candidates(environment.context.run_id, candidates)
@@ -176,6 +206,7 @@ class BrainBatchService:
                 "metadata_dataset_summary_persisted": persistence["dataset_summary_persisted"],
                 "metadata_field_catalog_persisted": persistence["field_catalog_persisted"],
                 "metadata_run_field_scores_persisted": persistence["run_field_scores_persisted"],
+                **local_validation_penalty.to_metrics(),
             }
         )
         self.repository.save_stage_metrics(
@@ -228,6 +259,8 @@ class BrainBatchService:
         region_learning_context,
         run_id: str,
         round_index: int,
+        generation_guardrails,
+        field_penalty_multipliers: dict[str, float] | None = None,
     ) -> tuple[list[AlphaCandidate], GenerationSessionStats]:
         if count <= 0:
             return [], GenerationSessionStats()
@@ -245,6 +278,8 @@ class BrainBatchService:
                 memory_service=memory_service,
                 field_registry=field_registry,
                 region_learning_context=region_learning_context,
+                generation_guardrails=generation_guardrails,
+                field_penalty_multipliers=field_penalty_multipliers,
             )
             candidates = engine.generate(
                 count=count,
@@ -259,6 +294,8 @@ class BrainBatchService:
             registry=registry,
             field_registry=field_registry,
             region_learning_context=region_learning_context,
+            generation_guardrails=generation_guardrails,
+            field_penalty_multipliers=field_penalty_multipliers,
         )
         candidates = engine.generate(count=count, existing_normalized=existing_normalized, case_snapshot=case_snapshot)
         return candidates, engine.last_generation_stats or GenerationSessionStats()
@@ -276,6 +313,9 @@ class BrainBatchService:
         mutation_parent_ids: set[str],
         existing_normalized: set[str],
         round_index: int,
+        generation_guardrails,
+        blocked_fields: set[str],
+        field_penalty_multipliers: dict[str, float] | None = None,
     ) -> tuple[list[AlphaCandidate], GenerationSessionStats]:
         if not mutation_parent_ids:
             return [], GenerationSessionStats()
@@ -305,6 +345,8 @@ class BrainBatchService:
                 field_registry=field_registry,
                 region_learning_context=region_learning_context,
                 mutation_learning_records=mutation_learning_records,
+                generation_guardrails=generation_guardrails,
+                field_penalty_multipliers=field_penalty_multipliers,
             )
             candidates = engine.generate_mutations(
                 count=mutation_budget,
@@ -321,6 +363,7 @@ class BrainBatchService:
             for record in self.repository.list_alpha_records(run_id)
             if record.alpha_id in mutation_parent_ids
         ]
+        parent_records = filter_generation_alpha_records(parent_records, blocked_fields=blocked_fields)
         parents = [alpha_candidate_from_record(record, parent_refs=parent_refs_map.get(record.alpha_id)) for record in parent_records]
         if not parents:
             return [], GenerationSessionStats()
@@ -331,6 +374,8 @@ class BrainBatchService:
             field_registry=field_registry,
             region_learning_context=region_learning_context,
             mutation_learning_records=mutation_learning_records,
+            generation_guardrails=generation_guardrails,
+            field_penalty_multipliers=field_penalty_multipliers,
         )
         candidates = engine.generate_mutations(
             parents=parents,
@@ -378,6 +423,14 @@ class BrainBatchService:
             merged.validation_context_cache_hit = merged.validation_context_cache_hit or item.validation_context_cache_hit
             merged.pre_dedup_reject_count += item.pre_dedup_reject_count
             merged.failure_counts.update(item.failure_counts)
+            for reason, field_counts in item.failure_field_counts.items():
+                merged.failure_field_counts.setdefault(reason, Counter()).update(field_counts)
+            for sample in item.validation_disallowed_field_samples:
+                if sample in merged.validation_disallowed_field_samples:
+                    continue
+                if len(merged.validation_disallowed_field_samples) >= 10:
+                    break
+                merged.validation_disallowed_field_samples.append(dict(sample))
             merged.duplicate_by_mutation_mode.update(item.duplicate_by_mutation_mode)
             merged.duplicate_by_motif.update(item.duplicate_by_motif)
             merged.duplicate_by_operator_path.update(item.duplicate_by_operator_path)

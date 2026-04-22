@@ -36,6 +36,7 @@ class MutationPolicy:
         randomizer: random.Random | None = None,
         field_registry: FieldRegistry | None = None,
         registry: OperatorRegistry | None = None,
+        field_penalty_multipliers: dict[str, float] | None = None,
     ) -> None:
         self.config = config
         self.adaptive_config = adaptive_config or AdaptiveGenerationConfig()
@@ -45,6 +46,11 @@ class MutationPolicy:
         self.randomizer = randomizer or random.Random(randomizer_seed if randomizer_seed is not None else config.random_seed)
         self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
         self.registry = registry or build_default_registry()
+        self.field_penalty_multipliers = {
+            str(field_name).strip(): max(1e-6, float(multiplier))
+            for field_name, multiplier in (field_penalty_multipliers or {}).items()
+            if str(field_name).strip()
+        }
         self.genome_builder = GenomeBuilder(
             generation_config=config,
             adaptive_config=self.adaptive_config,
@@ -344,15 +350,54 @@ class MutationPolicy:
 
     def _select_parent(self, parents: Sequence, *, diversity_tracker: GenerationDiversityTracker | None) -> Any:
         parent_list = list(parents)
-        if diversity_tracker is None or len(parent_list) <= 1:
+        if len(parent_list) <= 1:
+            return self.randomizer.choice(parent_list)
+        if diversity_tracker is None and not self.field_penalty_multipliers:
             return self.randomizer.choice(parent_list)
         weights: list[float] = []
         for parent in parent_list:
-            parent_id = str(getattr(parent, "alpha_id", "") or "")
-            family_signature = str(getattr(parent, "family_signature", "") or "")
-            lineage_key = parent_id or family_signature
-            weights.append(max(1e-6, diversity_tracker.lineage_weight(lineage_key)))
+            weight = 1.0
+            if diversity_tracker is not None:
+                parent_id = str(getattr(parent, "alpha_id", "") or "")
+                family_signature = str(getattr(parent, "family_signature", "") or "")
+                lineage_key = parent_id or family_signature
+                weight *= diversity_tracker.lineage_weight(lineage_key)
+            weight *= self._parent_field_penalty_multiplier(parent)
+            weights.append(max(1e-6, weight))
         return self.randomizer.choices(parent_list, weights=weights, k=1)[0]
+
+    def _parent_field_penalty_multiplier(self, parent: Any) -> float:
+        if not self.field_penalty_multipliers:
+            return 1.0
+        fields = self._parent_fields(parent)
+        if not fields:
+            return 1.0
+        multipliers = [
+            self.field_penalty_multipliers[field_name]
+            for field_name in fields
+            if field_name in self.field_penalty_multipliers
+        ]
+        if not multipliers:
+            return 1.0
+        return max(1e-6, min(multipliers))
+
+    @staticmethod
+    def _parent_fields(parent: Any) -> tuple[str, ...]:
+        signature = getattr(parent, "structural_signature", None)
+        if signature is not None:
+            fields = getattr(signature, "fields", ()) or ()
+            return tuple(
+                dict.fromkeys(str(field).strip() for field in fields if field is not None and str(field).strip())
+            )
+        metadata = getattr(parent, "generation_metadata", {}) or {}
+        if isinstance(metadata, dict):
+            fields = metadata.get("fields_used") or ()
+            if fields:
+                return tuple(
+                    dict.fromkeys(str(field).strip() for field in fields if field is not None and str(field).strip())
+                )
+        fields = getattr(parent, "fields_used", ()) or ()
+        return tuple(dict.fromkeys(str(field).strip() for field in fields if field is not None and str(field).strip()))
 
     def _mutation_outcome_multipliers(self, *, family_signature: str) -> dict[str, float]:
         learning_config = self.adaptive_config.mutation_learning

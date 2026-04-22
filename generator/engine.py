@@ -13,6 +13,7 @@ from alpha.validator import ValidationResult, has_nesting_violation, validate_ex
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import OperatorRegistry
+from generator.guardrails import GenerationGuardrails
 from generator.diversity_tracker import GenerationDiversityTracker, operator_path_key
 from generator.genome import GenomeRenderResult
 from generator.genome_builder import GenomeBuilder
@@ -51,6 +52,7 @@ class GenerationValidationContext:
 class CandidateBuildResult:
     candidate: AlphaCandidate | None
     failure_reason: str | None = None
+    failure_fields: tuple[str, ...] = ()
 
 
 @dataclass(slots=True)
@@ -74,6 +76,8 @@ class GenerationSessionStats:
     pre_dedup_reject_count: int = 0
     failure_counts: Counter[str] = field(default_factory=Counter)
     failure_samples: dict[str, list[str]] = field(default_factory=dict)
+    failure_field_counts: dict[str, Counter[str]] = field(default_factory=dict)
+    validation_disallowed_field_samples: list[dict[str, str]] = field(default_factory=list)
     duplicate_by_mutation_mode: Counter[str] = field(default_factory=Counter)
     duplicate_by_motif: Counter[str] = field(default_factory=Counter)
     duplicate_by_operator_path: Counter[str] = field(default_factory=Counter)
@@ -85,11 +89,30 @@ class GenerationSessionStats:
             return
         self.exploit_attempt_count += 1
 
-    def record_failure(self, reason: str | None, *, expression: str | None = None) -> None:
+    def record_failure(
+        self,
+        reason: str | None,
+        *,
+        expression: str | None = None,
+        fields: Iterable[str] = (),
+    ) -> None:
         normalized_reason = self._normalize_failure_reason(reason)
         if normalized_reason is None:
             return
         self.failure_counts[normalized_reason] += 1
+        normalized_fields = tuple(
+            dict.fromkeys(str(field).strip() for field in fields if field is not None and str(field).strip())
+        )
+        if normalized_fields:
+            field_counts = self.failure_field_counts.setdefault(normalized_reason, Counter())
+            field_counts.update(normalized_fields)
+            if normalized_reason == "validation_disallowed_field" and expression:
+                for field_name in normalized_fields:
+                    if len(self.validation_disallowed_field_samples) >= 10:
+                        break
+                    sample = {"field": field_name, "expression": expression}
+                    if sample not in self.validation_disallowed_field_samples:
+                        self.validation_disallowed_field_samples.append(sample)
         if expression:
             bucket = self.failure_samples.setdefault(normalized_reason, [])
             if expression not in bucket and len(bucket) < 3:
@@ -179,6 +202,9 @@ class GenerationSessionStats:
                 for reason, samples in self.failure_samples.items()
                 if samples
             }
+        validation_field_counts = self.failure_field_counts.get("validation_disallowed_field", Counter())
+        metrics["validation_disallowed_field_counts"] = dict(validation_field_counts.most_common(50))
+        metrics["validation_disallowed_field_samples"] = list(self.validation_disallowed_field_samples[:10])
         return metrics
 
     @staticmethod
@@ -204,12 +230,15 @@ class AlphaGenerationEngine:
         adaptive_config: AdaptiveGenerationConfig | None = None,
         region_learning_context: RegionLearningContext | None = None,
         mutation_learning_records: list[dict[str, Any]] | None = None,
+        generation_guardrails: GenerationGuardrails | None = None,
+        field_penalty_multipliers: dict[str, float] | None = None,
     ) -> None:
         self.config = config
         self.registry = registry
         self.adaptive_config = adaptive_config or AdaptiveGenerationConfig()
         self.field_registry = field_registry or self._fallback_field_registry(config.allowed_fields)
         self.region_learning_context = region_learning_context
+        self.generation_guardrails = generation_guardrails or GenerationGuardrails()
         self.memory_service = PatternMemoryService()
         self.grammar = MotifGrammar()
         self.genome_builder = GenomeBuilder(
@@ -233,6 +262,7 @@ class AlphaGenerationEngine:
             randomizer_seed=config.random_seed + 17,
             field_registry=self.field_registry,
             registry=self.registry,
+            field_penalty_multipliers=field_penalty_multipliers,
         )
         self._validation_context: GenerationValidationContext | None = None
         self._validation_context_key: tuple[Any, ...] | None = None
@@ -312,7 +342,11 @@ class AlphaGenerationEngine:
             )
             candidate = result.candidate
             if candidate is None:
-                session.record_failure(result.failure_reason, expression=render.expression)
+                session.record_failure(
+                    result.failure_reason,
+                    expression=render.expression,
+                    fields=result.failure_fields,
+                )
                 consecutive_failures += 1
                 continue
             if candidate.normalized_expression in existing:
@@ -402,7 +436,11 @@ class AlphaGenerationEngine:
             )
             candidate = result.candidate
             if candidate is None:
-                session.record_failure(result.failure_reason, expression=expression)
+                session.record_failure(
+                    result.failure_reason,
+                    expression=expression,
+                    fields=result.failure_fields,
+                )
                 consecutive_failures += 1
                 continue
             if candidate.normalized_expression in existing:
@@ -466,7 +504,11 @@ class AlphaGenerationEngine:
             candidate = result.candidate
             if candidate is None:
                 if session is not None:
-                    session.record_failure(result.failure_reason, expression=expression)
+                    session.record_failure(
+                        result.failure_reason,
+                        expression=expression,
+                        fields=result.failure_fields,
+                    )
                 continue
             if candidate.normalized_expression in existing:
                 if session is not None:
@@ -548,9 +590,11 @@ class AlphaGenerationEngine:
             exact_field_types=self.field_registry.exact_field_types() if hasattr(self.field_registry, "exact_field_types") else None,
         )
         if not validation.is_valid:
+            failure_reason = self._classify_validation_failure(validation)
             return CandidateBuildResult(
                 candidate=None,
-                failure_reason=self._classify_validation_failure(validation),
+                failure_reason=failure_reason,
+                failure_fields=self._validation_failure_fields(validation, failure_reason),
             )
 
         normalized_expression = to_expression(node)
@@ -561,6 +605,12 @@ class AlphaGenerationEngine:
             generation_metadata=metadata,
             field_categories=prepared_validation_ctx.field_categories,
         )
+        guardrail_failure = self._guardrail_failure_reason(
+            signature=signature,
+            field_categories=prepared_validation_ctx.field_categories,
+        )
+        if guardrail_failure is not None:
+            return CandidateBuildResult(candidate=None, failure_reason=guardrail_failure)
         complexity = signature.complexity
         if complexity > self.config.complexity_limit:
             return CandidateBuildResult(candidate=None, failure_reason="complexity_exceeded")
@@ -606,6 +656,36 @@ class AlphaGenerationEngine:
 
     def _is_redundant(self, fields: tuple[str, ...]) -> bool:
         return len(fields) == 0
+
+    def _guardrail_failure_reason(
+        self,
+        *,
+        signature,
+        field_categories: dict[str, str],
+    ) -> str | None:
+        if not self.generation_guardrails.enabled:
+            return None
+        if (
+            "group_neutralize" in signature.operators
+            and not self.generation_guardrails.blocked_group_neutralize_fields.isdisjoint(signature.fields)
+        ):
+            return "guard_group_neutralize_history"
+        if not self.generation_guardrails.blocked_unit_category_pairs:
+            return None
+        if not any(operator in {"binary:+", "binary:-", "binary:*", "binary:/"} for operator in signature.operator_path):
+            return None
+        categories = sorted(
+            {
+                str(field_categories.get(field_name) or "").strip().lower()
+                for field_name in signature.fields
+                if field_categories.get(field_name)
+            }
+        )
+        for index, left in enumerate(categories):
+            for right in categories[index + 1 :]:
+                if (left, right) in self.generation_guardrails.blocked_unit_category_pairs:
+                    return "guard_unit_mismatch_history"
+        return None
 
     def _render_metadata(
         self,
@@ -892,6 +972,19 @@ class AlphaGenerationEngine:
         if validation.primary_reason_code:
             return validation.primary_reason_code
         return "validation_unknown_error"
+
+    @staticmethod
+    def _validation_failure_fields(validation: ValidationResult, failure_reason: str) -> tuple[str, ...]:
+        if failure_reason != "validation_disallowed_field":
+            return ()
+        fields: list[str] = []
+        for issue in validation.issues:
+            if issue.reason_code != "validation_disallowed_field" or not issue.field_name:
+                continue
+            field_name = str(issue.field_name).strip()
+            if field_name and field_name not in fields:
+                fields.append(field_name)
+        return tuple(fields)
 
     def _fallback_field_registry(self, allowed_fields: list[str]) -> FieldRegistry:
         fields = {

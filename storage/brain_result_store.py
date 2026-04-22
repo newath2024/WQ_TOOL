@@ -160,6 +160,45 @@ class BrainResultStore:
                 blocked_fields.add(field_name)
         return blocked_fields
 
+    def list_generation_guardrail_rows(
+        self,
+        *,
+        region: str,
+        universe: str,
+        delay: int,
+        limit: int = 2000,
+    ) -> list[dict]:
+        clauses = [
+            "rejection_reason IS NOT NULL",
+            "rejection_reason <> ''",
+            "delay = ?",
+            "("
+            "LOWER(rejection_reason) LIKE '%does not support event inputs%' "
+            "OR LOWER(rejection_reason) LIKE '%unit mismatch%'"
+            ")",
+        ]
+        params: list[object] = [int(delay)]
+        normalized_region = str(region or "").strip().upper()
+        normalized_universe = str(universe or "").strip().upper()
+        if normalized_region:
+            clauses.append("UPPER(region) = ?")
+            params.append(normalized_region)
+        if normalized_universe:
+            clauses.append("UPPER(universe) = ?")
+            params.append(normalized_universe)
+        params.append(int(limit))
+        rows = self.connection.execute(
+            f"""
+            SELECT expression, rejection_reason
+            FROM brain_results
+            WHERE {" AND ".join(clauses)}
+            ORDER BY simulated_at DESC, created_at DESC, job_id DESC
+            LIMIT ?
+            """,
+            tuple(params),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
     def upsert_closed_loop_run(self, record: ClosedLoopRunRecord) -> None:
         self.connection.execute(
             """

@@ -7,6 +7,11 @@ from generator.engine import AlphaGenerationEngine
 from generator.guided_generator import GuidedGenerator
 from memory.pattern_memory import PatternMemoryService
 from services.data_service import (
+    apply_local_validation_field_penalties,
+    build_generation_guardrails,
+    filter_generation_alpha_records,
+    filter_generation_case_snapshot,
+    filter_generation_pattern_snapshot,
     load_research_context,
     persist_research_metadata,
     resolve_field_registry,
@@ -26,18 +31,19 @@ def mutate_and_persist(
 ) -> GenerationServiceResult:
     """Generate mutated alpha candidates from top-ranked parents."""
     logger = get_logger(__name__, run_id=environment.context.run_id, stage="mutate")
-    parent_records = repository.get_top_alpha_records(environment.context.run_id, limit=from_top)
-    if not parent_records:
-        logger.warning("No top alphas available for mutation in run %s.", environment.context.run_id)
-        return GenerationServiceResult(generated_count=0, inserted_count=0, exit_code=1)
-
-    existing = repository.list_existing_normalized_expressions(environment.context.run_id)
     registry = build_registry(
         config.generation.allowed_operators,
         operator_catalog_paths=config.generation.operator_catalog_paths,
     )
     research_context = load_research_context(config, environment, stage="mutate-data")
     research_context, blocked_fields = sanitize_generation_research_context(
+        repository,
+        config,
+        research_context,
+        environment,
+        stage="mutate",
+    )
+    research_context, local_validation_penalty = apply_local_validation_field_penalties(
         repository,
         config,
         research_context,
@@ -52,23 +58,39 @@ def mutate_and_persist(
         research_context,
         removed_field_names=blocked_fields,
     )
+    blocked_field_set = set(blocked_fields)
+    parent_records = filter_generation_alpha_records(
+        repository.get_top_alpha_records(environment.context.run_id, limit=from_top),
+        blocked_fields=blocked_field_set,
+    )
+    if not parent_records:
+        logger.warning("No mutation parents remain after blacklist filtering in run %s.", environment.context.run_id)
+        return GenerationServiceResult(generated_count=0, inserted_count=0, exit_code=1)
+    existing = repository.list_existing_normalized_expressions(environment.context.run_id)
+    generation_guardrails = build_generation_guardrails(repository, config, field_registry)
 
     regime_key: str | None = None
     if config.adaptive_generation.enabled:
-        snapshot = repository.alpha_history.load_snapshot(
-            regime_key=research_context.regime_key,
-            region=research_context.region,
-            global_regime_key=research_context.global_regime_key,
-            parent_pool_size=max(config.adaptive_generation.parent_pool_size, from_top * 2),
-            region_learning_config=config.adaptive_generation.region_learning,
-            pattern_decay=config.adaptive_generation.pattern_decay,
-            prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+        snapshot = filter_generation_pattern_snapshot(
+            repository.alpha_history.load_snapshot(
+                regime_key=research_context.regime_key,
+                region=research_context.region,
+                global_regime_key=research_context.global_regime_key,
+                parent_pool_size=max(config.adaptive_generation.parent_pool_size, from_top * 2),
+                region_learning_config=config.adaptive_generation.region_learning,
+                pattern_decay=config.adaptive_generation.pattern_decay,
+                prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+            ),
+            blocked_fields=blocked_field_set,
         )
-        case_snapshot = repository.alpha_history.load_case_snapshot(
-            research_context.regime_key,
-            region=research_context.region,
-            global_regime_key=research_context.global_regime_key,
-            region_learning_config=config.adaptive_generation.region_learning,
+        case_snapshot = filter_generation_case_snapshot(
+            repository.alpha_history.load_case_snapshot(
+                research_context.regime_key,
+                region=research_context.region,
+                global_regime_key=research_context.global_regime_key,
+                region_learning_config=config.adaptive_generation.region_learning,
+            ),
+            blocked_fields=blocked_field_set,
         )
         selected_parent_ids = {record.alpha_id for record in parent_records}
         parent_pool = [
@@ -85,6 +107,8 @@ def mutate_and_persist(
             memory_service=PatternMemoryService(),
             field_registry=field_registry,
             region_learning_context=research_context.region_learning_context,
+            generation_guardrails=generation_guardrails,
+            field_penalty_multipliers=local_validation_penalty.multipliers,
         )
         candidates = engine.generate_mutations(
             count=count,
@@ -95,11 +119,14 @@ def mutate_and_persist(
         )
         regime_key = research_context.regime_key
     else:
-        case_snapshot = repository.alpha_history.load_case_snapshot(
-            research_context.regime_key,
-            region=research_context.region,
-            global_regime_key=research_context.global_regime_key,
-            region_learning_config=config.adaptive_generation.region_learning,
+        case_snapshot = filter_generation_case_snapshot(
+            repository.alpha_history.load_case_snapshot(
+                research_context.regime_key,
+                region=research_context.region,
+                global_regime_key=research_context.global_regime_key,
+                region_learning_config=config.adaptive_generation.region_learning,
+            ),
+            blocked_fields=blocked_field_set,
         )
         engine = AlphaGenerationEngine(
             config=config.generation,
@@ -107,6 +134,8 @@ def mutate_and_persist(
             registry=registry,
             field_registry=field_registry,
             region_learning_context=research_context.region_learning_context,
+            generation_guardrails=generation_guardrails,
+            field_penalty_multipliers=local_validation_penalty.multipliers,
         )
         parents = [alpha_candidate_from_record(record) for record in parent_records]
         candidates = engine.generate_mutations(

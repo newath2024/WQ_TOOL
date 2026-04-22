@@ -18,6 +18,10 @@ from services.brain_learning_service import BrainLearningService
 from services.brain_service import BrainService
 from services.candidate_selection_service import CandidateSelectionService
 from services.data_service import (
+    apply_local_validation_field_penalties,
+    build_generation_guardrails,
+    filter_generation_case_snapshot,
+    filter_generation_pattern_snapshot,
     load_research_context,
     persist_research_metadata,
     resolve_field_registry,
@@ -73,12 +77,21 @@ class ClosedLoopService:
             environment,
             stage="closed-loop",
         )
+        research_context, local_validation_penalty = apply_local_validation_field_penalties(
+            self.repository,
+            config,
+            research_context,
+            environment,
+            stage="closed-loop",
+        )
         active_regime_key = research_context.effective_regime_key or research_context.regime_key
         self.selection_service.configure_runtime(
             repository=self.repository,
             adaptive_config=config.adaptive_generation,
         )
         field_registry = resolve_field_registry(config, research_context)
+        blocked_field_set = set(blocked_fields)
+        generation_guardrails = build_generation_guardrails(self.repository, config, field_registry)
         persist_research_metadata(
             self.repository,
             config,
@@ -124,20 +137,26 @@ class ClosedLoopService:
         round_summaries: list[ClosedLoopRoundSummary] = []
         run_status = "completed"
         for round_index in range(1, config.loop.rounds + 1):
-            snapshot = self.repository.alpha_history.load_snapshot(
-                regime_key=active_regime_key,
-                region=research_context.region,
-                global_regime_key=research_context.global_regime_key,
-                parent_pool_size=max(config.adaptive_generation.parent_pool_size, config.loop.mutate_top_k * 2),
-                region_learning_config=config.adaptive_generation.region_learning,
-                pattern_decay=config.adaptive_generation.pattern_decay,
-                prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+            snapshot = filter_generation_pattern_snapshot(
+                self.repository.alpha_history.load_snapshot(
+                    regime_key=active_regime_key,
+                    region=research_context.region,
+                    global_regime_key=research_context.global_regime_key,
+                    parent_pool_size=max(config.adaptive_generation.parent_pool_size, config.loop.mutate_top_k * 2),
+                    region_learning_config=config.adaptive_generation.region_learning,
+                    pattern_decay=config.adaptive_generation.pattern_decay,
+                    prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+                ),
+                blocked_fields=blocked_field_set,
             )
-            case_snapshot = self.repository.alpha_history.load_case_snapshot(
-                active_regime_key,
-                region=research_context.region,
-                global_regime_key=research_context.global_regime_key,
-                region_learning_config=config.adaptive_generation.region_learning,
+            case_snapshot = filter_generation_case_snapshot(
+                self.repository.alpha_history.load_case_snapshot(
+                    active_regime_key,
+                    region=research_context.region,
+                    global_regime_key=research_context.global_regime_key,
+                    region_learning_config=config.adaptive_generation.region_learning,
+                ),
+                blocked_fields=blocked_field_set,
             )
             round_existing_normalized = self.repository.list_existing_normalized_expressions(environment.context.run_id)
             fresh_budget = max(0, config.loop.generation_batch_size - len(staged_mutations))
@@ -152,6 +171,8 @@ class ClosedLoopService:
                 existing_normalized=round_existing_normalized | {candidate.normalized_expression for candidate in staged_mutations},
                 run_id=environment.context.run_id,
                 round_index=round_index,
+                generation_guardrails=generation_guardrails,
+                field_penalty_multipliers=local_validation_penalty.multipliers,
             )
             round_candidates = [*staged_mutations, *fresh_candidates]
             if not round_candidates:
@@ -375,6 +396,9 @@ class ClosedLoopService:
                     existing_normalized=round_existing_normalized | {candidate.normalized_expression for candidate in round_candidates},
                     run_id=environment.context.run_id,
                     round_index=round_index,
+                    generation_guardrails=generation_guardrails,
+                    blocked_fields=blocked_field_set,
+                    field_penalty_multipliers=local_validation_penalty.multipliers,
                 )
                 round_status = "completed"
                 selected_for_mutation_count = len(selected_parent_ids)
@@ -479,6 +503,8 @@ class ClosedLoopService:
         existing_normalized: set[str],
         run_id: str,
         round_index: int,
+        generation_guardrails,
+        field_penalty_multipliers: dict[str, float] | None = None,
     ) -> list[AlphaCandidate]:
         if count <= 0:
             return []
@@ -496,6 +522,8 @@ class ClosedLoopService:
                 memory_service=self.memory_service,
                 field_registry=field_registry,
                 region_learning_context=region_learning_context,
+                generation_guardrails=generation_guardrails,
+                field_penalty_multipliers=field_penalty_multipliers,
             )
             return engine.generate(
                 count=count,
@@ -509,6 +537,8 @@ class ClosedLoopService:
             registry=registry,
             field_registry=field_registry,
             region_learning_context=region_learning_context,
+            generation_guardrails=generation_guardrails,
+            field_penalty_multipliers=field_penalty_multipliers,
         )
         return engine.generate(count=count, existing_normalized=existing_normalized, case_snapshot=case_snapshot)
 
@@ -529,6 +559,9 @@ class ClosedLoopService:
         existing_normalized: set[str],
         run_id: str,
         round_index: int,
+        generation_guardrails,
+        blocked_fields: set[str],
+        field_penalty_multipliers: dict[str, float] | None = None,
     ) -> list[AlphaCandidate]:
         if not selected_parent_ids or count <= 0:
             return []
@@ -540,14 +573,17 @@ class ClosedLoopService:
             scope="mutation",
         )
         if config.adaptive_generation.enabled:
-            snapshot = self.repository.alpha_history.load_snapshot(
-                regime_key=regime_key,
-                region=region,
-                global_regime_key=global_regime_key,
-                parent_pool_size=max(config.adaptive_generation.parent_pool_size, len(selected_parent_ids) * 2),
-                region_learning_config=config.adaptive_generation.region_learning,
-                pattern_decay=config.adaptive_generation.pattern_decay,
-                prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+            snapshot = filter_generation_pattern_snapshot(
+                self.repository.alpha_history.load_snapshot(
+                    regime_key=regime_key,
+                    region=region,
+                    global_regime_key=global_regime_key,
+                    parent_pool_size=max(config.adaptive_generation.parent_pool_size, len(selected_parent_ids) * 2),
+                    region_learning_config=config.adaptive_generation.region_learning,
+                    pattern_decay=config.adaptive_generation.pattern_decay,
+                    prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
+                ),
+                blocked_fields=blocked_fields,
             )
             parent_pool = [parent for parent in snapshot.top_parents if parent.alpha_id in selected_parent_ids]
             if not parent_pool:
@@ -560,6 +596,8 @@ class ClosedLoopService:
                 field_registry=field_registry,
                 region_learning_context=region_learning_context,
                 mutation_learning_records=mutation_learning_records,
+                generation_guardrails=generation_guardrails,
+                field_penalty_multipliers=field_penalty_multipliers,
             )
             return engine.generate_mutations(
                 count=count,
@@ -579,6 +617,8 @@ class ClosedLoopService:
             field_registry=field_registry,
             region_learning_context=region_learning_context,
             mutation_learning_records=mutation_learning_records,
+            generation_guardrails=generation_guardrails,
+            field_penalty_multipliers=field_penalty_multipliers,
         )
         return engine.generate_mutations(
             parents=parents,

@@ -3,8 +3,10 @@ from __future__ import annotations
 import hashlib
 import json
 import time
-from dataclasses import asdict, dataclass
+from collections import Counter
+from dataclasses import asdict, dataclass, field, replace
 from datetime import UTC, datetime
+from itertools import combinations
 from pathlib import Path
 
 import pandas as pd
@@ -20,6 +22,8 @@ from data.field_registry import (
 from data.loader import load_market_data
 from data.schema import resolve_path
 from features.transforms import build_research_matrices
+from generator.guardrails import GenerationGuardrails
+from memory.case_memory import CaseMemoryService, CaseMemorySnapshot
 from memory.pattern_memory import PatternMemoryService, RegionLearningContext
 from services.regime_service import RegimeService
 from services.models import CommandEnvironment, ResearchContext
@@ -55,6 +59,20 @@ class ResearchContextLoadProfile:
 class CachedResearchContextResult:
     research_context: ResearchContext
     profile: ResearchContextLoadProfile
+
+
+@dataclass(frozen=True, slots=True)
+class LocalValidationFieldPenaltyResult:
+    counts: dict[str, int] = field(default_factory=dict)
+    multipliers: dict[str, float] = field(default_factory=dict)
+    applied_field_count: int = 0
+
+    def to_metrics(self) -> dict[str, object]:
+        return {
+            "local_validation_penalized_field_count": int(self.applied_field_count),
+            "local_validation_penalty_counts": dict(self.counts),
+            "local_validation_penalty_multipliers": dict(self.multipliers),
+        }
 
 
 @dataclass(slots=True)
@@ -551,6 +569,130 @@ def resolve_generation_field_registry(
     return resolve_field_registry(config, sanitized_context)
 
 
+def build_local_validation_field_penalties(
+    repository: SQLiteRepository,
+    config: AppConfig,
+    run_id: str,
+    *,
+    before_round_index: int | None = None,
+) -> LocalValidationFieldPenaltyResult:
+    penalty_config = config.adaptive_generation.local_validation_field_penalty
+    if not penalty_config.enabled:
+        return LocalValidationFieldPenaltyResult()
+    rows = repository.list_recent_generation_stage_metrics(
+        run_id,
+        limit=penalty_config.lookback_rounds,
+        before_round_index=before_round_index,
+    )
+    counts: Counter[str] = Counter()
+    for row in rows:
+        metrics = _decode_metrics_json(row.get("metrics_json"))
+        field_counts = metrics.get("validation_disallowed_field_counts")
+        if not isinstance(field_counts, dict):
+            continue
+        for raw_field_name, raw_count in field_counts.items():
+            field_name = str(raw_field_name).strip()
+            if not field_name:
+                continue
+            try:
+                count = int(raw_count)
+            except (TypeError, ValueError):
+                continue
+            if count > 0:
+                counts[field_name] += count
+    filtered_counts = {
+        field_name: count
+        for field_name, count in counts.most_common()
+        if count >= penalty_config.min_count
+    }
+    capped_counts = dict(Counter(filtered_counts).most_common(penalty_config.max_fields))
+    multipliers = {
+        field_name: _local_validation_penalty_multiplier(
+            count,
+            min_count=penalty_config.min_count,
+            penalty_strength=penalty_config.penalty_strength,
+            min_multiplier=penalty_config.min_multiplier,
+        )
+        for field_name, count in capped_counts.items()
+    }
+    return LocalValidationFieldPenaltyResult(counts=capped_counts, multipliers=multipliers)
+
+
+def apply_local_validation_field_penalties_to_registry(
+    field_registry: FieldRegistry,
+    penalty_result: LocalValidationFieldPenaltyResult,
+) -> tuple[FieldRegistry, LocalValidationFieldPenaltyResult]:
+    if not penalty_result.multipliers:
+        return field_registry, penalty_result
+    updated_fields = dict(field_registry.fields)
+    applied_count = 0
+    for field_name, multiplier in penalty_result.multipliers.items():
+        spec = field_registry.fields.get(field_name)
+        if spec is None:
+            continue
+        updated_fields[field_name] = replace(
+            spec,
+            field_score=max(1e-6, float(spec.field_score) * float(multiplier)),
+        )
+        applied_count += 1
+    return FieldRegistry(fields=updated_fields), replace(penalty_result, applied_field_count=applied_count)
+
+
+def apply_local_validation_field_penalties(
+    repository: SQLiteRepository,
+    config: AppConfig,
+    research_context: ResearchContext,
+    environment: CommandEnvironment,
+    *,
+    stage: str,
+    before_round_index: int | None = None,
+) -> tuple[ResearchContext, LocalValidationFieldPenaltyResult]:
+    penalty_result = build_local_validation_field_penalties(
+        repository,
+        config,
+        environment.context.run_id,
+        before_round_index=before_round_index,
+    )
+    penalized_registry, penalty_result = apply_local_validation_field_penalties_to_registry(
+        research_context.field_registry,
+        penalty_result,
+    )
+    if penalty_result.applied_field_count <= 0:
+        return research_context, penalty_result
+    logger = get_logger(__name__, run_id=environment.context.run_id, stage=stage)
+    sample_limit = config.adaptive_generation.local_validation_field_penalty.sample_limit
+    logger.info(
+        "Applied local validation field penalties: fields=%s sample=%s",
+        penalty_result.applied_field_count,
+        list(penalty_result.counts)[:sample_limit],
+    )
+    return replace(research_context, field_registry=penalized_registry), penalty_result
+
+
+def _local_validation_penalty_multiplier(
+    count: int,
+    *,
+    min_count: int,
+    penalty_strength: float,
+    min_multiplier: float,
+) -> float:
+    denominator = 1.0 + float(penalty_strength) * (float(count) / max(1, int(min_count)))
+    multiplier = 1.0 / max(denominator, 1e-6)
+    return round(max(float(min_multiplier), multiplier), 6)
+
+
+def _decode_metrics_json(raw: object) -> dict[str, object]:
+    if not raw:
+        return {}
+    if isinstance(raw, dict):
+        return raw
+    try:
+        decoded = json.loads(str(raw))
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return {}
+    return decoded if isinstance(decoded, dict) else {}
+
+
 def list_invalid_generation_fields(
     repository: SQLiteRepository,
     config: AppConfig,
@@ -559,6 +701,125 @@ def list_invalid_generation_fields(
         region=config.brain.region,
         universe=config.brain.universe,
         delay=config.brain.delay,
+    )
+
+
+def build_generation_guardrails(
+    repository: SQLiteRepository,
+    config: AppConfig,
+    field_registry: FieldRegistry,
+    *,
+    min_repeat_count: int = 2,
+) -> GenerationGuardrails:
+    rows = repository.brain_results.list_generation_guardrail_rows(
+        region=config.brain.region,
+        universe=config.brain.universe,
+        delay=config.brain.delay,
+    )
+    if not rows:
+        return GenerationGuardrails()
+    signature_service = PatternMemoryService()
+    group_field_names = {
+        spec.name
+        for spec in field_registry.generation_group_fields(
+            include_catalog_fields=config.generation.allow_catalog_fields_without_runtime,
+        )
+    }
+    blocked_group_neutralize_fields: Counter[str] = Counter()
+    blocked_unit_category_pairs: Counter[tuple[str, str]] = Counter()
+    for row in rows:
+        expression = str(row.get("expression") or "").strip()
+        rejection = str(row.get("rejection_reason") or "").strip().lower()
+        if not expression or not rejection:
+            continue
+        try:
+            signature = signature_service.extract_signature(expression)
+        except ValueError:
+            continue
+        if "does not support event inputs" in rejection and "group_neutralize" in signature.operators:
+            for field_name in signature.fields:
+                if field_name and field_name not in group_field_names:
+                    blocked_group_neutralize_fields[field_name] += 1
+        if "unit mismatch" not in rejection:
+            continue
+        if not any(operator in {"binary:+", "binary:-", "binary:*", "binary:/"} for operator in signature.operator_path):
+            continue
+        categories = sorted(
+            {
+                field_registry.get(field_name).category
+                for field_name in signature.fields
+                if field_registry.contains(field_name)
+            }
+        )
+        for left, right in combinations(categories, 2):
+            blocked_unit_category_pairs[(left, right)] += 1
+    return GenerationGuardrails(
+        blocked_group_neutralize_fields=frozenset(
+            field_name
+            for field_name, count in blocked_group_neutralize_fields.items()
+            if count >= min_repeat_count
+        ),
+        blocked_unit_category_pairs=frozenset(
+            pair
+            for pair, count in blocked_unit_category_pairs.items()
+            if count >= min_repeat_count
+        ),
+    )
+
+
+def filter_generation_alpha_records(records, *, blocked_fields: set[str]) -> list:
+    if not blocked_fields:
+        return list(records)
+    filtered = []
+    for record in records:
+        fields_used = _decode_text_list(getattr(record, "fields_used_json", ""))
+        if blocked_fields.isdisjoint(fields_used):
+            filtered.append(record)
+    return filtered
+
+
+def filter_generation_pattern_snapshot(snapshot, *, blocked_fields: set[str]):
+    if not blocked_fields or not getattr(snapshot, "top_parents", ()):
+        return snapshot
+    filtered_top_parents = tuple(
+        parent
+        for parent in snapshot.top_parents
+        if parent.structural_signature is None or blocked_fields.isdisjoint(parent.structural_signature.fields)
+    )
+    if len(filtered_top_parents) == len(snapshot.top_parents):
+        return snapshot
+    return replace(snapshot, top_parents=filtered_top_parents)
+
+
+def filter_generation_case_snapshot(
+    case_snapshot: CaseMemorySnapshot | None,
+    *,
+    blocked_fields: set[str],
+) -> CaseMemorySnapshot | None:
+    if case_snapshot is None or not blocked_fields:
+        return case_snapshot
+    filtered_cases = tuple(
+        case
+        for case in case_snapshot.cases
+        if blocked_fields.isdisjoint(case.structural_signature.fields)
+    )
+    filtered_global_cases = tuple(
+        case
+        for case in case_snapshot.global_cases
+        if blocked_fields.isdisjoint(case.structural_signature.fields)
+    )
+    if (
+        len(filtered_cases) == len(case_snapshot.cases)
+        and len(filtered_global_cases) == len(case_snapshot.global_cases)
+    ):
+        return case_snapshot
+    return CaseMemoryService().build_snapshot(
+        case_snapshot.regime_key,
+        filtered_cases,
+        region=case_snapshot.region,
+        global_regime_key=case_snapshot.global_regime_key,
+        global_records=filtered_global_cases,
+        blend=case_snapshot.blend,
     )
 
 
@@ -730,6 +991,17 @@ def _snapshot_path(path: Path) -> dict[str, object]:
 
 def _digest_payload(payload: object) -> str:
     return hashlib.sha1(json.dumps(payload, sort_keys=True, default=str).encode("utf-8")).hexdigest()
+
+
+def _decode_text_list(payload: object) -> tuple[str, ...]:
+    if isinstance(payload, str) and payload.strip():
+        try:
+            decoded = json.loads(payload)
+        except json.JSONDecodeError:
+            return ()
+        if isinstance(decoded, list):
+            return tuple(str(item) for item in decoded if str(item))
+    return ()
 
 
 def _fingerprint_field_registry(field_registry: FieldRegistry) -> str:

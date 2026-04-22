@@ -4,6 +4,8 @@ import json
 from dataclasses import replace
 from pathlib import Path
 
+from alpha.parser import parse_expression
+from alpha.validator import validate_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig, load_config
 from core.run_context import RunContext
 from data.field_registry import FieldRegistry, FieldSpec
@@ -11,11 +13,17 @@ from features.registry import build_registry
 from generator.diversity_tracker import GenerationDiversityTracker
 from generator.engine import AlphaCandidate, AlphaGenerationEngine, CandidateBuildResult, GenerationSessionStats
 from generator.guided_generator import GuidedGenerator
+from generator.mutation_policy import MutationPolicy
 from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.brain_batch_service import BrainBatchService
-from services.data_service import CachedResearchContextProvider
+from services.data_service import (
+    CachedResearchContextProvider,
+    apply_local_validation_field_penalties_to_registry,
+    build_local_validation_field_penalties,
+)
 from services.runtime_service import build_command_environment, init_run
+from storage.models import StageMetricRecord
 from storage.repository import SQLiteRepository
 
 
@@ -189,7 +197,21 @@ def test_candidate_build_result_classifies_failure_reasons() -> None:
 
     assert parse_failed.failure_reason == "parse_failed"
     assert disallowed.failure_reason == "validation_disallowed_field"
+    assert disallowed.failure_fields == ("beta",)
     assert redundant.failure_reason == "redundant_expression"
+
+
+def test_validator_records_disallowed_field_name() -> None:
+    registry = build_registry(["rank"])
+    validation = validate_expression(
+        node=parse_expression("rank(foo)"),
+        registry=registry,
+        allowed_fields={"close"},
+        max_depth=5,
+    )
+
+    assert validation.primary_reason_code == "validation_disallowed_field"
+    assert validation.issues[0].field_name == "foo"
 
 
 def test_candidate_build_result_maps_validation_sub_reasons() -> None:
@@ -241,6 +263,25 @@ def test_generation_session_stats_omits_failure_samples_at_info() -> None:
     metrics = session.to_metrics(generated_count=0, selected_for_simulation=0, include_debug_samples=False)
 
     assert "failure_samples" not in metrics
+
+
+def test_generation_session_stats_tracks_validation_field_counts_and_samples() -> None:
+    session = GenerationSessionStats()
+
+    session.record_failure("validation_disallowed_field", expression="rank(foo)", fields=("foo",))
+    session.record_failure("validation_disallowed_field", expression="rank(foo + bar)", fields=("foo", "bar"))
+    for index in range(60):
+        field_name = f"field_{index:02d}"
+        session.record_failure("validation_disallowed_field", expression=f"rank({field_name})", fields=(field_name,))
+
+    metrics = session.to_metrics(generated_count=0, selected_for_simulation=0, include_debug_samples=False)
+
+    assert metrics["failure_reason_counts"]["validation_disallowed_field"] == 62
+    assert metrics["validation_disallowed_field_counts"]["foo"] == 2
+    assert metrics["validation_disallowed_field_counts"]["bar"] == 1
+    assert len(metrics["validation_disallowed_field_counts"]) == 50
+    assert len(metrics["validation_disallowed_field_samples"]) == 10
+    assert {"field": "foo", "expression": "rank(foo)"} in metrics["validation_disallowed_field_samples"]
 
 
 def test_generation_session_stats_persists_redundant_samples_at_info() -> None:
@@ -296,6 +337,102 @@ def test_generation_session_stats_reports_duplicate_breakdowns() -> None:
     assert metrics["duplicate_by_mutation_mode"] == {"exploit_local": 1, "novelty": 1}
     assert metrics["duplicate_by_motif"] == {"momentum": 1, "mean_reversion": 1}
     assert metrics["duplicate_by_operator_path"] == {"rank>ts_mean": 1, "rank>ts_delta": 1}
+
+
+def test_local_validation_field_penalty_builder_and_registry_downrank() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        penalty_config = config.adaptive_generation.local_validation_field_penalty
+        penalty_config.enabled = True
+        penalty_config.lookback_rounds = 2
+        penalty_config.min_count = 2
+        penalty_config.max_fields = 10
+        penalty_config.penalty_strength = 1.0
+        penalty_config.min_multiplier = 0.10
+        run_id = "local-validation-penalty"
+        repository.save_stage_metrics(
+            [
+                StageMetricRecord(
+                    run_id=run_id,
+                    round_index=1,
+                    stage="generation",
+                    metrics_json=json.dumps({"validation_disallowed_field_counts": {"volume": 5}}),
+                    created_at="2026-04-22T00:00:00+00:00",
+                ),
+                StageMetricRecord(
+                    run_id=run_id,
+                    round_index=2,
+                    stage="generation",
+                    metrics_json=json.dumps({"validation_disallowed_field_counts": {"close": 1, "missing": 5}}),
+                    created_at="2026-04-22T00:01:00+00:00",
+                ),
+                StageMetricRecord(
+                    run_id=run_id,
+                    round_index=3,
+                    stage="generation",
+                    metrics_json=json.dumps({"validation_disallowed_field_counts": {"close": 1, "returns": 1}}),
+                    created_at="2026-04-22T00:02:00+00:00",
+                ),
+            ]
+        )
+
+        penalty_result = build_local_validation_field_penalties(repository, config, run_id)
+        penalized_registry, applied = apply_local_validation_field_penalties_to_registry(
+            _build_field_registry(),
+            penalty_result,
+        )
+    finally:
+        repository.close()
+
+    assert penalty_result.counts == {"missing": 5, "close": 2}
+    assert penalty_result.multipliers["close"] == 0.5
+    assert "volume" not in penalty_result.counts
+    assert applied.applied_field_count == 1
+    assert penalized_registry.get("close").field_score == 0.4
+    assert penalized_registry.contains("missing") is False
+
+
+def test_mutation_policy_downranks_parent_with_penalized_field() -> None:
+    class RandomProbe:
+        def __init__(self) -> None:
+            self.weights: list[float] = []
+
+        def choice(self, sequence):
+            return sequence[0]
+
+        def choices(self, population, weights, k):
+            self.weights = list(weights)
+            return [population[0]]
+
+        def random(self) -> float:
+            return 0.5
+
+    class Parent:
+        def __init__(self, alpha_id: str, fields: tuple[str, ...]) -> None:
+            self.alpha_id = alpha_id
+            self.family_signature = alpha_id
+            self.generation_metadata = {"fields_used": list(fields)}
+            self.fields_used = fields
+
+    randomizer = RandomProbe()
+    config = _build_generation_config()
+    policy = MutationPolicy(
+        config=config,
+        adaptive_config=AdaptiveGenerationConfig(),
+        memory_service=PatternMemoryService(),
+        randomizer=randomizer,
+        field_registry=_build_field_registry(),
+        registry=build_registry(config.allowed_operators),
+        field_penalty_multipliers={"close": 0.2},
+    )
+
+    policy._select_parent(  # noqa: SLF001
+        [Parent("bad", ("close",)), Parent("good", ("volume",))],
+        diversity_tracker=None,
+    )
+
+    assert randomizer.weights == [0.2, 1.0]
 
 
 def test_build_candidates_rejects_structural_duplicates_before_validation(monkeypatch) -> None:
@@ -806,6 +943,11 @@ def test_brain_batch_service_persists_generation_stage_metrics(tmp_path: Path) -
     assert "load_research_context_ms" in metrics
     assert "resolve_field_registry_ms" in metrics
     assert "top_fail_reasons" in metrics
+    assert "validation_disallowed_field_counts" in metrics
+    assert "validation_disallowed_field_samples" in metrics
+    assert "local_validation_penalized_field_count" in metrics
+    assert "local_validation_penalty_counts" in metrics
+    assert "local_validation_penalty_multipliers" in metrics
 
 
 def test_brain_batch_service_persists_redundant_expression_samples(tmp_path: Path, monkeypatch) -> None:
@@ -854,3 +996,67 @@ def test_brain_batch_service_persists_redundant_expression_samples(tmp_path: Pat
     assert prepared_rows[-1]["payload"]["generation_stage_metrics"]["redundant_expression_samples"] == [
         "rank(rank(close))"
     ]
+
+
+def test_brain_batch_service_applies_local_validation_penalty_from_previous_round(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        config.storage.path = ":memory:"
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        penalty_config = config.adaptive_generation.local_validation_field_penalty
+        penalty_config.enabled = True
+        penalty_config.lookback_rounds = 20
+        penalty_config.min_count = 2
+        penalty_config.penalty_strength = 1.0
+        environment = _environment("config/dev.yaml", "generation-local-penalty")
+        init_run(repository, config, environment, status="running")
+        repository.save_stage_metrics(
+            [
+                StageMetricRecord(
+                    run_id=environment.context.run_id,
+                    round_index=1,
+                    stage="generation",
+                    metrics_json=json.dumps({"validation_disallowed_field_counts": {"close": 5}}),
+                    created_at="2026-04-22T00:00:00+00:00",
+                )
+            ]
+        )
+
+        service = BrainBatchService(repository)
+        captured: dict[str, float] = {}
+
+        monkeypatch.setattr(
+            service,
+            "_generate_mutation_candidates",
+            lambda **kwargs: ([], GenerationSessionStats()),
+        )
+
+        def fake_fresh_candidates(**kwargs):
+            field_registry = kwargs["field_registry"]
+            captured["close_score"] = field_registry.get("close").field_score
+            captured["close_multiplier"] = kwargs["field_penalty_multipliers"]["close"]
+            return [], GenerationSessionStats()
+
+        monkeypatch.setattr(service, "_generate_fresh_candidates", fake_fresh_candidates)
+
+        service.prepare_service_batch(
+            config=config,
+            environment=environment,
+            count=1,
+            mutation_parent_ids=None,
+            round_index=2,
+        )
+        stage_metrics = repository.get_stage_metrics(environment.context.run_id)
+    finally:
+        repository.close()
+
+    metrics = json.loads([row for row in stage_metrics if row["stage"] == "generation"][-1]["metrics_json"])
+    assert metrics["local_validation_penalized_field_count"] >= 1
+    assert metrics["local_validation_penalty_counts"]["close"] == 5
+    assert metrics["local_validation_penalty_multipliers"]["close"] == captured["close_multiplier"]
+    assert captured["close_score"] > 0
+    assert captured["close_multiplier"] < 1.0

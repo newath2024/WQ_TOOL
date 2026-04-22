@@ -54,6 +54,7 @@ _DIMENSIONLESS_FUNCTIONS = frozenset(
 class ValidationIssue:
     reason_code: str
     detail: str
+    field_name: str | None = None
 
 
 @dataclass(slots=True)
@@ -145,6 +146,7 @@ class ExpressionValidator:
                 issues,
                 "validation_disallowed_field",
                 f"Unknown field '{node.name}'.",
+                field_name=node.name,
             )
             return None
         if isinstance(node, UnaryOpNode):
@@ -494,9 +496,11 @@ class ExpressionValidator:
         issues: list[ValidationIssue],
         reason_code: str,
         detail: str,
+        *,
+        field_name: str | None = None,
     ) -> None:
         errors.append(detail)
-        issues.append(ValidationIssue(reason_code=reason_code, detail=detail))
+        issues.append(ValidationIssue(reason_code=reason_code, detail=detail, field_name=field_name))
 
 
 def validate_expression(

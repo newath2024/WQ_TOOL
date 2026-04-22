@@ -7,6 +7,7 @@ import time
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry
 from features.registry import OperatorRegistry
+from generator.guardrails import GenerationGuardrails
 from generator.diversity_tracker import GenerationDiversityTracker
 from generator.engine import AlphaCandidate, AlphaGenerationEngine, GenerationSessionStats
 from generator.genome_builder import GenomeBuilder
@@ -27,6 +28,8 @@ class GuidedGenerator:
         field_registry: FieldRegistry,
         region_learning_context: RegionLearningContext | None = None,
         mutation_learning_records: list[dict] | None = None,
+        generation_guardrails: GenerationGuardrails | None = None,
+        field_penalty_multipliers: dict[str, float] | None = None,
     ) -> None:
         self.generation_config = generation_config
         self.adaptive_config = adaptive_config
@@ -41,6 +44,8 @@ class GuidedGenerator:
             field_registry=field_registry,
             region_learning_context=region_learning_context,
             mutation_learning_records=mutation_learning_records,
+            generation_guardrails=generation_guardrails,
+            field_penalty_multipliers=field_penalty_multipliers,
         )
         self.random = random.Random(generation_config.random_seed)
         self.genome_builder = GenomeBuilder(
@@ -65,6 +70,7 @@ class GuidedGenerator:
             randomizer_seed=generation_config.random_seed + 211,
             field_registry=field_registry,
             registry=registry,
+            field_penalty_multipliers=field_penalty_multipliers,
         )
         self.last_generation_stats: GenerationSessionStats | None = None
 
@@ -161,7 +167,11 @@ class GuidedGenerator:
                 )
                 candidate = result.candidate
                 if candidate is None:
-                    session.record_failure(result.failure_reason, expression=render.expression)
+                    session.record_failure(
+                        result.failure_reason,
+                        expression=render.expression,
+                        fields=result.failure_fields,
+                    )
                     exploit_consecutive_failures += 1
                     continue
                 if candidate.normalized_expression in existing:
@@ -256,7 +266,11 @@ class GuidedGenerator:
                 )
                 candidate = result.candidate
                 if candidate is None:
-                    session.record_failure(result.failure_reason, expression=render.expression)
+                    session.record_failure(
+                        result.failure_reason,
+                        expression=render.expression,
+                        fields=result.failure_fields,
+                    )
                     explore_consecutive_failures += 1
                     continue
                 if candidate.normalized_expression in existing:
@@ -368,7 +382,11 @@ class GuidedGenerator:
             )
             candidate = result.candidate
             if candidate is None:
-                session.record_failure(result.failure_reason, expression=expression)
+                session.record_failure(
+                    result.failure_reason,
+                    expression=expression,
+                    fields=result.failure_fields,
+                )
                 consecutive_failures += 1
                 continue
             if candidate.normalized_expression in existing:
