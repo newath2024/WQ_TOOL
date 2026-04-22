@@ -35,6 +35,8 @@ FAIL_TAG_PENALTIES: dict[str, float] = {
     "weak_validation": 0.20,
 }
 
+_NEUTRAL_BRAIN_REJECTION_REASONS = frozenset({"poll_timeout_after_downtime"})
+
 
 @dataclass(frozen=True, slots=True)
 class GeneObservation:
@@ -429,7 +431,8 @@ class PatternMemoryService:
             score += 0.20
         elif submission_eligible is False:
             score -= 0.05
-        if rejection_reason:
+        normalized_rejection = str(rejection_reason or "").strip()
+        if normalized_rejection and normalized_rejection not in _NEUTRAL_BRAIN_REJECTION_REASONS:
             score -= 0.25
         for tag in fail_tags:
             score -= FAIL_TAG_PENALTIES.get(tag, 0.0)

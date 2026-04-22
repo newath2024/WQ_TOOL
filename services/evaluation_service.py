@@ -47,6 +47,16 @@ def alpha_candidate_from_record(record, parent_refs: list[dict[str, str]] | None
             operators_used = json.loads(record.operators_used_json)
         except json.JSONDecodeError:
             operators_used = []
+    if (
+        "canonical_structural_signature" not in generation_metadata
+        and getattr(record, "structural_signature_json", "")
+    ):
+        try:
+            structural_signature = json.loads(record.structural_signature_json or "{}")
+        except json.JSONDecodeError:
+            structural_signature = {}
+        if isinstance(structural_signature, dict) and structural_signature:
+            generation_metadata["canonical_structural_signature"] = structural_signature
     return AlphaCandidate(
         alpha_id=record.alpha_id,
         expression=record.expression,

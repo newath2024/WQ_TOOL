@@ -12,6 +12,8 @@ from storage.repository import SQLiteRepository
 
 
 class BrainLearningService:
+    _NEUTRAL_OPERATIONAL_REJECTIONS = frozenset({"poll_timeout_after_downtime"})
+
     def __init__(
         self,
         repository: SQLiteRepository,
@@ -41,6 +43,8 @@ class BrainLearningService:
         entries: list[dict] = []
         selected = selected_parent_ids or set()
         for result in results:
+            if self._is_neutral_operational_result(result):
+                continue
             candidate = candidates_by_id.get(result.candidate_id)
             if candidate is None:
                 continue
@@ -190,6 +194,11 @@ class BrainLearningService:
             seen_hints.add(hint.hint)
         diagnosis.mutation_hints = deduped_hints
         return diagnosis
+
+    @classmethod
+    def _is_neutral_operational_result(cls, result: SimulationResult) -> bool:
+        rejection = str(result.rejection_reason or "").strip()
+        return rejection in cls._NEUTRAL_OPERATIONAL_REJECTIONS
 
     def _persist_mutation_outcomes(
         self,

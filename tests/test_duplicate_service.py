@@ -111,6 +111,106 @@ def test_cross_run_duplicate_respects_global_scope() -> None:
     assert len(kept.kept_candidates) == 1
 
 
+def test_save_alpha_candidates_persists_structural_signature() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        repository.upsert_run(
+            run_id="run-1",
+            seed=7,
+            config_path="config/dev.yaml",
+            config_snapshot="{}",
+            status="running",
+            started_at="2026-01-01T00:00:00+00:00",
+        )
+        repository.save_alpha_candidates("run-1", [_candidate("alpha-1", "rank(ts_mean(close, 5))")])
+        row = repository.connection.execute(
+            "SELECT structural_signature_json FROM alphas WHERE run_id = ? AND alpha_id = ?",
+            ("run-1", "alpha-1"),
+        ).fetchone()
+    finally:
+        repository.close()
+
+    assert row is not None
+    assert json.loads(row["structural_signature_json"])["family_signature"]
+
+
+def test_exact_same_run_duplicate_does_not_require_structural_window() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        repository.upsert_run(
+            run_id="run-1",
+            seed=7,
+            config_path="config/dev.yaml",
+            config_snapshot="{}",
+            status="running",
+            started_at="2026-01-01T00:00:00+00:00",
+        )
+        existing = _candidate("alpha-existing", "rank(ts_mean(close, 5))")
+        incoming = _candidate("alpha-new", "rank(ts_mean(close, 5))")
+        repository.save_alpha_candidates("run-1", [existing])
+        service = DuplicateService(
+            repository,
+            config=DuplicateConfig(same_run_structural_reference_limit=0),
+        )
+
+        result = service.filter_pre_sim(
+            [incoming],
+            run_id="run-1",
+            round_index=1,
+            legacy_regime_key="legacy",
+            global_regime_key="global",
+        )
+    finally:
+        repository.close()
+
+    assert not result.kept_candidates
+    assert result.decisions[0].reason_code == "exact_same_run"
+
+
+def test_pre_sim_dedup_uses_targeted_repository_paths(monkeypatch) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        repository.upsert_run(
+            run_id="run-1",
+            seed=7,
+            config_path="config/dev.yaml",
+            config_snapshot="{}",
+            status="running",
+            started_at="2026-01-01T00:00:00+00:00",
+        )
+        repository.save_alpha_candidates("run-1", [_candidate("alpha-existing", "rank(ts_mean(open, 5))")])
+
+        def fail_full_scan(run_id: str):  # noqa: ARG001
+            raise AssertionError("pre-sim dedup should not load every alpha record")
+
+        calls: list[int] = []
+        original_refs = repository.get_same_run_structural_references
+
+        def track_refs(*, run_id: str, limit: int):
+            calls.append(limit)
+            return original_refs(run_id=run_id, limit=limit)
+
+        monkeypatch.setattr(repository, "list_alpha_records", fail_full_scan)
+        monkeypatch.setattr(repository, "get_same_run_structural_references", track_refs)
+        service = DuplicateService(
+            repository,
+            config=DuplicateConfig(same_run_structural_reference_limit=1),
+        )
+
+        result = service.filter_pre_sim(
+            [_candidate("alpha-new", "rank(ts_mean(close, 6))")],
+            run_id="run-1",
+            round_index=1,
+            legacy_regime_key="legacy",
+            global_regime_key="global",
+        )
+    finally:
+        repository.close()
+
+    assert result.decisions
+    assert calls == [1]
+
+
 def _candidate(alpha_id: str, expression: str) -> AlphaCandidate:
     return AlphaCandidate(
         alpha_id=alpha_id,

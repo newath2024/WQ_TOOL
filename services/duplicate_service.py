@@ -30,6 +30,7 @@ class DuplicateService:
         self.repository = repository
         self.config = config
         self.memory_service = memory_service or PatternMemoryService()
+        self._same_run_ref_cache: dict[tuple[str, int, str, int], tuple[_CandidateReference, ...]] = {}
 
     def filter_pre_sim(
         self,
@@ -66,25 +67,16 @@ class DuplicateService:
             )
 
         current_alpha_ids = {candidate.alpha_id for candidate in candidates}
-        existing_records = [
-            record
-            for record in self.repository.list_alpha_records(run_id)
-            if record.alpha_id not in current_alpha_ids
-        ]
-        existing_by_normalized = {record.normalized_expression: record.alpha_id for record in existing_records}
-        same_run_refs = [
-            _CandidateReference(
-                run_id=record.run_id,
-                alpha_id=record.alpha_id,
-                normalized_expression=record.normalized_expression,
-                signature=self._safe_extract_signature(
-                    record.expression,
-                    generation_metadata=self._record_metadata(record.generation_metadata),
-                ),
-                scope="same_run",
-            )
-            for record in existing_records
-        ]
+        existing_by_normalized = self.repository.get_existing_alpha_ids_by_normalized(
+            run_id,
+            (candidate.normalized_expression for candidate in candidates),
+            exclude_alpha_ids=current_alpha_ids,
+        )
+        same_run_refs = (
+            self._same_run_structural_refs(run_id=run_id, exclude_alpha_ids=current_alpha_ids)
+            if self.config.structural_match_enabled
+            else []
+        )
         cross_run_refs = [
             _CandidateReference(
                 run_id=str(row["run_id"]),
@@ -341,6 +333,57 @@ class DuplicateService:
             return self.memory_service.extract_signature(expression, generation_metadata=generation_metadata)
         except Exception:  # noqa: BLE001
             return None
+
+    def _same_run_structural_refs(
+        self,
+        *,
+        run_id: str,
+        exclude_alpha_ids: set[str],
+    ) -> list[_CandidateReference]:
+        limit = max(int(self.config.same_run_structural_reference_limit), 0)
+        if limit <= 0:
+            return []
+        alpha_count, max_created_at = self.repository.get_alpha_reference_marker(run_id)
+        cache_key = (run_id, alpha_count, max_created_at, limit)
+        cached = self._same_run_ref_cache.get(cache_key)
+        if cached is None:
+            rows = self.repository.get_same_run_structural_references(run_id=run_id, limit=limit)
+            refs: list[_CandidateReference] = []
+            fallback_remaining = min(100, limit)
+            for row in rows:
+                signature = self._signature_from_payload_json(str(row.get("structural_signature_json") or "{}"))
+                if signature is None and fallback_remaining > 0:
+                    signature = self._safe_extract_signature(
+                        str(row.get("expression") or row.get("normalized_expression") or ""),
+                        generation_metadata=self._record_metadata(str(row.get("generation_metadata") or "{}")),
+                    )
+                    fallback_remaining -= 1
+                    if signature is not None:
+                        self.repository.update_alpha_structural_signature(
+                            run_id=str(row.get("run_id") or run_id),
+                            alpha_id=str(row.get("alpha_id") or ""),
+                            structural_signature_json=json.dumps(signature.to_dict(), sort_keys=True),
+                        )
+                refs.append(
+                    _CandidateReference(
+                        run_id=str(row.get("run_id") or run_id),
+                        alpha_id=str(row.get("alpha_id") or ""),
+                        normalized_expression=str(row.get("normalized_expression") or ""),
+                        signature=signature,
+                        scope="same_run",
+                    )
+                )
+            cached = tuple(refs)
+            self._same_run_ref_cache.clear()
+            self._same_run_ref_cache[cache_key] = cached
+        return [reference for reference in cached if reference.alpha_id not in exclude_alpha_ids]
+
+    def _signature_from_payload_json(self, payload: str) -> StructuralSignature | None:
+        try:
+            parsed = json.loads(payload or "{}")
+        except json.JSONDecodeError:
+            return None
+        return self._signature_from_payload(parsed if isinstance(parsed, dict) else {})
 
     @staticmethod
     def _record_metadata(payload: str) -> dict:
