@@ -41,6 +41,7 @@ class AlphaRecord:
     complexity: int
     created_at: str
     status: str
+    structural_signature_json: str = "{}"
 
 
 @dataclass(frozen=True, slots=True)
@@ -283,6 +284,22 @@ class SubmissionRecord:
     timeout_deadline_at: str | None = None
     stuck_since: str | None = None
     service_failure_reason: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ServiceDispatchQueueRecord:
+    queue_item_id: str
+    service_name: str
+    run_id: str
+    candidate_id: str
+    source_round_index: int
+    queue_position: int
+    status: str
+    batch_id: str | None
+    job_id: str | None
+    failure_reason: str | None
+    created_at: str
+    updated_at: str
 
 
 @dataclass(frozen=True, slots=True)

@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS alphas (
     operators_used_json TEXT NOT NULL DEFAULT '[]',
     depth INTEGER NOT NULL DEFAULT 0,
     generation_metadata TEXT NOT NULL DEFAULT '{}',
+    structural_signature_json TEXT NOT NULL DEFAULT '{}',
     complexity INTEGER NOT NULL,
     created_at TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'generated',
@@ -52,6 +53,9 @@ CREATE TABLE IF NOT EXISTS alphas (
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_alphas_run_expression
     ON alphas(run_id, normalized_expression);
+
+CREATE INDEX IF NOT EXISTS idx_alphas_run_created_at
+    ON alphas(run_id, created_at DESC);
 
 CREATE TABLE IF NOT EXISTS alpha_parents (
     run_id TEXT NOT NULL,
@@ -434,6 +438,30 @@ CREATE TABLE IF NOT EXISTS service_runtime (
     updated_at TEXT NOT NULL DEFAULT ''
 );
 
+CREATE TABLE IF NOT EXISTS service_dispatch_queue (
+    queue_item_id TEXT PRIMARY KEY,
+    service_name TEXT NOT NULL,
+    run_id TEXT NOT NULL,
+    candidate_id TEXT NOT NULL,
+    source_round_index INTEGER NOT NULL DEFAULT 0,
+    queue_position INTEGER NOT NULL DEFAULT 0,
+    status TEXT NOT NULL,
+    batch_id TEXT,
+    job_id TEXT,
+    failure_reason TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES runs(run_id),
+    FOREIGN KEY (batch_id) REFERENCES submission_batches(batch_id),
+    FOREIGN KEY (job_id) REFERENCES submissions(job_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_service_dispatch_queue_active
+    ON service_dispatch_queue(service_name, run_id, status, queue_position);
+
+CREATE INDEX IF NOT EXISTS idx_service_dispatch_queue_round
+    ON service_dispatch_queue(run_id, source_round_index, queue_position);
+
 CREATE TABLE IF NOT EXISTS alpha_duplicate_decisions (
     run_id TEXT NOT NULL,
     round_index INTEGER NOT NULL DEFAULT 0,
@@ -574,6 +602,7 @@ REQUIRED_COLUMNS = {
     },
     "alphas": {
         "generation_metadata": "TEXT NOT NULL DEFAULT '{}'",
+        "structural_signature_json": "TEXT NOT NULL DEFAULT '{}'",
         "template_name": "TEXT NOT NULL DEFAULT ''",
         "fields_used_json": "TEXT NOT NULL DEFAULT '[]'",
         "operators_used_json": "TEXT NOT NULL DEFAULT '[]'",

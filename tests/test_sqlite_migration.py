@@ -78,3 +78,49 @@ def test_connect_sqlite_migrates_legacy_tables_before_creating_new_indexes(tmp_p
     assert "global_regime_key" in runs_columns
     assert "global_regime_key" in alpha_history_columns
     assert "idx_alpha_history_global_regime_outcome" in indexes
+
+
+def test_connect_sqlite_migrates_legacy_alphas_structural_signature(tmp_path: Path) -> None:
+    db_path = tmp_path / "legacy-alphas.sqlite3"
+    legacy = sqlite3.connect(str(db_path))
+    try:
+        legacy.executescript(
+            """
+            CREATE TABLE alphas (
+                run_id TEXT NOT NULL,
+                alpha_id TEXT NOT NULL,
+                expression TEXT NOT NULL,
+                normalized_expression TEXT NOT NULL,
+                generation_mode TEXT NOT NULL,
+                template_name TEXT NOT NULL DEFAULT '',
+                fields_used_json TEXT NOT NULL DEFAULT '[]',
+                operators_used_json TEXT NOT NULL DEFAULT '[]',
+                depth INTEGER NOT NULL DEFAULT 0,
+                generation_metadata TEXT NOT NULL DEFAULT '{}',
+                complexity INTEGER NOT NULL,
+                created_at TEXT NOT NULL,
+                status TEXT NOT NULL DEFAULT 'generated',
+                PRIMARY KEY (run_id, alpha_id)
+            );
+            """
+        )
+        legacy.commit()
+    finally:
+        legacy.close()
+
+    connection = connect_sqlite(str(db_path))
+    try:
+        columns = {
+            row["name"]
+            for row in connection.execute("PRAGMA table_info(alphas)").fetchall()
+        }
+        indexes = {
+            row["name"]
+            for row in connection.execute("PRAGMA index_list(alphas)").fetchall()
+        }
+    finally:
+        connection.close()
+
+    assert "structural_signature_json" in columns
+    assert "idx_alphas_run_expression" in indexes
+    assert "idx_alphas_run_created_at" in indexes

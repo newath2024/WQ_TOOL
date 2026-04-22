@@ -29,6 +29,7 @@ from storage.models import (
     SubmissionTestRecord,
 )
 from storage.service_runtime_store import ServiceRuntimeStore
+from storage.service_dispatch_queue_store import ServiceDispatchQueueStore
 from storage.sqlite import connect_sqlite
 from storage.submission_store import SubmissionStore
 
@@ -36,10 +37,12 @@ from storage.submission_store import SubmissionStore
 class SQLiteRepository:
     def __init__(self, path: str) -> None:
         self.connection = connect_sqlite(path)
-        self.alpha_history = AlphaHistoryStore(self.connection, PatternMemoryService())
+        self._memory_service = PatternMemoryService()
+        self.alpha_history = AlphaHistoryStore(self.connection, self._memory_service)
         self.submissions = SubmissionStore(self.connection)
         self.brain_results = BrainResultStore(self.connection)
         self.service_runtime = ServiceRuntimeStore(self.connection)
+        self.service_dispatch_queue = ServiceDispatchQueueStore(self.connection)
 
     def close(self) -> None:
         self.connection.close()
@@ -186,8 +189,8 @@ class SQLiteRepository:
                 """
                 INSERT OR IGNORE INTO alphas
                 (run_id, alpha_id, expression, normalized_expression, generation_mode, template_name, fields_used_json,
-                 operators_used_json, depth, generation_metadata, complexity, created_at, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 operators_used_json, depth, generation_metadata, structural_signature_json, complexity, created_at, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     run_id,
@@ -200,6 +203,7 @@ class SQLiteRepository:
                     json.dumps(list(candidate.operators_used), sort_keys=True),
                     candidate.depth,
                     json.dumps(candidate.generation_metadata, sort_keys=True),
+                    self._candidate_structural_signature_json(candidate),
                     candidate.complexity,
                     candidate.created_at,
                     "generated",
@@ -230,12 +234,118 @@ class SQLiteRepository:
         self.connection.commit()
         return inserted
 
+    def _candidate_structural_signature_json(self, candidate: AlphaCandidate) -> str:
+        payload = candidate.generation_metadata.get("canonical_structural_signature")
+        if isinstance(payload, dict) and payload:
+            return json.dumps(payload, sort_keys=True)
+        try:
+            signature = self._memory_service.extract_signature(
+                candidate.normalized_expression or candidate.expression,
+                generation_metadata=candidate.generation_metadata,
+            )
+        except Exception:  # noqa: BLE001
+            return "{}"
+        return json.dumps(signature.to_dict(), sort_keys=True)
+
     def list_alpha_records(self, run_id: str) -> list[AlphaRecord]:
         rows = self.connection.execute(
             "SELECT * FROM alphas WHERE run_id = ? ORDER BY created_at ASC, alpha_id ASC",
             (run_id,),
         ).fetchall()
         return [AlphaRecord(**dict(row)) for row in rows]
+
+    def get_alpha_reference_marker(self, run_id: str) -> tuple[int, str]:
+        row = self.connection.execute(
+            """
+            SELECT COUNT(*) AS alpha_count, MAX(created_at) AS max_created_at
+            FROM alphas
+            WHERE run_id = ?
+            """,
+            (run_id,),
+        ).fetchone()
+        if row is None:
+            return 0, ""
+        return int(row["alpha_count"] or 0), str(row["max_created_at"] or "")
+
+    def get_existing_alpha_ids_by_normalized(
+        self,
+        run_id: str,
+        normalized_expressions: Iterable[str],
+        *,
+        exclude_alpha_ids: Iterable[str] = (),
+    ) -> dict[str, str]:
+        expressions = tuple(
+            dict.fromkeys(str(expression) for expression in normalized_expressions if str(expression))
+        )
+        if not expressions:
+            return {}
+        excluded = tuple(dict.fromkeys(str(alpha_id) for alpha_id in exclude_alpha_ids if str(alpha_id)))
+        expression_placeholders = ",".join("?" for _ in expressions)
+        params: list[str] = [run_id, *expressions]
+        exclusion_sql = ""
+        if excluded:
+            exclusion_placeholders = ",".join("?" for _ in excluded)
+            exclusion_sql = f" AND alpha_id NOT IN ({exclusion_placeholders})"
+            params.extend(excluded)
+        rows = self.connection.execute(
+            f"""
+            SELECT normalized_expression, alpha_id
+            FROM alphas
+            WHERE run_id = ?
+              AND normalized_expression IN ({expression_placeholders})
+              {exclusion_sql}
+            ORDER BY created_at ASC, alpha_id ASC
+            """,
+            tuple(params),
+        ).fetchall()
+        existing: dict[str, str] = {}
+        for row in rows:
+            existing.setdefault(str(row["normalized_expression"]), str(row["alpha_id"]))
+        return existing
+
+    def get_same_run_structural_references(
+        self,
+        *,
+        run_id: str,
+        limit: int,
+    ) -> list[dict]:
+        if limit <= 0:
+            return []
+        rows = self.connection.execute(
+            """
+            SELECT
+                run_id,
+                alpha_id,
+                normalized_expression,
+                expression,
+                generation_metadata,
+                structural_signature_json,
+                created_at
+            FROM alphas
+            WHERE run_id = ?
+            ORDER BY created_at DESC, alpha_id DESC
+            LIMIT ?
+            """,
+            (run_id, int(limit)),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def update_alpha_structural_signature(
+        self,
+        *,
+        run_id: str,
+        alpha_id: str,
+        structural_signature_json: str,
+    ) -> None:
+        self.connection.execute(
+            """
+            UPDATE alphas
+            SET structural_signature_json = ?
+            WHERE run_id = ? AND alpha_id = ?
+            """,
+            (structural_signature_json, run_id, alpha_id),
+        )
+        self.connection.commit()
 
     def save_field_catalog(self, records: list[FieldCatalogRecord]) -> None:
         for record in records:
@@ -846,6 +956,34 @@ class SQLiteRepository:
             ORDER BY round_index ASC, stage ASC
             """,
             (run_id,),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def list_recent_generation_stage_metrics(
+        self,
+        run_id: str,
+        *,
+        limit: int,
+        before_round_index: int | None = None,
+    ) -> list[dict]:
+        if limit <= 0:
+            return []
+        round_filter = ""
+        params: list[object] = [run_id]
+        if before_round_index is not None:
+            round_filter = "AND round_index < ?"
+            params.append(int(before_round_index))
+        params.append(int(limit))
+        rows = self.connection.execute(
+            f"""
+            SELECT run_id, round_index, stage, metrics_json, created_at
+            FROM round_stage_metrics
+            WHERE run_id = ? AND stage = 'generation'
+              {round_filter}
+            ORDER BY round_index DESC, created_at DESC
+            LIMIT ?
+            """,
+            tuple(params),
         ).fetchall()
         return [dict(row) for row in rows]
 
