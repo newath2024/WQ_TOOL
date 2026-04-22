@@ -2,7 +2,12 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from core.config import load_config
 from services.kpi_report_service import build_run_kpi_report, run_kpi_report_to_dict
@@ -64,6 +69,7 @@ def _print_human(payload: dict[str, object]) -> None:
     meta_model = payload.get("meta_model") or {}
     regime = payload.get("regime") or {}
     mutation = payload.get("mutation") or {}
+    delta_flags = payload.get("delta_flags") or {}
 
     print(
         f"run_id={_display(payload.get('run_id'))} "
@@ -103,7 +109,9 @@ def _print_human(payload: dict[str, object]) -> None:
             f"selected_for_simulation={funnel.get('selected_for_simulation', 0)} "
             f"validation_rate={_fmt_pct(funnel.get('validation_rate'))} "
             f"selection_rate={_fmt_pct(funnel.get('selection_rate'))} "
-            f"validate_fail_count={funnel.get('validate_fail_count', 0)}"
+            f"validate_fail_count={funnel.get('validate_fail_count', 0)} "
+            f"validation_disallowed_field_rate={_fmt_pct(funnel.get('validation_disallowed_field_rate'))} "
+            f"blocked_by_near_duplicate_rate={_fmt_pct(funnel.get('blocked_by_near_duplicate_rate'))}"
         )
     if quality:
         print(
@@ -143,6 +151,18 @@ def _print_human(payload: dict[str, object]) -> None:
             f"mutated_children={mutation.get('mutated_children_count', 0)} "
             f"child_better_than_parent_rate={_fmt_pct(mutation.get('child_better_than_parent_rate'))} "
             f"mutation_outcome_rows={mutation.get('mutation_outcome_rows', 0)}"
+        )
+    if delta_flags:
+        raw_delta = delta_flags.get("raw_results") or {}
+        completed_delta = delta_flags.get("completed_results") or {}
+        round_delta = delta_flags.get("rounds") or {}
+        print(
+            "recent_vs_baseline: "
+            f"raw_quality={_display(raw_delta.get('quality'))} "
+            f"raw_ops={_display(raw_delta.get('operations'))} "
+            f"completed_quality={_display(completed_delta.get('quality'))} "
+            f"round_quality={_display(round_delta.get('quality'))} "
+            f"round_ops={_display(round_delta.get('operations'))}"
         )
 
 

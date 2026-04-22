@@ -120,32 +120,26 @@ The expected tick order is:
 
 ### 2.4 Concurrency and slot filling
 
-Submission capacity is bounded by:
+Submission capacity is bounded only by:
 
 - `service.max_pending_jobs`
-- the runtime-learned safe cap derived from backend concurrency behavior
-
-The effective pending cap is:
-
-- `min(service.max_pending_jobs, learned_safe_cap)` when a learned cap exists
-- otherwise `service.max_pending_jobs`
 
 Slot filling strategy:
 
-- Slot filling is conservative.
-- Slot filling is only applied when the tick starts idle.
-- Batch size is capped by available slots, configured simulation batch size, and selected candidate count.
-- Recent failure rate may reduce submission count further.
-- Learned backend caps are runtime safety limits, not targets to exceed.
+- Service-mode dispatch is single-alpha and refill-oriented.
+- The service may prepare a queue larger than the currently free slot count.
+- After polling, every freed slot may be refilled in the same tick until pending jobs reach `service.max_pending_jobs`.
+- `loop.simulation_batch_size` limits prepared queue depth, not live concurrent jobs.
+- Observed backend concurrency limits may be recorded as telemetry, but must not reduce the live dispatch cap.
 
 ### 2.5 Forbidden orchestration behavior
 
 The service must never:
 
-- poll and prepare a new batch in the same tick when the tick started with pending work
-- block polling on synchronous batch preparation
-- treat "freed capacity after polling" as permission to submit in that same tick
-- burst new work because the backend briefly reports free slots
+- stop polling pending jobs during a submission cooldown
+- wait for an entire logical wave to finish before refilling a freed slot
+- reduce live dispatch capacity below `service.max_pending_jobs` because of stored learned-cap telemetry
+- submit more live jobs than `service.max_pending_jobs`
 
 ## 3. Timeout Policy
 
@@ -223,11 +217,11 @@ The timeout model must explicitly prevent:
 
 ### 4.1 Submission model
 
-The submission model is batch-oriented and job-persistent.
+The submission model is job-persistent and service-refill-aware.
 
 Rules:
 
-- One service submit tick creates at most one batch.
+- Service mode submits one alpha per batch.
 - A batch is persisted before external submission begins.
 - Each submitted job is persisted individually with its own job identifier and timeout deadline.
 - Manual backend batches may remain in `manual_pending`; API backend batches transition into active polling states.
@@ -253,6 +247,7 @@ Polling rules:
 - Otherwise, pending jobs are polled directly against the backend.
 - Normal running-job cadence uses configured poll interval unless backend supplies `retry_after`.
 - Polling cadence must remain independent from batch preparation time.
+- Service mode must not start a new dispatch queue preparation while there are still pending jobs and the dispatch queue is empty; it should emit `queue_prepare_deferred` and wait for pending work to drain.
 
 ### 4.4 Retry strategy
 
@@ -276,10 +271,19 @@ On `ConcurrentSimulationLimitExceeded`:
 - stop the current submit attempt
 - persist any jobs already accepted
 - place the service into `cooldown`
-- derive and persist a runtime `learned_safe_cap`
-- do not immediately retry back to configured hard cap in the same service run
+- record the observed pending level into runtime telemetry using the existing `learned_safe_cap` key for compatibility
+- persist `observed_pending_limit`, `observed_limit_observed_at`, `observed_limit_hit_count`, and `observed_limit_last_probe_at`
+- keep polling pending jobs during cooldown
+- clear cooldown and refill in the same tick if polling produces new terminal results
+- otherwise retry only after normal cooldown timing
 
-The learned safe cap is a conservative runtime limit, not a permanent config change.
+`service.max_pending_jobs` remains the hard upper bound. A fresh observed limit may temporarily reduce refill capacity until its TTL expires or a guarded probe succeeds. `learned_safe_cap` remains compatibility telemetry and is not a permanent learned cap.
+
+### 4.6 Pre-simulation duplicate control
+
+- Exact same-run duplicate checks must query only the current candidate normalized expressions.
+- Structural same-run near-duplicate checks must use a bounded recent reference window, backed by cached `alphas.structural_signature_json`.
+- The pre-sim duplicate path must not load all alpha records for the run.
 
 ## 5. Failure Taxonomy
 
@@ -448,6 +452,7 @@ Supporting metrics should include:
 
 - High `prepare_batch_ms` with stable `poll_pending_ms` is acceptable only when the service is idle before submission.
 - High `prepare_batch_ms` combined with rising `timeout_rate` indicates forbidden coupling between prep and polling.
+- Any `prepare_batch_ms > 0` while `pre_prepare_pending_job_count > 0` indicates the service is preparing work too early.
 - High `submission_rate` with low `alpha_per_hour` indicates backend latency, timeout problems, or backend acceptance without useful completion.
 - High auth wait counts with low timeout rate indicates deadline extension behavior is working as intended.
 - High auth wait counts with high timeout rate indicates broken defer handling or incorrect deadline management.

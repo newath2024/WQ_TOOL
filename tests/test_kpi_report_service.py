@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from services.kpi_report_service import _fetch_alpha_outcomes, build_run_kpi_report
+from services.kpi_report_service import _fetch_alpha_outcomes, build_run_kpi_report, run_kpi_report_to_dict
 from storage.models import (
     BrainResultRecord,
     ClosedLoopRoundRecord,
@@ -56,6 +56,8 @@ def test_build_run_kpi_report_scopes_recent_rounds_and_extracts_kpis() -> None:
         assert report.funnel["validation_rate"] == pytest.approx(0.5)
         assert report.funnel["selection_rate"] == pytest.approx(0.04)
         assert report.funnel["validate_fail_count"] == 22
+        assert report.funnel["validation_disallowed_field_rate"] == pytest.approx(0.09)
+        assert report.funnel["blocked_by_near_duplicate_rate"] == pytest.approx(0.1)
 
         assert report.quality["completed_results"] == 2
         assert report.quality["distinct_candidates"] == 4
@@ -63,6 +65,8 @@ def test_build_run_kpi_report_scopes_recent_rounds_and_extracts_kpis() -> None:
         assert report.quality["positive_sharpe_rate"] == pytest.approx(1.0)
         assert report.quality["avg_fitness"] == pytest.approx(0.1)
         assert report.quality["max_sharpe"] == pytest.approx(0.6)
+        assert report.quality["avg_drawdown"] == pytest.approx(0.15)
+        assert report.quality["avg_returns"] == pytest.approx(0.025)
 
         assert report.meta_model["rows"] == 4
         assert report.meta_model["meta_model_used_rate"] == pytest.approx(1.0)
@@ -104,6 +108,32 @@ def test_build_run_kpi_report_marks_full_run_scope_when_recent_rounds_is_zero() 
         assert report.scope_round_end == 3
         assert report.scope_round_count == 3
         assert report.funnel["generated_count"] == 60
+    finally:
+        repository.close()
+
+
+def test_run_kpi_report_to_dict_includes_recent_vs_baseline_blocks() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_kpi_report_run(repository)
+
+        payload = run_kpi_report_to_dict(
+            build_run_kpi_report(
+                repository,
+                service_name="brain-service",
+                run_id="run-kpi",
+                recent_rounds=2,
+            )
+        )
+
+        assert payload["recent"]["raw_results"]["label"] == "recent_raw_results"
+        assert payload["recent"]["raw_results"]["top_timeout_reasons"] == {"poll_timeout_live": 1}
+        assert payload["recent"]["rounds"]["top_generation_fail_reasons"]["validation_disallowed_field"] == 10
+        assert payload["baseline"]["raw_results"]["top_timeout_reasons"] == {}
+        assert payload["timeout_reasons"]["recent"] == {"poll_timeout_live": 1}
+        assert payload["generation_fail_reasons"]["recent"]["validation_disallowed_field"] == 10
+        assert payload["delta_flags"]["raw_results"]["quality"] == "flat"
+        assert payload["delta_flags"]["raw_results"]["operations"] == "flat"
     finally:
         repository.close()
 
@@ -271,21 +301,76 @@ def _seed_kpi_report_run(repository: SQLiteRepository) -> None:
                 run_id="run-kpi",
                 round_index=1,
                 stage="generation",
-                metrics_json=json.dumps({"validate_fail_count": 5}),
+                metrics_json=json.dumps(
+                    {
+                        "attempt_count": 20,
+                        "generated": 10,
+                        "selected_for_simulation": 1,
+                        "validate_fail_count": 5,
+                        "failure_reason_counts": {
+                            "validation_disallowed_field": 1,
+                            "validation_unknown_error": 4,
+                        },
+                    }
+                ),
                 created_at=timestamp,
             ),
             StageMetricRecord(
                 run_id="run-kpi",
                 round_index=2,
                 stage="generation",
-                metrics_json=json.dumps({"validate_fail_count": 10}),
+                metrics_json=json.dumps(
+                    {
+                        "attempt_count": 40,
+                        "generated": 20,
+                        "selected_for_simulation": 2,
+                        "validate_fail_count": 10,
+                        "failure_reason_counts": {
+                            "validation_disallowed_field": 3,
+                            "duplicate_normalized_expression": 7,
+                        },
+                    }
+                ),
                 created_at=timestamp,
             ),
             StageMetricRecord(
                 run_id="run-kpi",
                 round_index=3,
                 stage="generation",
-                metrics_json=json.dumps({"validate_fail_count": 12}),
+                metrics_json=json.dumps(
+                    {
+                        "attempt_count": 60,
+                        "generated": 30,
+                        "selected_for_simulation": 2,
+                        "validate_fail_count": 12,
+                        "failure_reason_counts": {
+                            "validation_disallowed_field": 6,
+                            "guard_unit_mismatch_history": 2,
+                            "validation_unknown_error": 4,
+                        },
+                    }
+                ),
+                created_at=timestamp,
+            ),
+            StageMetricRecord(
+                run_id="run-kpi",
+                round_index=1,
+                stage="pre_sim",
+                metrics_json=json.dumps({"blocked_by_near_duplicate": 1}),
+                created_at=timestamp,
+            ),
+            StageMetricRecord(
+                run_id="run-kpi",
+                round_index=2,
+                stage="pre_sim",
+                metrics_json=json.dumps({"blocked_by_near_duplicate": 2}),
+                created_at=timestamp,
+            ),
+            StageMetricRecord(
+                run_id="run-kpi",
+                round_index=3,
+                stage="pre_sim",
+                metrics_json=json.dumps({"blocked_by_near_duplicate": 3}),
                 created_at=timestamp,
             ),
         ]

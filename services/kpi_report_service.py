@@ -31,6 +31,11 @@ class RunKpiReport:
     meta_model: dict[str, Any]
     regime: dict[str, Any]
     mutation: dict[str, Any]
+    recent: dict[str, Any]
+    baseline: dict[str, Any]
+    delta_flags: dict[str, Any]
+    timeout_reasons: dict[str, Any]
+    generation_fail_reasons: dict[str, Any]
 
 
 def build_run_kpi_report(
@@ -59,6 +64,11 @@ def build_run_kpi_report(
             meta_model={},
             regime={},
             mutation={},
+            recent={},
+            baseline={},
+            delta_flags={},
+            timeout_reasons={},
+            generation_fail_reasons={},
         )
     run = repository.get_run(resolved_run_id)
     scope = _resolve_round_scope(repository.connection, run_id=resolved_run_id, recent_rounds=recent_rounds)
@@ -67,7 +77,8 @@ def build_run_kpi_report(
     stage_metrics = repository.get_stage_metrics(resolved_run_id)
     selection_scores = repository.list_selection_scores(resolved_run_id, score_stage="pre_sim")
     regime_rows = _fetch_regime_rows(repository.connection, resolved_run_id, scope)
-    closed_loop_rows = _fetch_closed_loop_rows(repository.connection, resolved_run_id, scope)
+    all_closed_loop_rows = _fetch_all_closed_loop_rows(repository.connection, resolved_run_id)
+    closed_loop_rows = [row for row in all_closed_loop_rows if _round_in_scope(int(row.get("round_index") or 0), scope)]
     mutation_rows = _fetch_mutation_rows(repository.connection, resolved_run_id)
 
     scoped_submissions = [row for row in submissions if _round_in_scope(row.round_index, scope)]
@@ -80,6 +91,12 @@ def build_run_kpi_report(
         repository.connection,
         run_id=resolved_run_id,
         alpha_ids={str(row.get("alpha_id") or "") for row in scoped_selection_scores if str(row.get("alpha_id") or "")},
+    )
+    recent, baseline, delta_flags, timeout_reasons, generation_fail_reasons = _build_recent_vs_baseline(
+        submissions=submissions,
+        results=results,
+        stage_metrics=stage_metrics,
+        closed_loop_rows=all_closed_loop_rows,
     )
 
     return RunKpiReport(
@@ -98,6 +115,11 @@ def build_run_kpi_report(
         meta_model=_build_meta_model(selection_scores=scoped_selection_scores, outcome_by_alpha=outcome_by_alpha),
         regime=_build_regime(regime_rows=regime_rows),
         mutation=_build_mutation(closed_loop_rows=closed_loop_rows, mutation_rows=mutation_rows),
+        recent=recent,
+        baseline=baseline,
+        delta_flags=delta_flags,
+        timeout_reasons=timeout_reasons,
+        generation_fail_reasons=generation_fail_reasons,
     )
 
 
@@ -120,6 +142,11 @@ def run_kpi_report_to_dict(report: RunKpiReport) -> dict[str, Any]:
         "meta_model": report.meta_model,
         "regime": report.regime,
         "mutation": report.mutation,
+        "recent": report.recent,
+        "baseline": report.baseline,
+        "delta_flags": report.delta_flags,
+        "timeout_reasons": report.timeout_reasons,
+        "generation_fail_reasons": report.generation_fail_reasons,
     }
 
 
@@ -233,6 +260,19 @@ def _fetch_closed_loop_rows(connection: sqlite3.Connection, run_id: str, scope: 
     return [dict(row) for row in rows]
 
 
+def _fetch_all_closed_loop_rows(connection: sqlite3.Connection, run_id: str) -> list[dict[str, Any]]:
+    rows = connection.execute(
+        """
+        SELECT *
+        FROM closed_loop_rounds
+        WHERE run_id = ?
+        ORDER BY round_index ASC
+        """,
+        (run_id,),
+    ).fetchall()
+    return [dict(row) for row in rows]
+
+
 def _fetch_mutation_rows(connection: sqlite3.Connection, run_id: str) -> list[dict[str, Any]]:
     rows = connection.execute(
         """
@@ -278,22 +318,10 @@ def _build_health(
     submissions,
 ) -> dict[str, Any]:
     status_counts = Counter(str(row.status or "") for row in submissions)
-    timeout_reason_counts: Counter[str] = Counter()
+    timeout_reason_counts = _timeout_reason_counts_for_submissions(submissions)
     terminal_statuses = {"completed", "failed", "rejected", "timeout"}
     terminal = [row for row in submissions if str(row.status or "") in terminal_statuses or row.completed_at]
     terminal_count = len(terminal)
-    for row in submissions:
-        if str(row.status or "") != "timeout":
-            continue
-        reason = str(row.service_failure_reason or row.error_message or "").strip()
-        if reason == "poll_timeout_live":
-            timeout_reason_counts["poll_timeout_live"] += 1
-        elif reason == "poll_timeout_after_downtime":
-            timeout_reason_counts["poll_timeout_after_downtime"] += 1
-        elif reason == "poll_timeout":
-            timeout_reason_counts["poll_timeout"] += 1
-        else:
-            timeout_reason_counts["other_timeout"] += 1
     latencies = [
         _latency_seconds(row.submitted_at, row.completed_at)
         for row in terminal
@@ -333,11 +361,19 @@ def _build_funnel(
     validated = sum(int(row.get("validated_count") or 0) for row in closed_loop_rows)
     pre_sim_selected = sum(1 for row in selection_scores if bool(row.get("selected")) and row.get("score_stage") == "pre_sim")
     validate_fail_count = 0
+    attempt_count = 0
+    validation_disallowed_field_count = 0
+    blocked_by_near_duplicate = 0
     for row in stage_metrics:
-        if row.get("stage") != "generation":
-            continue
         metrics = _decode_json_object(row.get("metrics_json"))
-        validate_fail_count += int(metrics.get("validate_fail_count") or 0)
+        if row.get("stage") == "generation":
+            validate_fail_count += int(metrics.get("validate_fail_count") or 0)
+            attempt_count += int(metrics.get("attempt_count") or 0)
+            validation_disallowed_field_count += int(
+                _decode_json_object(metrics.get("failure_reason_counts")).get("validation_disallowed_field", 0)
+            )
+        elif row.get("stage") == "pre_sim":
+            blocked_by_near_duplicate += int(metrics.get("blocked_by_near_duplicate") or 0)
     return {
         "generated_count": generated,
         "validated_count": validated,
@@ -345,6 +381,11 @@ def _build_funnel(
         "validation_rate": _safe_ratio(validated, generated),
         "selection_rate": _safe_ratio(pre_sim_selected, generated),
         "validate_fail_count": validate_fail_count,
+        "attempt_count": attempt_count,
+        "validation_disallowed_field_count": validation_disallowed_field_count,
+        "validation_disallowed_field_rate": _safe_ratio(validation_disallowed_field_count, attempt_count),
+        "blocked_by_near_duplicate": blocked_by_near_duplicate,
+        "blocked_by_near_duplicate_rate": _safe_ratio(blocked_by_near_duplicate, generated),
     }
 
 
@@ -356,6 +397,8 @@ def _build_quality(
     completed_results = [row for row in results if row.status == "completed"]
     fitnesses = [float(row.fitness) for row in completed_results if row.fitness is not None]
     sharpes = [float(row.sharpe) for row in completed_results if row.sharpe is not None]
+    drawdowns = [float(row.drawdown) for row in completed_results if row.drawdown is not None]
+    returns = [float(row.returns) for row in completed_results if row.returns is not None]
     candidate_ids = {str(row.candidate_id) for row in submissions if str(row.candidate_id or "")}
     return {
         "completed_results": len(completed_results),
@@ -366,6 +409,10 @@ def _build_quality(
         "median_fitness": float(median(fitnesses)) if fitnesses else None,
         "avg_sharpe": float(sum(sharpes) / len(sharpes)) if sharpes else None,
         "median_sharpe": float(median(sharpes)) if sharpes else None,
+        "avg_drawdown": float(sum(drawdowns) / len(drawdowns)) if drawdowns else None,
+        "median_drawdown": float(median(drawdowns)) if drawdowns else None,
+        "avg_returns": float(sum(returns) / len(returns)) if returns else None,
+        "median_returns": float(median(returns)) if returns else None,
         "max_fitness": max(fitnesses) if fitnesses else None,
         "max_sharpe": max(sharpes) if sharpes else None,
     }
@@ -458,6 +505,309 @@ def _build_mutation(
         "child_better_than_parent_rate": _safe_ratio(len(better_rows), len(mutation_rows)),
         "mutation_outcome_rows": len(mutation_rows),
     }
+
+
+def _build_recent_vs_baseline(
+    *,
+    submissions,
+    results,
+    stage_metrics: list[dict[str, Any]],
+    closed_loop_rows: list[dict[str, Any]],
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
+    recent: dict[str, Any] = {}
+    baseline: dict[str, Any] = {}
+
+    terminal_statuses = {"completed", "failed", "rejected", "timeout"}
+    terminal_submissions = [
+        row for row in submissions if str(row.status or "") in terminal_statuses or getattr(row, "completed_at", None)
+    ]
+    raw_recent_submissions, raw_baseline_submissions = _split_recent_and_baseline(list(terminal_submissions), size=200)
+    recent["raw_results"] = _build_window_metrics(
+        label="recent_raw_results",
+        results=_results_for_submissions(results, raw_recent_submissions),
+        submissions=raw_recent_submissions,
+        stage_metrics=_stage_metrics_for_submissions(stage_metrics, raw_recent_submissions),
+        closed_loop_rows=_closed_loop_rows_for_submissions(closed_loop_rows, raw_recent_submissions),
+    )
+    baseline["raw_results"] = _build_window_metrics(
+        label="baseline_raw_results",
+        results=_results_for_submissions(results, raw_baseline_submissions),
+        submissions=raw_baseline_submissions,
+        stage_metrics=_stage_metrics_for_submissions(stage_metrics, raw_baseline_submissions),
+        closed_loop_rows=_closed_loop_rows_for_submissions(closed_loop_rows, raw_baseline_submissions),
+    )
+
+    completed_results = [row for row in results if str(row.status or "") == "completed"]
+    recent_completed, baseline_completed = _split_recent_and_baseline(completed_results, size=200)
+    recent["completed_results"] = _build_window_metrics(
+        label="recent_completed_results",
+        results=recent_completed,
+        submissions=_submissions_for_results(submissions, recent_completed),
+        stage_metrics=_stage_metrics_for_results(stage_metrics, recent_completed),
+        closed_loop_rows=_closed_loop_rows_for_results(closed_loop_rows, recent_completed),
+    )
+    baseline["completed_results"] = _build_window_metrics(
+        label="baseline_completed_results",
+        results=baseline_completed,
+        submissions=_submissions_for_results(submissions, baseline_completed),
+        stage_metrics=_stage_metrics_for_results(stage_metrics, baseline_completed),
+        closed_loop_rows=_closed_loop_rows_for_results(closed_loop_rows, baseline_completed),
+    )
+
+    recent_round_rows, baseline_round_rows = _split_recent_and_baseline(closed_loop_rows, size=7)
+    recent_round_numbers = {int(row.get("round_index") or 0) for row in recent_round_rows}
+    baseline_round_numbers = {int(row.get("round_index") or 0) for row in baseline_round_rows}
+    recent["rounds"] = _build_window_metrics(
+        label="recent_rounds",
+        results=_filter_results_by_rounds(results, recent_round_numbers),
+        submissions=_filter_submissions_by_rounds(submissions, recent_round_numbers),
+        stage_metrics=_filter_stage_metrics_by_rounds(stage_metrics, recent_round_numbers),
+        closed_loop_rows=recent_round_rows,
+    )
+    baseline["rounds"] = _build_window_metrics(
+        label="baseline_rounds",
+        results=_filter_results_by_rounds(results, baseline_round_numbers),
+        submissions=_filter_submissions_by_rounds(submissions, baseline_round_numbers),
+        stage_metrics=_filter_stage_metrics_by_rounds(stage_metrics, baseline_round_numbers),
+        closed_loop_rows=baseline_round_rows,
+    )
+
+    delta_flags = {
+        key: _classify_window_delta(recent.get(key, {}), baseline.get(key, {}))
+        for key in ("raw_results", "completed_results", "rounds")
+    }
+    timeout_reasons = {
+        "recent": dict(recent.get("raw_results", {}).get("top_timeout_reasons") or {}),
+        "baseline": dict(baseline.get("raw_results", {}).get("top_timeout_reasons") or {}),
+    }
+    generation_fail_reasons = {
+        "recent": dict(recent.get("rounds", {}).get("top_generation_fail_reasons") or {}),
+        "baseline": dict(baseline.get("rounds", {}).get("top_generation_fail_reasons") or {}),
+    }
+    return recent, baseline, delta_flags, timeout_reasons, generation_fail_reasons
+
+
+def _build_window_metrics(
+    *,
+    label: str,
+    results,
+    submissions,
+    stage_metrics: list[dict[str, Any]],
+    closed_loop_rows: list[dict[str, Any]],
+) -> dict[str, Any]:
+    completed_results = [row for row in results if str(row.status or "") == "completed"]
+    fitnesses = [float(row.fitness) for row in completed_results if row.fitness is not None]
+    sharpes = [float(row.sharpe) for row in completed_results if row.sharpe is not None]
+    drawdowns = [float(row.drawdown) for row in completed_results if row.drawdown is not None]
+    returns = [float(row.returns) for row in completed_results if row.returns is not None]
+    timeout_reason_counts = _timeout_reason_counts_for_submissions(submissions)
+    generation_fail_reasons = _aggregate_generation_fail_reasons(stage_metrics)
+    generated_count = sum(int(row.get("generated_count") or 0) for row in closed_loop_rows)
+    if generated_count <= 0:
+        generated_count = sum(
+            int(_decode_json_object(row.get("metrics_json")).get("generated") or 0)
+            for row in stage_metrics
+            if row.get("stage") == "generation"
+        )
+    selected_for_simulation = sum(
+        int(_decode_json_object(row.get("metrics_json")).get("selected_for_simulation") or 0)
+        for row in stage_metrics
+        if row.get("stage") == "generation"
+    )
+    blocked_by_near_duplicate = sum(
+        int(_decode_json_object(row.get("metrics_json")).get("blocked_by_near_duplicate") or 0)
+        for row in stage_metrics
+        if row.get("stage") == "pre_sim"
+    )
+    attempt_count = sum(
+        int(_decode_json_object(row.get("metrics_json")).get("attempt_count") or 0)
+        for row in stage_metrics
+        if row.get("stage") == "generation"
+    )
+    validation_disallowed_field_count = sum(
+        int(
+            _decode_json_object(
+                _decode_json_object(row.get("metrics_json")).get("failure_reason_counts")
+            ).get("validation_disallowed_field", 0)
+        )
+        for row in stage_metrics
+        if row.get("stage") == "generation"
+    )
+    terminal_statuses = {"completed", "failed", "rejected", "timeout"}
+    terminal_submissions = [
+        row for row in submissions if str(row.status or "") in terminal_statuses or getattr(row, "completed_at", None)
+    ]
+    timeout_jobs = sum(1 for row in submissions if str(row.status or "") == "timeout")
+    completed_jobs = sum(1 for row in submissions if str(row.status or "") == "completed")
+    round_indices = sorted({int(row.get("round_index") or 0) for row in closed_loop_rows if int(row.get("round_index") or 0) > 0})
+    if not round_indices:
+        round_indices = sorted({int(getattr(row, "round_index", 0) or 0) for row in results if int(getattr(row, "round_index", 0) or 0) > 0})
+    return {
+        "label": label,
+        "result_count": len(results),
+        "submission_count": len(submissions),
+        "round_count": len(round_indices),
+        "round_start": round_indices[0] if round_indices else None,
+        "round_end": round_indices[-1] if round_indices else None,
+        "completed_rate": _safe_ratio(completed_jobs, len(terminal_submissions)),
+        "timeout_rate": _safe_ratio(timeout_jobs, len(terminal_submissions)),
+        "avg_sharpe": _avg(sharpes),
+        "median_sharpe": float(median(sharpes)) if sharpes else None,
+        "avg_fitness": _avg(fitnesses),
+        "median_fitness": float(median(fitnesses)) if fitnesses else None,
+        "positive_sharpe_rate": _safe_ratio(sum(1 for value in sharpes if value > 0.0), len(sharpes)),
+        "positive_fitness_rate": _safe_ratio(sum(1 for value in fitnesses if value > 0.0), len(fitnesses)),
+        "avg_drawdown": _avg(drawdowns),
+        "median_drawdown": float(median(drawdowns)) if drawdowns else None,
+        "avg_returns": _avg(returns),
+        "median_returns": float(median(returns)) if returns else None,
+        "generated_count": generated_count,
+        "selected_for_simulation": selected_for_simulation,
+        "attempt_count": attempt_count,
+        "validation_disallowed_field_count": validation_disallowed_field_count,
+        "validation_disallowed_field_rate": _safe_ratio(validation_disallowed_field_count, attempt_count),
+        "blocked_by_near_duplicate": blocked_by_near_duplicate,
+        "blocked_by_near_duplicate_rate": _safe_ratio(blocked_by_near_duplicate, generated_count),
+        "selected_for_simulation_rate": _safe_ratio(selected_for_simulation, generated_count),
+        "top_timeout_reasons": dict(timeout_reason_counts.most_common(5)),
+        "top_generation_fail_reasons": dict(generation_fail_reasons.most_common(5)),
+    }
+
+
+def _classify_window_delta(recent_window: dict[str, Any], baseline_window: dict[str, Any]) -> dict[str, Any]:
+    avg_fitness_delta = _delta(recent_window.get("avg_fitness"), baseline_window.get("avg_fitness"))
+    positive_fitness_rate_delta = _delta(
+        recent_window.get("positive_fitness_rate"),
+        baseline_window.get("positive_fitness_rate"),
+    )
+    timeout_rate_delta = _delta(recent_window.get("timeout_rate"), baseline_window.get("timeout_rate"))
+    quality = "flat"
+    if (avg_fitness_delta is not None and avg_fitness_delta >= 0.02) or (
+        positive_fitness_rate_delta is not None and positive_fitness_rate_delta >= 0.05
+    ):
+        quality = "better"
+    elif (avg_fitness_delta is not None and avg_fitness_delta <= -0.02) or (
+        positive_fitness_rate_delta is not None and positive_fitness_rate_delta <= -0.05
+    ):
+        quality = "worse"
+    operations = "flat"
+    if timeout_rate_delta is not None and timeout_rate_delta >= 0.10:
+        operations = "worse"
+    elif timeout_rate_delta is not None and timeout_rate_delta <= -0.10:
+        operations = "better"
+    return {
+        "quality": quality,
+        "operations": operations,
+        "avg_fitness_delta": avg_fitness_delta,
+        "positive_fitness_rate_delta": positive_fitness_rate_delta,
+        "timeout_rate_delta": timeout_rate_delta,
+    }
+
+
+def _split_recent_and_baseline(rows: list, *, size: int) -> tuple[list, list]:
+    if size <= 0 or not rows:
+        return list(rows), []
+    recent = list(rows[-size:])
+    baseline_end = max(0, len(rows) - size)
+    baseline_start = max(0, baseline_end - size)
+    baseline = list(rows[baseline_start:baseline_end])
+    return recent, baseline
+
+
+def _submissions_for_results(submissions, results) -> list:
+    job_ids = {str(getattr(row, "job_id", "") or "") for row in results if str(getattr(row, "job_id", "") or "")}
+    return [row for row in submissions if str(getattr(row, "job_id", "") or "") in job_ids]
+
+
+def _results_for_submissions(results, submissions) -> list:
+    job_ids = {str(getattr(row, "job_id", "") or "") for row in submissions if str(getattr(row, "job_id", "") or "")}
+    return [row for row in results if str(getattr(row, "job_id", "") or "") in job_ids]
+
+
+def _closed_loop_rows_for_results(closed_loop_rows: list[dict[str, Any]], results) -> list[dict[str, Any]]:
+    round_numbers = {int(getattr(row, "round_index", 0) or 0) for row in results if int(getattr(row, "round_index", 0) or 0) > 0}
+    return [row for row in closed_loop_rows if int(row.get("round_index") or 0) in round_numbers]
+
+
+def _closed_loop_rows_for_submissions(closed_loop_rows: list[dict[str, Any]], submissions) -> list[dict[str, Any]]:
+    round_numbers = {
+        int(getattr(row, "round_index", 0) or 0)
+        for row in submissions
+        if int(getattr(row, "round_index", 0) or 0) > 0
+    }
+    return [row for row in closed_loop_rows if int(row.get("round_index") or 0) in round_numbers]
+
+
+def _stage_metrics_for_results(stage_metrics: list[dict[str, Any]], results) -> list[dict[str, Any]]:
+    round_numbers = {int(getattr(row, "round_index", 0) or 0) for row in results if int(getattr(row, "round_index", 0) or 0) > 0}
+    return _filter_stage_metrics_by_rounds(stage_metrics, round_numbers)
+
+
+def _stage_metrics_for_submissions(stage_metrics: list[dict[str, Any]], submissions) -> list[dict[str, Any]]:
+    round_numbers = {
+        int(getattr(row, "round_index", 0) or 0)
+        for row in submissions
+        if int(getattr(row, "round_index", 0) or 0) > 0
+    }
+    return _filter_stage_metrics_by_rounds(stage_metrics, round_numbers)
+
+
+def _filter_results_by_rounds(results, round_numbers: set[int]) -> list:
+    if not round_numbers:
+        return []
+    return [row for row in results if int(getattr(row, "round_index", 0) or 0) in round_numbers]
+
+
+def _filter_submissions_by_rounds(submissions, round_numbers: set[int]) -> list:
+    if not round_numbers:
+        return []
+    return [row for row in submissions if int(getattr(row, "round_index", 0) or 0) in round_numbers]
+
+
+def _filter_stage_metrics_by_rounds(stage_metrics: list[dict[str, Any]], round_numbers: set[int]) -> list[dict[str, Any]]:
+    if not round_numbers:
+        return []
+    return [row for row in stage_metrics if int(row.get("round_index") or 0) in round_numbers]
+
+
+def _timeout_reason_counts_for_submissions(submissions) -> Counter[str]:
+    timeout_reason_counts: Counter[str] = Counter()
+    for row in submissions:
+        if str(row.status or "") != "timeout":
+            continue
+        reason = str(row.service_failure_reason or row.error_message or "").strip()
+        if reason == "poll_timeout_live":
+            timeout_reason_counts["poll_timeout_live"] += 1
+        elif reason == "poll_timeout_after_downtime":
+            timeout_reason_counts["poll_timeout_after_downtime"] += 1
+        elif reason == "poll_timeout":
+            timeout_reason_counts["poll_timeout"] += 1
+        else:
+            timeout_reason_counts["other_timeout"] += 1
+    return timeout_reason_counts
+
+
+def _aggregate_generation_fail_reasons(stage_metrics: list[dict[str, Any]]) -> Counter[str]:
+    counts: Counter[str] = Counter()
+    for row in stage_metrics:
+        if row.get("stage") != "generation":
+            continue
+        metrics = _decode_json_object(row.get("metrics_json"))
+        failure_reason_counts = _decode_json_object(metrics.get("failure_reason_counts"))
+        if failure_reason_counts:
+            counts.update({str(key): int(value or 0) for key, value in failure_reason_counts.items()})
+            continue
+        top_fail_reasons = _decode_json_object(metrics.get("top_fail_reasons"))
+        counts.update({str(key): int(value or 0) for key, value in top_fail_reasons.items()})
+    return counts
+
+
+def _delta(current: Any, previous: Any) -> float | None:
+    current_value = _to_float(current)
+    previous_value = _to_float(previous)
+    if current_value is None or previous_value is None:
+        return None
+    return float(current_value - previous_value)
 
 
 def _round_in_scope(round_index: int, scope: dict[str, Any]) -> bool:
