@@ -89,7 +89,7 @@ adaptive_generation:
     novelty_behavior: 0.10
   exploration_epsilon: 0.10
   sampling_temperature: 0.75
-  family_cap_fraction: 0.25
+  family_cap_fraction: 0.18
   parent_pool_size: 30
   novelty_reference_top_k: 20
   min_pattern_support: 3
@@ -98,20 +98,20 @@ adaptive_generation:
   max_attempt_multiplier: 12
   max_consecutive_failures: 400
   min_candidates_before_early_exit: 5
-  exploration_ratio: 0.35
+  exploration_ratio: 0.45
   novelty_weight: 0.25
   mutation_mode_weights:
-    exploit_local: 0.35
-    structural: 0.25
-    crossover: 0.15
-    novelty: 0.15
-    repair: 0.10
+    exploit_local: 0.25
+    structural: 0.20
+    crossover: 0.20
+    novelty: 0.20
+    repair: 0.15
   crossover_rate: 0.15
   diversity:
     max_family_fraction: 0.25
-    max_field_category_fraction: 0.50
+    max_field_category_fraction: 0.40
     max_horizon_bucket_fraction: 0.40
-    max_operator_path_fraction: 0.40
+    max_operator_path_fraction: 0.30
     exploration_quota_fraction: 0.20
     min_structural_distance: 0.08
   repair_policy:
@@ -157,6 +157,14 @@ adaptive_generation:
     min_train_windows: 120
     confidence_floor: 0.35
     tsfresh_profile: minimal
+  local_validation_field_penalty:
+    enabled: true
+    lookback_rounds: 20
+    min_count: 2
+    max_fields: 200
+    penalty_strength: 1.0
+    min_multiplier: 0.10
+    sample_limit: 10
 
 simulation:
   delay_mode: fast_d1
@@ -241,7 +249,7 @@ brain:
       truncation: 0.01
       weight: 1.0
   poll_interval_seconds: 5
-  timeout_seconds: 300
+  timeout_seconds: 600
   max_retries: 2
   batch_size: 10
   manual_export_dir: outputs/brain_manual
@@ -282,7 +290,7 @@ service:
   resume_incomplete_jobs: true
   ambiguous_submission_policy: resubmit
   shutdown_grace_period_seconds: 30
-  stuck_job_after_seconds: 900
+  stuck_job_after_seconds: 1800
   persona_retry_interval_seconds: 30
   persona_email_cooldown_seconds: 600
   persona_confirmation_required: true
@@ -291,6 +299,8 @@ service:
   persona_confirmation_granted_ttl_seconds: 300
   research_context_cache_enabled: true
   research_context_cache_ttl_seconds: 0
+  observed_limit_ttl_seconds: 1800
+  observed_limit_probe_interval_seconds: 300
 
 runtime:
   log_level: INFO

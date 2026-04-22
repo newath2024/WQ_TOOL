@@ -3,8 +3,13 @@ from __future__ import annotations
 import argparse
 import json
 import sqlite3
+import sys
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from core.config import load_config
 
@@ -60,6 +65,7 @@ def fetch_status_payload(connection: sqlite3.Connection, run_id: str | None, lim
     payload: dict[str, Any] = {
         "run_id": run_id,
         "service_runtime": [],
+        "service_dispatch_queue": [],
         "submission_batches": [],
         "submissions": [],
         "brain_results": [],
@@ -91,6 +97,18 @@ def fetch_status_payload(connection: sqlite3.Connection, run_id: str | None, lim
                 FROM submission_batches
                 WHERE run_id = ?
                 ORDER BY created_at DESC, batch_id DESC
+                LIMIT ?
+                """,
+                (run_id, limit),
+            ).fetchall()
+        )
+        payload["service_dispatch_queue"] = rows_to_dicts(
+            connection.execute(
+                """
+                SELECT *
+                FROM service_dispatch_queue
+                WHERE run_id = ?
+                ORDER BY updated_at DESC, queue_position DESC
                 LIMIT ?
                 """,
                 (run_id, limit),
@@ -140,6 +158,12 @@ def fetch_status_payload(connection: sqlite3.Connection, run_id: str | None, lim
             (limit,),
         ).fetchall()
     )
+    payload["service_dispatch_queue"] = rows_to_dicts(
+        connection.execute(
+            "SELECT * FROM service_dispatch_queue ORDER BY updated_at DESC, queue_position DESC LIMIT ?",
+            (limit,),
+        ).fetchall()
+    )
     payload["submissions"] = rows_to_dicts(
         connection.execute(
             "SELECT * FROM submissions ORDER BY submitted_at DESC, job_id DESC LIMIT ?",
@@ -164,6 +188,7 @@ def print_human(payload: dict[str, Any]) -> None:
     print(f"run_id: {run_id or '(latest not found)'}")
     print_section("runs", payload.get("runs", []))
     print_section("service_runtime", payload.get("service_runtime", []))
+    print_section("service_dispatch_queue", payload.get("service_dispatch_queue", []))
     print_section("submission_batches", payload.get("submission_batches", []))
     print_section("submissions", payload.get("submissions", []))
     print_section("brain_results", payload.get("brain_results", []))

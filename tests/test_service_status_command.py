@@ -9,7 +9,13 @@ from cli.commands import service_status
 from core.config import load_config
 from core.run_context import RunContext
 from services.runtime_service import build_command_environment
-from storage.models import BrainResultRecord, ServiceRuntimeRecord, SubmissionBatchRecord, SubmissionRecord
+from storage.models import (
+    BrainResultRecord,
+    ServiceDispatchQueueRecord,
+    ServiceRuntimeRecord,
+    SubmissionBatchRecord,
+    SubmissionRecord,
+)
 from storage.repository import SQLiteRepository
 
 
@@ -19,6 +25,24 @@ def test_service_status_command_prints_human_summary(tmp_path: Path, capsys) -> 
         timestamp = datetime.now(UTC).isoformat()
         _seed_run(repository, run_id="run-status", timestamp=timestamp)
         repository.service_runtime.upsert_state(_runtime_record(run_id="run-status", timestamp=timestamp))
+        repository.service_dispatch_queue.upsert_items(
+            [
+                ServiceDispatchQueueRecord(
+                    queue_item_id="queue-1",
+                    service_name="brain-service",
+                    run_id="run-status",
+                    candidate_id="alpha-3",
+                    source_round_index=1,
+                    queue_position=1,
+                    status="queued",
+                    batch_id=None,
+                    job_id=None,
+                    failure_reason=None,
+                    created_at=timestamp,
+                    updated_at=timestamp,
+                )
+            ]
+        )
         repository.submissions.upsert_batch(
             SubmissionBatchRecord(
                 batch_id="batch-1",
@@ -120,6 +144,9 @@ def test_service_status_command_prints_human_summary(tmp_path: Path, capsys) -> 
         assert "active_batch_id: batch-1" in output
         assert "active_batch_submission_counts: completed=1 running=1" in output
         assert "result_counts: completed=1" in output
+        assert "dispatch_queue_depth: 1" in output
+        assert "dispatch_queue_counts: queued=1" in output
+        assert "recent_dispatch_queue:" in output
     finally:
         repository.close()
 
@@ -130,6 +157,24 @@ def test_service_status_command_prints_json(tmp_path: Path, capsys) -> None:
         timestamp = datetime.now(UTC).isoformat()
         _seed_run(repository, run_id="run-json", timestamp=timestamp)
         repository.service_runtime.upsert_state(_runtime_record(run_id="run-json", timestamp=timestamp))
+        repository.service_dispatch_queue.upsert_items(
+            [
+                ServiceDispatchQueueRecord(
+                    queue_item_id="queue-json-1",
+                    service_name="brain-service",
+                    run_id="run-json",
+                    candidate_id="alpha-json-1",
+                    source_round_index=2,
+                    queue_position=3,
+                    status="dispatching",
+                    batch_id=None,
+                    job_id=None,
+                    failure_reason=None,
+                    created_at=timestamp,
+                    updated_at=timestamp,
+                )
+            ]
+        )
 
         args = argparse.Namespace(run_id="run-json", json=True, limit=3, service_name="brain-service")
         config = load_config("config/dev.yaml")
@@ -146,6 +191,9 @@ def test_service_status_command_prints_json(tmp_path: Path, capsys) -> None:
         assert payload["run_id"] == "run-json"
         assert payload["service_runtime"]["status"] == "running"
         assert payload["summary"]["submission_counts"] == {}
+        assert payload["summary"]["queue_depth"] == 1
+        assert payload["summary"]["queue_counts"] == {"dispatching": 1}
+        assert payload["recent_queue_items"][0]["queue_item_id"] == "queue-json-1"
     finally:
         repository.close()
 

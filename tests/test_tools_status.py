@@ -11,6 +11,7 @@ from storage.models import (
     ClosedLoopRoundRecord,
     RegimeSnapshotRecord,
     SelectionScoreRecord,
+    ServiceDispatchQueueRecord,
     ServiceRuntimeRecord,
     SubmissionBatchRecord,
     SubmissionRecord,
@@ -33,6 +34,24 @@ def test_show_brain_status_script_outputs_json_for_run(tmp_path: Path) -> None:
             entry_command="run-service",
         )
         repository.save_dataset_summary("run-status", summary={}, regime_key="status-regime")
+        repository.service_dispatch_queue.upsert_items(
+            [
+                ServiceDispatchQueueRecord(
+                    queue_item_id="queue-1",
+                    service_name="brain-service",
+                    run_id="run-status",
+                    candidate_id="alpha-2",
+                    source_round_index=1,
+                    queue_position=1,
+                    status="queued",
+                    batch_id=None,
+                    job_id=None,
+                    failure_reason=None,
+                    created_at=timestamp,
+                    updated_at=timestamp,
+                )
+            ]
+        )
         repository.submissions.upsert_batch(
             SubmissionBatchRecord(
                 batch_id="batch-1",
@@ -123,6 +142,7 @@ def test_show_brain_status_script_outputs_json_for_run(tmp_path: Path) -> None:
     assert payload["submission_batches"][0]["batch_id"] == "batch-1"
     assert payload["submissions"][0]["job_id"] == "job-1"
     assert payload["brain_results"][0]["fitness"] == 0.9
+    assert payload["service_dispatch_queue"][0]["queue_item_id"] == "queue-1"
 
 
 def test_status_report_script_outputs_kpi_json_for_run(tmp_path: Path) -> None:
@@ -410,6 +430,10 @@ def test_status_report_script_outputs_kpi_json_for_run(tmp_path: Path) -> None:
     assert payload["funnel"]["generated_count"] == 12
     assert payload["meta_model"]["meta_model_used_rate"] == 1.0
     assert payload["regime"]["latest_market_regime_key"] == "learned_cluster:4"
+    assert payload["recent"]["raw_results"]["label"] == "recent_raw_results"
+    assert payload["recent"]["raw_results"]["top_timeout_reasons"] == {"poll_timeout_after_downtime": 1}
+    assert payload["timeout_reasons"]["recent"] == {"poll_timeout_after_downtime": 1}
+    assert payload["delta_flags"]["raw_results"]["operations"] == "flat"
 
     human = subprocess.run(
         [
@@ -428,3 +452,4 @@ def test_status_report_script_outputs_kpi_json_for_run(tmp_path: Path) -> None:
         text=True,
     )
     assert "timeout_breakdown: live=0 after_downtime=1 legacy=0 other=0" in human.stdout
+    assert "recent_vs_baseline:" in human.stdout

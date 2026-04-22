@@ -183,7 +183,9 @@ class ServiceRunner:
                         status=runtime.status,
                         tick_id=tick_id,
                         batch_id=runtime.active_batch_id,
-                        payload={"pending_job_count": runtime.pending_job_count},
+                        payload={
+                            "pending_job_count": runtime.pending_job_count,
+                        },
                     )
                 try:
                     outcome = self.worker.run_tick(
@@ -205,6 +207,8 @@ class ServiceRunner:
                         batch_id=outcome.active_batch_id,
                         payload={
                             "pending_job_count": outcome.pending_job_count,
+                            "queue_depth": outcome.queue_depth,
+                            "queue_counts": dict(outcome.queue_counts),
                             "generated_count": outcome.generated_count,
                             "submitted_count": outcome.submitted_count,
                             "completed_count": outcome.completed_count,
@@ -213,6 +217,7 @@ class ServiceRunner:
                             "poll_pending_ms": outcome.poll_pending_ms,
                             "prepare_batch_ms": outcome.prepare_batch_ms,
                             "submit_batch_ms": outcome.submit_batch_ms,
+                            "pre_prepare_pending_job_count": outcome.pre_prepare_pending_job_count,
                             "next_sleep_seconds": outcome.next_sleep_seconds,
                             "cooldown_until": outcome.cooldown_until,
                             "last_error": outcome.last_error,

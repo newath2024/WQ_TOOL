@@ -105,6 +105,8 @@ def _print_human(snapshot: ServiceStatusSnapshot) -> None:
     print(f"batch_counts: {_format_counts(snapshot.batch_counts)}")
     print(f"submission_counts: {_format_counts(snapshot.submission_counts)}")
     print(f"result_counts: {_format_counts(snapshot.result_counts)}")
+    print(f"dispatch_queue_depth: {snapshot.queue_depth}")
+    print(f"dispatch_queue_counts: {_format_counts(snapshot.queue_counts)}")
     print(f"avg_crowding_penalty: {snapshot.avg_crowding_penalty:.4f}")
     if snapshot.latest_regime_snapshot is not None:
         print(
@@ -134,6 +136,14 @@ def _print_human(snapshot: ServiceStatusSnapshot) -> None:
             print(
                 f"  job_id={row.job_id} batch={row.batch_id} status={row.status} "
                 f"candidate={row.candidate_id} updated_at={row.updated_at}"
+            )
+
+    if snapshot.recent_queue_items:
+        print("recent_dispatch_queue:")
+        for row in snapshot.recent_queue_items:
+            print(
+                f"  queue_item_id={row.queue_item_id} candidate={row.candidate_id} "
+                f"round={row.source_round_index} position={row.queue_position} status={row.status}"
             )
 
     if snapshot.recent_results:

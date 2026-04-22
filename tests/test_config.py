@@ -356,6 +356,14 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert config.service.ambiguous_submission_policy == "resubmit"
     assert config.generation.sim_neutralization == "SUBINDUSTRY"
     assert config.generation.sim_decay == 5
+    penalty = config.adaptive_generation.local_validation_field_penalty
+    assert penalty.enabled is True
+    assert penalty.lookback_rounds == 20
+    assert penalty.min_count == 2
+    assert penalty.max_fields == 200
+    assert penalty.penalty_strength == 1.0
+    assert penalty.min_multiplier == 0.10
+    assert penalty.sample_limit == 10
 
 
 def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_path: Path) -> None:
@@ -407,6 +415,8 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.adaptive_generation.max_consecutive_failures == 400
     assert config.adaptive_generation.explore_max_consecutive_failures is None
     assert config.adaptive_generation.min_candidates_before_early_exit == 5
+    assert config.adaptive_generation.local_validation_field_penalty.enabled is True
+    assert config.adaptive_generation.local_validation_field_penalty.lookback_rounds == 20
     assert config.service.research_context_cache_enabled is True
     assert config.service.research_context_cache_ttl_seconds == 0
     assert config.runtime.progress_log_enabled is True

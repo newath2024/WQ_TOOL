@@ -23,6 +23,7 @@ from services.session_manager import SessionManager
 from storage.models import (
     BrainResultRecord,
     ClosedLoopRoundRecord,
+    ServiceDispatchQueueRecord,
     ServiceRuntimeRecord,
     SubmissionBatchRecord,
     SubmissionRecord,
@@ -285,6 +286,15 @@ class ServiceWorker:
             logger.warning("Marked %s ambiguous batches as failed to unblock service.", len(failed_batch_ids))
         if resubmitted_batch_ids:
             logger.warning("Resubmitted %s ambiguous batches after interrupted submission.", len(resubmitted_batch_ids))
+        recovered_queue_items, requeued_queue_items = self._recover_dispatch_queue_items(
+            service_name=runtime.service_name,
+            run_id=runtime.service_run_id,
+            now=now,
+        )
+        if recovered_queue_items:
+            logger.info("Recovered %s dispatch queue items with existing submissions.", recovered_queue_items)
+        if requeued_queue_items:
+            logger.info("Re-queued %s interrupted dispatch queue items.", requeued_queue_items)
         paused_batches = self.repository.submissions.list_batches_by_status(
             run_id=runtime.service_run_id,
             statuses=("paused_quarantine",),
@@ -294,16 +304,29 @@ class ServiceWorker:
         if paused_batches:
             active_batch_id = paused_batches[0].batch_id
             logger.error("Service remains paused because batch=%s is quarantined.", active_batch_id)
-            return ServiceTickOutcome(
-                status="paused_quarantine",
-                pending_job_count=len(self.repository.submissions.list_pending_submissions(runtime.service_run_id)),
-                active_batch_id=active_batch_id,
-                quarantined_count=len(quarantined_batch_ids),
+            return self._with_queue_metrics(
+                ServiceTickOutcome(
+                    status="paused_quarantine",
+                    pending_job_count=len(self.repository.submissions.list_pending_submissions(runtime.service_run_id)),
+                    active_batch_id=active_batch_id,
+                    quarantined_count=len(quarantined_batch_ids),
+                ),
+                service_name=runtime.service_name,
+                run_id=runtime.service_run_id,
             )
 
         pending_batches = self.repository.submissions.list_batches_by_status(
             run_id=runtime.service_run_id,
             statuses=("submitting", "submitted", "running"),
+        )
+        poll_outcome = self._with_queue_metrics(
+            ServiceTickOutcome(
+                status="idle",
+                pending_job_count=len(self.repository.submissions.list_pending_submissions(runtime.service_run_id)),
+                active_batch_id=runtime.active_batch_id,
+            ),
+            service_name=runtime.service_name,
+            run_id=runtime.service_run_id,
         )
         if pending_batches:
             poll_outcome = self._poll_pending_batches(
@@ -311,40 +334,51 @@ class ServiceWorker:
                 tick_id=tick_id,
                 batch_ids=[batch.batch_id for batch in pending_batches],
             )
-            if poll_outcome.pending_job_count == 0:
-                reconciled_batches = self._reconcile_completed_batches(run_id=runtime.service_run_id)
-                if reconciled_batches:
-                    logger.info("Reconciled learning for %s completed batches after polling.", reconciled_batches)
-            if submission_cooldown_active:
-                return replace(poll_outcome, status="cooldown", cooldown_until=runtime.cooldown_until)
-            if stop_requested:
-                logger.info("Shutdown requested after polling; skipping top-up submission.")
-                return poll_outcome
-            return poll_outcome
-
         reconciled_batches = self._reconcile_completed_batches(run_id=runtime.service_run_id)
         if reconciled_batches:
-            logger.info("Reconciled learning for %s completed batches before new submission.", reconciled_batches)
+            logger.info("Reconciled learning for %s completed batches after polling.", reconciled_batches)
 
         if stop_requested:
-            logger.info("Shutdown requested; skipping new batch submission.")
-            return ServiceTickOutcome(status="idle", pending_job_count=0)
+            logger.info("Shutdown requested after polling; skipping top-up submission.")
+            return poll_outcome
         if submission_cooldown_active:
-            return ServiceTickOutcome(
-                status="cooldown",
-                pending_job_count=0,
-                active_batch_id=None,
-                cooldown_until=runtime.cooldown_until,
-            )
+            if poll_outcome.new_result_count > 0:
+                logger.info(
+                    "Observed %s new terminal results during submission cooldown; clearing cooldown and refilling slots.",
+                    poll_outcome.new_result_count,
+                )
+            else:
+                return self._defer_pending_timeouts_for_wait(
+                    run_id=runtime.service_run_id,
+                    updated_at=now,
+                    outcome=self._with_queue_metrics(
+                        replace(
+                            poll_outcome,
+                            status="cooldown",
+                            cooldown_until=runtime.cooldown_until,
+                        ),
+                        service_name=runtime.service_name,
+                        run_id=runtime.service_run_id,
+                    ),
+                )
 
         try:
-            return self._submit_new_batch(
+            dispatch_outcome = self._prepare_and_refill_dispatch_queue(
                 runtime=runtime,
                 tick_id=tick_id,
-                pending_cap=self._effective_pending_cap(runtime=runtime),
+                pending_cap=self._effective_pending_cap(
+                    runtime=runtime,
+                    now=now,
+                    allow_observed_limit_probe=poll_outcome.new_result_count > 0,
+                ),
+                now=now,
             )
         except ConcurrentSimulationLimitExceeded as exc:
             return self._submission_cooldown_outcome(runtime=runtime, now=now, error=exc, logger=logger)
+        return self._merge_tick_outcomes(
+            poll_outcome=poll_outcome,
+            submit_outcome=dispatch_outcome,
+        )
 
     def _poll_pending_batches(
         self,
@@ -418,15 +452,114 @@ class ServiceWorker:
             next_pending = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
             next_active_batch = next_pending[0].batch_id if next_pending else active_batch_id
         status = "running" if pending_count else "idle"
-        return ServiceTickOutcome(
-            status=status,
-            pending_job_count=pending_count,
-            new_result_count=new_result_count,
-            active_batch_id=next_active_batch,
-            completed_count=len(completed_results),
-            failed_count=len(failed_results),
-            poll_pending_ms=(time.perf_counter() - poll_started) * 1000.0,
+        return self._with_queue_metrics(
+            ServiceTickOutcome(
+                status=status,
+                pending_job_count=pending_count,
+                new_result_count=new_result_count,
+                active_batch_id=next_active_batch,
+                completed_count=len(completed_results),
+                failed_count=len(failed_results),
+                poll_pending_ms=(time.perf_counter() - poll_started) * 1000.0,
+            ),
+            service_name=runtime.service_name,
+            run_id=runtime.service_run_id,
         )
+
+    def _prepare_and_refill_dispatch_queue(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        tick_id: int,
+        pending_cap: int | None = None,
+        now: str | None = None,
+    ) -> ServiceTickOutcome:
+        now = now or datetime.now(UTC).isoformat()
+        effective_pending_cap = max(int(pending_cap or self.config.service.max_pending_jobs), 0)
+        pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+        initial_queue_depth = self._queue_depth(service_name=runtime.service_name, run_id=runtime.service_run_id)
+        aggregate = self._with_queue_metrics(
+            ServiceTickOutcome(
+                status="running" if pending_submissions or initial_queue_depth > 0 else "idle",
+                pending_job_count=len(pending_submissions),
+                active_batch_id=(pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id),
+            ),
+            service_name=runtime.service_name,
+            run_id=runtime.service_run_id,
+        )
+        if effective_pending_cap <= 0:
+            return aggregate
+        max_iterations = max(effective_pending_cap, 1) + 4
+        for _ in range(max_iterations):
+            if aggregate.queue_depth <= 0:
+                pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+                if pending_submissions:
+                    append_progress_event(
+                        self.config,
+                        self.environment,
+                        event="queue_prepare_deferred",
+                        stage="service-queue-prepare",
+                        status="deferred",
+                        tick_id=tick_id,
+                        batch_id=pending_submissions[0].batch_id,
+                        payload={
+                            "pending_job_count": len(pending_submissions),
+                            "queue_depth": aggregate.queue_depth,
+                            "max_pending_jobs": self.config.service.max_pending_jobs,
+                            "reason": "pending_jobs_active",
+                        },
+                    )
+                    return self._with_queue_metrics(
+                        replace(
+                            aggregate,
+                            status="running",
+                            pending_job_count=len(pending_submissions),
+                            active_batch_id=pending_submissions[0].batch_id,
+                        ),
+                        service_name=runtime.service_name,
+                        run_id=runtime.service_run_id,
+                    )
+                prepare_outcome = self._prepare_dispatch_queue_if_needed(runtime=runtime, tick_id=tick_id)
+                aggregate = self._merge_tick_outcomes(
+                    poll_outcome=aggregate,
+                    submit_outcome=prepare_outcome,
+                )
+                if self._is_dispatch_blocked_status(prepare_outcome.status) or prepare_outcome.status == "no_candidates":
+                    return aggregate
+                if aggregate.queue_depth <= 0:
+                    return aggregate
+
+            pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+            if len(pending_submissions) >= effective_pending_cap:
+                return self._with_queue_metrics(
+                    replace(
+                        aggregate,
+                        status="running" if pending_submissions or aggregate.queue_depth > 0 else "idle",
+                        pending_job_count=len(pending_submissions),
+                        active_batch_id=(
+                            pending_submissions[0].batch_id if pending_submissions else aggregate.active_batch_id
+                        ),
+                    ),
+                    service_name=runtime.service_name,
+                    run_id=runtime.service_run_id,
+                )
+
+            dispatch_outcome = self._dispatch_queued_candidates(
+                runtime=runtime,
+                tick_id=tick_id,
+                pending_cap=effective_pending_cap,
+                now=now,
+            )
+            aggregate = self._merge_tick_outcomes(
+                poll_outcome=aggregate,
+                submit_outcome=dispatch_outcome,
+            )
+            if self._is_dispatch_blocked_status(dispatch_outcome.status):
+                return aggregate
+            if dispatch_outcome.submitted_count == 0 and aggregate.queue_depth <= 0:
+                return aggregate
+
+        return aggregate
 
     def _submit_new_batch(
         self,
@@ -435,173 +568,350 @@ class ServiceWorker:
         tick_id: int,
         pending_cap: int | None = None,
     ) -> ServiceTickOutcome:
+        return self._prepare_and_refill_dispatch_queue(
+            runtime=runtime,
+            tick_id=tick_id,
+            pending_cap=pending_cap,
+            now=datetime.now(UTC).isoformat(),
+        )
+
+    def _prepare_dispatch_queue_if_needed(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        tick_id: int,
+    ) -> ServiceTickOutcome:
         logger = get_logger(
             __name__,
             run_id=runtime.service_run_id,
-            stage="service-submit",
+            stage="service-queue-prepare",
             tick_id=tick_id,
         )
+        if self._queue_depth(service_name=runtime.service_name, run_id=runtime.service_run_id) > 0:
+            pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+            return self._with_queue_metrics(
+                ServiceTickOutcome(
+                    status="running",
+                    pending_job_count=len(pending_submissions),
+                    active_batch_id=(pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id),
+                ),
+                service_name=runtime.service_name,
+                run_id=runtime.service_run_id,
+            )
+
+        blocked_outcome = self._probe_auth_after_batch_failures(runtime=runtime, logger=logger)
+        if blocked_outcome is not None:
+            return blocked_outcome
+
+        pre_prepare_pending_job_count = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+        source_round_index = self._next_service_round_index(run_id=runtime.service_run_id)
         mutation_parent_ids = self._select_mutation_parent_ids(run_id=runtime.service_run_id)
-        # --- Pre-submission auth probe on consecutive batch failures ---
-        threshold = self.config.service.max_consecutive_batch_failures_before_auth_check
-        recent_all_failed = self.repository.submissions.count_recent_all_failed_batches(
-            runtime.service_run_id, lookback=threshold + 1,
-        )
-        if recent_all_failed >= threshold:
-            logger.warning(
-                "Detected %s consecutive batches with 100%% job failures. "
-                "Probing auth session before submitting another batch.",
-                recent_all_failed,
-            )
-            session_state = self.session_manager.ensure_session(runtime=runtime, allow_new_login=False)
-            if session_state.status != "ready":
-                logger.warning(
-                    "Auth probe after batch failures detected session status=%s. "
-                    "Triggering re-authentication flow.",
-                    session_state.status,
-                )
-                now = datetime.now(UTC).isoformat()
-                self.repository.service_runtime.update_state(
-                    runtime.service_name,
-                    status="waiting_persona",
-                    persona_wait_started_at=now,
-                    updated_at=now,
-                )
-                pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
-                return self._defer_pending_timeouts_for_wait(
-                    run_id=runtime.service_run_id,
-                    updated_at=now,
-                    outcome=ServiceTickOutcome(
-                        status="waiting_persona",
-                        pending_job_count=pending_jobs,
-                        active_batch_id=runtime.active_batch_id,
-                        last_error=f"Auth re-check triggered after {recent_all_failed} consecutive all-failed batches.",
-                        next_sleep_seconds=self.config.service.persona_retry_interval_seconds,
-                    ),
-                )
-
-        pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
-        current_pending = len(pending_submissions)
-        effective_pending_cap = max(int(pending_cap or self.config.service.max_pending_jobs), 0)
-        available_slots = max(effective_pending_cap - current_pending, 0)
-        if available_slots <= 0:
-            active_batch_id = pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id
-            logger.info(
-                "Skipping new submission because pending capacity is full. current_pending=%s effective_pending_cap=%s max_pending_jobs=%s",
-                current_pending,
-                effective_pending_cap,
-                self.config.service.max_pending_jobs,
-            )
-            return ServiceTickOutcome(
-                status="running" if current_pending else "idle",
-                pending_job_count=current_pending,
-                active_batch_id=active_batch_id,
-            )
-
         prepare_started = time.perf_counter()
         batch_result = self.batch_service.prepare_service_batch(
             config=self.config,
             environment=self.environment,
             count=self.config.loop.generation_batch_size,
             mutation_parent_ids=mutation_parent_ids,
-            round_index=tick_id,
+            round_index=source_round_index,
         )
         prepare_batch_ms = (time.perf_counter() - prepare_started) * 1000.0
         candidates = list(batch_result.candidates)
-        selected_scores = list(batch_result.selected)
+        if candidates:
+            self.repository.save_alpha_candidates(runtime.service_run_id, candidates)
+        selected_scores = list(batch_result.selected[: self.config.loop.simulation_batch_size])
         selected_candidates = [item.candidate for item in selected_scores]
         logger.info("[generation-summary] %s", json.dumps(batch_result.generation_stage_metrics, sort_keys=True))
-        if not selected_candidates:
-            logger.info(
-                "No simulation-worthy candidates generated on this tick. top_fail_reasons=%s",
-                batch_result.generation_stage_metrics.get("top_fail_reasons", {}),
-            )
-            return ServiceTickOutcome(
-                status="no_candidates",
-                pending_job_count=current_pending,
-                generated_count=len(candidates),
-                prepare_batch_ms=prepare_batch_ms,
-            )
-
-        recent_fail_rate = self._recent_job_failure_rate(runtime.service_run_id)
-        recent_live_timeout_rate = self._recent_live_timeout_rate(runtime.service_run_id)
-        normal_count = min(
-            self.config.loop.simulation_batch_size,
-            available_slots,
-            len(selected_candidates),
-        )
-        adjusted_count = normal_count
-        if recent_live_timeout_rate >= 0.4 and normal_count > 2:
-            adjusted_count = min(adjusted_count, 2)
-        elif recent_fail_rate > 0.8 and normal_count > 2:
-            adjusted_count = max(2, normal_count // 2)
-        elif recent_fail_rate > 0.5 and normal_count > 2:
-            adjusted_count = max(2, normal_count * 2 // 3)
-        selected_scores = selected_scores[:adjusted_count]
-        selected_candidates = [item.candidate for item in selected_scores]
-        logger.info(
-            "Adaptive submission: recent_fail_rate=%.2f recent_live_timeout_rate=%.2f current_pending=%s available_slots=%s effective_pending_cap=%s adjusted_count=%s",
-            recent_fail_rate,
-            recent_live_timeout_rate,
-            current_pending,
-            available_slots,
-            effective_pending_cap,
-            adjusted_count,
-        )
-        submit_started = time.perf_counter()
-        batch = self.brain_service.submit_candidates(
-            selected_candidates,
-            config=self.config,
-            environment=self.environment,
-            round_index=tick_id,
-            batch_size=adjusted_count,
-        )
-        submit_batch_ms = (time.perf_counter() - submit_started) * 1000.0
         self._sync_service_round(
             run_id=runtime.service_run_id,
-            batch_id=batch.batch_id,
+            round_index_override=source_round_index,
             generated_count=len(candidates),
             validated_count=batch_result.validated_count or len(candidates),
-            submitted_count=batch.submitted_count,
             mutated_children_count=batch_result.mutated_children_count,
-            status_override=batch.status,
+            status_override="queued" if selected_candidates else "no_candidates",
             note_overrides={
+                "dispatch_mode": "service_single",
                 "archived_count": batch_result.archived_count,
                 "generation_stage_metrics": batch_result.generation_stage_metrics,
+                "prepared_queue_size": len(selected_candidates),
             },
         )
-        pending_count = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+        if not selected_candidates:
+            logger.info(
+                "No simulation-worthy candidates generated for new dispatch queue. top_fail_reasons=%s",
+                batch_result.generation_stage_metrics.get("top_fail_reasons", {}),
+            )
+            pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+            return self._with_queue_metrics(
+                ServiceTickOutcome(
+                    status="no_candidates",
+                    pending_job_count=len(pending_submissions),
+                    active_batch_id=(pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id),
+                    generated_count=len(candidates),
+                    prepare_batch_ms=prepare_batch_ms,
+                    pre_prepare_pending_job_count=pre_prepare_pending_job_count,
+                ),
+                service_name=runtime.service_name,
+                run_id=runtime.service_run_id,
+            )
+
+        timestamp = datetime.now(UTC).isoformat()
+        next_position = self.repository.service_dispatch_queue.next_queue_position(
+            service_name=runtime.service_name,
+            run_id=runtime.service_run_id,
+        )
+        self.repository.service_dispatch_queue.upsert_items(
+            [
+                ServiceDispatchQueueRecord(
+                    queue_item_id=self._queue_item_id(
+                        run_id=runtime.service_run_id,
+                        source_round_index=source_round_index,
+                        queue_position=next_position + offset,
+                    ),
+                    service_name=runtime.service_name,
+                    run_id=runtime.service_run_id,
+                    candidate_id=candidate.alpha_id,
+                    source_round_index=source_round_index,
+                    queue_position=next_position + offset,
+                    status="queued",
+                    batch_id=None,
+                    job_id=None,
+                    failure_reason=None,
+                    created_at=timestamp,
+                    updated_at=timestamp,
+                )
+                for offset, candidate in enumerate(selected_candidates)
+            ]
+        )
+        pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+        queue_depth = self._queue_depth(service_name=runtime.service_name, run_id=runtime.service_run_id)
         logger.info(
-            "Submitted batch=%s generated=%s submitted=%s pending=%s",
-            batch.batch_id,
-            len(candidates),
-            batch.submitted_count,
-            pending_count,
+            "Prepared dispatch queue round=%s selected=%s queue_depth=%s pending=%s",
+            source_round_index,
+            len(selected_candidates),
+            queue_depth,
+            len(pending_submissions),
         )
         append_progress_event(
             self.config,
             self.environment,
-            event="batch_submitted",
-            stage="service-submit",
-            status=batch.status,
+            event="dispatch_queue_prepared",
+            stage="service-queue-prepare",
+            status="queued",
             tick_id=tick_id,
-            round_index=tick_id,
-            batch_id=batch.batch_id,
+            round_index=source_round_index,
             payload={
                 "generated_count": len(candidates),
-                "submitted_count": batch.submitted_count,
-                "pending_job_count": pending_count,
-                "export_path": batch.export_path,
+                "prepared_queue_size": len(selected_candidates),
+                "pending_job_count": len(pending_submissions),
+                "pre_prepare_pending_job_count": pre_prepare_pending_job_count,
+                "queue_depth": queue_depth,
             },
         )
-        return ServiceTickOutcome(
-            status="running" if pending_count else "idle",
-            pending_job_count=pending_count,
-            active_batch_id=batch.batch_id,
-            generated_count=len(candidates),
-            submitted_count=batch.submitted_count,
-            prepare_batch_ms=prepare_batch_ms,
-            submit_batch_ms=submit_batch_ms,
+        return self._with_queue_metrics(
+            ServiceTickOutcome(
+                status="running" if pending_submissions or queue_depth > 0 else "idle",
+                pending_job_count=len(pending_submissions),
+                active_batch_id=(pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id),
+                generated_count=len(candidates),
+                prepare_batch_ms=prepare_batch_ms,
+                pre_prepare_pending_job_count=pre_prepare_pending_job_count,
+            ),
+            service_name=runtime.service_name,
+            run_id=runtime.service_run_id,
+        )
+
+    def _dispatch_queued_candidates(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        tick_id: int,
+        pending_cap: int,
+        now: str | None = None,
+    ) -> ServiceTickOutcome:
+        logger = get_logger(
+            __name__,
+            run_id=runtime.service_run_id,
+            stage="service-dispatch",
+            tick_id=tick_id,
+        )
+        submit_started = time.perf_counter()
+        submitted_count = 0
+        active_batch_id = runtime.active_batch_id
+        current_pending_cap = int(pending_cap)
+        now = now or datetime.now(UTC).isoformat()
+
+        while True:
+            pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+            available_slots = max(current_pending_cap - len(pending_submissions), 0)
+            if available_slots <= 0:
+                break
+            queued_items = self.repository.service_dispatch_queue.list_items(
+                service_name=runtime.service_name,
+                run_id=runtime.service_run_id,
+                statuses=("queued",),
+            )
+            if not queued_items:
+                break
+
+            queue_item = queued_items[0]
+            now = datetime.now(UTC).isoformat()
+            self.repository.service_dispatch_queue.update_item(
+                queue_item.queue_item_id,
+                status="dispatching",
+                failure_reason=None,
+                updated_at=now,
+            )
+            active_submission = self._active_submissions_by_candidate(
+                run_id=runtime.service_run_id,
+                excluding_batch_id="",
+            ).get(queue_item.candidate_id)
+            if active_submission is not None:
+                self.repository.service_dispatch_queue.update_item(
+                    queue_item.queue_item_id,
+                    status="submitted",
+                    batch_id=active_submission.batch_id,
+                    job_id=active_submission.job_id,
+                    failure_reason=None,
+                    updated_at=now,
+                )
+                self._sync_service_round(
+                    run_id=runtime.service_run_id,
+                    batch_id=active_submission.batch_id,
+                )
+                continue
+
+            terminal_result = self._terminal_results_by_candidate(run_id=runtime.service_run_id).get(queue_item.candidate_id)
+            if terminal_result is not None:
+                self.repository.service_dispatch_queue.update_item(
+                    queue_item.queue_item_id,
+                    status="submitted",
+                    batch_id=terminal_result.batch_id,
+                    job_id=terminal_result.job_id,
+                    failure_reason=None,
+                    updated_at=now,
+                )
+                self._sync_service_round(
+                    run_id=runtime.service_run_id,
+                    batch_id=terminal_result.batch_id,
+                )
+                continue
+
+            candidate = self._load_candidates_by_ids(
+                run_id=runtime.service_run_id,
+                candidate_ids={queue_item.candidate_id},
+            ).get(queue_item.candidate_id)
+            if candidate is None:
+                self.repository.service_dispatch_queue.update_item(
+                    queue_item.queue_item_id,
+                    status="dropped",
+                    batch_id=None,
+                    job_id=None,
+                    failure_reason="dispatch_candidate_missing",
+                    updated_at=now,
+                )
+                continue
+
+            probing_observed_limit = self._mark_observed_limit_probe_if_needed(
+                runtime=runtime,
+                pending_jobs=len(pending_submissions),
+                updated_at=now,
+            )
+            try:
+                batch = self.brain_service.submit_candidates(
+                    [candidate],
+                    config=self.config,
+                    environment=self.environment,
+                    round_index=queue_item.source_round_index,
+                    batch_size=1,
+                    note_overrides={
+                        "dispatch_mode": "service_single",
+                        "dispatch_queue_item_id": queue_item.queue_item_id,
+                        "source_round_index": queue_item.source_round_index,
+                    },
+                )
+            except ConcurrentSimulationLimitExceeded:
+                self.repository.service_dispatch_queue.update_item(
+                    queue_item.queue_item_id,
+                    status="queued",
+                    batch_id=None,
+                    job_id=None,
+                    failure_reason="dispatch_concurrent_limit",
+                    updated_at=datetime.now(UTC).isoformat(),
+                )
+                raise
+            except Exception:
+                self.repository.service_dispatch_queue.update_item(
+                    queue_item.queue_item_id,
+                    status="queued",
+                    batch_id=None,
+                    job_id=None,
+                    failure_reason="dispatch_interrupted",
+                    updated_at=datetime.now(UTC).isoformat(),
+                )
+                raise
+
+            batch_job_id = batch.jobs[0].job_id if batch.jobs else None
+            if probing_observed_limit:
+                self._clear_observed_limit(runtime=runtime, updated_at=datetime.now(UTC).isoformat())
+                current_pending_cap = max(int(self.config.service.max_pending_jobs), 0)
+            self.repository.service_dispatch_queue.update_item(
+                queue_item.queue_item_id,
+                status="submitted",
+                batch_id=batch.batch_id,
+                job_id=batch_job_id,
+                failure_reason=None,
+                updated_at=datetime.now(UTC).isoformat(),
+            )
+            self._sync_service_round(
+                run_id=runtime.service_run_id,
+                batch_id=batch.batch_id,
+                status_override=batch.status,
+                note_overrides={
+                    "dispatch_mode": "service_single",
+                    "source_round_index": queue_item.source_round_index,
+                },
+            )
+            pending_count = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+            active_batch_id = batch.batch_id
+            submitted_count += 1
+            logger.info(
+                "Dispatched queue_item=%s candidate=%s batch=%s pending=%s",
+                queue_item.queue_item_id,
+                queue_item.candidate_id,
+                batch.batch_id,
+                pending_count,
+            )
+            append_progress_event(
+                self.config,
+                self.environment,
+                event="batch_submitted",
+                stage="service-dispatch",
+                status=batch.status,
+                tick_id=tick_id,
+                round_index=queue_item.source_round_index,
+                batch_id=batch.batch_id,
+                payload={
+                    "generated_count": 0,
+                    "submitted_count": 1,
+                    "pending_job_count": pending_count,
+                    "export_path": batch.export_path,
+                    "dispatch_queue_item_id": queue_item.queue_item_id,
+                    "queue_depth": self._queue_depth(service_name=runtime.service_name, run_id=runtime.service_run_id),
+                },
+            )
+
+        pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
+        next_active_batch_id = pending_submissions[0].batch_id if pending_submissions else active_batch_id
+        return self._with_queue_metrics(
+            ServiceTickOutcome(
+                status="running" if pending_submissions or self._queue_depth(service_name=runtime.service_name, run_id=runtime.service_run_id) > 0 else "idle",
+                pending_job_count=len(pending_submissions),
+                active_batch_id=next_active_batch_id,
+                submitted_count=submitted_count,
+                submit_batch_ms=(time.perf_counter() - submit_started) * 1000.0,
+            ),
+            service_name=runtime.service_name,
+            run_id=runtime.service_run_id,
         )
 
     def _submission_cooldown_outcome(
@@ -616,30 +926,38 @@ class ServiceWorker:
         cooldown_until = (datetime.fromisoformat(now) + timedelta(seconds=cooldown_seconds)).isoformat()
         pending_submissions = self.repository.submissions.list_pending_submissions(runtime.service_run_id)
         pending_jobs = len(pending_submissions)
-        learned_safe_cap = self._derive_learned_safe_cap(
+        observed_pending_limit = self._derive_observed_limit_telemetry(
             runtime=runtime,
             pending_jobs=pending_jobs,
         )
-        self._persist_learned_safe_cap(
+        self._persist_limit_hit_telemetry(
             runtime=runtime,
-            learned_safe_cap=learned_safe_cap,
+            observed_pending_limit=observed_pending_limit,
             cooldown_until=cooldown_until,
             last_error=str(error),
             updated_at=now,
         )
         logger.warning(
-            "BRAIN concurrent simulation limit hit; pausing submissions for %ss pending_jobs=%s learned_safe_cap=%s",
+            "BRAIN concurrent simulation limit hit; pausing submissions for %ss pending_jobs=%s observed_pending_limit=%s",
             cooldown_seconds,
             pending_jobs,
-            learned_safe_cap,
+            observed_pending_limit,
         )
-        return ServiceTickOutcome(
-            status="cooldown",
-            pending_job_count=pending_jobs,
-            active_batch_id=pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id,
-            next_sleep_seconds=cooldown_seconds,
-            last_error=str(error),
-            cooldown_until=cooldown_until,
+        return self._defer_pending_timeouts_for_wait(
+            run_id=runtime.service_run_id,
+            updated_at=now,
+            outcome=self._with_queue_metrics(
+                ServiceTickOutcome(
+                    status="cooldown",
+                    pending_job_count=pending_jobs,
+                    active_batch_id=pending_submissions[0].batch_id if pending_submissions else runtime.active_batch_id,
+                    next_sleep_seconds=0 if pending_jobs > 0 else cooldown_seconds,
+                    last_error=str(error),
+                    cooldown_until=cooldown_until,
+                ),
+                service_name=runtime.service_name,
+                run_id=runtime.service_run_id,
+            ),
         )
 
     @staticmethod
@@ -656,9 +974,11 @@ class ServiceWorker:
             pending_job_count=submit_outcome.pending_job_count,
             new_result_count=poll_outcome.new_result_count + submit_outcome.new_result_count,
             active_batch_id=submit_outcome.active_batch_id or poll_outcome.active_batch_id,
+            queue_depth=submit_outcome.queue_depth,
+            queue_counts=dict(submit_outcome.queue_counts),
             next_sleep_seconds=submit_outcome.next_sleep_seconds,
-            generated_count=submit_outcome.generated_count,
-            submitted_count=submit_outcome.submitted_count,
+            generated_count=poll_outcome.generated_count + submit_outcome.generated_count,
+            submitted_count=poll_outcome.submitted_count + submit_outcome.submitted_count,
             completed_count=poll_outcome.completed_count + submit_outcome.completed_count,
             failed_count=poll_outcome.failed_count + submit_outcome.failed_count,
             quarantined_count=poll_outcome.quarantined_count + submit_outcome.quarantined_count,
@@ -668,6 +988,11 @@ class ServiceWorker:
             poll_pending_ms=poll_outcome.poll_pending_ms + submit_outcome.poll_pending_ms,
             prepare_batch_ms=poll_outcome.prepare_batch_ms + submit_outcome.prepare_batch_ms,
             submit_batch_ms=poll_outcome.submit_batch_ms + submit_outcome.submit_batch_ms,
+            pre_prepare_pending_job_count=(
+                submit_outcome.pre_prepare_pending_job_count
+                if submit_outcome.pre_prepare_pending_job_count is not None
+                else poll_outcome.pre_prepare_pending_job_count
+            ),
         )
 
     def _defer_pending_timeouts_for_wait(
@@ -677,49 +1002,331 @@ class ServiceWorker:
         updated_at: str,
         outcome: ServiceTickOutcome,
     ) -> ServiceTickOutcome:
-        if outcome.pending_job_count > 0 and outcome.next_sleep_seconds > 0:
+        seconds = float(outcome.next_sleep_seconds)
+        if seconds <= 0 and outcome.cooldown_until:
+            try:
+                now = datetime.fromisoformat(updated_at)
+                cooldown_until = datetime.fromisoformat(outcome.cooldown_until)
+            except ValueError:
+                cooldown_remaining = 0.0
+            else:
+                cooldown_remaining = max((cooldown_until - now).total_seconds(), 0.0)
+            if cooldown_remaining > 0:
+                seconds = min(cooldown_remaining, float(self.config.service.heartbeat_interval_seconds))
+                if seconds > 0:
+                    seconds = max(seconds, 1.0)
+        if outcome.pending_job_count > 0 and seconds > 0:
             self.brain_service.defer_pending_timeouts(
                 run_id=run_id,
-                seconds=float(outcome.next_sleep_seconds),
+                seconds=seconds,
                 updated_at=updated_at,
             )
         return outcome
 
-    def _effective_pending_cap(self, *, runtime: ServiceRuntimeRecord) -> int:
-        learned_safe_cap = self._learned_safe_cap(runtime=runtime)
-        if learned_safe_cap is None:
-            return max(int(self.config.service.max_pending_jobs), 0)
-        return max(min(int(self.config.service.max_pending_jobs), learned_safe_cap), 0)
+    def _with_queue_metrics(
+        self,
+        outcome: ServiceTickOutcome,
+        *,
+        service_name: str,
+        run_id: str,
+    ) -> ServiceTickOutcome:
+        queue_counts = self._queue_counts(service_name=service_name, run_id=run_id)
+        return replace(
+            outcome,
+            queue_depth=int(queue_counts.get("dispatching", 0) + queue_counts.get("queued", 0)),
+            queue_counts=queue_counts,
+        )
 
-    def _learned_safe_cap(self, *, runtime: ServiceRuntimeRecord) -> int | None:
-        value = self._decode_json_object(runtime.counters_json).get("learned_safe_cap")
-        if value is None:
+    def _queue_counts(
+        self,
+        *,
+        service_name: str,
+        run_id: str,
+        source_round_index: int | None = None,
+    ) -> dict[str, int]:
+        counts = Counter(
+            item.status
+            for item in self.repository.service_dispatch_queue.list_items(
+                service_name=service_name,
+                run_id=run_id,
+                source_round_index=source_round_index,
+            )
+            if item.status
+        )
+        return {key: counts[key] for key in sorted(counts)}
+
+    def _queue_depth(self, *, service_name: str, run_id: str) -> int:
+        queue_counts = self._queue_counts(service_name=service_name, run_id=run_id)
+        return int(queue_counts.get("dispatching", 0) + queue_counts.get("queued", 0))
+
+    def _recover_dispatch_queue_items(
+        self,
+        *,
+        service_name: str,
+        run_id: str,
+        now: str,
+    ) -> tuple[int, int]:
+        dispatching_items = self.repository.service_dispatch_queue.list_items(
+            service_name=service_name,
+            run_id=run_id,
+            statuses=("dispatching",),
+        )
+        if not dispatching_items:
+            return 0, 0
+
+        batches_by_queue_item: dict[str, SubmissionBatchRecord] = {}
+        for batch in self.repository.submissions.list_batches(run_id):
+            queue_item_id = str(self._decode_json_object(batch.notes_json).get("dispatch_queue_item_id") or "").strip()
+            if queue_item_id:
+                batches_by_queue_item[queue_item_id] = batch
+
+        active_submissions = self._active_submissions_by_candidate(run_id=run_id, excluding_batch_id="")
+        terminal_results = self._terminal_results_by_candidate(run_id=run_id)
+        recovered = 0
+        requeued = 0
+        for item in dispatching_items:
+            submission = self.repository.submissions.get_submission(item.job_id) if item.job_id else None
+            batch = self.repository.submissions.get_batch(item.batch_id) if item.batch_id else None
+            if submission is None and item.queue_item_id in batches_by_queue_item:
+                batch = batches_by_queue_item[item.queue_item_id]
+                submissions = self.repository.submissions.list_submissions(run_id=run_id, batch_id=batch.batch_id)
+                submission = submissions[0] if submissions else None
+            if submission is None:
+                submission = active_submissions.get(item.candidate_id)
+            if submission is not None:
+                self.repository.service_dispatch_queue.update_item(
+                    item.queue_item_id,
+                    status="submitted",
+                    batch_id=submission.batch_id,
+                    job_id=submission.job_id,
+                    failure_reason=None,
+                    updated_at=now,
+                )
+                recovered += 1
+                continue
+            terminal_result = terminal_results.get(item.candidate_id)
+            if terminal_result is not None:
+                self.repository.service_dispatch_queue.update_item(
+                    item.queue_item_id,
+                    status="submitted",
+                    batch_id=terminal_result.batch_id,
+                    job_id=terminal_result.job_id,
+                    failure_reason=None,
+                    updated_at=now,
+                )
+                recovered += 1
+                continue
+            self.repository.service_dispatch_queue.update_item(
+                item.queue_item_id,
+                status="queued",
+                batch_id=None,
+                job_id=None,
+                failure_reason="dispatch_recovered_to_queue",
+                updated_at=now,
+            )
+            requeued += 1
+        return recovered, requeued
+
+    @staticmethod
+    def _queue_item_id(*, run_id: str, source_round_index: int, queue_position: int) -> str:
+        return f"queue-{run_id[:8]}-r{int(source_round_index):06d}-{int(queue_position):08d}"
+
+    def _next_service_round_index(self, *, run_id: str) -> int:
+        row = self.repository.connection.execute(
+            """
+            SELECT MAX(round_index) AS max_round
+            FROM (
+                SELECT COALESCE(MAX(round_index), 0) AS round_index
+                FROM closed_loop_rounds
+                WHERE run_id = ?
+                UNION ALL
+                SELECT COALESCE(MAX(round_index), 0) AS round_index
+                FROM submission_batches
+                WHERE run_id = ?
+            )
+            """,
+            (run_id, run_id),
+        ).fetchone()
+        return int(row["max_round"] or 0) + 1 if row is not None else 1
+
+    def _probe_auth_after_batch_failures(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        logger,
+    ) -> ServiceTickOutcome | None:
+        threshold = self.config.service.max_consecutive_batch_failures_before_auth_check
+        recent_all_failed = self.repository.submissions.count_recent_all_failed_batches(
+            runtime.service_run_id,
+            lookback=threshold + 1,
+        )
+        if recent_all_failed < threshold:
+            return None
+        logger.warning(
+            "Detected %s consecutive batches with 100%% job failures. Probing auth session before preparing more work.",
+            recent_all_failed,
+        )
+        session_state = self.session_manager.ensure_session(runtime=runtime, allow_new_login=False)
+        if session_state.status == "ready":
+            return None
+        logger.warning(
+            "Auth probe after batch failures detected session status=%s. Triggering re-authentication flow.",
+            session_state.status,
+        )
+        now = datetime.now(UTC).isoformat()
+        self.repository.service_runtime.update_state(
+            runtime.service_name,
+            status="waiting_persona",
+            persona_wait_started_at=now,
+            updated_at=now,
+        )
+        pending_jobs = len(self.repository.submissions.list_pending_submissions(runtime.service_run_id))
+        return self._with_queue_metrics(
+            self._defer_pending_timeouts_for_wait(
+                run_id=runtime.service_run_id,
+                updated_at=now,
+                outcome=ServiceTickOutcome(
+                    status="waiting_persona",
+                    pending_job_count=pending_jobs,
+                    active_batch_id=runtime.active_batch_id,
+                    last_error=f"Auth re-check triggered after {recent_all_failed} consecutive all-failed batches.",
+                    next_sleep_seconds=self.config.service.persona_retry_interval_seconds,
+                ),
+            ),
+            service_name=runtime.service_name,
+            run_id=runtime.service_run_id,
+        )
+
+    @staticmethod
+    def _is_dispatch_blocked_status(status: str) -> bool:
+        return status in {
+            "auth_throttled",
+            "auth_unavailable",
+            "cooldown",
+            "waiting_persona",
+            "waiting_persona_confirmation",
+        }
+
+    def _effective_pending_cap(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        now: str | None = None,
+        allow_observed_limit_probe: bool = False,
+    ) -> int:
+        hard_cap = max(int(self.config.service.max_pending_jobs), 0)
+        state = self._observed_limit_state(runtime=runtime, now=now, clear_expired=True)
+        if not state:
+            return hard_cap
+        observed_limit = min(hard_cap, int(state["limit"]))
+        if observed_limit >= hard_cap:
+            return hard_cap
+        if allow_observed_limit_probe or self._observed_limit_probe_due(state=state, now=now):
+            return min(hard_cap, observed_limit + 1)
+        return observed_limit
+
+    def _observed_limit_state(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        now: str | None = None,
+        clear_expired: bool = False,
+    ) -> dict[str, object]:
+        current = self.repository.service_runtime.get_state(runtime.service_name) or runtime
+        counters = self._decode_json_object(current.counters_json)
+        try:
+            observed_limit = int(counters.get("observed_pending_limit") or 0)
+        except (TypeError, ValueError):
+            observed_limit = 0
+        observed_at = str(counters.get("observed_limit_observed_at") or "")
+        if observed_limit <= 0 or not observed_at:
+            return {}
+        now_dt = self._parse_datetime(now)
+        observed_at_dt = self._parse_datetime(observed_at)
+        if now_dt is not None and observed_at_dt is not None:
+            age_seconds = (now_dt - observed_at_dt).total_seconds()
+            if age_seconds > float(self.config.service.observed_limit_ttl_seconds):
+                if clear_expired:
+                    self._clear_observed_limit(runtime=runtime, updated_at=now or datetime.now(UTC).isoformat())
+                return {}
+        return {
+            "limit": observed_limit,
+            "observed_at": observed_at,
+            "last_probe_at": str(counters.get("observed_limit_last_probe_at") or ""),
+        }
+
+    def _observed_limit_probe_due(self, *, state: dict[str, object], now: str | None = None) -> bool:
+        last_probe_at = str(state.get("last_probe_at") or "")
+        if not last_probe_at:
+            return True
+        now_dt = self._parse_datetime(now)
+        probe_dt = self._parse_datetime(last_probe_at)
+        if now_dt is None or probe_dt is None:
+            return True
+        return (now_dt - probe_dt).total_seconds() >= float(self.config.service.observed_limit_probe_interval_seconds)
+
+    def _mark_observed_limit_probe_if_needed(
+        self,
+        *,
+        runtime: ServiceRuntimeRecord,
+        pending_jobs: int,
+        updated_at: str,
+    ) -> bool:
+        state = self._observed_limit_state(runtime=runtime, now=updated_at)
+        if not state:
+            return False
+        observed_limit = int(state["limit"])
+        if pending_jobs < observed_limit:
+            return False
+        current = self.repository.service_runtime.get_state(runtime.service_name)
+        if current is None:
+            return True
+        counters = self._decode_json_object(current.counters_json)
+        counters["observed_limit_last_probe_at"] = updated_at
+        self.repository.service_runtime.update_state(
+            runtime.service_name,
+            counters_json=json.dumps(counters, sort_keys=True),
+            updated_at=updated_at,
+        )
+        return True
+
+    def _clear_observed_limit(self, *, runtime: ServiceRuntimeRecord, updated_at: str) -> None:
+        current = self.repository.service_runtime.get_state(runtime.service_name)
+        if current is None:
+            return
+        counters = self._decode_json_object(current.counters_json)
+        for key in (
+            "observed_pending_limit",
+            "observed_limit_observed_at",
+            "observed_limit_last_probe_at",
+        ):
+            counters.pop(key, None)
+        self.repository.service_runtime.update_state(
+            runtime.service_name,
+            counters_json=json.dumps(counters, sort_keys=True),
+            updated_at=updated_at,
+        )
+
+    @staticmethod
+    def _parse_datetime(timestamp: str | None) -> datetime | None:
+        if not timestamp:
             return None
         try:
-            parsed = int(value)
-        except (TypeError, ValueError):
+            return datetime.fromisoformat(timestamp)
+        except ValueError:
             return None
-        return parsed if parsed > 0 else None
 
-    def _derive_learned_safe_cap(
+    def _derive_observed_limit_telemetry(
         self,
         *,
         runtime: ServiceRuntimeRecord,
         pending_jobs: int,
     ) -> int:
-        if pending_jobs > 0:
-            return min(
-                int(self.config.service.max_pending_jobs),
-                max(pending_jobs, 3),
-            )
         partial_batch = self._latest_interrupted_limit_batch(run_id=runtime.service_run_id)
         partial_count = 0
         if partial_batch is not None:
             partial_count = self._partial_submitted_count(batch=partial_batch)
-        return min(
-            int(self.config.service.max_pending_jobs),
-            max(partial_count, 3),
-        )
+        return max(int(pending_jobs), int(partial_count), 0)
 
     def _latest_interrupted_limit_batch(self, *, run_id: str) -> SubmissionBatchRecord | None:
         candidates = [
@@ -740,11 +1347,11 @@ class ServiceWorker:
             parsed = int(batch.candidate_count or 0)
         return max(parsed, 0)
 
-    def _persist_learned_safe_cap(
+    def _persist_limit_hit_telemetry(
         self,
         *,
         runtime: ServiceRuntimeRecord,
-        learned_safe_cap: int,
+        observed_pending_limit: int,
         cooldown_until: str,
         last_error: str,
         updated_at: str,
@@ -753,7 +1360,15 @@ class ServiceWorker:
         if current is None:
             return
         counters = self._decode_json_object(current.counters_json)
-        counters["learned_safe_cap"] = learned_safe_cap
+        try:
+            hit_count = int(counters.get("observed_limit_hit_count") or 0)
+        except (TypeError, ValueError):
+            hit_count = 0
+        counters["learned_safe_cap"] = observed_pending_limit
+        counters["observed_pending_limit"] = observed_pending_limit
+        counters["observed_limit_observed_at"] = updated_at
+        counters["observed_limit_last_probe_at"] = updated_at
+        counters["observed_limit_hit_count"] = hit_count + 1
         self.repository.service_runtime.update_state(
             runtime.service_name,
             counters_json=json.dumps(counters, sort_keys=True),
@@ -1384,7 +1999,8 @@ class ServiceWorker:
         self,
         *,
         run_id: str,
-        batch_id: str,
+        batch_id: str | None = None,
+        round_index_override: int | None = None,
         generated_count: int | None = None,
         validated_count: int | None = None,
         submitted_count: int | None = None,
@@ -1393,15 +2009,17 @@ class ServiceWorker:
         status_override: str | None = None,
         note_overrides: dict[str, object] | None = None,
     ) -> None:
-        batch = self.repository.submissions.get_batch(batch_id)
-        if batch is None:
+        batch = self.repository.submissions.get_batch(batch_id) if batch_id is not None else None
+        if batch is None and round_index_override is None:
             return
-        round_index = int(batch.round_index)
+        round_index = int(round_index_override if round_index_override is not None else batch.round_index)
         existing = self.repository.brain_results.get_closed_loop_round(run_id, round_index)
-        submissions = self.repository.submissions.list_submissions(run_id=run_id, batch_id=batch_id)
+        round_batches = [item for item in self.repository.submissions.list_batches(run_id) if int(item.round_index) == round_index]
+        submissions = self.repository.submissions.list_submissions(run_id=run_id, round_index=round_index)
         terminal_statuses = {"completed", "failed", "rejected", "timeout"}
         terminal_submission_count = sum(1 for submission in submissions if submission.status in terminal_statuses)
         timestamp = datetime.now(UTC).isoformat()
+        latest_batch = batch or (max(round_batches, key=self._batch_recency_key) if round_batches else None)
 
         summary_payload: dict[str, object] = {}
         if existing is not None and existing.summary_json:
@@ -1414,14 +2032,23 @@ class ServiceWorker:
         summary_payload.update(
             {
                 "source": "service",
-                "batch_id": batch.batch_id,
-                "backend": batch.backend,
-                "export_path": batch.export_path,
-                "service_status_reason": batch.service_status_reason,
-                "candidate_count": int(batch.candidate_count or 0),
+                "round_index": round_index,
+                "batch_id": latest_batch.batch_id if latest_batch is not None else summary_payload.get("batch_id"),
+                "backend": latest_batch.backend if latest_batch is not None else self.config.brain.backend,
+                "export_path": latest_batch.export_path if latest_batch is not None else summary_payload.get("export_path"),
+                "service_status_reason": (
+                    latest_batch.service_status_reason if latest_batch is not None else summary_payload.get("service_status_reason")
+                ),
+                "candidate_count": sum(int(item.candidate_count or 0) for item in round_batches),
+                "batch_count": len(round_batches),
                 "terminal_submission_count": terminal_submission_count,
                 "submission_status_counts": dict(
                     Counter(submission.status for submission in submissions if submission.status)
+                ),
+                "queue_status_counts": self._queue_counts(
+                    service_name=self.config.service.lock_name,
+                    run_id=run_id,
+                    source_round_index=round_index,
                 ),
             }
         )
@@ -1430,15 +2057,13 @@ class ServiceWorker:
 
         generated_total = generated_count
         if generated_total is None:
-            generated_total = existing.generated_count if existing is not None else int(batch.candidate_count or 0)
+            generated_total = existing.generated_count if existing is not None else int(summary_payload.get("candidate_count") or 0)
         validated_total = validated_count
         if validated_total is None:
             validated_total = existing.validated_count if existing is not None else generated_total
         submitted_total = submitted_count
         if submitted_total is None:
-            submitted_total = len(submissions) or (
-                existing.submitted_count if existing is not None else int(batch.candidate_count or 0)
-            )
+            submitted_total = len(submissions) or (existing.submitted_count if existing is not None else 0)
         selected_total = selected_for_mutation_count
         if selected_total is None:
             selected_total = existing.selected_for_mutation_count if existing is not None else self._round_selected_parent_count(
@@ -1453,7 +2078,10 @@ class ServiceWorker:
             ClosedLoopRoundRecord(
                 run_id=run_id,
                 round_index=round_index,
-                status=status_override or batch.status,
+                status=self._derive_service_round_status(
+                    round_batches=round_batches,
+                    fallback=status_override or (existing.status if existing is not None else "queued"),
+                ),
                 generated_count=int(generated_total or 0),
                 validated_count=int(validated_total or 0),
                 submitted_count=int(submitted_total or 0),
@@ -1465,6 +2093,28 @@ class ServiceWorker:
                 updated_at=timestamp,
             )
         )
+
+    def _derive_service_round_status(
+        self,
+        *,
+        round_batches: list[SubmissionBatchRecord],
+        fallback: str,
+    ) -> str:
+        if not round_batches:
+            return fallback
+        statuses = [str(batch.status or "") for batch in round_batches if batch.status]
+        if any(status in {"submitting", "submitted", "running"} for status in statuses):
+            return "running"
+        if statuses and all(status == "manual_pending" for status in statuses):
+            return "manual_pending"
+        if any(status == "paused_quarantine" for status in statuses):
+            return "paused_quarantine"
+        if statuses and all(status == "completed" for status in statuses):
+            return "completed"
+        if any(status == "failed" for status in statuses):
+            return "failed"
+        latest_batch = max(round_batches, key=self._batch_recency_key)
+        return str(latest_batch.status or fallback)
 
     def _round_selected_parent_count(self, *, run_id: str, candidate_ids: list[str]) -> int:
         normalized_candidate_ids = tuple(dict.fromkeys(candidate_id for candidate_id in candidate_ids if candidate_id))

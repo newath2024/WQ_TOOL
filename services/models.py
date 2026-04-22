@@ -355,6 +355,8 @@ class ServiceTickOutcome:
     pending_job_count: int = 0
     new_result_count: int = 0
     active_batch_id: str | None = None
+    queue_depth: int = 0
+    queue_counts: dict[str, int] = field(default_factory=dict)
     next_sleep_seconds: int = 0
     generated_count: int = 0
     submitted_count: int = 0
@@ -367,6 +369,7 @@ class ServiceTickOutcome:
     poll_pending_ms: float = 0.0
     prepare_batch_ms: float = 0.0
     submit_batch_ms: float = 0.0
+    pre_prepare_pending_job_count: int | None = None
 
 
 @dataclass(slots=True, frozen=True)

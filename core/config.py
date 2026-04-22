@@ -174,6 +174,7 @@ class DuplicateConfig:
     same_run_structural_threshold: float = 0.92
     cross_run_structural_threshold: float = 0.95
     max_cross_run_references: int = 500
+    same_run_structural_reference_limit: int = 5000
 
 
 @dataclass(slots=True)
@@ -321,6 +322,33 @@ class MutationLearningConfig:
 
 
 @dataclass(slots=True)
+class LocalValidationFieldPenaltyConfig:
+    enabled: bool = True
+    lookback_rounds: int = 20
+    min_count: int = 2
+    max_fields: int = 200
+    penalty_strength: float = 1.0
+    min_multiplier: float = 0.10
+    sample_limit: int = 10
+
+    def __post_init__(self) -> None:
+        if self.lookback_rounds <= 0:
+            raise ValueError("adaptive_generation.local_validation_field_penalty.lookback_rounds must be > 0")
+        if self.min_count <= 0:
+            raise ValueError("adaptive_generation.local_validation_field_penalty.min_count must be > 0")
+        if self.max_fields <= 0:
+            raise ValueError("adaptive_generation.local_validation_field_penalty.max_fields must be > 0")
+        if self.penalty_strength < 0:
+            raise ValueError("adaptive_generation.local_validation_field_penalty.penalty_strength must be >= 0")
+        if not 0.0 < float(self.min_multiplier) <= 1.0:
+            raise ValueError(
+                "adaptive_generation.local_validation_field_penalty.min_multiplier must be between 0 and 1"
+            )
+        if self.sample_limit < 0:
+            raise ValueError("adaptive_generation.local_validation_field_penalty.sample_limit must be >= 0")
+
+
+@dataclass(slots=True)
 class AdaptiveGenerationConfig:
     enabled: bool = True
     memory_scope: str = "regime"
@@ -348,6 +376,9 @@ class AdaptiveGenerationConfig:
     meta_model: MetaModelConfig = field(default_factory=MetaModelConfig)
     learned_regime: LearnedRegimeConfig = field(default_factory=LearnedRegimeConfig)
     mutation_learning: MutationLearningConfig = field(default_factory=MutationLearningConfig)
+    local_validation_field_penalty: LocalValidationFieldPenaltyConfig = field(
+        default_factory=LocalValidationFieldPenaltyConfig
+    )
     max_generation_seconds: float = 20.0
     max_attempt_multiplier: int = 12
     exploit_budget_ratio: float = 0.60
@@ -707,6 +738,8 @@ class ServiceConfig:
     ambiguous_submission_policy: str = "fail"
     research_context_cache_enabled: bool = True
     research_context_cache_ttl_seconds: int = 0
+    observed_limit_ttl_seconds: int = 1800
+    observed_limit_probe_interval_seconds: int = 300
 
     def __post_init__(self) -> None:
         self.ambiguous_submission_policy = str(self.ambiguous_submission_policy or "fail").strip().lower()
@@ -752,6 +785,10 @@ class ServiceConfig:
             )
         if self.research_context_cache_ttl_seconds < 0:
             raise ValueError("service.research_context_cache_ttl_seconds must be >= 0")
+        if self.observed_limit_ttl_seconds <= 0:
+            raise ValueError("service.observed_limit_ttl_seconds must be > 0")
+        if self.observed_limit_probe_interval_seconds <= 0:
+            raise ValueError("service.observed_limit_probe_interval_seconds must be > 0")
 
 
 @dataclass(slots=True)
@@ -851,6 +888,9 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     )
     adaptive_payload["mutation_learning"] = MutationLearningConfig(
         **adaptive_payload.get("mutation_learning", {})
+    )
+    adaptive_payload["local_validation_field_penalty"] = LocalValidationFieldPenaltyConfig(
+        **adaptive_payload.get("local_validation_field_penalty", {})
     )
     return AdaptiveGenerationConfig(**adaptive_payload)
 

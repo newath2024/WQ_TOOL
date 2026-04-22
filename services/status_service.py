@@ -7,6 +7,7 @@ from typing import Any
 from storage.models import (
     BrainResultRecord,
     RunRecord,
+    ServiceDispatchQueueRecord,
     ServiceRuntimeRecord,
     SubmissionBatchRecord,
     SubmissionRecord,
@@ -22,6 +23,9 @@ class ServiceStatusSnapshot:
     run: RunRecord | None
     active_batch: SubmissionBatchRecord | None
     active_batch_submissions: list[SubmissionRecord]
+    queue_depth: int
+    queue_counts: dict[str, int]
+    recent_queue_items: list[ServiceDispatchQueueRecord]
     recent_batches: list[SubmissionBatchRecord]
     recent_submissions: list[SubmissionRecord]
     recent_results: list[BrainResultRecord]
@@ -54,6 +58,9 @@ def build_service_status_snapshot(
             run=None,
             active_batch=None,
             active_batch_submissions=[],
+            queue_depth=0,
+            queue_counts={},
+            recent_queue_items=[],
             recent_batches=[],
             recent_submissions=[],
             recent_results=[],
@@ -70,6 +77,10 @@ def build_service_status_snapshot(
     batches = repository.submissions.list_batches(resolved_run_id)
     submissions = repository.submissions.list_submissions(run_id=resolved_run_id)
     results = repository.brain_results.list_results(run_id=resolved_run_id)
+    queue_items = repository.service_dispatch_queue.list_items(
+        service_name=service_name,
+        run_id=resolved_run_id,
+    )
 
     active_batch = _resolve_active_batch(repository, runtime=runtime, batches=batches)
     active_batch_submissions = (
@@ -85,6 +96,15 @@ def build_service_status_snapshot(
         run=run,
         active_batch=active_batch,
         active_batch_submissions=active_batch_submissions,
+        queue_depth=sum(1 for item in queue_items if item.status in {"queued", "dispatching"}),
+        queue_counts=_count_statuses(item.status for item in queue_items),
+        recent_queue_items=list(
+            sorted(
+                queue_items,
+                key=lambda item: (item.updated_at, item.queue_position, item.queue_item_id),
+                reverse=True,
+            )
+        )[:limit],
         recent_batches=list(reversed(batches))[:limit],
         recent_submissions=list(reversed(submissions))[:limit],
         recent_results=list(reversed(results))[:limit],
@@ -112,6 +132,8 @@ def service_status_snapshot_to_dict(snapshot: ServiceStatusSnapshot) -> dict[str
             "submission_counts": snapshot.submission_counts,
             "result_counts": snapshot.result_counts,
             "active_batch_submission_counts": snapshot.active_batch_submission_counts,
+            "queue_depth": snapshot.queue_depth,
+            "queue_counts": snapshot.queue_counts,
             "avg_crowding_penalty": snapshot.avg_crowding_penalty,
         },
         "stage_metrics": snapshot.stage_metrics,
@@ -119,6 +141,7 @@ def service_status_snapshot_to_dict(snapshot: ServiceStatusSnapshot) -> dict[str
         "latest_regime_snapshot": snapshot.latest_regime_snapshot,
         "active_batch": _batch_to_dict(snapshot.active_batch),
         "active_batch_submissions": [_submission_to_dict(row) for row in snapshot.active_batch_submissions],
+        "recent_queue_items": [_queue_item_to_dict(row) for row in snapshot.recent_queue_items],
         "recent_batches": [_batch_to_dict(row) for row in snapshot.recent_batches],
         "recent_submissions": [_submission_to_dict(row) for row in snapshot.recent_submissions],
         "recent_results": [_result_to_dict(row) for row in snapshot.recent_results],
@@ -210,6 +233,20 @@ def _submission_to_dict(submission: SubmissionRecord) -> dict[str, Any]:
         "retry_count": submission.retry_count,
         "error_message": submission.error_message,
         "service_failure_reason": submission.service_failure_reason,
+    }
+
+
+def _queue_item_to_dict(item: ServiceDispatchQueueRecord) -> dict[str, Any]:
+    return {
+        "queue_item_id": item.queue_item_id,
+        "candidate_id": item.candidate_id,
+        "source_round_index": item.source_round_index,
+        "queue_position": item.queue_position,
+        "status": item.status,
+        "batch_id": item.batch_id,
+        "job_id": item.job_id,
+        "failure_reason": item.failure_reason,
+        "updated_at": item.updated_at,
     }
 
 

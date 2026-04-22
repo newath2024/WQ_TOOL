@@ -26,7 +26,13 @@ from services.service_scheduler import ServiceScheduler
 from services.service_runner import ServiceRunner
 from services.service_worker import ServiceWorker
 from services.session_manager import SessionManager
-from storage.models import BrainResultRecord, ServiceRuntimeRecord, SubmissionBatchRecord, SubmissionRecord
+from storage.models import (
+    BrainResultRecord,
+    ServiceDispatchQueueRecord,
+    ServiceRuntimeRecord,
+    SubmissionBatchRecord,
+    SubmissionRecord,
+)
 from storage.repository import SQLiteRepository
 
 
@@ -613,11 +619,11 @@ def test_service_worker_rechecks_auth_during_auth_related_cooldown() -> None:
     assert outcome.completed_count == 1
 
 
-def test_service_worker_polls_submitting_batch_during_submission_cooldown() -> None:
+def test_service_worker_keeps_submission_cooldown_when_poll_finds_no_new_results() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
-        run_id = "run-submit-cooldown-poll"
+        run_id = "run-submit-cooldown-no-results"
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
         _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
@@ -627,7 +633,7 @@ def test_service_worker_polls_submitting_batch_during_submission_cooldown() -> N
             updated_at=_timestamp(),
             service_status_reason="submission_failed:ConcurrentSimulationLimitExceeded",
         )
-        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "running"}]})
         worker = ServiceWorker(
             repository,
             config=config,
@@ -651,13 +657,166 @@ def test_service_worker_polls_submitting_batch_during_submission_cooldown() -> N
         repository.close()
 
     assert outcome.status == "cooldown"
-    assert outcome.completed_count == 1
-    assert outcome.pending_job_count == 0
+    assert outcome.completed_count == 0
+    assert outcome.pending_job_count == 1
     assert outcome.cooldown_until == runtime.cooldown_until
+    assert len(adapter.submit_calls) == 0
+    assert batch is not None
+    assert batch.status == "running"
+    assert result is None
+
+
+def test_service_worker_refills_same_tick_after_result_arrives_during_submission_cooldown() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 3
+        config.service.max_pending_jobs = 3
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-submit-cooldown-refill"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(run_id, [_candidate("alpha-pending", "rank(close)")])
+        _seed_pending_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-1",
+            job_id="job-1",
+            status="submitted",
+            candidate_id="alpha-pending",
+            expression="rank(close)",
+        )
+        repository.submissions.update_batch_status(
+            "batch-1",
+            status="submitting",
+            updated_at=_timestamp(),
+            service_status_reason="submission_failed:ConcurrentSimulationLimitExceeded",
+        )
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
+        refill_candidates = [
+            _candidate("alpha-2", "rank(open)"),
+            _candidate("alpha-3", "rank(volume)"),
+            _candidate("alpha-4", "rank(vwap)"),
+        ]
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(refill_candidates)),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+        now = datetime.now(UTC)
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            status="cooldown",
+            cooldown_until=(now + timedelta(seconds=60)).isoformat(),
+            last_error="BRAIN concurrent simulation limit exceeded: CONCURRENT_SIMULATION_LIMIT_EXCEEDED",
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        batch = repository.submissions.get_batch("batch-1")
+        result = repository.brain_results.get_result("job-1")
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.completed_count == 1
+    assert outcome.submitted_count == 3
+    assert outcome.pending_job_count == 3
+    assert outcome.cooldown_until is None
+    assert len(adapter.submit_calls) == 3
     assert batch is not None
     assert batch.status == "completed"
     assert result is not None
     assert result.status == "completed"
+
+
+def test_service_worker_refills_multiple_slots_when_multiple_results_arrive_during_submission_cooldown() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 4
+        config.service.max_pending_jobs = 3
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-submit-cooldown-multi-refill"
+        _seed_run(repository, run_id)
+        repository.save_alpha_candidates(
+            run_id,
+            [
+                _candidate("alpha-pending-1", "rank(close)"),
+                _candidate("alpha-pending-2", "rank(open)"),
+                _candidate("alpha-pending-3", "rank(volume)"),
+            ],
+        )
+        _seed_pending_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-1",
+            job_id="job-1",
+            status="submitted",
+            candidate_id="alpha-pending-1",
+            expression="rank(close)",
+        )
+        _seed_pending_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-2",
+            job_id="job-2",
+            status="submitted",
+            candidate_id="alpha-pending-2",
+            expression="rank(open)",
+        )
+        _seed_pending_batch(
+            repository,
+            run_id=run_id,
+            batch_id="batch-3",
+            job_id="job-3",
+            status="submitted",
+            candidate_id="alpha-pending-3",
+            expression="rank(volume)",
+        )
+        adapter = FakeApiAdapter(
+            status_plan={
+                "job-1": [{"job_id": "job-1", "status": "completed"}],
+                "job-2": [{"job_id": "job-2", "status": "completed"}],
+                "job-3": [{"job_id": "job-3", "status": "running"}],
+            }
+        )
+        refill_candidates = [
+            _candidate("alpha-4", "rank(vwap)"),
+            _candidate("alpha-5", "rank(low)"),
+            _candidate("alpha-6", "rank(high)"),
+            _candidate("alpha-7", "rank(close/open)"),
+        ]
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(refill_candidates)),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+        now = datetime.now(UTC)
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            status="cooldown",
+            cooldown_until=(now + timedelta(seconds=60)).isoformat(),
+            last_error="BRAIN concurrent simulation limit exceeded: CONCURRENT_SIMULATION_LIMIT_EXCEEDED",
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.completed_count == 2
+    assert outcome.submitted_count == 0
+    assert outcome.pending_job_count == 1
+    assert outcome.new_result_count == 2
+    assert outcome.cooldown_until is None
+    assert len(adapter.submit_calls) == 0
 
 
 def test_service_runner_resumes_pending_jobs_without_duplicate_submission() -> None:
@@ -817,9 +976,10 @@ def test_service_worker_limits_submission_count_to_available_pending_slots() -> 
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 1
-    assert outcome.pending_job_count == 5
-    assert len(adapter.submit_calls) == 1
+    assert outcome.submitted_count == 0
+    assert outcome.pending_job_count == 4
+    assert outcome.queue_depth == 0
+    assert len(adapter.submit_calls) == 0
 
 
 def test_service_worker_respects_available_slots_even_with_extreme_fail_history() -> None:
@@ -868,9 +1028,10 @@ def test_service_worker_respects_available_slots_even_with_extreme_fail_history(
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 1
-    assert outcome.pending_job_count == 5
-    assert len(adapter.submit_calls) == 1
+    assert outcome.submitted_count == 0
+    assert outcome.pending_job_count == 4
+    assert outcome.queue_depth == 0
+    assert len(adapter.submit_calls) == 0
 
 
 def test_service_worker_caps_submission_count_when_recent_fail_rate_exceeds_half() -> None:
@@ -911,8 +1072,8 @@ def test_service_worker_caps_submission_count_when_recent_fail_rate_exceeds_half
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 2
-    assert len(adapter.submit_calls) == 2
+    assert outcome.submitted_count == 4
+    assert len(adapter.submit_calls) == 4
 
 
 def test_service_worker_caps_submission_count_at_one_when_recent_fail_rate_is_extreme() -> None:
@@ -953,8 +1114,8 @@ def test_service_worker_caps_submission_count_at_one_when_recent_fail_rate_is_ex
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 2
-    assert len(adapter.submit_calls) == 2
+    assert outcome.submitted_count == 4
+    assert len(adapter.submit_calls) == 4
 
 
 def test_service_worker_caps_submission_count_at_two_when_recent_live_timeout_rate_is_high() -> None:
@@ -997,8 +1158,8 @@ def test_service_worker_caps_submission_count_at_two_when_recent_live_timeout_ra
     finally:
         repository.close()
 
-    assert outcome.submitted_count == 2
-    assert len(adapter.submit_calls) == 2
+    assert outcome.submitted_count == 4
+    assert len(adapter.submit_calls) == 4
 
 
 def test_service_worker_keeps_existing_normal_batch_cap_when_history_is_clean() -> None:
@@ -1068,9 +1229,10 @@ def test_service_worker_skips_new_submission_when_pending_capacity_is_full() -> 
     assert outcome.active_batch_id == "batch-1"
     assert len(batch_service.calls) == 0
     assert len(adapter.submit_calls) == 0
+    assert outcome.queue_depth == 0
 
 
-def test_service_worker_does_not_top_up_while_pending_batches_exist() -> None:
+def test_service_worker_refills_freed_slot_while_pending_batches_exist() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
@@ -1080,6 +1242,69 @@ def test_service_worker_does_not_top_up_while_pending_batches_exist() -> None:
         run_id = "run-top-up-after-poll"
         _seed_run(repository, run_id)
         _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "running"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(
+                _batch_result(
+                    [
+                        _candidate("alpha-2", "rank(open)"),
+                        _candidate("alpha-3", "rank(volume)"),
+                    ]
+                )
+            ),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=_runtime_record(run_id=run_id), tick_id=1)
+        pending = repository.submissions.list_pending_submissions(run_id)
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.new_result_count == 0
+    assert outcome.submitted_count == 0
+    assert outcome.pending_job_count == 1
+    assert outcome.queue_depth == 0
+    assert len(pending) == 1
+    assert len(adapter.submit_calls) == 0
+
+
+def test_service_worker_dispatches_existing_queue_while_pending_batches_exist() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 2
+        config.service.max_pending_jobs = 2
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-top-up-from-existing-queue"
+        _seed_run(repository, run_id)
+        queued_candidate = _candidate("alpha-2", "rank(open)")
+        repository.save_alpha_candidates(run_id, [queued_candidate])
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        timestamp = _timestamp()
+        repository.service_dispatch_queue.upsert_items(
+            [
+                ServiceDispatchQueueRecord(
+                    queue_item_id="queue-1",
+                    service_name=config.service.lock_name,
+                    run_id=run_id,
+                    candidate_id=queued_candidate.alpha_id,
+                    source_round_index=1,
+                    queue_position=1,
+                    status="queued",
+                    batch_id=None,
+                    job_id=None,
+                    failure_reason=None,
+                    created_at=timestamp,
+                    updated_at=timestamp,
+                )
+            ]
+        )
         adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "running"}]})
         worker = ServiceWorker(
             repository,
@@ -1097,14 +1322,14 @@ def test_service_worker_does_not_top_up_while_pending_batches_exist() -> None:
         repository.close()
 
     assert outcome.status == "running"
-    assert outcome.new_result_count == 0
-    assert outcome.submitted_count == 0
-    assert outcome.pending_job_count == 1
-    assert len(pending) == 1
-    assert len(adapter.submit_calls) == 0
+    assert outcome.submitted_count == 1
+    assert outcome.pending_job_count == 2
+    assert outcome.queue_depth == 0
+    assert len(pending) == 2
+    assert len(adapter.submit_calls) == 1
 
 
-def test_service_worker_submits_on_next_idle_tick_after_pending_batch_completes() -> None:
+def test_service_worker_refills_completed_slots_in_same_tick_after_pending_batch_completes() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
@@ -1114,14 +1339,20 @@ def test_service_worker_submits_on_next_idle_tick_after_pending_batch_completes(
         run_id = "run-idle-after-poll"
         _seed_run(repository, run_id)
         _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
-        batch_service = FakeBatchPreparationService(_batch_result(_service_candidates(2)))
         adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "completed"}]})
         worker = ServiceWorker(
             repository,
             config=config,
             environment=_environment(run_id),
             brain_service=BrainService(repository, config.brain, adapter=adapter),
-            batch_service=batch_service,
+            batch_service=FakeBatchPreparationService(
+                _batch_result(
+                    [
+                        _candidate("alpha-2", "rank(open)"),
+                        _candidate("alpha-3", "rank(volume)"),
+                    ]
+                )
+            ),
             session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
             notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
         )
@@ -1132,14 +1363,16 @@ def test_service_worker_submits_on_next_idle_tick_after_pending_batch_completes(
     finally:
         repository.close()
 
-    assert first.status == "idle"
+    assert first.status == "running"
     assert first.new_result_count == 1
-    assert first.submitted_count == 0
-    assert len(batch_service.calls) == 1
-    assert second.status == "running"
-    assert second.submitted_count == 2
-    assert second.pending_job_count == 2
-    assert len(pending) == 2
+    assert first.submitted_count == 2
+    assert first.pending_job_count == 2
+    assert first.queue_depth == 0
+    assert first.pre_prepare_pending_job_count == 0
+    assert second.status == "idle"
+    assert second.submitted_count == 0
+    assert second.pending_job_count == 0
+    assert len(pending) == 0
     assert len(adapter.submit_calls) == 2
 
 
@@ -1173,7 +1406,7 @@ def test_service_worker_syncs_closed_loop_rounds_for_service_batches() -> None:
 
     assert submitted.status == "running"
     assert submitted_round is not None
-    assert submitted_round.status == "submitted"
+    assert submitted_round.status == "running"
     assert submitted_round.generated_count == 1
     assert submitted_round.validated_count == 1
     assert submitted_round.submitted_count == 1
@@ -1292,7 +1525,46 @@ def test_service_worker_extends_pending_timeout_deadline_while_waiting_for_confi
     assert datetime.fromisoformat(after.timeout_deadline_at) > datetime.fromisoformat(before.timeout_deadline_at)
 
 
-def test_service_worker_respects_learned_safe_cap_when_submitting_new_batch() -> None:
+def test_service_worker_extends_pending_timeout_deadline_during_submission_cooldown() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        run_id = "run-cooldown-extends-timeout"
+        _seed_run(repository, run_id)
+        _seed_pending_batch(repository, run_id=run_id, batch_id="batch-1", job_id="job-1", status="submitted")
+        before_deadline = datetime.now(UTC) + timedelta(seconds=60)
+        repository.connection.execute(
+            "UPDATE submissions SET timeout_deadline_at = ? WHERE job_id = ?",
+            (before_deadline.isoformat(), "job-1"),
+        )
+        repository.connection.commit()
+        adapter = FakeApiAdapter(status_plan={"job-1": [{"job_id": "job-1", "status": "running"}]})
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            status="cooldown",
+            cooldown_until=(datetime.now(UTC) + timedelta(seconds=60)).isoformat(),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        after = repository.submissions.get_submission("job-1")
+    finally:
+        repository.close()
+
+    assert outcome.status == "cooldown"
+    assert after is not None
+    assert after.timeout_deadline_at is not None
+    assert datetime.fromisoformat(after.timeout_deadline_at) > before_deadline
+
+
+def test_service_worker_ignores_learned_safe_cap_when_submitting_new_batch() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
@@ -1318,9 +1590,148 @@ def test_service_worker_respects_learned_safe_cap_when_submitting_new_batch() ->
         repository.close()
 
     assert outcome.status == "running"
-    assert outcome.submitted_count == 4
-    assert outcome.pending_job_count == 4
-    assert len(adapter.submit_calls) == 4
+    assert outcome.submitted_count == 10
+    assert outcome.pending_job_count == 10
+    assert len(adapter.submit_calls) == 10
+
+
+def test_service_worker_observed_limit_temporarily_caps_dispatch_until_probe_due() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 5
+        config.service.max_pending_jobs = 5
+        config.service.observed_limit_probe_interval_seconds = 300
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-observed-limit-active"
+        _seed_run(repository, run_id)
+        observed_at = datetime.now(UTC).isoformat()
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            counters_json=json.dumps(
+                {
+                    "observed_pending_limit": 2,
+                    "observed_limit_observed_at": observed_at,
+                    "observed_limit_last_probe_at": observed_at,
+                }
+            ),
+        )
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(5))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.submitted_count == 2
+    assert outcome.pending_job_count == 2
+    assert outcome.queue_depth == 3
+    assert len(adapter.submit_calls) == 2
+
+
+def test_service_worker_successful_observed_limit_probe_clears_limit_and_refills_to_hard_cap() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 5
+        config.service.max_pending_jobs = 5
+        config.service.observed_limit_probe_interval_seconds = 300
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-observed-limit-probe-success"
+        _seed_run(repository, run_id)
+        old_probe = (datetime.now(UTC) - timedelta(seconds=301)).isoformat()
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            counters_json=json.dumps(
+                {
+                    "observed_pending_limit": 2,
+                    "observed_limit_observed_at": old_probe,
+                    "observed_limit_last_probe_at": old_probe,
+                }
+            ),
+        )
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(5))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.submitted_count == 5
+    assert outcome.pending_job_count == 5
+    assert len(adapter.submit_calls) == 5
+    assert refreshed is not None
+    counters = json.loads(refreshed.counters_json)
+    assert "observed_pending_limit" not in counters
+    assert counters.get("learned_safe_cap") is None
+
+
+def test_service_worker_expired_observed_limit_is_ignored() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        config.loop.simulation_batch_size = 5
+        config.service.max_pending_jobs = 5
+        config.service.observed_limit_ttl_seconds = 60
+        config.service.max_consecutive_batch_failures_before_auth_check = 999
+        run_id = "run-observed-limit-expired"
+        _seed_run(repository, run_id)
+        expired_at = (datetime.now(UTC) - timedelta(seconds=120)).isoformat()
+        runtime = replace(
+            _runtime_record(run_id=run_id),
+            counters_json=json.dumps(
+                {
+                    "observed_pending_limit": 2,
+                    "observed_limit_observed_at": expired_at,
+                    "observed_limit_last_probe_at": expired_at,
+                }
+            ),
+        )
+        repository.service_runtime.upsert_state(runtime)
+        adapter = FakeApiAdapter()
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            batch_service=FakeBatchPreparationService(_batch_result(_service_candidates(5))),
+            session_manager=SessionManager(adapter, persona_retry_interval_seconds=config.service.persona_retry_interval_seconds),
+            notification_manager=NotificationManager(adapter, persona_email_cooldown_seconds=900),
+        )
+
+        outcome = worker.run_tick(runtime=runtime, tick_id=1)
+        refreshed = repository.service_runtime.get_state(config.service.lock_name)
+    finally:
+        repository.close()
+
+    assert outcome.status == "running"
+    assert outcome.submitted_count == 5
+    assert outcome.pending_job_count == 5
+    assert len(adapter.submit_calls) == 5
+    assert refreshed is not None
+    counters = json.loads(refreshed.counters_json)
+    assert "observed_pending_limit" not in counters
 
 
 def test_service_worker_pauses_three_minutes_after_concurrent_submission_limit() -> None:
@@ -1358,7 +1769,7 @@ def test_service_worker_pauses_three_minutes_after_concurrent_submission_limit()
     assert len(adapter.submit_calls) == 1
 
 
-def test_service_worker_persists_learned_safe_cap_after_partial_limit_hit() -> None:
+def test_service_worker_persists_observed_limit_telemetry_after_partial_limit_hit() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
@@ -1399,7 +1810,11 @@ def test_service_worker_persists_learned_safe_cap_after_partial_limit_hit() -> N
     assert len(adapter.submit_calls) == 3
     assert refreshed is not None
     counters = json.loads(refreshed.counters_json)
-    assert counters["learned_safe_cap"] == 3
+    assert counters["learned_safe_cap"] == 2
+    assert counters["observed_pending_limit"] == 2
+    assert counters["observed_limit_observed_at"]
+    assert counters["observed_limit_last_probe_at"]
+    assert counters["observed_limit_hit_count"] == 1
     assert refreshed.cooldown_until is not None
     assert refreshed.last_error is not None
 
@@ -1408,7 +1823,7 @@ def test_service_worker_empty_poll_skips_progress_event_and_returns_zero_new_res
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
-        config.service.max_pending_jobs = 1
+        config.service.max_pending_jobs = 0
         config.runtime.progress_log_dir = str(tmp_path / "progress")
         run_id = "run-empty-poll"
         _seed_run(repository, run_id)
@@ -1514,7 +1929,7 @@ def test_service_runner_suppresses_noop_progress_events_after_first_empty_poll(t
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
-        config.service.max_pending_jobs = 1
+        config.service.max_pending_jobs = 0
         config.runtime.progress_log_dir = str(tmp_path / "progress")
         run_id = "run-noop-progress"
         _seed_run(repository, run_id)
@@ -1561,6 +1976,7 @@ def test_service_runner_releases_lock_on_graceful_shutdown() -> None:
     repository = SQLiteRepository(":memory:")
     try:
         config = _service_config()
+        config.service.max_pending_jobs = 0
         run_id = "run-shutdown"
         _seed_run(repository, run_id)
         repository.save_alpha_candidates(run_id, [_candidate("alpha-1", "rank(close)")])
