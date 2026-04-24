@@ -328,6 +328,7 @@ class BrainResultRecord:
     metric_source: str
     simulated_at: str
     created_at: str
+    quality_score: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -425,6 +426,7 @@ class SelectionScoreRecord:
     reason_codes_json: str
     breakdown_json: str
     created_at: str
+    quality_score: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -458,6 +460,9 @@ class MutationOutcomeRecord:
     selected_for_simulation: bool
     selected_for_mutation: bool
     created_at: str
+    parent_quality_score: float = 0.0
+    child_quality_score: float = 0.0
+    quality_delta: float = 0.0
 
 
 @dataclass(frozen=True, slots=True)

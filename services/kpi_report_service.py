@@ -8,6 +8,7 @@ from datetime import datetime
 from statistics import median
 from typing import Any
 
+from core.quality_score import MultiObjectiveQualityScorer
 from storage.models import RunRecord, ServiceRuntimeRecord
 from storage.repository import SQLiteRepository
 
@@ -36,6 +37,10 @@ class RunKpiReport:
     delta_flags: dict[str, Any]
     timeout_reasons: dict[str, Any]
     generation_fail_reasons: dict[str, Any]
+    top_quality_families: list[dict[str, Any]]
+    top_negative_families: list[dict[str, Any]]
+    top_search_buckets: list[dict[str, Any]]
+    negative_search_buckets: list[dict[str, Any]]
 
 
 def build_run_kpi_report(
@@ -69,6 +74,10 @@ def build_run_kpi_report(
             delta_flags={},
             timeout_reasons={},
             generation_fail_reasons={},
+            top_quality_families=[],
+            top_negative_families=[],
+            top_search_buckets=[],
+            negative_search_buckets=[],
         )
     run = repository.get_run(resolved_run_id)
     scope = _resolve_round_scope(repository.connection, run_id=resolved_run_id, recent_rounds=recent_rounds)
@@ -76,6 +85,11 @@ def build_run_kpi_report(
     results = repository.brain_results.list_results(run_id=resolved_run_id)
     stage_metrics = repository.get_stage_metrics(resolved_run_id)
     selection_scores = repository.list_selection_scores(resolved_run_id, score_stage="pre_sim")
+    generation_context_by_alpha = _fetch_alpha_generation_context(repository.connection, resolved_run_id)
+    generation_mode_by_alpha = {
+        alpha_id: str(context.get("generation_mode") or "unknown")
+        for alpha_id, context in generation_context_by_alpha.items()
+    }
     regime_rows = _fetch_regime_rows(repository.connection, resolved_run_id, scope)
     all_closed_loop_rows = _fetch_all_closed_loop_rows(repository.connection, resolved_run_id)
     closed_loop_rows = [row for row in all_closed_loop_rows if _round_in_scope(int(row.get("round_index") or 0), scope)]
@@ -97,6 +111,19 @@ def build_run_kpi_report(
         results=results,
         stage_metrics=stage_metrics,
         closed_loop_rows=all_closed_loop_rows,
+        selection_scores=selection_scores,
+        generation_mode_by_alpha=generation_mode_by_alpha,
+        generation_context_by_alpha=generation_context_by_alpha,
+    )
+    top_quality_families, top_negative_families = _build_family_quality(
+        results=scoped_results,
+        generation_context_by_alpha=generation_context_by_alpha,
+    )
+    top_search_buckets, negative_search_buckets = _build_search_bucket_quality(
+        submissions=scoped_submissions,
+        results=scoped_results,
+        stage_metrics=scoped_stage_metrics,
+        generation_context_by_alpha=generation_context_by_alpha,
     )
 
     return RunKpiReport(
@@ -111,7 +138,11 @@ def build_run_kpi_report(
         scope_label=scope["label"],
         health=_build_health(runtime=runtime, submissions=scoped_submissions),
         funnel=_build_funnel(closed_loop_rows=closed_loop_rows, selection_scores=scoped_selection_scores, stage_metrics=scoped_stage_metrics),
-        quality=_build_quality(submissions=scoped_submissions, results=scoped_results),
+        quality=_build_quality(
+            submissions=scoped_submissions,
+            results=scoped_results,
+            generation_mode_by_alpha=generation_mode_by_alpha,
+        ),
         meta_model=_build_meta_model(selection_scores=scoped_selection_scores, outcome_by_alpha=outcome_by_alpha),
         regime=_build_regime(regime_rows=regime_rows),
         mutation=_build_mutation(closed_loop_rows=closed_loop_rows, mutation_rows=mutation_rows),
@@ -120,6 +151,10 @@ def build_run_kpi_report(
         delta_flags=delta_flags,
         timeout_reasons=timeout_reasons,
         generation_fail_reasons=generation_fail_reasons,
+        top_quality_families=top_quality_families,
+        top_negative_families=top_negative_families,
+        top_search_buckets=top_search_buckets,
+        negative_search_buckets=negative_search_buckets,
     )
 
 
@@ -147,6 +182,10 @@ def run_kpi_report_to_dict(report: RunKpiReport) -> dict[str, Any]:
         "delta_flags": report.delta_flags,
         "timeout_reasons": report.timeout_reasons,
         "generation_fail_reasons": report.generation_fail_reasons,
+        "top_quality_families": report.top_quality_families,
+        "top_negative_families": report.top_negative_families,
+        "top_search_buckets": report.top_search_buckets,
+        "negative_search_buckets": report.negative_search_buckets,
     }
 
 
@@ -312,6 +351,38 @@ def _fetch_alpha_outcomes(
     return outcomes
 
 
+def _fetch_alpha_generation_context(connection: sqlite3.Connection, run_id: str) -> dict[str, dict[str, Any]]:
+    rows = connection.execute(
+        """
+        SELECT alpha_id, generation_mode, generation_metadata, structural_signature_json
+        FROM alphas
+        WHERE run_id = ?
+        """,
+        (run_id,),
+    ).fetchall()
+    context: dict[str, dict[str, Any]] = {}
+    for row in rows:
+        alpha_id = str(row["alpha_id"] or "")
+        if not alpha_id:
+            continue
+        metadata = _decode_json_object(row["generation_metadata"])
+        structural_signature = _decode_json_object(row["structural_signature_json"])
+        family_signature = str(
+            metadata.get("family_signature")
+            or structural_signature.get("family_signature")
+            or ""
+        )
+        context[alpha_id] = {
+            "generation_mode": str(row["generation_mode"] or "unknown"),
+            "generation_source": str(metadata.get("generation_source") or ""),
+            "family_signature": family_signature,
+            "search_bucket_id": str(metadata.get("search_bucket_id") or ""),
+            "recipe_family": str(metadata.get("recipe_family") or ""),
+            "objective_profile": str(metadata.get("objective_profile") or ""),
+        }
+    return context
+
+
 def _build_health(
     *,
     runtime: ServiceRuntimeRecord | None,
@@ -393,18 +464,23 @@ def _build_quality(
     *,
     submissions,
     results,
+    generation_mode_by_alpha: dict[str, str] | None = None,
 ) -> dict[str, Any]:
     completed_results = [row for row in results if row.status == "completed"]
     fitnesses = [float(row.fitness) for row in completed_results if row.fitness is not None]
     sharpes = [float(row.sharpe) for row in completed_results if row.sharpe is not None]
     drawdowns = [float(row.drawdown) for row in completed_results if row.drawdown is not None]
     returns = [float(row.returns) for row in completed_results if row.returns is not None]
+    quality_scores = [_quality_score_for_result(row) for row in completed_results]
     candidate_ids = {str(row.candidate_id) for row in submissions if str(row.candidate_id or "")}
     return {
         "completed_results": len(completed_results),
         "distinct_candidates": len(candidate_ids),
+        "positive_quality_rate": _safe_ratio(sum(1 for value in quality_scores if value > 0.0), len(quality_scores)),
         "positive_fitness_rate": _safe_ratio(sum(1 for value in fitnesses if value > 0.0), len(fitnesses)),
         "positive_sharpe_rate": _safe_ratio(sum(1 for value in sharpes if value > 0.0), len(sharpes)),
+        "avg_quality_score": _avg(quality_scores),
+        "median_quality_score": float(median(quality_scores)) if quality_scores else None,
         "avg_fitness": float(sum(fitnesses) / len(fitnesses)) if fitnesses else None,
         "median_fitness": float(median(fitnesses)) if fitnesses else None,
         "avg_sharpe": float(sum(sharpes) / len(sharpes)) if sharpes else None,
@@ -415,6 +491,133 @@ def _build_quality(
         "median_returns": float(median(returns)) if returns else None,
         "max_fitness": max(fitnesses) if fitnesses else None,
         "max_sharpe": max(sharpes) if sharpes else None,
+        "by_generation_mode": _build_generation_mode_quality(
+            submissions=submissions,
+            results=results,
+            generation_mode_by_alpha=generation_mode_by_alpha or {},
+        ),
+    }
+
+
+def _build_generation_mode_quality(
+    *,
+    submissions,
+    results,
+    generation_mode_by_alpha: dict[str, str],
+) -> dict[str, Any]:
+    terminal_statuses = {"completed", "failed", "rejected", "timeout"}
+    modes = sorted(
+        {
+            _generation_mode_for_alpha(str(getattr(row, "candidate_id", "") or ""), generation_mode_by_alpha)
+            for row in [*list(submissions), *list(results)]
+        }
+        - {""}
+    )
+    summary: dict[str, Any] = {}
+    for mode in modes:
+        mode_submissions = [
+            row
+            for row in submissions
+            if _generation_mode_for_alpha(str(getattr(row, "candidate_id", "") or ""), generation_mode_by_alpha) == mode
+        ]
+        terminal_submissions = [
+            row
+            for row in mode_submissions
+            if str(row.status or "") in terminal_statuses or getattr(row, "completed_at", None)
+        ]
+        mode_results = [
+            row
+            for row in results
+            if _generation_mode_for_alpha(str(getattr(row, "candidate_id", "") or ""), generation_mode_by_alpha) == mode
+        ]
+        completed_results = [row for row in mode_results if str(row.status or "") == "completed"]
+        fitnesses = [float(row.fitness) for row in completed_results if row.fitness is not None]
+        sharpes = [float(row.sharpe) for row in completed_results if row.sharpe is not None]
+        turnovers = [float(row.turnover) for row in completed_results if row.turnover is not None]
+        drawdowns = [float(row.drawdown) for row in completed_results if row.drawdown is not None]
+        returns = [float(row.returns) for row in completed_results if row.returns is not None]
+        quality_scores = [_quality_score_for_result(row) for row in completed_results]
+        timeout_jobs = sum(1 for row in mode_submissions if str(row.status or "") == "timeout")
+        completed_jobs = sum(1 for row in mode_submissions if str(row.status or "") == "completed")
+        summary[mode] = {
+            "submission_count": len(mode_submissions),
+            "result_count": len(mode_results),
+            "completed_results": len(completed_results),
+            "completed_rate": _safe_ratio(completed_jobs, len(terminal_submissions)),
+            "timeout_rate": _safe_ratio(timeout_jobs, len(terminal_submissions)),
+            "avg_quality_score": _avg(quality_scores),
+            "median_quality_score": float(median(quality_scores)) if quality_scores else None,
+            "positive_quality_rate": _safe_ratio(sum(1 for value in quality_scores if value > 0.0), len(quality_scores)),
+            "avg_fitness": _avg(fitnesses),
+            "median_fitness": float(median(fitnesses)) if fitnesses else None,
+            "avg_sharpe": _avg(sharpes),
+            "median_sharpe": float(median(sharpes)) if sharpes else None,
+            "positive_fitness_rate": _safe_ratio(sum(1 for value in fitnesses if value > 0.0), len(fitnesses)),
+            "positive_sharpe_rate": _safe_ratio(sum(1 for value in sharpes if value > 0.0), len(sharpes)),
+            "avg_turnover": _avg(turnovers),
+            "avg_drawdown": _avg(drawdowns),
+            "avg_returns": _avg(returns),
+        }
+    return summary
+
+
+def _build_family_quality(
+    *,
+    results,
+    generation_context_by_alpha: dict[str, dict[str, Any]],
+    limit: int = 10,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for row in results:
+        if str(row.status or "") != "completed":
+            continue
+        alpha_id = str(row.candidate_id or "")
+        context = generation_context_by_alpha.get(alpha_id, {})
+        family_signature = str(context.get("family_signature") or "")
+        if not family_signature:
+            continue
+        grouped.setdefault(family_signature, []).append(
+            {
+                "alpha_id": alpha_id,
+                "generation_mode": str(context.get("generation_mode") or "unknown"),
+                "quality_score": _quality_score_for_result(row),
+                "fitness": _to_float(row.fitness),
+                "sharpe": _to_float(row.sharpe),
+                "turnover": _to_float(row.turnover),
+                "drawdown": _to_float(row.drawdown),
+            }
+        )
+
+    rows = [_family_quality_row(family_signature, family_rows) for family_signature, family_rows in grouped.items()]
+    rows = [row for row in rows if row["support"] > 0]
+    top_quality = sorted(rows, key=lambda row: (-float(row["avg_quality_score"]), -int(row["support"]), row["family_signature"]))
+    negative_rows = [row for row in rows if float(row["avg_quality_score"]) <= 0.0]
+    top_negative = sorted(
+        negative_rows,
+        key=lambda row: (float(row["avg_quality_score"]), -int(row["support"]), row["family_signature"]),
+    )
+    return top_quality[:limit], top_negative[:limit]
+
+
+def _family_quality_row(family_signature: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    quality_scores = [float(row["quality_score"]) for row in rows]
+    fitnesses = [float(row["fitness"]) for row in rows if row["fitness"] is not None]
+    sharpes = [float(row["sharpe"]) for row in rows if row["sharpe"] is not None]
+    turnovers = [float(row["turnover"]) for row in rows if row["turnover"] is not None]
+    drawdowns = [float(row["drawdown"]) for row in rows if row["drawdown"] is not None]
+    generation_modes = Counter(str(row["generation_mode"] or "unknown") for row in rows)
+    top_row = max(rows, key=lambda row: float(row["quality_score"]))
+    return {
+        "family_signature": family_signature,
+        "support": len(rows),
+        "avg_quality_score": _avg(quality_scores) or 0.0,
+        "avg_fitness": _avg(fitnesses),
+        "avg_sharpe": _avg(sharpes),
+        "positive_fitness_rate": _safe_ratio(sum(1 for value in fitnesses if value > 0.0), len(fitnesses)),
+        "avg_turnover": _avg(turnovers),
+        "avg_drawdown": _avg(drawdowns),
+        "generation_modes": dict(generation_modes),
+        "top_alpha_id": str(top_row["alpha_id"]),
     }
 
 
@@ -513,6 +716,9 @@ def _build_recent_vs_baseline(
     results,
     stage_metrics: list[dict[str, Any]],
     closed_loop_rows: list[dict[str, Any]],
+    selection_scores: list[dict[str, Any]],
+    generation_mode_by_alpha: dict[str, str],
+    generation_context_by_alpha: dict[str, dict[str, Any]],
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any]]:
     recent: dict[str, Any] = {}
     baseline: dict[str, Any] = {}
@@ -528,6 +734,16 @@ def _build_recent_vs_baseline(
         submissions=raw_recent_submissions,
         stage_metrics=_stage_metrics_for_submissions(stage_metrics, raw_recent_submissions),
         closed_loop_rows=_closed_loop_rows_for_submissions(closed_loop_rows, raw_recent_submissions),
+        selection_scores=_filter_selection_scores_by_rounds(
+            selection_scores,
+            {
+                int(getattr(row, "round_index", 0) or 0)
+                for row in raw_recent_submissions
+                if int(getattr(row, "round_index", 0) or 0) > 0
+            },
+        ),
+        generation_mode_by_alpha=generation_mode_by_alpha,
+        generation_context_by_alpha=generation_context_by_alpha,
     )
     baseline["raw_results"] = _build_window_metrics(
         label="baseline_raw_results",
@@ -535,6 +751,16 @@ def _build_recent_vs_baseline(
         submissions=raw_baseline_submissions,
         stage_metrics=_stage_metrics_for_submissions(stage_metrics, raw_baseline_submissions),
         closed_loop_rows=_closed_loop_rows_for_submissions(closed_loop_rows, raw_baseline_submissions),
+        selection_scores=_filter_selection_scores_by_rounds(
+            selection_scores,
+            {
+                int(getattr(row, "round_index", 0) or 0)
+                for row in raw_baseline_submissions
+                if int(getattr(row, "round_index", 0) or 0) > 0
+            },
+        ),
+        generation_mode_by_alpha=generation_mode_by_alpha,
+        generation_context_by_alpha=generation_context_by_alpha,
     )
 
     completed_results = [row for row in results if str(row.status or "") == "completed"]
@@ -545,6 +771,12 @@ def _build_recent_vs_baseline(
         submissions=_submissions_for_results(submissions, recent_completed),
         stage_metrics=_stage_metrics_for_results(stage_metrics, recent_completed),
         closed_loop_rows=_closed_loop_rows_for_results(closed_loop_rows, recent_completed),
+        selection_scores=_filter_selection_scores_by_rounds(
+            selection_scores,
+            {int(getattr(row, "round_index", 0) or 0) for row in recent_completed if int(getattr(row, "round_index", 0) or 0) > 0},
+        ),
+        generation_mode_by_alpha=generation_mode_by_alpha,
+        generation_context_by_alpha=generation_context_by_alpha,
     )
     baseline["completed_results"] = _build_window_metrics(
         label="baseline_completed_results",
@@ -552,6 +784,12 @@ def _build_recent_vs_baseline(
         submissions=_submissions_for_results(submissions, baseline_completed),
         stage_metrics=_stage_metrics_for_results(stage_metrics, baseline_completed),
         closed_loop_rows=_closed_loop_rows_for_results(closed_loop_rows, baseline_completed),
+        selection_scores=_filter_selection_scores_by_rounds(
+            selection_scores,
+            {int(getattr(row, "round_index", 0) or 0) for row in baseline_completed if int(getattr(row, "round_index", 0) or 0) > 0},
+        ),
+        generation_mode_by_alpha=generation_mode_by_alpha,
+        generation_context_by_alpha=generation_context_by_alpha,
     )
 
     recent_round_rows, baseline_round_rows = _split_recent_and_baseline(closed_loop_rows, size=7)
@@ -563,6 +801,9 @@ def _build_recent_vs_baseline(
         submissions=_filter_submissions_by_rounds(submissions, recent_round_numbers),
         stage_metrics=_filter_stage_metrics_by_rounds(stage_metrics, recent_round_numbers),
         closed_loop_rows=recent_round_rows,
+        selection_scores=_filter_selection_scores_by_rounds(selection_scores, recent_round_numbers),
+        generation_mode_by_alpha=generation_mode_by_alpha,
+        generation_context_by_alpha=generation_context_by_alpha,
     )
     baseline["rounds"] = _build_window_metrics(
         label="baseline_rounds",
@@ -570,6 +811,9 @@ def _build_recent_vs_baseline(
         submissions=_filter_submissions_by_rounds(submissions, baseline_round_numbers),
         stage_metrics=_filter_stage_metrics_by_rounds(stage_metrics, baseline_round_numbers),
         closed_loop_rows=baseline_round_rows,
+        selection_scores=_filter_selection_scores_by_rounds(selection_scores, baseline_round_numbers),
+        generation_mode_by_alpha=generation_mode_by_alpha,
+        generation_context_by_alpha=generation_context_by_alpha,
     )
 
     delta_flags = {
@@ -594,12 +838,16 @@ def _build_window_metrics(
     submissions,
     stage_metrics: list[dict[str, Any]],
     closed_loop_rows: list[dict[str, Any]],
+    selection_scores: list[dict[str, Any]],
+    generation_mode_by_alpha: dict[str, str],
+    generation_context_by_alpha: dict[str, dict[str, Any]],
 ) -> dict[str, Any]:
     completed_results = [row for row in results if str(row.status or "") == "completed"]
     fitnesses = [float(row.fitness) for row in completed_results if row.fitness is not None]
     sharpes = [float(row.sharpe) for row in completed_results if row.sharpe is not None]
     drawdowns = [float(row.drawdown) for row in completed_results if row.drawdown is not None]
     returns = [float(row.returns) for row in completed_results if row.returns is not None]
+    quality_scores = [_quality_score_for_result(row) for row in completed_results]
     timeout_reason_counts = _timeout_reason_counts_for_submissions(submissions)
     generation_fail_reasons = _aggregate_generation_fail_reasons(stage_metrics)
     generated_count = sum(int(row.get("generated_count") or 0) for row in closed_loop_rows)
@@ -633,6 +881,19 @@ def _build_window_metrics(
         for row in stage_metrics
         if row.get("stage") == "generation"
     )
+    family_proxy_penalties = [
+        float(
+            _decode_json_object(row.get("breakdown_json"))
+            .get("components", {})
+            .get("family_correlation_proxy_penalty", 0.0)
+            or 0.0
+        )
+        for row in selection_scores
+    ]
+    source_budget_allocations = _aggregate_generation_counter_metric(stage_metrics, "source_budget_allocations")
+    source_yield_scores = _aggregate_generation_average_metric(stage_metrics, "source_yield_scores")
+    recipe_bucket_budget_allocations = _aggregate_generation_counter_metric(stage_metrics, "recipe_bucket_budget_allocations")
+    recipe_bucket_yield_scores = _aggregate_generation_average_metric(stage_metrics, "recipe_bucket_yield_scores")
     terminal_statuses = {"completed", "failed", "rejected", "timeout"}
     terminal_submissions = [
         row for row in submissions if str(row.status or "") in terminal_statuses or getattr(row, "completed_at", None)
@@ -651,6 +912,9 @@ def _build_window_metrics(
         "round_end": round_indices[-1] if round_indices else None,
         "completed_rate": _safe_ratio(completed_jobs, len(terminal_submissions)),
         "timeout_rate": _safe_ratio(timeout_jobs, len(terminal_submissions)),
+        "avg_quality_score": _avg(quality_scores),
+        "median_quality_score": float(median(quality_scores)) if quality_scores else None,
+        "positive_quality_rate": _safe_ratio(sum(1 for value in quality_scores if value > 0.0), len(quality_scores)),
         "avg_sharpe": _avg(sharpes),
         "median_sharpe": float(median(sharpes)) if sharpes else None,
         "avg_fitness": _avg(fitnesses),
@@ -669,9 +933,202 @@ def _build_window_metrics(
         "blocked_by_near_duplicate": blocked_by_near_duplicate,
         "blocked_by_near_duplicate_rate": _safe_ratio(blocked_by_near_duplicate, generated_count),
         "selected_for_simulation_rate": _safe_ratio(selected_for_simulation, generated_count),
+        "avg_family_correlation_proxy_penalty": _avg(family_proxy_penalties),
+        "source_budget_allocations": dict(source_budget_allocations),
+        "source_yield_scores": dict(source_yield_scores),
+        "recipe_bucket_budget_allocations": dict(recipe_bucket_budget_allocations),
+        "recipe_bucket_yield_scores": dict(recipe_bucket_yield_scores),
         "top_timeout_reasons": dict(timeout_reason_counts.most_common(5)),
         "top_generation_fail_reasons": dict(generation_fail_reasons.most_common(5)),
+        "by_generation_mode": _build_generation_mode_window_metrics(
+            submissions=submissions,
+            results=results,
+            stage_metrics=stage_metrics,
+            selection_scores=selection_scores,
+            generation_mode_by_alpha=generation_mode_by_alpha,
+        ),
+        "by_search_bucket": _build_search_bucket_window_metrics(
+            submissions=submissions,
+            results=results,
+            stage_metrics=stage_metrics,
+            generation_context_by_alpha=generation_context_by_alpha,
+        ),
     }
+
+
+def _build_generation_mode_window_metrics(
+    *,
+    submissions,
+    results,
+    stage_metrics: list[dict[str, Any]],
+    selection_scores: list[dict[str, Any]],
+    generation_mode_by_alpha: dict[str, str],
+) -> dict[str, Any]:
+    summary = _build_generation_mode_quality(
+        submissions=submissions,
+        results=results,
+        generation_mode_by_alpha=generation_mode_by_alpha,
+    )
+    penalties_by_mode: dict[str, list[float]] = {}
+    for row in selection_scores:
+        alpha_id = str(row.get("alpha_id") or "")
+        mode = _generation_mode_for_alpha(alpha_id, generation_mode_by_alpha)
+        penalty = float(
+            _decode_json_object(row.get("breakdown_json"))
+            .get("components", {})
+            .get("family_correlation_proxy_penalty", 0.0)
+            or 0.0
+        )
+        penalties_by_mode.setdefault(mode, []).append(penalty)
+    source_budget_allocations = _aggregate_generation_counter_metric(stage_metrics, "source_budget_allocations")
+    quality_polish_generated = sum(
+        int(_decode_json_object(row.get("metrics_json")).get("quality_polish_generated") or 0)
+        for row in stage_metrics
+        if row.get("stage") == "generation"
+    )
+    quality_polish_selected = sum(
+        int(_decode_json_object(row.get("metrics_json")).get("quality_polish_selected") or 0)
+        for row in stage_metrics
+        if row.get("stage") == "generation"
+    )
+    quality_polish_blocked_by_signature = _sum_generation_metric(
+        stage_metrics,
+        "quality_polish_blocked_by_signature",
+        fallback_key="quality_polish_skipped_used_signature",
+    )
+    quality_polish_blocked_by_recent_parent_transform = _sum_generation_metric(
+        stage_metrics,
+        "quality_polish_blocked_by_recent_parent_transform",
+        fallback_key="quality_polish_skipped_used_parent_transform",
+    )
+    quality_polish_transform_cooldown_counts = _aggregate_generation_counter_metric(
+        stage_metrics,
+        "quality_polish_transform_cooldown_counts",
+    )
+    turnover_repair_generated = _sum_generation_metric(stage_metrics, "turnover_repair_generated")
+    turnover_repair_selected = _sum_generation_metric(stage_metrics, "turnover_repair_selected")
+    turnover_repair_transform_counts = _aggregate_generation_counter_metric(
+        stage_metrics,
+        "turnover_repair_transform_counts",
+    )
+    if quality_polish_generated or quality_polish_selected or "quality_polish" in summary:
+        polish = summary.setdefault("quality_polish", {})
+        polish["generated_count"] = quality_polish_generated
+        polish["selected_for_simulation"] = quality_polish_selected
+        polish["selected_for_simulation_rate"] = _safe_ratio(quality_polish_selected, quality_polish_generated)
+        polish["blocked_by_signature"] = quality_polish_blocked_by_signature
+        polish["blocked_by_recent_parent_transform"] = quality_polish_blocked_by_recent_parent_transform
+        polish["transform_cooldown_counts"] = dict(quality_polish_transform_cooldown_counts)
+        polish["turnover_repair_generated"] = turnover_repair_generated
+        polish["turnover_repair_selected"] = turnover_repair_selected
+        polish["turnover_repair_transform_counts"] = dict(turnover_repair_transform_counts)
+        polish["budget_allocated"] = int(source_budget_allocations.get("quality_polish", 0))
+    recipe_guided_generated = _sum_generation_metric(stage_metrics, "recipe_guided_generated")
+    recipe_guided_selected = _sum_generation_metric(stage_metrics, "recipe_guided_selected")
+    recipe_guided_bucket_counts = _aggregate_generation_counter_metric(stage_metrics, "recipe_guided_bucket_counts")
+    recipe_guided_selected_by_bucket = _aggregate_generation_counter_metric(
+        stage_metrics,
+        "recipe_guided_selected_by_bucket",
+    )
+    if recipe_guided_generated or recipe_guided_selected or "recipe_guided" in summary:
+        recipe = summary.setdefault("recipe_guided", {})
+        recipe["generated_count"] = recipe_guided_generated
+        recipe["selected_for_simulation"] = recipe_guided_selected
+        recipe["selected_for_simulation_rate"] = _safe_ratio(recipe_guided_selected, recipe_guided_generated)
+        recipe["bucket_counts"] = dict(recipe_guided_bucket_counts)
+        recipe["selected_by_bucket"] = dict(recipe_guided_selected_by_bucket)
+        recipe["budget_allocated"] = int(source_budget_allocations.get("recipe_guided", 0))
+    if int(source_budget_allocations.get("fresh", 0)) > 0:
+        fresh = summary.setdefault("fresh", {})
+        fresh["budget_allocated"] = int(source_budget_allocations.get("fresh", 0))
+    for mode, penalties in penalties_by_mode.items():
+        summary.setdefault(mode, {})["avg_family_correlation_proxy_penalty"] = _avg(penalties)
+    return summary
+
+
+def _build_search_bucket_window_metrics(
+    *,
+    submissions,
+    results,
+    stage_metrics: list[dict[str, Any]],
+    generation_context_by_alpha: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    generated_by_bucket = _aggregate_generation_counter_metric(stage_metrics, "recipe_guided_bucket_counts")
+    selected_by_bucket = _aggregate_generation_counter_metric(stage_metrics, "recipe_guided_selected_by_bucket")
+    budget_by_bucket = _aggregate_generation_counter_metric(stage_metrics, "recipe_bucket_budget_allocations")
+    yield_scores_by_bucket = _aggregate_generation_average_metric(stage_metrics, "recipe_bucket_yield_scores")
+    bucket_submissions: dict[str, list[Any]] = {}
+    bucket_results: dict[str, list[Any]] = {}
+    for row in submissions:
+        alpha_id = str(getattr(row, "candidate_id", "") or "")
+        bucket_id = str((generation_context_by_alpha.get(alpha_id) or {}).get("search_bucket_id") or "")
+        if bucket_id:
+            bucket_submissions.setdefault(bucket_id, []).append(row)
+    for row in results:
+        alpha_id = str(getattr(row, "candidate_id", "") or "")
+        bucket_id = str((generation_context_by_alpha.get(alpha_id) or {}).get("search_bucket_id") or "")
+        if bucket_id:
+            bucket_results.setdefault(bucket_id, []).append(row)
+
+    bucket_ids = sorted(
+        set(generated_by_bucket)
+        | set(selected_by_bucket)
+        | set(budget_by_bucket)
+        | set(yield_scores_by_bucket)
+        | set(bucket_submissions)
+        | set(bucket_results)
+    )
+    summary: dict[str, dict[str, Any]] = {}
+    for bucket_id in bucket_ids:
+        result_rows = bucket_results.get(bucket_id, [])
+        submission_rows = bucket_submissions.get(bucket_id, [])
+        completed_rows = [row for row in result_rows if str(getattr(row, "status", "") or "") == "completed"]
+        fitnesses = [float(row.fitness) for row in completed_rows if row.fitness is not None]
+        sharpes = [float(row.sharpe) for row in completed_rows if row.sharpe is not None]
+        quality_scores = [_quality_score_for_result(row) for row in completed_rows]
+        timeout_count = sum(1 for row in submission_rows if str(getattr(row, "status", "") or "") == "timeout")
+        summary[bucket_id] = {
+            "search_bucket_id": bucket_id,
+            "support": len(result_rows),
+            "generated_count": int(generated_by_bucket.get(bucket_id, 0)),
+            "budget_allocated": int(budget_by_bucket.get(bucket_id, 0)),
+            "yield_score": _to_float(yield_scores_by_bucket.get(bucket_id)),
+            "selected_for_simulation": int(selected_by_bucket.get(bucket_id, 0)),
+            "completed_count": len(completed_rows),
+            "timeout_count": timeout_count,
+            "avg_quality_score": _avg(quality_scores),
+            "avg_fitness": _avg(fitnesses),
+            "avg_sharpe": _avg(sharpes),
+            "positive_fitness_rate": _safe_ratio(sum(1 for value in fitnesses if value > 0.0), len(fitnesses)),
+        }
+    return summary
+
+
+def _build_search_bucket_quality(
+    *,
+    submissions,
+    results,
+    stage_metrics: list[dict[str, Any]],
+    generation_context_by_alpha: dict[str, dict[str, Any]],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    summary = _build_search_bucket_window_metrics(
+        submissions=submissions,
+        results=results,
+        stage_metrics=stage_metrics,
+        generation_context_by_alpha=generation_context_by_alpha,
+    )
+    rows = list(summary.values())
+    top_rows = [row for row in rows if row["avg_quality_score"] is not None]
+    negative_rows = [
+        row for row in rows if row["avg_quality_score"] is not None and float(row["avg_quality_score"]) <= 0.0
+    ]
+    top_rows.sort(
+        key=lambda row: (-float(row["avg_quality_score"]), -int(row["support"]), row["search_bucket_id"])
+    )
+    negative_rows.sort(
+        key=lambda row: (float(row["avg_quality_score"]), -int(row["support"]), row["search_bucket_id"])
+    )
+    return top_rows[:10], negative_rows[:10]
 
 
 def _classify_window_delta(recent_window: dict[str, Any], baseline_window: dict[str, Any]) -> dict[str, Any]:
@@ -770,6 +1227,16 @@ def _filter_stage_metrics_by_rounds(stage_metrics: list[dict[str, Any]], round_n
     return [row for row in stage_metrics if int(row.get("round_index") or 0) in round_numbers]
 
 
+def _filter_selection_scores_by_rounds(selection_scores: list[dict[str, Any]], round_numbers: set[int]) -> list[dict[str, Any]]:
+    if not round_numbers:
+        return []
+    return [row for row in selection_scores if int(row.get("round_index") or 0) in round_numbers]
+
+
+def _generation_mode_for_alpha(alpha_id: str, generation_mode_by_alpha: dict[str, str]) -> str:
+    return str(generation_mode_by_alpha.get(alpha_id) or "unknown")
+
+
 def _timeout_reason_counts_for_submissions(submissions) -> Counter[str]:
     timeout_reason_counts: Counter[str] = Counter()
     for row in submissions:
@@ -800,6 +1267,56 @@ def _aggregate_generation_fail_reasons(stage_metrics: list[dict[str, Any]]) -> C
         top_fail_reasons = _decode_json_object(metrics.get("top_fail_reasons"))
         counts.update({str(key): int(value or 0) for key, value in top_fail_reasons.items()})
     return counts
+
+
+def _sum_generation_metric(
+    stage_metrics: list[dict[str, Any]],
+    key: str,
+    *,
+    fallback_key: str | None = None,
+) -> int:
+    total = 0
+    for row in stage_metrics:
+        if row.get("stage") != "generation":
+            continue
+        metrics = _decode_json_object(row.get("metrics_json"))
+        raw_value = metrics.get(key)
+        if raw_value is None and fallback_key:
+            raw_value = metrics.get(fallback_key)
+        total += int(raw_value or 0)
+    return total
+
+
+def _aggregate_generation_counter_metric(stage_metrics: list[dict[str, Any]], key: str) -> Counter[str]:
+    counts: Counter[str] = Counter()
+    for row in stage_metrics:
+        if row.get("stage") != "generation":
+            continue
+        metrics = _decode_json_object(row.get("metrics_json"))
+        counter_payload = _decode_json_object(metrics.get(key))
+        counts.update({str(name): int(value or 0) for name, value in counter_payload.items()})
+    return counts
+
+
+def _aggregate_generation_average_metric(stage_metrics: list[dict[str, Any]], key: str) -> dict[str, float]:
+    sums: Counter[str] = Counter()
+    counts: Counter[str] = Counter()
+    for row in stage_metrics:
+        if row.get("stage") != "generation":
+            continue
+        metrics = _decode_json_object(row.get("metrics_json"))
+        payload = _decode_json_object(metrics.get(key))
+        for name, value in payload.items():
+            parsed = _to_float(value)
+            if parsed is None:
+                continue
+            sums[str(name)] += float(parsed)
+            counts[str(name)] += 1
+    return {
+        name: float(sums[name] / counts[name])
+        for name in sums
+        if int(counts[name]) > 0
+    }
 
 
 def _delta(current: Any, previous: Any) -> float | None:
@@ -836,6 +1353,13 @@ def _avg(values: list[float]) -> float | None:
     if not values:
         return None
     return float(sum(values) / len(values))
+
+
+def _quality_score_for_result(row: Any) -> float:
+    stored = _to_float(getattr(row, "quality_score", None))
+    if stored is not None and abs(stored) > 1e-12:
+        return float(stored)
+    return MultiObjectiveQualityScorer.score_record(row)
 
 
 def _chunked(values: list[str], *, size: int) -> list[list[str]]:

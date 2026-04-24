@@ -124,3 +124,88 @@ def test_connect_sqlite_migrates_legacy_alphas_structural_signature(tmp_path: Pa
     assert "structural_signature_json" in columns
     assert "idx_alphas_run_expression" in indexes
     assert "idx_alphas_run_created_at" in indexes
+
+
+def test_connect_sqlite_migrates_quality_score_columns(tmp_path: Path) -> None:
+    db_path = tmp_path / "legacy-quality.sqlite3"
+    legacy = sqlite3.connect(str(db_path))
+    try:
+        legacy.executescript(
+            """
+            CREATE TABLE brain_results (
+                job_id TEXT PRIMARY KEY,
+                run_id TEXT NOT NULL,
+                round_index INTEGER NOT NULL DEFAULT 0,
+                batch_id TEXT NOT NULL,
+                candidate_id TEXT NOT NULL,
+                expression TEXT NOT NULL,
+                status TEXT NOT NULL,
+                region TEXT NOT NULL,
+                universe TEXT NOT NULL,
+                delay INTEGER NOT NULL,
+                neutralization TEXT NOT NULL,
+                decay INTEGER NOT NULL,
+                sharpe REAL,
+                fitness REAL,
+                turnover REAL,
+                drawdown REAL,
+                returns REAL,
+                margin REAL,
+                submission_eligible INTEGER,
+                rejection_reason TEXT,
+                raw_result_json TEXT NOT NULL,
+                metric_source TEXT NOT NULL DEFAULT 'external_brain',
+                simulated_at TEXT NOT NULL,
+                created_at TEXT NOT NULL
+            );
+
+            CREATE TABLE alpha_selection_scores (
+                run_id TEXT NOT NULL,
+                round_index INTEGER NOT NULL,
+                alpha_id TEXT NOT NULL,
+                score_stage TEXT NOT NULL,
+                composite_score REAL NOT NULL,
+                selected INTEGER NOT NULL,
+                rank INTEGER,
+                reason_codes_json TEXT NOT NULL,
+                breakdown_json TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (run_id, round_index, score_stage, alpha_id)
+            );
+
+            CREATE TABLE mutation_outcomes (
+                run_id TEXT NOT NULL,
+                child_alpha_id TEXT NOT NULL,
+                parent_alpha_id TEXT NOT NULL,
+                parent_run_id TEXT NOT NULL,
+                mutation_mode TEXT NOT NULL,
+                family_signature TEXT NOT NULL,
+                effective_regime_key TEXT NOT NULL,
+                outcome_source TEXT NOT NULL,
+                parent_post_sim_score REAL NOT NULL,
+                child_post_sim_score REAL NOT NULL,
+                outcome_delta REAL NOT NULL,
+                selected_for_simulation INTEGER NOT NULL,
+                selected_for_mutation INTEGER NOT NULL,
+                created_at TEXT NOT NULL,
+                PRIMARY KEY (run_id, child_alpha_id, parent_alpha_id, outcome_source)
+            );
+            """
+        )
+        legacy.commit()
+    finally:
+        legacy.close()
+
+    connection = connect_sqlite(str(db_path))
+    try:
+        brain_columns = {row["name"] for row in connection.execute("PRAGMA table_info(brain_results)").fetchall()}
+        selection_columns = {
+            row["name"] for row in connection.execute("PRAGMA table_info(alpha_selection_scores)").fetchall()
+        }
+        mutation_columns = {row["name"] for row in connection.execute("PRAGMA table_info(mutation_outcomes)").fetchall()}
+    finally:
+        connection.close()
+
+    assert "quality_score" in brain_columns
+    assert "quality_score" in selection_columns
+    assert {"parent_quality_score", "child_quality_score", "quality_delta"} <= mutation_columns

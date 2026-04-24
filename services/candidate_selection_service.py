@@ -179,6 +179,20 @@ class CandidateSelectionService:
             "kept_after_hard_dedup": len(dedup_result.kept_candidates),
             "hard_blocked_by_crowding": hard_blocked,
             "avg_crowding_penalty": float(avg_crowding_penalty),
+            "avg_family_correlation_proxy_penalty": float(
+                sum(
+                    float(
+                        (
+                            score.ranking_rationale.get("selection_breakdown", {})
+                            .get("components", {})
+                            .get("family_correlation_proxy_penalty", 0.0)
+                        )
+                        or 0.0
+                    )
+                    for score in scored
+                )
+                / max(1, len(scored))
+            ),
             "selected_for_simulation": len(selected),
             "archived_after_selection": len(pre_screen_archived) + len(archived),
         }
@@ -307,6 +321,7 @@ class CandidateSelectionService:
                         sort_keys=True,
                     ),
                     created_at=created_at,
+                    quality_score=float(decision.quality_score),
                 )
                 for decision in decisions
             ]
@@ -414,6 +429,9 @@ class CandidateSelectionService:
                 self.repository,
                 config=self.adaptive_config.meta_model,
             ),
+            repository=self.repository,
+            family_proxy_lookback_rounds=self.adaptive_config.recipe_generation.yield_lookback_rounds,
+            family_proxy_min_support=self.adaptive_config.recipe_generation.min_bucket_support_for_penalty,
         )
         self.duplicate_service = (
             DuplicateService(

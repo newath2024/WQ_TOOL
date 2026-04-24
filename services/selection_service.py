@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import json
 from collections import Counter
 
 from core.config import DiversityThresholdConfig, SelectionConfig
+from core.quality_score import MultiObjectiveQualityScorer
 from data.field_registry import FieldRegistry
 from generator.engine import AlphaCandidate
 from memory.case_memory import CaseMemorySnapshot, CaseMemoryService, ObjectiveVector
@@ -18,6 +20,7 @@ from services.models import (
     SimulationResult,
 )
 from services.multi_objective_selection import MultiObjectiveSelectionService, RankedItem
+from storage.repository import SQLiteRepository
 
 
 class SelectionService:
@@ -28,11 +31,17 @@ class SelectionService:
         memory_service: PatternMemoryService | None = None,
         case_memory_service: CaseMemoryService | None = None,
         meta_model_service: MetaModelService | None = None,
+        repository: SQLiteRepository | None = None,
+        family_proxy_lookback_rounds: int = 12,
+        family_proxy_min_support: int = 5,
     ) -> None:
         self.config = config
         self.memory_service = memory_service or PatternMemoryService()
         self.case_memory_service = case_memory_service or CaseMemoryService()
         self.meta_model_service = meta_model_service
+        self.repository = repository
+        self.family_proxy_lookback_rounds = max(1, int(family_proxy_lookback_rounds))
+        self.family_proxy_min_support = max(1, int(family_proxy_min_support))
         self.multi_objective = MultiObjectiveSelectionService()
 
     def score_pre_sim_candidates(
@@ -55,6 +64,10 @@ class SelectionService:
         ranked_items: list[RankedItem[CandidateScore]] = []
         score_by_id: dict[str, CandidateScore] = {}
         field_categories = {name: spec.category for name, spec in field_registry.fields.items()}
+        recent_family_stats = self._recent_family_proxy_stats(
+            run_id=run_id,
+            round_index=round_index,
+        )
         for candidate in candidates:
             family_score, novelty_score, signature, _ = self.memory_service.score_expression(
                 candidate.expression,
@@ -87,6 +100,9 @@ class SelectionService:
             heuristic_predicted_quality = self._predicted_quality(objective_vector, field_score=field_score)
             family_diversity = self._family_diversity_bonus(signature, case_snapshot)
             exploration_bonus = self._exploration_bonus(candidate)
+            quality_polish_prior = self._quality_polish_prior(candidate)
+            recipe_bucket_prior = self._recipe_bucket_prior(candidate)
+            parent_family_signatures = self._candidate_parent_family_signatures(candidate)
             complexity_cost = max(
                 float(objective_vector.complexity_cost),
                 min(1.0, float(signature.complexity) / 20.0),
@@ -106,6 +122,14 @@ class SelectionService:
                     "heuristic_predicted_quality": float(heuristic_predicted_quality),
                     "family_diversity": float(family_diversity),
                     "exploration_bonus": float(exploration_bonus),
+                    "quality_polish_prior": float(quality_polish_prior),
+                    "recipe_bucket_prior": float(recipe_bucket_prior),
+                    "family_signature": str(
+                        candidate.generation_metadata.get("family_signature")
+                        or signature.family_signature
+                        or ""
+                    ),
+                    "parent_family_signatures": parent_family_signatures,
                     "complexity_cost": float(complexity_cost),
                     "meta_model_input": MetaModelService.feature_input_from_candidate(
                         candidate=candidate,
@@ -121,6 +145,11 @@ class SelectionService:
                     ),
                 }
             )
+        batch_family_counts = Counter(
+            str(item["family_signature"])
+            for item in prepared_inputs
+            if str(item["family_signature"])
+        )
         meta_predictions = self._meta_model_predictions(
             feature_inputs=[
                 item["meta_model_input"]
@@ -145,6 +174,14 @@ class SelectionService:
                 if meta_prediction is not None
                 else heuristic_predicted_quality
             )
+            family_signature = str(item["family_signature"] or "")
+            family_proxy_penalty, family_proxy_components = self._family_correlation_proxy_penalty(
+                family_signature=family_signature,
+                parent_family_signatures=tuple(item["parent_family_signatures"]),
+                batch_family_counts=batch_family_counts,
+                batch_size=len(prepared_inputs),
+                recent_family_stats=recent_family_stats,
+            )
             weights = self.config.pre_sim
             composite_score = (
                 weights.predicted_quality * predicted_quality
@@ -152,8 +189,11 @@ class SelectionService:
                 + weights.family_diversity * float(item["family_diversity"])
                 + weights.regime_fit * float(item["regime_fit"])
                 + weights.exploration_bonus * float(item["exploration_bonus"])
+                + float(item["quality_polish_prior"])
+                + float(item["recipe_bucket_prior"])
                 - weights.duplicate_risk * float(item["duplicate_risk"])
                 - weights.crowding_penalty * float(item["crowding_penalty"])
+                - weights.family_correlation_proxy_penalty * float(family_proxy_penalty)
                 - weights.complexity_cost * float(item["complexity_cost"])
             )
             breakdown = SelectionBreakdown(
@@ -172,8 +212,21 @@ class SelectionService:
                     "family_diversity": float(item["family_diversity"]),
                     "regime_fit": float(item["regime_fit"]),
                     "exploration_bonus": float(item["exploration_bonus"]),
+                    "quality_polish_prior": float(item["quality_polish_prior"]),
+                    "recipe_bucket_prior": float(item["recipe_bucket_prior"]),
                     "duplicate_risk": float(item["duplicate_risk"]),
                     "crowding_penalty": float(item["crowding_penalty"]),
+                    "family_correlation_proxy_penalty": float(family_proxy_penalty),
+                    "family_proxy_recent_family_share": float(family_proxy_components["recent_family_share"]),
+                    "family_proxy_current_batch_family_share": float(
+                        family_proxy_components["current_batch_family_share"]
+                    ),
+                    "family_proxy_parent_family_overlap": float(
+                        family_proxy_components["parent_family_overlap"]
+                    ),
+                    "family_proxy_negative_family_surcharge": float(
+                        family_proxy_components["negative_family_surcharge"]
+                    ),
                     "complexity_cost": float(item["complexity_cost"]),
                 },
                 reason_codes=self._pre_sim_reason_codes(
@@ -181,6 +234,7 @@ class SelectionService:
                     duplicate_risk=float(item["duplicate_risk"]),
                     crowding_score=crowding_scores.get(candidate.alpha_id),
                     exploration_bonus=float(item["exploration_bonus"]),
+                    family_proxy_penalty=float(family_proxy_penalty),
                 ),
             )
             memory_context = candidate.generation_metadata.get("memory_context")
@@ -196,6 +250,10 @@ class SelectionService:
             candidate.generation_metadata["crowding_penalty"] = float(item["crowding_penalty"])
             candidate.generation_metadata["regime_fit"] = float(item["regime_fit"])
             candidate.generation_metadata["heuristic_predicted_quality"] = float(heuristic_predicted_quality)
+            candidate.generation_metadata["quality_polish_prior"] = float(item["quality_polish_prior"])
+            candidate.generation_metadata["recipe_bucket_prior"] = float(item["recipe_bucket_prior"])
+            candidate.generation_metadata["family_correlation_proxy_penalty"] = float(family_proxy_penalty)
+            candidate.generation_metadata["family_proxy_components"] = dict(family_proxy_components)
             candidate.generation_metadata["ml_positive_outcome_prob"] = float(
                 meta_prediction.ml_positive_outcome_prob if meta_prediction else 0.0
             )
@@ -228,6 +286,7 @@ class SelectionService:
                         "components": dict(breakdown.components),
                         "reason_codes": list(breakdown.reason_codes),
                     },
+                    "family_proxy_components": dict(family_proxy_components),
                 },
             )
             score_by_id[candidate.alpha_id] = candidate_score
@@ -340,6 +399,7 @@ class SelectionService:
             )
             objective_vector = self._result_objective_vector(result=result, candidate=candidate)
             performance_quality = self._performance_quality(objective_vector)
+            multi_objective_quality_score = MultiObjectiveQualityScorer.score_result(result)
             robustness = float(objective_vector.robustness)
             regime_fit = self._regime_fit(candidate)
             family_diversity_bonus = self._family_diversity_bonus(signature, case_snapshot)
@@ -348,7 +408,7 @@ class SelectionService:
             duplicate_penalty = float(candidate.generation_metadata.get("duplicate_risk") or 0.0)
             weights = self.config.post_sim
             composite_score = (
-                weights.performance_quality * performance_quality
+                weights.performance_quality * multi_objective_quality_score
                 + weights.robustness * robustness
                 + weights.regime_fit * regime_fit
                 + weights.family_diversity_bonus * family_diversity_bonus
@@ -360,6 +420,7 @@ class SelectionService:
                 score_stage="post_sim",
                 composite_score=float(composite_score),
                 components={
+                    "multi_objective_quality_score": float(multi_objective_quality_score),
                     "performance_quality": float(performance_quality),
                     "robustness": float(robustness),
                     "regime_fit": float(regime_fit),
@@ -387,7 +448,8 @@ class SelectionService:
                             "composite_score": breakdown.composite_score,
                             "components": dict(breakdown.components),
                             "reason_codes": list(breakdown.reason_codes),
-                        }
+                        },
+                        "quality_score": float(multi_objective_quality_score),
                     },
                 )
             )
@@ -429,6 +491,9 @@ class SelectionService:
 
         for index, item in enumerate(ordered_post, start=1):
             breakdown = post_breakdowns[item.item.candidate_id]
+            multi_objective_quality_score = float(
+                breakdown.components.get("multi_objective_quality_score", breakdown.composite_score)
+            )
             post_decisions.append(
                 SelectionDecision(
                     alpha_id=item.item.candidate_id,
@@ -438,6 +503,7 @@ class SelectionService:
                     rank=index,
                     reason_codes=breakdown.reason_codes,
                     breakdown=breakdown,
+                    quality_score=multi_objective_quality_score,
                 )
             )
             candidate = candidates_by_id[item.item.candidate_id]
@@ -460,6 +526,7 @@ class SelectionService:
                 composite_score=float(composite_score),
                 components={
                     "post_sim_score": float(breakdown.composite_score),
+                    "multi_objective_quality_score": float(multi_objective_quality_score),
                     "family_diversification_bonus": float(family_bonus),
                     "lineage_diversity_bonus": float(lineage_bonus),
                     "mutation_learnability_bonus": float(mutation_learnability_bonus),
@@ -507,6 +574,7 @@ class SelectionService:
                     rank=index,
                     reason_codes=breakdown.reason_codes,
                     breakdown=breakdown,
+                    quality_score=float(breakdown.components.get("multi_objective_quality_score", 0.0)),
                 )
             )
         return [item.item for item in selected_ranked], tuple(post_decisions), tuple(mutation_decisions)
@@ -613,6 +681,7 @@ class SelectionService:
             rank=rank,
             reason_codes=tuple(score.reason_codes),
             breakdown=breakdown,
+            quality_score=float(breakdown.components.get("multi_objective_quality_score", 0.0)),
         )
 
     def _finalize_order(
@@ -724,6 +793,7 @@ class SelectionService:
         duplicate_risk: float,
         crowding_score: CrowdingScore | None,
         exploration_bonus: float,
+        family_proxy_penalty: float,
     ) -> tuple[str, ...]:
         codes: list[str] = []
         if duplicate_risk >= 0.75:
@@ -732,11 +802,37 @@ class SelectionService:
             codes.append("duplicate_risk_medium")
         if crowding_score is not None:
             codes.extend(crowding_score.reason_codes)
+        if family_proxy_penalty > 0.0:
+            codes.append("family_proxy_penalty_applied")
+        if family_proxy_penalty >= 0.50:
+            codes.append("family_proxy_penalty_high")
         if exploration_bonus > 0:
             codes.append("exploration_candidate")
         if candidate.generation_metadata.get("parent_refs"):
             codes.append("has_lineage")
+        if candidate.generation_mode == "quality_polish":
+            codes.append("quality_polish_candidate")
+        if candidate.generation_mode == "recipe_guided":
+            codes.append("recipe_guided_candidate")
         return tuple(dict.fromkeys(codes))
+
+    @staticmethod
+    def _quality_polish_prior(candidate: AlphaCandidate) -> float:
+        if candidate.generation_mode != "quality_polish":
+            return 0.0
+        try:
+            return max(0.0, float(candidate.generation_metadata.get("quality_polish_prior") or 0.0))
+        except (TypeError, ValueError):
+            return 0.0
+
+    @staticmethod
+    def _recipe_bucket_prior(candidate: AlphaCandidate) -> float:
+        if candidate.generation_mode != "recipe_guided":
+            return 0.0
+        try:
+            return max(0.0, float(candidate.generation_metadata.get("recipe_bucket_prior") or 0.0))
+        except (TypeError, ValueError):
+            return 0.0
 
     @staticmethod
     def _post_sim_reason_codes(*, result: SimulationResult, candidate: AlphaCandidate) -> tuple[str, ...]:
@@ -788,3 +884,133 @@ class SelectionService:
             if field_registry.contains(name)
         ]
         return float(sum(scores) / len(scores)) if scores else 0.0
+
+    def _recent_family_proxy_stats(
+        self,
+        *,
+        run_id: str,
+        round_index: int,
+    ) -> dict[str, dict[str, float]]:
+        if not run_id or self.repository is None or self.family_proxy_lookback_rounds <= 0:
+            return {}
+        rows = self.repository.list_generation_result_rows(
+            run_id=run_id,
+            before_round_index=int(round_index),
+            lookback_rounds=int(self.family_proxy_lookback_rounds),
+        )
+        completed_rows = [row for row in rows if str(row.get("status") or "") == "completed"]
+        total_completed = max(1, len(completed_rows))
+        family_counts: Counter[str] = Counter()
+        quality_sums: Counter[str] = Counter()
+        for row in completed_rows:
+            family_signature = self._family_signature_from_row(row)
+            if not family_signature:
+                continue
+            family_counts[family_signature] += 1
+            try:
+                quality_score = float(row.get("quality_score"))
+            except (TypeError, ValueError):
+                quality_score = 0.0
+            if abs(quality_score) <= 1e-12:
+                quality_score = MultiObjectiveQualityScorer.score(
+                    metrics={
+                        "fitness": row.get("fitness"),
+                        "sharpe": row.get("sharpe"),
+                        "turnover": row.get("turnover"),
+                        "drawdown": row.get("drawdown"),
+                        "returns": row.get("returns"),
+                        "margin": row.get("margin"),
+                    },
+                    submission_eligible=row.get("submission_eligible"),
+                    rejection_reason=row.get("rejection_reason"),
+                    status=str(row.get("status") or ""),
+                )
+            quality_sums[family_signature] += float(quality_score)
+        return {
+            family_signature: {
+                "support": float(support),
+                "recent_family_share": float(support / total_completed),
+                "avg_quality_score": float(quality_sums.get(family_signature, 0.0) / max(1, support)),
+            }
+            for family_signature, support in family_counts.items()
+        }
+
+    def _family_correlation_proxy_penalty(
+        self,
+        *,
+        family_signature: str,
+        parent_family_signatures: tuple[str, ...],
+        batch_family_counts: Counter[str],
+        batch_size: int,
+        recent_family_stats: dict[str, dict[str, float]],
+    ) -> tuple[float, dict[str, float]]:
+        family_stats = recent_family_stats.get(family_signature, {})
+        recent_family_share = float(family_stats.get("recent_family_share") or 0.0)
+        current_batch_family_share = (
+            float(batch_family_counts.get(family_signature, 0) / max(1, batch_size))
+            if family_signature
+            else 0.0
+        )
+        parent_overlap_values = [
+            float(batch_family_counts.get(parent_family, 0) / max(1, batch_size))
+            for parent_family in parent_family_signatures
+            if parent_family
+        ]
+        parent_family_overlap = (
+            float(sum(parent_overlap_values) / len(parent_overlap_values))
+            if parent_overlap_values
+            else 0.0
+        )
+        negative_family_surcharge = 1.0 if (
+            float(family_stats.get("support") or 0.0) >= float(self.family_proxy_min_support)
+            and float(family_stats.get("avg_quality_score") or 0.0) <= 0.0
+        ) else 0.0
+        proxy_raw = float(
+            0.50 * recent_family_share
+            + 0.30 * current_batch_family_share
+            + 0.20 * parent_family_overlap
+            + 0.10 * negative_family_surcharge
+        )
+        return proxy_raw, {
+            "recent_family_share": recent_family_share,
+            "current_batch_family_share": current_batch_family_share,
+            "parent_family_overlap": parent_family_overlap,
+            "negative_family_surcharge": negative_family_surcharge,
+        }
+
+    @staticmethod
+    def _candidate_parent_family_signatures(candidate: AlphaCandidate) -> tuple[str, ...]:
+        explicit = candidate.generation_metadata.get("parent_family_signatures")
+        if isinstance(explicit, (list, tuple)):
+            values = [str(item).strip() for item in explicit if str(item).strip()]
+            if values:
+                return tuple(dict.fromkeys(values))
+        parent_refs = candidate.generation_metadata.get("parent_refs") or []
+        resolved = [
+            str(item.get("family_signature") or "").strip()
+            for item in parent_refs
+            if isinstance(item, dict) and str(item.get("family_signature") or "").strip()
+        ]
+        return tuple(dict.fromkeys(resolved))
+
+    @staticmethod
+    def _family_signature_from_row(row: dict[str, object]) -> str:
+        metadata = row.get("generation_metadata")
+        structural_signature = row.get("structural_signature_json")
+        try:
+            metadata_payload = metadata if isinstance(metadata, dict) else json.loads(metadata or "{}")
+        except Exception:  # noqa: BLE001
+            metadata_payload = {}
+        try:
+            structural_payload = (
+                structural_signature
+                if isinstance(structural_signature, dict)
+                else json.loads(structural_signature or "{}")
+            )
+        except Exception:  # noqa: BLE001
+            structural_payload = {}
+        return str(
+            metadata_payload.get("family_signature")
+            or structural_payload.get("family_signature")
+            or ""
+        ).strip()

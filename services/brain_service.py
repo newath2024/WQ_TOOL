@@ -12,6 +12,7 @@ from adapters.simulation_adapter import SimulationAdapter
 from core.brain_rejections import extract_invalid_field_from_rejection
 from core.config import AppConfig, BrainConfig
 from core.logging import get_logger
+from core.quality_score import MultiObjectiveQualityScorer
 from generator.engine import AlphaCandidate
 from services.models import (
     BrainSimulationBatch,
@@ -796,6 +797,7 @@ class BrainService:
             metric_source=result.metric_source,
             simulated_at=result.simulated_at,
             created_at=created_at,
+            quality_score=MultiObjectiveQualityScorer.score_result(result),
         )
 
     @staticmethod

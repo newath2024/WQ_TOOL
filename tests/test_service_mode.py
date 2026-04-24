@@ -1564,6 +1564,103 @@ def test_service_worker_extends_pending_timeout_deadline_during_submission_coold
     assert datetime.fromisoformat(after.timeout_deadline_at) > before_deadline
 
 
+def test_service_worker_does_not_reconcile_operational_timeout_batches() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        run_id = "run-operational-timeout-reconcile"
+        batch_id = "batch-timeout"
+        _seed_run(repository, run_id)
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id=batch_id,
+                run_id=run_id,
+                round_index=1,
+                backend="api",
+                status="completed",
+                candidate_count=1,
+                sim_config_snapshot="{}",
+                export_path=None,
+                notes_json="{}",
+                created_at="2026-04-23T00:00:00+00:00",
+                updated_at="2026-04-23T00:10:00+00:00",
+            )
+        )
+        repository.submissions.upsert_submissions(
+            [
+                SubmissionRecord(
+                    job_id="job-timeout",
+                    batch_id=batch_id,
+                    run_id=run_id,
+                    round_index=1,
+                    candidate_id="alpha-timeout",
+                    expression="rank(close)",
+                    backend="api",
+                    status="timeout",
+                    sim_config_snapshot="{}",
+                    submitted_at="2026-04-23T00:00:00+00:00",
+                    updated_at="2026-04-23T00:10:00+00:00",
+                    completed_at="2026-04-23T00:10:00+00:00",
+                    export_path=None,
+                    raw_submission_json="{}",
+                    error_message="poll_timeout_after_downtime",
+                    service_failure_reason="poll_timeout_after_downtime",
+                )
+            ]
+        )
+        repository.brain_results.save_results(
+            [
+                BrainResultRecord(
+                    job_id="job-timeout",
+                    run_id=run_id,
+                    round_index=1,
+                    batch_id=batch_id,
+                    candidate_id="alpha-timeout",
+                    expression="rank(close)",
+                    status="timeout",
+                    region="USA",
+                    universe="TOP3000",
+                    delay=1,
+                    neutralization="SUBINDUSTRY",
+                    decay=5,
+                    sharpe=None,
+                    fitness=None,
+                    turnover=None,
+                    drawdown=None,
+                    returns=None,
+                    margin=None,
+                    submission_eligible=None,
+                    rejection_reason="poll_timeout_after_downtime",
+                    raw_result_json="{}",
+                    metric_source="external_brain",
+                    simulated_at="2026-04-23T00:10:00+00:00",
+                    created_at="2026-04-23T00:10:00+00:00",
+                )
+            ]
+        )
+        worker = ServiceWorker(
+            repository,
+            config=config,
+            environment=_environment(run_id),
+            brain_service=BrainService(repository, config.brain, adapter=FakeApiAdapter()),
+            session_manager=SessionManager(
+                FakeApiAdapter(),
+                persona_retry_interval_seconds=config.service.persona_retry_interval_seconds,
+            ),
+            notification_manager=NotificationManager(FakeApiAdapter(), persona_email_cooldown_seconds=900),
+        )
+
+        learning_needed = worker._batch_learning_needed(run_id=run_id, batch_id=batch_id)
+        reconciled = worker._reconcile_completed_batches(run_id=run_id)
+        history_count = repository.connection.execute("SELECT COUNT(*) AS total FROM alpha_history").fetchone()["total"]
+    finally:
+        repository.close()
+
+    assert learning_needed is False
+    assert reconciled == 0
+    assert history_count == 0
+
+
 def test_service_worker_ignores_learned_safe_cap_when_submitting_new_batch() -> None:
     repository = SQLiteRepository(":memory:")
     try:

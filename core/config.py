@@ -198,6 +198,7 @@ class PreSimSelectionWeightsConfig:
     exploration_bonus: float = 0.05
     duplicate_risk: float = 0.25
     crowding_penalty: float = 0.20
+    family_correlation_proxy_penalty: float = 0.10
     complexity_cost: float = 0.10
 
 
@@ -349,6 +350,204 @@ class LocalValidationFieldPenaltyConfig:
 
 
 @dataclass(slots=True)
+class RecipeGenerationConfig:
+    enabled: bool = True
+    recipe_budget_fraction: float = 0.20
+    max_recipe_candidates_per_round: int = 24
+    active_bucket_count: int = 4
+    max_candidates_per_bucket: int = 6
+    yield_lookback_rounds: int = 12
+    lookback_completed_results: int = 800
+    selection_prior_weight: float = 0.08
+    min_bucket_support_for_penalty: int = 5
+    dynamic_budget_enabled: bool = True
+    dynamic_budget_min_generated_support: int = 20
+    dynamic_budget_min_completed_support: int = 5
+    source_exploration_floor_fractions: dict[str, float] = field(
+        default_factory=lambda: {
+            "quality_polish": 0.10,
+            "recipe_guided": 0.10,
+            "fresh": 0.30,
+        }
+    )
+    source_reallocation_strength: float = 0.50
+    bucket_exploration_floor: int = 1
+    bucket_reallocation_strength: float = 0.60
+    enabled_recipe_families: list[str] = field(
+        default_factory=lambda: [
+            "fundamental_quality",
+            "accrual_vs_cashflow",
+            "value_vs_growth",
+            "revision_surprise",
+        ]
+    )
+    objective_profiles: list[str] = field(
+        default_factory=lambda: ["balanced", "quality", "low_turnover"]
+    )
+
+    def __post_init__(self) -> None:
+        if not 0.0 <= float(self.recipe_budget_fraction) <= 1.0:
+            raise ValueError("adaptive_generation.recipe_generation.recipe_budget_fraction must be between 0 and 1")
+        if self.max_recipe_candidates_per_round < 0:
+            raise ValueError(
+                "adaptive_generation.recipe_generation.max_recipe_candidates_per_round must be >= 0"
+            )
+        if self.active_bucket_count <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.active_bucket_count must be > 0")
+        if self.max_candidates_per_bucket <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.max_candidates_per_bucket must be > 0")
+        if self.yield_lookback_rounds <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.yield_lookback_rounds must be > 0")
+        if self.lookback_completed_results <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.lookback_completed_results must be > 0")
+        if self.selection_prior_weight < 0:
+            raise ValueError("adaptive_generation.recipe_generation.selection_prior_weight must be >= 0")
+        if self.min_bucket_support_for_penalty <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.min_bucket_support_for_penalty must be > 0")
+        if self.dynamic_budget_min_generated_support <= 0:
+            raise ValueError(
+                "adaptive_generation.recipe_generation.dynamic_budget_min_generated_support must be > 0"
+            )
+        if self.dynamic_budget_min_completed_support <= 0:
+            raise ValueError(
+                "adaptive_generation.recipe_generation.dynamic_budget_min_completed_support must be > 0"
+            )
+        if not 0.0 <= float(self.source_reallocation_strength) <= 1.0:
+            raise ValueError(
+                "adaptive_generation.recipe_generation.source_reallocation_strength must be between 0 and 1"
+            )
+        if self.bucket_exploration_floor < 0:
+            raise ValueError("adaptive_generation.recipe_generation.bucket_exploration_floor must be >= 0")
+        if not 0.0 <= float(self.bucket_reallocation_strength) <= 1.0:
+            raise ValueError(
+                "adaptive_generation.recipe_generation.bucket_reallocation_strength must be between 0 and 1"
+            )
+        normalized_floor_fractions: dict[str, float] = {}
+        for key, value in dict(self.source_exploration_floor_fractions or {}).items():
+            normalized_key = str(key).strip()
+            if not normalized_key:
+                continue
+            normalized_value = float(value)
+            if not 0.0 <= normalized_value <= 1.0:
+                raise ValueError(
+                    "adaptive_generation.recipe_generation.source_exploration_floor_fractions values must be between 0 and 1"
+                )
+            normalized_floor_fractions[normalized_key] = normalized_value
+        self.source_exploration_floor_fractions = normalized_floor_fractions
+        self.enabled_recipe_families = [
+            str(item).strip()
+            for item in (self.enabled_recipe_families or [])
+            if str(item).strip()
+        ]
+        self.objective_profiles = [
+            str(item).strip()
+            for item in (self.objective_profiles or [])
+            if str(item).strip()
+        ]
+        if not self.enabled_recipe_families:
+            raise ValueError("adaptive_generation.recipe_generation.enabled_recipe_families must not be empty")
+        if not self.objective_profiles:
+            raise ValueError("adaptive_generation.recipe_generation.objective_profiles must not be empty")
+
+
+@dataclass(slots=True)
+class QualityOptimizationConfig:
+    enabled: bool = True
+    lookback_completed_results: int = 800
+    polish_budget_fraction: float = 0.35
+    max_polish_candidates_per_round: int = 64
+    max_polish_parents_per_round: int = 8
+    variants_per_parent: int = 8
+    min_parent_fitness: float = 0.02
+    min_parent_sharpe: float = 0.03
+    max_parent_turnover: float = 1.00
+    max_parent_drawdown: float = 0.75
+    min_completed_parent_count: int = 5
+    selection_prior_weight: float = 0.10
+    enabled_transforms: list[str] = field(
+        default_factory=lambda: ["wrap_rank", "wrap_zscore", "window_perturb"]
+    )
+    primary_transform: str = "wrap_rank"
+    max_variants_per_parent_by_transform: dict[str, int] = field(
+        default_factory=lambda: {"wrap_rank": 1, "wrap_zscore": 1, "window_perturb": 4}
+    )
+    disabled_transforms: list[str] = field(
+        default_factory=lambda: [
+            "cleanup_redundant_wrapper",
+            "smooth_ts_mean",
+            "smooth_ts_decay_linear",
+            "smooth_ts_rank",
+        ]
+    )
+    parent_transform_recent_rounds: int = 2
+    max_parent_transform_uses_per_recent_window: int = 1
+    transform_score_lookback_rounds: int = 4
+    transform_cooldown_min_attempts: int = 3
+    transform_cooldown_success_rate_floor: float = 0.20
+    window_perturb_neighbor_count: int = 4
+
+    def __post_init__(self) -> None:
+        if self.lookback_completed_results <= 0:
+            raise ValueError("adaptive_generation.quality_optimization.lookback_completed_results must be > 0")
+        if not 0.0 <= float(self.polish_budget_fraction) <= 1.0:
+            raise ValueError("adaptive_generation.quality_optimization.polish_budget_fraction must be between 0 and 1")
+        if self.max_polish_candidates_per_round < 0:
+            raise ValueError("adaptive_generation.quality_optimization.max_polish_candidates_per_round must be >= 0")
+        if self.max_polish_parents_per_round <= 0:
+            raise ValueError("adaptive_generation.quality_optimization.max_polish_parents_per_round must be > 0")
+        if self.variants_per_parent <= 0:
+            raise ValueError("adaptive_generation.quality_optimization.variants_per_parent must be > 0")
+        if self.min_completed_parent_count < 0:
+            raise ValueError("adaptive_generation.quality_optimization.min_completed_parent_count must be >= 0")
+        if self.max_parent_turnover < 0:
+            raise ValueError("adaptive_generation.quality_optimization.max_parent_turnover must be >= 0")
+        if self.max_parent_drawdown < 0:
+            raise ValueError("adaptive_generation.quality_optimization.max_parent_drawdown must be >= 0")
+        if self.selection_prior_weight < 0:
+            raise ValueError("adaptive_generation.quality_optimization.selection_prior_weight must be >= 0")
+        if self.parent_transform_recent_rounds < 0:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.parent_transform_recent_rounds must be >= 0"
+            )
+        if self.max_parent_transform_uses_per_recent_window <= 0:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.max_parent_transform_uses_per_recent_window must be > 0"
+            )
+        if self.transform_score_lookback_rounds < 0:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.transform_score_lookback_rounds must be >= 0"
+            )
+        if self.transform_cooldown_min_attempts <= 0:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.transform_cooldown_min_attempts must be > 0"
+            )
+        if not 0.0 <= float(self.transform_cooldown_success_rate_floor) <= 1.0:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.transform_cooldown_success_rate_floor must be between 0 and 1"
+            )
+        if self.window_perturb_neighbor_count <= 0:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.window_perturb_neighbor_count must be > 0"
+            )
+        self.enabled_transforms = [
+            str(item).strip()
+            for item in (self.enabled_transforms or [])
+            if str(item).strip()
+        ]
+        self.primary_transform = str(self.primary_transform or "wrap_rank").strip()
+        self.max_variants_per_parent_by_transform = {
+            str(key).strip(): int(value)
+            for key, value in dict(self.max_variants_per_parent_by_transform or {}).items()
+            if str(key).strip() and int(value) > 0
+        }
+        self.disabled_transforms = [
+            str(item).strip()
+            for item in (self.disabled_transforms or [])
+            if str(item).strip()
+        ]
+
+
+@dataclass(slots=True)
 class AdaptiveGenerationConfig:
     enabled: bool = True
     memory_scope: str = "regime"
@@ -379,6 +578,8 @@ class AdaptiveGenerationConfig:
     local_validation_field_penalty: LocalValidationFieldPenaltyConfig = field(
         default_factory=LocalValidationFieldPenaltyConfig
     )
+    recipe_generation: RecipeGenerationConfig = field(default_factory=RecipeGenerationConfig)
+    quality_optimization: QualityOptimizationConfig = field(default_factory=QualityOptimizationConfig)
     max_generation_seconds: float = 20.0
     max_attempt_multiplier: int = 12
     exploit_budget_ratio: float = 0.60
@@ -891,6 +1092,12 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     )
     adaptive_payload["local_validation_field_penalty"] = LocalValidationFieldPenaltyConfig(
         **adaptive_payload.get("local_validation_field_penalty", {})
+    )
+    adaptive_payload["recipe_generation"] = RecipeGenerationConfig(
+        **adaptive_payload.get("recipe_generation", {})
+    )
+    adaptive_payload["quality_optimization"] = QualityOptimizationConfig(
+        **adaptive_payload.get("quality_optimization", {})
     )
     return AdaptiveGenerationConfig(**adaptive_payload)
 

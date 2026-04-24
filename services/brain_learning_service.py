@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 
 from core.brain_rejections import extract_invalid_field_from_rejection
+from core.quality_score import MultiObjectiveQualityScorer
 from evaluation.critic import AlphaDiagnosis, MutationHint
 from generator.engine import AlphaCandidate
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
@@ -72,6 +73,7 @@ class BrainLearningService:
                 rejection_reason=result.rejection_reason,
                 fail_tags=diagnosis.fail_tags,
             )
+            quality_score = MultiObjectiveQualityScorer.score_result(result)
             passed_filters = result.status == "completed" and not result.rejection_reason
             entries.append(
                 {
@@ -81,6 +83,7 @@ class BrainLearningService:
                     "structural_signature": structural_signature,
                     "gene_ids": gene_ids,
                     "outcome_score": outcome_score,
+                    "quality_score": quality_score,
                     "behavioral_novelty_score": float(
                         candidate.generation_metadata.get("selection_objectives", {}).get("novelty", 0.5)
                     ),
@@ -221,6 +224,7 @@ class BrainLearningService:
             family_signature = str(candidate.generation_metadata.get("family_signature") or "")
             mutation_mode = str(candidate.generation_metadata.get("mutation_mode") or candidate.generation_mode or "")
             child_score = float(entry["outcome_score"])
+            child_quality_score = float(entry.get("quality_score") or 0.0)
             for parent_ref in parent_refs:
                 parent_run_id = str(parent_ref.get("run_id") or run_id)
                 parent_alpha_id = str(parent_ref.get("alpha_id") or "")
@@ -228,6 +232,8 @@ class BrainLearningService:
                     continue
                 parent_outcome_score = self.repository.alpha_history.get_outcome_score(parent_run_id, parent_alpha_id)
                 parent_score = float(parent_outcome_score or 0.0)
+                parent_quality_score = self.repository.get_latest_brain_quality_score(parent_run_id, parent_alpha_id)
+                parent_quality_score = float(parent_quality_score if parent_quality_score is not None else parent_score)
                 records.append(
                     MutationOutcomeRecord(
                         run_id=run_id,
@@ -241,6 +247,9 @@ class BrainLearningService:
                         parent_post_sim_score=parent_score,
                         child_post_sim_score=child_score,
                         outcome_delta=child_score - parent_score,
+                        parent_quality_score=parent_quality_score,
+                        child_quality_score=child_quality_score,
+                        quality_delta=child_quality_score - parent_quality_score,
                         selected_for_simulation=True,
                         selected_for_mutation=candidate.alpha_id in selected_parent_ids,
                         created_at=created_at,

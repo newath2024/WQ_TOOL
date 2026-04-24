@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from io import StringIO
+from types import SimpleNamespace
 from typing import Any
 
 import pandas as pd
 
+from core.quality_score import MultiObjectiveQualityScorer
 from generator.engine import AlphaCandidate
 from memory.pattern_memory import PatternMemoryService
 from storage.alpha_history import AlphaHistoryStore
@@ -253,6 +256,243 @@ class SQLiteRepository:
             (run_id,),
         ).fetchall()
         return [AlphaRecord(**dict(row)) for row in rows]
+
+    def _list_recent_completed_parent_rows(
+        self,
+        *,
+        run_id: str,
+        limit: int,
+    ) -> list[dict[str, Any]]:
+        if limit <= 0:
+            return []
+        rows = self.connection.execute(
+            """
+            SELECT
+                a.run_id,
+                a.alpha_id,
+                a.expression,
+                a.normalized_expression,
+                a.generation_mode,
+                a.template_name,
+                a.fields_used_json,
+                a.operators_used_json,
+                a.depth,
+                a.generation_metadata,
+                a.structural_signature_json,
+                a.complexity,
+                a.created_at,
+                a.status AS alpha_status,
+                r.job_id AS result_job_id,
+                r.round_index AS result_round_index,
+                r.batch_id AS result_batch_id,
+                r.status AS result_status,
+                r.region AS result_region,
+                r.universe AS result_universe,
+                r.delay AS result_delay,
+                r.neutralization AS result_neutralization,
+                r.decay AS result_decay,
+                r.sharpe AS result_sharpe,
+                r.fitness AS result_fitness,
+                r.turnover AS result_turnover,
+                r.drawdown AS result_drawdown,
+                r.returns AS result_returns,
+                r.margin AS result_margin,
+                r.submission_eligible AS result_submission_eligible,
+                r.rejection_reason AS result_rejection_reason,
+                r.quality_score AS result_quality_score,
+                r.simulated_at AS result_simulated_at
+            FROM brain_results r
+            JOIN alphas a
+              ON a.run_id = r.run_id AND a.alpha_id = r.candidate_id
+            WHERE r.run_id = ?
+              AND r.status = 'completed'
+              AND NOT EXISTS (
+                  SELECT 1
+                  FROM brain_results newer
+                  WHERE newer.run_id = r.run_id
+                    AND newer.candidate_id = r.candidate_id
+                    AND newer.status = 'completed'
+                    AND (
+                        newer.simulated_at > r.simulated_at
+                        OR (newer.simulated_at = r.simulated_at AND newer.job_id > r.job_id)
+                    )
+              )
+            ORDER BY r.simulated_at DESC, r.job_id DESC
+            LIMIT ?
+            """,
+            (run_id, int(limit)),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def list_quality_polish_parent_rows(
+        self,
+        *,
+        run_id: str,
+        limit: int,
+    ) -> list[dict[str, Any]]:
+        return self._list_recent_completed_parent_rows(run_id=run_id, limit=limit)
+
+    def list_recipe_parent_rows(
+        self,
+        *,
+        run_id: str,
+        limit: int,
+    ) -> list[dict[str, Any]]:
+        return self._list_recent_completed_parent_rows(run_id=run_id, limit=limit)
+
+    def list_quality_polish_usage_keys(self, run_id: str) -> dict[str, Any]:
+        rows = self.connection.execute(
+            """
+            SELECT alpha_id, normalized_expression, generation_metadata, created_at
+            FROM alphas
+            WHERE run_id = ?
+              AND generation_mode = 'quality_polish'
+            """,
+            (run_id,),
+        ).fetchall()
+        signatures: set[str] = set()
+        parent_transform_keys: set[str] = set()
+        usage_rows: list[dict[str, Any]] = []
+        for row in rows:
+            try:
+                metadata = json.loads(row["generation_metadata"] or "{}")
+            except json.JSONDecodeError:
+                metadata = {}
+            parent_alpha_id = str(metadata.get("polish_parent_alpha_id") or "").strip()
+            transform = str(metadata.get("polish_transform") or "").strip()
+            normalized_expression = str(row["normalized_expression"] or "").strip()
+            signature = str(metadata.get("polish_signature") or "").strip()
+            if not signature and parent_alpha_id and transform and normalized_expression:
+                signature = _quality_polish_signature(
+                    run_id=run_id,
+                    parent_alpha_id=parent_alpha_id,
+                    transform=transform,
+                    normalized_expression=normalized_expression,
+                )
+            if signature:
+                signatures.add(signature)
+            parent_transform_key = str(metadata.get("polish_parent_transform_key") or "").strip()
+            if not parent_transform_key and parent_alpha_id and transform:
+                parent_transform_key = f"{parent_alpha_id}:{transform}"
+            if parent_transform_key:
+                parent_transform_keys.add(parent_transform_key)
+            usage_rows.append(
+                {
+                    "alpha_id": str(row["alpha_id"] or "").strip(),
+                    "polish_signature": signature,
+                    "polish_parent_transform_key": parent_transform_key,
+                    "polish_parent_alpha_id": parent_alpha_id,
+                    "polish_transform": transform,
+                    "polish_transform_group": str(
+                        metadata.get("polish_transform_group")
+                        or _quality_polish_transform_group(transform)
+                    ).strip(),
+                    "normalized_expression": normalized_expression,
+                    "polish_round_index": _optional_int(metadata.get("polish_round_index")),
+                    "created_at": str(row["created_at"] or ""),
+                }
+            )
+        return {
+            "signatures": signatures,
+            "parent_transform_keys": parent_transform_keys,
+            "usage_rows": usage_rows,
+        }
+
+    def get_latest_brain_quality_score(self, run_id: str, alpha_id: str) -> float | None:
+        row = self.connection.execute(
+            """
+            SELECT *
+            FROM brain_results
+            WHERE run_id = ?
+              AND candidate_id = ?
+            ORDER BY simulated_at DESC, created_at DESC, job_id DESC
+            LIMIT 1
+            """,
+            (run_id, alpha_id),
+        ).fetchone()
+        if row is None:
+            return None
+        return MultiObjectiveQualityScorer.score_record(SimpleNamespace(**dict(row)))
+
+    def list_recipe_bucket_result_rows(
+        self,
+        *,
+        run_id: str,
+        before_round_index: int,
+        lookback_rounds: int,
+    ) -> list[dict[str, Any]]:
+        if lookback_rounds <= 0:
+            return []
+        min_round_index = max(0, int(before_round_index) - int(lookback_rounds))
+        rows = self.connection.execute(
+            """
+            SELECT
+                r.round_index,
+                r.candidate_id,
+                r.status,
+                r.fitness,
+                r.sharpe,
+                r.turnover,
+                r.drawdown,
+                r.returns,
+                r.margin,
+                r.submission_eligible,
+                r.rejection_reason,
+                r.quality_score,
+                a.generation_mode,
+                a.generation_metadata
+            FROM brain_results r
+            JOIN alphas a
+              ON a.run_id = r.run_id AND a.alpha_id = r.candidate_id
+            WHERE r.run_id = ?
+              AND a.generation_mode = 'recipe_guided'
+              AND r.round_index >= ?
+              AND r.round_index < ?
+            ORDER BY r.round_index DESC, r.simulated_at DESC, r.job_id DESC
+            """,
+            (run_id, min_round_index, int(before_round_index)),
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def list_generation_result_rows(
+        self,
+        *,
+        run_id: str,
+        before_round_index: int,
+        lookback_rounds: int,
+    ) -> list[dict[str, Any]]:
+        if lookback_rounds <= 0:
+            return []
+        min_round_index = max(0, int(before_round_index) - int(lookback_rounds))
+        rows = self.connection.execute(
+            """
+            SELECT
+                r.round_index,
+                r.candidate_id,
+                r.status,
+                r.fitness,
+                r.sharpe,
+                r.turnover,
+                r.drawdown,
+                r.returns,
+                r.margin,
+                r.submission_eligible,
+                r.rejection_reason,
+                r.quality_score,
+                a.generation_mode,
+                a.generation_metadata,
+                a.structural_signature_json
+            FROM brain_results r
+            JOIN alphas a
+              ON a.run_id = r.run_id AND a.alpha_id = r.candidate_id
+            WHERE r.run_id = ?
+              AND r.round_index >= ?
+              AND r.round_index < ?
+            ORDER BY r.round_index DESC, r.simulated_at DESC, r.job_id DESC
+            """,
+            (run_id, min_round_index, int(before_round_index)),
+        ).fetchall()
+        return [dict(row) for row in rows]
 
     def get_alpha_reference_marker(self, run_id: str) -> tuple[int, str]:
         row = self.connection.execute(
@@ -847,14 +1087,15 @@ class SQLiteRepository:
                 """
                 INSERT INTO alpha_selection_scores
                 (run_id, round_index, alpha_id, score_stage, composite_score, selected, rank, reason_codes_json,
-                 breakdown_json, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 breakdown_json, quality_score, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(run_id, round_index, score_stage, alpha_id) DO UPDATE SET
                     composite_score = excluded.composite_score,
                     selected = excluded.selected,
                     rank = excluded.rank,
                     reason_codes_json = excluded.reason_codes_json,
                     breakdown_json = excluded.breakdown_json,
+                    quality_score = excluded.quality_score,
                     created_at = excluded.created_at
                 """,
                 (
@@ -867,6 +1108,7 @@ class SQLiteRepository:
                     record.rank,
                     record.reason_codes_json,
                     record.breakdown_json,
+                    record.quality_score,
                     record.created_at,
                 ),
             )
@@ -914,8 +1156,9 @@ class SQLiteRepository:
                 INSERT INTO mutation_outcomes
                 (run_id, child_alpha_id, parent_alpha_id, parent_run_id, mutation_mode, family_signature,
                  effective_regime_key, outcome_source, parent_post_sim_score, child_post_sim_score, outcome_delta,
-                 selected_for_simulation, selected_for_mutation, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 parent_quality_score, child_quality_score, quality_delta, selected_for_simulation,
+                 selected_for_mutation, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(run_id, child_alpha_id, parent_alpha_id, outcome_source) DO UPDATE SET
                     parent_run_id = excluded.parent_run_id,
                     mutation_mode = excluded.mutation_mode,
@@ -924,6 +1167,9 @@ class SQLiteRepository:
                     parent_post_sim_score = excluded.parent_post_sim_score,
                     child_post_sim_score = excluded.child_post_sim_score,
                     outcome_delta = excluded.outcome_delta,
+                    parent_quality_score = excluded.parent_quality_score,
+                    child_quality_score = excluded.child_quality_score,
+                    quality_delta = excluded.quality_delta,
                     selected_for_simulation = excluded.selected_for_simulation,
                     selected_for_mutation = excluded.selected_for_mutation,
                     created_at = excluded.created_at
@@ -940,6 +1186,9 @@ class SQLiteRepository:
                     record.parent_post_sim_score,
                     record.child_post_sim_score,
                     record.outcome_delta,
+                    record.parent_quality_score,
+                    record.child_quality_score,
+                    record.quality_delta,
                     int(record.selected_for_simulation),
                     int(record.selected_for_mutation),
                     record.created_at,
@@ -1179,3 +1428,31 @@ class SQLiteRepository:
     @staticmethod
     def series_from_json(payload: str) -> pd.Series:
         return pd.read_json(StringIO(payload), orient="split", typ="series")
+
+
+def _quality_polish_signature(
+    *,
+    run_id: str,
+    parent_alpha_id: str,
+    transform: str,
+    normalized_expression: str,
+) -> str:
+    payload = "\x1f".join((str(run_id), str(parent_alpha_id), str(transform), str(normalized_expression)))
+    return hashlib.sha1(payload.encode("utf-8")).hexdigest()
+
+
+def _quality_polish_transform_group(transform: str) -> str:
+    normalized = str(transform or "").strip()
+    if normalized.startswith("window_perturb"):
+        return "window_perturb"
+    for prefix in ("smooth_ts_mean", "smooth_ts_decay_linear", "smooth_ts_rank"):
+        if normalized.startswith(prefix):
+            return prefix
+    return normalized
+
+
+def _optional_int(value: Any) -> int | None:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None

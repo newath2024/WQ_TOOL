@@ -360,6 +360,7 @@ CREATE TABLE IF NOT EXISTS brain_results (
     rejection_reason TEXT,
     raw_result_json TEXT NOT NULL DEFAULT '{}',
     metric_source TEXT NOT NULL DEFAULT 'external_brain',
+    quality_score REAL NOT NULL DEFAULT 0.0,
     simulated_at TEXT NOT NULL,
     created_at TEXT NOT NULL,
     FOREIGN KEY (run_id) REFERENCES runs(run_id),
@@ -523,6 +524,7 @@ CREATE TABLE IF NOT EXISTS alpha_selection_scores (
     rank INTEGER,
     reason_codes_json TEXT NOT NULL DEFAULT '[]',
     breakdown_json TEXT NOT NULL DEFAULT '{}',
+    quality_score REAL NOT NULL DEFAULT 0.0,
     created_at TEXT NOT NULL,
     PRIMARY KEY (run_id, round_index, score_stage, alpha_id)
 );
@@ -560,6 +562,9 @@ CREATE TABLE IF NOT EXISTS mutation_outcomes (
     parent_post_sim_score REAL NOT NULL DEFAULT 0.0,
     child_post_sim_score REAL NOT NULL DEFAULT 0.0,
     outcome_delta REAL NOT NULL DEFAULT 0.0,
+    parent_quality_score REAL NOT NULL DEFAULT 0.0,
+    child_quality_score REAL NOT NULL DEFAULT 0.0,
+    quality_delta REAL NOT NULL DEFAULT 0.0,
     selected_for_simulation INTEGER NOT NULL DEFAULT 0,
     selected_for_mutation INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL,
@@ -687,6 +692,15 @@ REQUIRED_COLUMNS = {
         "round_index": "INTEGER NOT NULL DEFAULT 0",
         "submission_eligible": "INTEGER",
         "metric_source": "TEXT NOT NULL DEFAULT 'external_brain'",
+        "quality_score": "REAL NOT NULL DEFAULT 0.0",
+    },
+    "alpha_selection_scores": {
+        "quality_score": "REAL NOT NULL DEFAULT 0.0",
+    },
+    "mutation_outcomes": {
+        "parent_quality_score": "REAL NOT NULL DEFAULT 0.0",
+        "child_quality_score": "REAL NOT NULL DEFAULT 0.0",
+        "quality_delta": "REAL NOT NULL DEFAULT 0.0",
     },
     "closed_loop_runs": {
         "completed_rounds": "INTEGER NOT NULL DEFAULT 0",

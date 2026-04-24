@@ -1828,6 +1828,13 @@ class ServiceWorker:
         ]
         if not results:
             return
+        if all(self._is_neutral_operational_result_record(result) for result in results):
+            self._sync_service_round(
+                run_id=run_id,
+                batch_id=batch_id,
+                selected_for_mutation_count=0,
+            )
+            return
         regime_key = self._resolve_regime_key(run_id)
         run = self.repository.get_run(run_id)
         region = str(run.region or "") if run else ""
@@ -1972,15 +1979,19 @@ class ServiceWorker:
         )
 
     def _batch_learning_needed(self, *, run_id: str, batch_id: str) -> bool:
-        candidate_rows = self.repository.connection.execute(
+        result_rows = self.repository.connection.execute(
             """
-            SELECT DISTINCT candidate_id
+            SELECT DISTINCT candidate_id, status, rejection_reason
             FROM brain_results
             WHERE run_id = ? AND batch_id = ?
             """,
             (run_id, batch_id),
         ).fetchall()
-        candidate_ids = [str(row["candidate_id"]) for row in candidate_rows if row["candidate_id"]]
+        candidate_ids = [
+            str(row["candidate_id"])
+            for row in result_rows
+            if row["candidate_id"] and not self._is_neutral_operational_result_row(row)
+        ]
         if not candidate_ids:
             return False
         placeholders = ", ".join("?" for _ in candidate_ids)
@@ -1994,6 +2005,16 @@ class ServiceWorker:
         ).fetchone()
         learned_total = int(learned_rows["total"] or 0)
         return learned_total < len(candidate_ids)
+
+    @staticmethod
+    def _is_neutral_operational_result_row(row) -> bool:
+        rejection = str(row["rejection_reason"] or "").strip()
+        return rejection in BrainLearningService._NEUTRAL_OPERATIONAL_REJECTIONS
+
+    @staticmethod
+    def _is_neutral_operational_result_record(record) -> bool:
+        rejection = str(record.rejection_reason or "").strip()
+        return rejection in BrainLearningService._NEUTRAL_OPERATIONAL_REJECTIONS
 
     def _sync_service_round(
         self,

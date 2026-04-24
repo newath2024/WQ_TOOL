@@ -22,6 +22,7 @@ from services.data_service import (
     apply_local_validation_field_penalties_to_registry,
     build_local_validation_field_penalties,
 )
+from services.recipe_guided_generator import RecipeGuidedStats
 from services.runtime_service import build_command_environment, init_run
 from storage.models import StageMetricRecord
 from storage.repository import SQLiteRepository
@@ -948,6 +949,149 @@ def test_brain_batch_service_persists_generation_stage_metrics(tmp_path: Path) -
     assert "local_validation_penalized_field_count" in metrics
     assert "local_validation_penalty_counts" in metrics
     assert "local_validation_penalty_multipliers" in metrics
+
+
+def test_brain_batch_service_includes_recipe_guided_metrics(tmp_path: Path, monkeypatch) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        config.storage.path = ":memory:"
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        environment = _environment("config/dev.yaml", "generation-recipe-guided")
+        init_run(repository, config, environment, status="running")
+
+        service = BrainBatchService(repository)
+        recipe_candidate = AlphaCandidate(
+            alpha_id="recipe-1",
+            expression="rank(ts_mean(close,5))",
+            normalized_expression="rank(ts_mean(close,5))",
+            generation_mode="recipe_guided",
+            parent_ids=(),
+            complexity=3,
+            created_at="2026-04-23T00:00:00+00:00",
+            template_name="recipe_fundamental_quality",
+            fields_used=("close",),
+            operators_used=("rank", "ts_mean"),
+            depth=3,
+            generation_metadata={
+                "search_bucket_id": "fundamental_quality|fundamental|balanced",
+                "recipe_bucket_prior": 0.08,
+            },
+        )
+        recipe_stats = RecipeGuidedStats(enabled=True)
+        recipe_stats.generated_count = 1
+        recipe_stats.attempt_count = 2
+        recipe_stats.success_count = 1
+        recipe_stats.bucket_counts["fundamental_quality|fundamental|balanced"] = 1
+        recipe_stats.template_counts["recipe_fundamental_quality"] = 1
+        recipe_stats.parentless_count = 1
+
+        monkeypatch.setattr(service, "_generate_mutation_candidates", lambda **kwargs: ([], GenerationSessionStats()))
+        monkeypatch.setattr(service, "_generate_quality_polish_candidates", lambda **kwargs: ([], type("Stats", (), {"selected_count": 0, "to_metrics": lambda self: {}})()))
+        monkeypatch.setattr(
+            service,
+            "_generate_recipe_guided_candidates",
+            lambda **kwargs: ([recipe_candidate], recipe_stats),
+        )
+        monkeypatch.setattr(service, "_generate_fresh_candidates", lambda **kwargs: ([], GenerationSessionStats()))
+
+        result = service.prepare_service_batch(
+            config=config,
+            environment=environment,
+            count=1,
+            mutation_parent_ids=None,
+            round_index=1,
+        )
+        stage_metrics = repository.get_stage_metrics(environment.context.run_id)
+    finally:
+        repository.close()
+
+    metrics = json.loads([row for row in stage_metrics if row["stage"] == "generation"][-1]["metrics_json"])
+    assert any(candidate.generation_mode == "recipe_guided" for candidate in result.candidates)
+    assert metrics["recipe_guided_generated"] == 1
+    assert metrics["recipe_guided_attempt_count"] == 2
+    assert metrics["recipe_guided_success_count"] == 1
+    assert metrics["recipe_guided_bucket_counts"] == {"fundamental_quality|fundamental|balanced": 1}
+    assert metrics["recipe_guided_template_counts"] == {"recipe_fundamental_quality": 1}
+    assert "recipe_guided_selected_by_bucket" in metrics
+
+
+def test_brain_batch_service_persists_dynamic_source_budget_metrics(tmp_path: Path, monkeypatch) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        config.storage.path = ":memory:"
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        environment = _environment("config/dev.yaml", "generation-source-budget")
+        init_run(repository, config, environment, status="running")
+
+        service = BrainBatchService(repository)
+        fresh_candidate = AlphaCandidate(
+            alpha_id="fresh-1",
+            expression="rank(ts_mean(close,5))",
+            normalized_expression="rank(ts_mean(close,5))",
+            generation_mode="guided_explore",
+            parent_ids=(),
+            complexity=3,
+            created_at="2026-04-23T00:00:00+00:00",
+            template_name="template",
+            fields_used=("close",),
+            operators_used=("rank", "ts_mean"),
+            depth=3,
+            generation_metadata={},
+        )
+
+        class _PolishStats:
+            selected_count = 0
+            turnover_repair_selected = 0
+
+            def to_metrics(self):
+                return {
+                    "quality_polish_generated": 0,
+                    "quality_polish_attempt_count": 0,
+                    "quality_polish_success_count": 0,
+                    "quality_polish_selected": 0,
+                    "quality_polish_failure_reason_counts": {},
+                    "turnover_repair_generated": 0,
+                    "turnover_repair_attempt_count": 0,
+                    "turnover_repair_success_count": 0,
+                    "turnover_repair_selected": 0,
+                    "turnover_repair_transform_counts": {},
+                    "quality_polish_generation_total_ms": 0.0,
+                }
+
+        monkeypatch.setattr(service, "_generate_mutation_candidates", lambda **kwargs: ([], GenerationSessionStats()))
+        monkeypatch.setattr(service, "_generate_quality_polish_candidates", lambda **kwargs: ([], _PolishStats()))
+        monkeypatch.setattr(service, "_generate_recipe_guided_candidates", lambda **kwargs: ([], RecipeGuidedStats(enabled=True)))
+        monkeypatch.setattr(service, "_generate_fresh_candidates", lambda **kwargs: ([fresh_candidate], GenerationSessionStats()))
+        monkeypatch.setattr(
+            service,
+            "_plan_generation_source_budgets",
+            lambda **kwargs: (
+                {"quality_polish": 1, "recipe_guided": 1, "fresh": 2},
+                {"quality_polish": 0.55, "recipe_guided": 0.65, "fresh": 0.50},
+            ),
+        )
+
+        service.prepare_service_batch(
+            config=config,
+            environment=environment,
+            count=2,
+            mutation_parent_ids=None,
+            round_index=1,
+        )
+        stage_metrics = repository.get_stage_metrics(environment.context.run_id)
+    finally:
+        repository.close()
+
+    metrics = json.loads([row for row in stage_metrics if row["stage"] == "generation"][-1]["metrics_json"])
+    assert metrics["source_budget_allocations"] == {"quality_polish": 1, "recipe_guided": 1, "fresh": 2}
+    assert metrics["source_yield_scores"] == {
+        "quality_polish": 0.55,
+        "recipe_guided": 0.65,
+        "fresh": 0.5,
+    }
+    assert metrics["source_generated_counts"]["fresh"] == 1
 
 
 def test_brain_batch_service_persists_redundant_expression_samples(tmp_path: Path, monkeypatch) -> None:

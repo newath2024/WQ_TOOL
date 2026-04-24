@@ -4,6 +4,7 @@ import sqlite3
 from collections.abc import Iterable
 
 from core.brain_rejections import extract_invalid_field_from_rejection
+from core.quality_score import MultiObjectiveQualityScorer
 from storage.models import BrainResultRecord, ClosedLoopRoundRecord, ClosedLoopRunRecord
 
 
@@ -18,8 +19,9 @@ class BrainResultStore:
                 INSERT INTO brain_results
                 (job_id, run_id, round_index, batch_id, candidate_id, expression, status, region, universe, delay,
                  neutralization, decay, sharpe, fitness, turnover, drawdown, returns, margin,
-                 submission_eligible, rejection_reason, raw_result_json, metric_source, simulated_at, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 submission_eligible, rejection_reason, raw_result_json, metric_source, quality_score, simulated_at,
+                 created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(job_id) DO UPDATE SET
                     status = excluded.status,
                     region = excluded.region,
@@ -37,6 +39,7 @@ class BrainResultStore:
                     rejection_reason = excluded.rejection_reason,
                     raw_result_json = excluded.raw_result_json,
                     metric_source = excluded.metric_source,
+                    quality_score = excluded.quality_score,
                     simulated_at = excluded.simulated_at,
                     created_at = excluded.created_at
                 """,
@@ -63,6 +66,7 @@ class BrainResultStore:
                     record.rejection_reason,
                     record.raw_result_json,
                     record.metric_source,
+                    _quality_score_for_record(record),
                     record.simulated_at,
                     record.created_at,
                 ),
@@ -295,3 +299,7 @@ class BrainResultStore:
         eligible = payload.get("submission_eligible")
         payload["submission_eligible"] = None if eligible is None else bool(eligible)
         return BrainResultRecord(**payload)
+
+
+def _quality_score_for_record(record: BrainResultRecord) -> float:
+    return MultiObjectiveQualityScorer.score_record(record)

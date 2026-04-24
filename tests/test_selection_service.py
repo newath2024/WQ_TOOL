@@ -9,6 +9,8 @@ from memory.pattern_memory import PatternMemorySnapshot
 from services.candidate_selection_service import CandidateSelectionService
 from services.models import CrowdingScore, DedupBatchResult, DedupDecision, SimulationResult
 from services.selection_service import SelectionService
+from storage.models import BrainResultRecord, SubmissionBatchRecord, SubmissionRecord
+from storage.repository import SQLiteRepository
 
 
 def test_pre_sim_score_prefers_lower_duplicate_and_crowding_risk() -> None:
@@ -59,6 +61,187 @@ def test_pre_sim_score_prefers_lower_duplicate_and_crowding_risk() -> None:
     assert scored[0].composite_score > scored[1].composite_score
 
 
+def test_pre_sim_score_applies_quality_polish_prior_without_bypassing_penalties() -> None:
+    service = SelectionService(config=SelectionConfig())
+    field_registry = _field_registry()
+    snapshot = PatternMemorySnapshot(regime_key="regime")
+    plain = _candidate("alpha-plain", "rank(ts_mean(close, 5))", field_name="close")
+    polish = replace(
+        _candidate("alpha-polish", "zscore(ts_mean(close, 5))", field_name="close"),
+        generation_mode="quality_polish",
+        generation_metadata={"quality_polish_prior": 0.10},
+    )
+
+    scored = service.score_pre_sim_candidates(
+        [plain, polish],
+        snapshot=snapshot,
+        field_registry=field_registry,
+        min_pattern_support=1,
+    )
+
+    assert scored[0].candidate.alpha_id == "alpha-polish"
+    assert scored[0].ranking_rationale["selection_breakdown"]["components"]["quality_polish_prior"] == 0.10
+    assert "quality_polish_candidate" in scored[0].reason_codes
+
+
+def test_pre_sim_score_applies_recipe_bucket_prior() -> None:
+    service = SelectionService(config=SelectionConfig())
+    field_registry = _field_registry()
+    snapshot = PatternMemorySnapshot(regime_key="regime")
+    plain = _candidate("alpha-plain", "rank(ts_mean(close, 5))", field_name="close")
+    recipe = replace(
+        _candidate("alpha-recipe", "rank(ts_mean(volume, 5))", field_name="volume"),
+        generation_mode="recipe_guided",
+        generation_metadata={
+            "recipe_bucket_prior": 0.096,
+            "search_bucket_id": "fundamental_quality|fundamental|balanced",
+        },
+    )
+
+    scored = service.score_pre_sim_candidates(
+        [plain, recipe],
+        snapshot=snapshot,
+        field_registry=field_registry,
+        min_pattern_support=1,
+    )
+
+    assert scored[0].candidate.alpha_id == "alpha-recipe"
+    assert scored[0].ranking_rationale["selection_breakdown"]["components"]["recipe_bucket_prior"] == 0.096
+    assert "recipe_guided_candidate" in scored[0].reason_codes
+
+
+def test_pre_sim_score_applies_family_proxy_penalty_from_recent_history() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        repository.upsert_run(
+            run_id="run-proxy",
+            seed=7,
+            config_path="config/dev.yaml",
+            config_snapshot="{}",
+            status="running",
+            started_at="2026-04-23T00:00:00+00:00",
+        )
+        repository.save_alpha_candidates(
+            "run-proxy",
+            [
+                _candidate(
+                    "hist-hot",
+                    "rank(ts_mean(close, 5))",
+                    field_name="close",
+                    metadata={"family_signature": "family-hot"},
+                )
+            ],
+        )
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-hist",
+                run_id="run-proxy",
+                round_index=1,
+                backend="api",
+                status="completed",
+                candidate_count=1,
+                sim_config_snapshot="{}",
+                export_path=None,
+                notes_json="{}",
+                created_at="2026-04-23T00:00:00+00:00",
+                updated_at="2026-04-23T00:00:10+00:00",
+            )
+        )
+        repository.submissions.upsert_submissions(
+            [
+                SubmissionRecord(
+                    job_id="job-hist",
+                    batch_id="batch-hist",
+                    run_id="run-proxy",
+                    round_index=1,
+                    candidate_id="hist-hot",
+                    expression="rank(ts_mean(close, 5))",
+                    backend="api",
+                    status="completed",
+                    sim_config_snapshot="{}",
+                    submitted_at="2026-04-23T00:00:00+00:00",
+                    updated_at="2026-04-23T00:00:10+00:00",
+                    completed_at="2026-04-23T00:00:10+00:00",
+                    export_path=None,
+                    raw_submission_json="{}",
+                    error_message=None,
+                )
+            ]
+        )
+        repository.brain_results.save_results(
+            [
+                BrainResultRecord(
+                    job_id="job-hist",
+                    run_id="run-proxy",
+                    round_index=1,
+                    batch_id="batch-hist",
+                    candidate_id="hist-hot",
+                    expression="rank(ts_mean(close, 5))",
+                    status="completed",
+                    region="USA",
+                    universe="TOP3000",
+                    delay=1,
+                    neutralization="SECTOR",
+                    decay=0,
+                    sharpe=-0.20,
+                    fitness=-0.10,
+                    turnover=0.80,
+                    drawdown=0.40,
+                    returns=-0.02,
+                    margin=0.01,
+                    submission_eligible=False,
+                    rejection_reason=None,
+                    raw_result_json="{}",
+                    metric_source="external_brain",
+                    simulated_at="2026-04-23T00:10:00+00:00",
+                    created_at="2026-04-23T00:10:00+00:00",
+                )
+            ]
+        )
+
+        service = SelectionService(
+            config=SelectionConfig(),
+            repository=repository,
+            family_proxy_lookback_rounds=12,
+            family_proxy_min_support=1,
+        )
+        field_registry = _field_registry()
+        snapshot = PatternMemorySnapshot(regime_key="regime")
+        hot = _candidate(
+            "alpha-hot",
+            "rank(ts_mean(close, 6))",
+            field_name="close",
+            metadata={
+                "family_signature": "family-hot",
+                "parent_refs": [{"family_signature": "family-hot"}],
+            },
+        )
+        clean = _candidate(
+            "alpha-clean",
+            "rank(ts_mean(volume, 6))",
+            field_name="volume",
+            metadata={"family_signature": "family-clean"},
+        )
+
+        scored = service.score_pre_sim_candidates(
+            [hot, clean],
+            snapshot=snapshot,
+            field_registry=field_registry,
+            min_pattern_support=1,
+            run_id="run-proxy",
+            round_index=2,
+        )
+    finally:
+        repository.close()
+
+    breakdowns = {
+        item.candidate.alpha_id: item.ranking_rationale["selection_breakdown"]["components"]
+        for item in scored
+    }
+    assert breakdowns["alpha-hot"]["family_correlation_proxy_penalty"] > breakdowns["alpha-clean"]["family_correlation_proxy_penalty"]
+    assert "family_proxy_penalty_applied" in next(item for item in scored if item.candidate.alpha_id == "alpha-hot").reason_codes
+
+
 def test_post_sim_score_orders_by_quality() -> None:
     service = SelectionService(config=SelectionConfig())
     candidates = {
@@ -70,9 +253,12 @@ def test_post_sim_score_orders_by_quality() -> None:
         _result("alpha-weak", fitness=0.2, sharpe=0.1, turnover=0.8, margin=0.02),
     ]
 
-    _, ordered = service.score_post_sim(results, candidates_by_id=candidates)
+    breakdowns, ordered = service.score_post_sim(results, candidates_by_id=candidates)
 
     assert list(ordered.keys())[0] == "alpha-good"
+    assert "multi_objective_quality_score" in breakdowns["alpha-good"].components
+    assert "performance_quality" in breakdowns["alpha-good"].components
+    assert breakdowns["alpha-good"].components["multi_objective_quality_score"] > breakdowns["alpha-weak"].components["multi_objective_quality_score"]
 
 
 def test_score_post_sim_uses_field_registry_for_category() -> None:
@@ -123,6 +309,8 @@ def test_mutation_parent_score_can_boost_learnable_branch() -> None:
 
     assert selected[0].candidate_id == "alpha-b"
     assert mutation_decisions[0].alpha_id == "alpha-b"
+    assert "multi_objective_quality_score" in mutation_decisions[0].breakdown.components
+    assert mutation_decisions[0].quality_score > 0.0
 
 
 def test_pre_screen_candidates_wrap_rejections_with_priority_reason() -> None:
@@ -196,6 +384,7 @@ def _candidate(
     *,
     field_name: str,
     lineage: str = "",
+    metadata: dict | None = None,
 ) -> AlphaCandidate:
     return AlphaCandidate(
         alpha_id=alpha_id,
@@ -212,6 +401,7 @@ def _candidate(
         generation_metadata={
             "field_families": ["price" if field_name == "close" else "volume"],
             "lineage_branch_key": lineage,
+            **dict(metadata or {}),
         },
     )
 

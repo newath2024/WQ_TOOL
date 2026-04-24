@@ -111,6 +111,7 @@ class SelectionDecision:
     rank: int | None
     reason_codes: tuple[str, ...] = ()
     breakdown: SelectionBreakdown | None = None
+    quality_score: float = 0.0
 
 
 @dataclass(slots=True, frozen=True)

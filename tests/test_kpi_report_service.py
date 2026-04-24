@@ -4,6 +4,7 @@ import json
 
 import pytest
 
+from generator.engine import AlphaCandidate
 from services.kpi_report_service import _fetch_alpha_outcomes, build_run_kpi_report, run_kpi_report_to_dict
 from storage.models import (
     BrainResultRecord,
@@ -136,6 +137,218 @@ def test_run_kpi_report_to_dict_includes_recent_vs_baseline_blocks() -> None:
         assert payload["delta_flags"]["raw_results"]["operations"] == "flat"
     finally:
         repository.close()
+
+
+def test_kpi_report_groups_recent_quality_by_generation_mode() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_kpi_report_run(repository)
+        repository.save_alpha_candidates(
+            "run-kpi",
+            [
+                AlphaCandidate(
+                    alpha_id="alpha-selected-3",
+                    expression="rank(volume)",
+                    normalized_expression="rank(volume)",
+                    generation_mode="quality_polish",
+                    parent_ids=(),
+                    complexity=2,
+                    created_at="2026-01-01T00:03:00+00:00",
+                    fields_used=("volume",),
+                    operators_used=("rank",),
+                    depth=2,
+                    generation_metadata={"mutation_mode": "quality_polish"},
+                )
+            ],
+        )
+        repository.save_stage_metrics(
+            [
+                StageMetricRecord(
+                    run_id="run-kpi",
+                    round_index=3,
+                    stage="generation",
+                    metrics_json=json.dumps(
+                        {
+                            "quality_polish_generated": 4,
+                            "quality_polish_selected": 1,
+                            "quality_polish_blocked_by_signature": 2,
+                            "quality_polish_blocked_by_recent_parent_transform": 3,
+                            "quality_polish_transform_cooldown_counts": {"wrap_zscore": 5},
+                        }
+                    ),
+                    created_at="2026-01-01T00:03:10+00:00",
+                )
+            ]
+        )
+
+        payload = run_kpi_report_to_dict(
+            build_run_kpi_report(
+                repository,
+                service_name="brain-service",
+                run_id="run-kpi",
+                recent_rounds=2,
+            )
+        )
+    finally:
+        repository.close()
+
+    polish = payload["recent"]["rounds"]["by_generation_mode"]["quality_polish"]
+    assert polish["completed_results"] == 1
+    assert polish["avg_fitness"] == pytest.approx(-0.2)
+    assert polish["generated_count"] == 4
+    assert polish["selected_for_simulation"] == 1
+    assert polish["selected_for_simulation_rate"] == pytest.approx(0.25)
+    assert polish["blocked_by_signature"] == 2
+    assert polish["blocked_by_recent_parent_transform"] == 3
+    assert polish["transform_cooldown_counts"] == {"wrap_zscore": 5}
+
+
+def test_kpi_report_includes_quality_family_leaders_and_laggards() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_kpi_report_run(repository)
+        repository.save_alpha_candidates(
+            "run-kpi",
+            [
+                AlphaCandidate(
+                    alpha_id="alpha-selected-2",
+                    expression="rank(close)",
+                    normalized_expression="rank(close)",
+                    generation_mode="fresh",
+                    parent_ids=(),
+                    complexity=2,
+                    created_at="2026-01-01T00:02:00+00:00",
+                    fields_used=("close",),
+                    operators_used=("rank",),
+                    depth=2,
+                    generation_metadata={"family_signature": "family-good"},
+                ),
+                AlphaCandidate(
+                    alpha_id="alpha-selected-3",
+                    expression="rank(volume)",
+                    normalized_expression="rank(volume)",
+                    generation_mode="quality_polish",
+                    parent_ids=(),
+                    complexity=2,
+                    created_at="2026-01-01T00:03:00+00:00",
+                    fields_used=("volume",),
+                    operators_used=("rank",),
+                    depth=2,
+                    generation_metadata={"family_signature": "family-bad"},
+                ),
+            ],
+        )
+
+        payload = run_kpi_report_to_dict(
+            build_run_kpi_report(
+                repository,
+                service_name="brain-service",
+                run_id="run-kpi",
+                recent_rounds=2,
+            )
+        )
+    finally:
+        repository.close()
+
+    assert payload["quality"]["avg_quality_score"] is not None
+    assert payload["recent"]["rounds"]["avg_quality_score"] is not None
+    assert payload["top_quality_families"][0]["family_signature"] == "family-good"
+    assert payload["top_quality_families"][0]["top_alpha_id"] == "alpha-selected-2"
+    assert payload["top_negative_families"][0]["family_signature"] == "family-bad"
+    assert payload["top_negative_families"][0]["generation_modes"] == {"quality_polish": 1}
+
+
+def test_kpi_report_includes_search_bucket_metrics_and_rankings() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_kpi_report_run(repository)
+        repository.save_alpha_candidates(
+            "run-kpi",
+            [
+                AlphaCandidate(
+                    alpha_id="alpha-selected-3",
+                    expression="rank(volume)",
+                    normalized_expression="rank(volume)",
+                    generation_mode="recipe_guided",
+                    parent_ids=(),
+                    complexity=2,
+                    created_at="2026-01-01T00:03:00+00:00",
+                    fields_used=("volume",),
+                    operators_used=("rank",),
+                    depth=2,
+                    generation_metadata={
+                        "search_bucket_id": "fundamental_quality|fundamental|balanced",
+                        "recipe_family": "fundamental_quality",
+                        "objective_profile": "balanced",
+                    },
+                )
+            ],
+        )
+        repository.save_stage_metrics(
+            [
+                StageMetricRecord(
+                    run_id="run-kpi",
+                    round_index=3,
+                    stage="generation",
+                    metrics_json=json.dumps(
+                        {
+                            "recipe_guided_generated": 4,
+                            "recipe_guided_selected": 1,
+                            "source_budget_allocations": {
+                                "quality_polish": 2,
+                                "recipe_guided": 4,
+                                "fresh": 6,
+                            },
+                            "source_yield_scores": {
+                                "quality_polish": 0.55,
+                                "recipe_guided": 0.75,
+                                "fresh": 0.50,
+                            },
+                            "recipe_guided_bucket_counts": {
+                                "fundamental_quality|fundamental|balanced": 4,
+                            },
+                            "recipe_guided_selected_by_bucket": {
+                                "fundamental_quality|fundamental|balanced": 1,
+                            },
+                            "recipe_bucket_budget_allocations": {
+                                "fundamental_quality|fundamental|balanced": 4,
+                            },
+                            "recipe_bucket_yield_scores": {
+                                "fundamental_quality|fundamental|balanced": 0.75,
+                            },
+                        }
+                    ),
+                    created_at="2026-01-01T00:03:15+00:00",
+                )
+            ]
+        )
+
+        payload = run_kpi_report_to_dict(
+            build_run_kpi_report(
+                repository,
+                service_name="brain-service",
+                run_id="run-kpi",
+                recent_rounds=2,
+            )
+        )
+    finally:
+        repository.close()
+
+    bucket = payload["recent"]["rounds"]["by_search_bucket"]["fundamental_quality|fundamental|balanced"]
+    assert bucket["generated_count"] == 4
+    assert bucket["budget_allocated"] == 4
+    assert bucket["yield_score"] == pytest.approx(0.75)
+    assert bucket["selected_for_simulation"] == 1
+    assert bucket["completed_count"] == 1
+    assert bucket["support"] == 1
+    assert payload["recent"]["rounds"]["source_budget_allocations"] == {
+        "quality_polish": 2,
+        "recipe_guided": 4,
+        "fresh": 6,
+    }
+    assert payload["recent"]["rounds"]["source_yield_scores"]["recipe_guided"] == pytest.approx(0.75)
+    assert payload["top_search_buckets"][0]["search_bucket_id"] == "fundamental_quality|fundamental|balanced"
+    assert payload["negative_search_buckets"][0]["search_bucket_id"] == "fundamental_quality|fundamental|balanced"
 
 
 def test_fetch_alpha_outcomes_chunks_large_id_sets_without_hitting_sqlite_variable_limit() -> None:

@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
-from core.config import BrainConfig, load_config
+from core.config import BrainConfig, RecipeGenerationConfig, load_config
 
 
 def test_grouped_evaluation_config_builds_submission_thresholds(tmp_path: Path) -> None:
@@ -147,6 +148,41 @@ def test_brain_config_code_defaults_include_weighted_simulation_profiles() -> No
     assert brain.simulation_profiles[0].weight == 0.6
     assert brain.simulation_profiles[1].universe == "TOP500"
     assert brain.simulation_profiles[1].weight == 0.4
+
+
+def test_recipe_generation_config_defaults_and_validation() -> None:
+    config = RecipeGenerationConfig()
+
+    assert config.recipe_budget_fraction == 0.20
+    assert config.max_recipe_candidates_per_round == 24
+    assert config.active_bucket_count == 4
+    assert config.dynamic_budget_enabled is True
+    assert config.dynamic_budget_min_generated_support == 20
+    assert config.dynamic_budget_min_completed_support == 5
+    assert config.source_exploration_floor_fractions == {
+        "quality_polish": 0.10,
+        "recipe_guided": 0.10,
+        "fresh": 0.30,
+    }
+    assert config.source_reallocation_strength == 0.50
+    assert config.bucket_exploration_floor == 1
+    assert config.bucket_reallocation_strength == 0.60
+    assert config.enabled_recipe_families == [
+        "fundamental_quality",
+        "accrual_vs_cashflow",
+        "value_vs_growth",
+        "revision_surprise",
+    ]
+    assert config.objective_profiles == ["balanced", "quality", "low_turnover"]
+
+    with pytest.raises(ValueError):
+        RecipeGenerationConfig(recipe_budget_fraction=1.5)
+    with pytest.raises(ValueError):
+        RecipeGenerationConfig(active_bucket_count=0)
+    with pytest.raises(ValueError):
+        RecipeGenerationConfig(source_reallocation_strength=1.5)
+    with pytest.raises(ValueError):
+        RecipeGenerationConfig(enabled_recipe_families=[])
 
 
 def test_region_learning_config_loads_and_legacy_yaml_keeps_defaults(tmp_path: Path) -> None:
@@ -364,6 +400,33 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert penalty.penalty_strength == 1.0
     assert penalty.min_multiplier == 0.10
     assert penalty.sample_limit == 10
+    quality = config.adaptive_generation.quality_optimization
+    assert quality.enabled is True
+    assert quality.lookback_completed_results == 800
+    assert quality.polish_budget_fraction == 0.35
+    assert quality.max_polish_candidates_per_round == 64
+    assert quality.max_polish_parents_per_round == 8
+    assert quality.variants_per_parent == 8
+    assert quality.min_parent_fitness == 0.02
+    assert quality.min_parent_sharpe == 0.03
+    assert quality.max_parent_turnover == 1.00
+    assert quality.max_parent_drawdown == 0.75
+    assert quality.min_completed_parent_count == 5
+    assert quality.selection_prior_weight == 0.10
+    assert quality.enabled_transforms == ["wrap_rank", "wrap_zscore", "window_perturb"]
+    assert quality.primary_transform == "wrap_rank"
+    assert quality.max_variants_per_parent_by_transform == {
+        "wrap_rank": 1,
+        "wrap_zscore": 1,
+        "window_perturb": 4,
+    }
+    assert quality.parent_transform_recent_rounds == 2
+    assert quality.max_parent_transform_uses_per_recent_window == 1
+    assert quality.transform_score_lookback_rounds == 4
+    assert quality.transform_cooldown_min_attempts == 3
+    assert quality.transform_cooldown_success_rate_floor == 0.20
+    assert quality.window_perturb_neighbor_count == 4
+    assert "smooth_ts_mean" in quality.disabled_transforms
 
 
 def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_path: Path) -> None:
@@ -417,6 +480,16 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.adaptive_generation.min_candidates_before_early_exit == 5
     assert config.adaptive_generation.local_validation_field_penalty.enabled is True
     assert config.adaptive_generation.local_validation_field_penalty.lookback_rounds == 20
+    assert config.adaptive_generation.quality_optimization.enabled is True
+    assert config.adaptive_generation.quality_optimization.polish_budget_fraction == 0.35
+    assert config.adaptive_generation.quality_optimization.enabled_transforms == [
+        "wrap_rank",
+        "wrap_zscore",
+        "window_perturb",
+    ]
+    assert config.adaptive_generation.quality_optimization.max_variants_per_parent_by_transform["window_perturb"] == 4
+    assert config.adaptive_generation.quality_optimization.parent_transform_recent_rounds == 2
+    assert config.adaptive_generation.quality_optimization.window_perturb_neighbor_count == 4
     assert config.service.research_context_cache_enabled is True
     assert config.service.research_context_cache_ttl_seconds == 0
     assert config.runtime.progress_log_enabled is True
