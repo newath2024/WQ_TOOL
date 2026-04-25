@@ -398,6 +398,49 @@ class SQLiteRepository:
             "usage_rows": usage_rows,
         }
 
+    def list_recent_recipe_guided_usage_rows(
+        self,
+        *,
+        run_id: str,
+        before_round_index: int,
+        lookback_rounds: int,
+    ) -> list[dict[str, Any]]:
+        if lookback_rounds <= 0:
+            return []
+        rows = self.connection.execute(
+            """
+            SELECT alpha_id, normalized_expression, fields_used_json, generation_metadata, created_at
+            FROM alphas
+            WHERE run_id = ?
+              AND generation_mode = 'recipe_guided'
+            ORDER BY created_at DESC, alpha_id DESC
+            """,
+            (run_id,),
+        ).fetchall()
+        min_round_index = max(0, int(before_round_index) - int(lookback_rounds))
+        usage_rows: list[dict[str, Any]] = []
+        for row in rows:
+            try:
+                metadata = json.loads(row["generation_metadata"] or "{}")
+            except json.JSONDecodeError:
+                metadata = {}
+            round_index = _optional_int(metadata.get("recipe_round_index"))
+            if round_index is None:
+                continue
+            if round_index < min_round_index or round_index >= int(before_round_index):
+                continue
+            usage_rows.append(
+                {
+                    "alpha_id": str(row["alpha_id"] or "").strip(),
+                    "normalized_expression": str(row["normalized_expression"] or "").strip(),
+                    "fields_used_json": str(row["fields_used_json"] or "[]"),
+                    "generation_metadata": metadata,
+                    "recipe_round_index": round_index,
+                    "created_at": str(row["created_at"] or ""),
+                }
+            )
+        return usage_rows
+
     def get_latest_brain_quality_score(self, run_id: str, alpha_id: str) -> float | None:
         row = self.connection.execute(
             """

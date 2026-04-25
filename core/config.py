@@ -356,13 +356,19 @@ class RecipeGenerationConfig:
     max_recipe_candidates_per_round: int = 24
     active_bucket_count: int = 4
     max_candidates_per_bucket: int = 6
+    max_field_candidates_per_side: int = 8
+    max_pair_candidates_per_bucket: int = 12
+    max_drafts_per_bucket: int = 64
+    duplicate_retry_multiplier: int = 4
+    enable_field_rotation: bool = True
+    field_rotation_lookback_rounds: int = 12
     yield_lookback_rounds: int = 12
     lookback_completed_results: int = 800
     selection_prior_weight: float = 0.08
     min_bucket_support_for_penalty: int = 5
     dynamic_budget_enabled: bool = True
-    dynamic_budget_min_generated_support: int = 20
-    dynamic_budget_min_completed_support: int = 5
+    dynamic_budget_min_generated_support: int = 10
+    dynamic_budget_min_completed_support: int = 3
     source_exploration_floor_fractions: dict[str, float] = field(
         default_factory=lambda: {
             "quality_polish": 0.10,
@@ -370,9 +376,17 @@ class RecipeGenerationConfig:
             "fresh": 0.30,
         }
     )
-    source_reallocation_strength: float = 0.50
+    source_reallocation_strength: float = 0.65
     bucket_exploration_floor: int = 1
-    bucket_reallocation_strength: float = 0.60
+    bucket_reallocation_strength: float = 0.75
+    bucket_biases: dict[str, float] = field(
+        default_factory=lambda: {
+            "revision_surprise|fundamental|balanced": 1.35,
+            "revision_surprise|fundamental|quality": 1.25,
+            "fundamental_quality|fundamental|balanced": 1.15,
+            "fundamental_quality|fundamental|quality": 0.70,
+        }
+    )
     enabled_recipe_families: list[str] = field(
         default_factory=lambda: [
             "fundamental_quality",
@@ -396,6 +410,16 @@ class RecipeGenerationConfig:
             raise ValueError("adaptive_generation.recipe_generation.active_bucket_count must be > 0")
         if self.max_candidates_per_bucket <= 0:
             raise ValueError("adaptive_generation.recipe_generation.max_candidates_per_bucket must be > 0")
+        if self.max_field_candidates_per_side <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.max_field_candidates_per_side must be > 0")
+        if self.max_pair_candidates_per_bucket <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.max_pair_candidates_per_bucket must be > 0")
+        if self.max_drafts_per_bucket <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.max_drafts_per_bucket must be > 0")
+        if self.duplicate_retry_multiplier <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.duplicate_retry_multiplier must be > 0")
+        if self.field_rotation_lookback_rounds <= 0:
+            raise ValueError("adaptive_generation.recipe_generation.field_rotation_lookback_rounds must be > 0")
         if self.yield_lookback_rounds <= 0:
             raise ValueError("adaptive_generation.recipe_generation.yield_lookback_rounds must be > 0")
         if self.lookback_completed_results <= 0:
@@ -434,6 +458,16 @@ class RecipeGenerationConfig:
                 )
             normalized_floor_fractions[normalized_key] = normalized_value
         self.source_exploration_floor_fractions = normalized_floor_fractions
+        normalized_bucket_biases: dict[str, float] = {}
+        for key, value in dict(self.bucket_biases or {}).items():
+            normalized_key = str(key).strip()
+            if not normalized_key:
+                continue
+            normalized_value = float(value)
+            if normalized_value <= 0.0:
+                raise ValueError("adaptive_generation.recipe_generation.bucket_biases values must be > 0")
+            normalized_bucket_biases[normalized_key] = normalized_value
+        self.bucket_biases = normalized_bucket_biases
         self.enabled_recipe_families = [
             str(item).strip()
             for item in (self.enabled_recipe_families or [])

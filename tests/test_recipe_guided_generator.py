@@ -413,19 +413,199 @@ def test_recipe_guided_generator_applies_dynamic_bucket_budget_with_floor() -> N
     assert result.stats.yield_scores["fundamental_quality|fundamental|balanced"] > result.stats.yield_scores["accrual_vs_cashflow|fundamental|balanced"]
 
 
+def test_recipe_guided_generator_retries_alternate_fields_when_top_drafts_duplicate() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, "run-recipe")
+        generation_config = replace(
+            load_config("config/dev.yaml").generation,
+            allowed_fields=[
+                "gross_margin",
+                "operating_cash_flow",
+                "free_cash_flow",
+                "eps_revision",
+            ],
+        )
+        recipe_config = RecipeGenerationConfig(
+            enabled_recipe_families=["fundamental_quality"],
+            objective_profiles=["balanced"],
+            active_bucket_count=1,
+            max_recipe_candidates_per_round=3,
+            max_candidates_per_bucket=3,
+            max_field_candidates_per_side=4,
+            duplicate_retry_multiplier=4,
+            enable_field_rotation=False,
+        )
+
+        result = RecipeGuidedGenerator(repository).generate(
+            config=recipe_config,
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(region="USA", regime_key="local", global_regime_key="global"),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized={
+                "rank(operating_cash_flow)",
+                "rank(ts_mean(operating_cash_flow,2))",
+                "zscore(ts_mean(operating_cash_flow,2))",
+            },
+            run_id="run-recipe",
+            round_index=0,
+            count=3,
+        )
+    finally:
+        repository.close()
+
+    assert result.candidates
+    assert result.stats.duplicate_retry_count > 0
+    assert result.stats.unique_draft_count > len(result.candidates)
+    assert all(candidate.normalized_expression not in {"rank(operating_cash_flow)"} for candidate in result.candidates)
+
+
+def test_recipe_guided_generator_tries_multiple_pairs_after_duplicate_top_pair() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, "run-recipe")
+        generation_config = replace(
+            load_config("config/dev.yaml").generation,
+            allowed_fields=[
+                "cash_top",
+                "cash_alt",
+                "accrual_top",
+                "accrual_alt",
+            ],
+        )
+        recipe_config = RecipeGenerationConfig(
+            enabled_recipe_families=["accrual_vs_cashflow"],
+            objective_profiles=["balanced"],
+            active_bucket_count=1,
+            max_recipe_candidates_per_round=3,
+            max_candidates_per_bucket=3,
+            max_field_candidates_per_side=4,
+            max_pair_candidates_per_bucket=4,
+            duplicate_retry_multiplier=4,
+            enable_field_rotation=False,
+        )
+
+        result = RecipeGuidedGenerator(repository).generate(
+            config=recipe_config,
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_pair_field_registry(),
+            region_learning_context=RegionLearningContext(region="USA", regime_key="local", global_regime_key="global"),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized={
+                "(rank(cash_top)-rank(accrual_top))",
+                "(rank(ts_mean(cash_top,2))-rank(ts_mean(accrual_top,2)))",
+                "(rank(ts_mean(cash_top,3))-rank(ts_mean(accrual_top,3)))",
+            },
+            run_id="run-recipe",
+            round_index=0,
+            count=3,
+        )
+    finally:
+        repository.close()
+
+    assert result.candidates
+    assert result.stats.duplicate_retry_count > 0
+    assert any(pair_key != "cash_top:accrual_top" for pair_key in result.stats.pair_usage_counts)
+
+
+def test_recipe_guided_field_rotation_changes_first_draft_field() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, "run-recipe")
+        generation_config = replace(
+            load_config("config/dev.yaml").generation,
+            allowed_fields=["gross_margin", "operating_cash_flow", "free_cash_flow"],
+        )
+        recipe_config = RecipeGenerationConfig(
+            enabled_recipe_families=["fundamental_quality"],
+            objective_profiles=["balanced"],
+            active_bucket_count=1,
+            max_recipe_candidates_per_round=1,
+            max_candidates_per_bucket=1,
+            max_field_candidates_per_side=3,
+            enable_field_rotation=True,
+        )
+        common_kwargs = {
+            "config": recipe_config,
+            "adaptive_config": AdaptiveGenerationConfig(),
+            "generation_config": generation_config,
+            "registry": build_registry(generation_config.allowed_operators),
+            "field_registry": _field_registry(),
+            "region_learning_context": RegionLearningContext(region="USA", regime_key="local", global_regime_key="global"),
+            "generation_guardrails": GenerationGuardrails(),
+            "field_penalty_multipliers": {},
+            "blocked_fields": set(),
+            "existing_normalized": set(),
+            "run_id": "run-recipe",
+            "count": 1,
+        }
+
+        round_0 = RecipeGuidedGenerator(repository).generate(round_index=0, **common_kwargs)
+        round_1 = RecipeGuidedGenerator(repository).generate(round_index=1, **common_kwargs)
+    finally:
+        repository.close()
+
+    assert round_0.candidates
+    assert round_1.candidates
+    assert round_0.candidates[0].fields_used != round_1.candidates[0].fields_used
+
+
 def _field_registry() -> FieldRegistry:
     return FieldRegistry(
         fields={
             "gross_margin": _field_spec("gross_margin", category="fundamental", description="profitability margin quality"),
             "operating_cash_flow": _field_spec("operating_cash_flow", category="fundamental", description="cash cfo fcf"),
+            "free_cash_flow": _field_spec("free_cash_flow", category="fundamental", description="cash free_cash_flow fcf"),
             "accrual_ratio": _field_spec("accrual_ratio", category="fundamental", description="accrual reserve inventory"),
+            "receivable_accrual": _field_spec("receivable_accrual", category="fundamental", description="accrual receivable reserve"),
             "book_value_yield": _field_spec("book_value_yield", category="fundamental", description="book value earnings_yield"),
+            "sales_growth": _field_spec("sales_growth", category="fundamental", description="growth forecast expected"),
             "eps_revision": _field_spec("eps_revision", category="analyst", description="estimate revision analyst forecast surprise"),
         }
     )
 
 
-def _field_spec(name: str, *, category: str, description: str) -> FieldSpec:
+def _pair_field_registry() -> FieldRegistry:
+    return FieldRegistry(
+        fields={
+            "cash_top": _field_spec(
+                "cash_top",
+                category="fundamental",
+                description="cash cfo fcf operating_cash",
+                field_score=3.0,
+            ),
+            "cash_alt": _field_spec(
+                "cash_alt",
+                category="fundamental",
+                description="cash cfo fcf operating_cash",
+                field_score=2.0,
+            ),
+            "accrual_top": _field_spec(
+                "accrual_top",
+                category="fundamental",
+                description="accrual receivable working_capital inventory",
+                field_score=3.0,
+            ),
+            "accrual_alt": _field_spec(
+                "accrual_alt",
+                category="fundamental",
+                description="accrual receivable working_capital inventory",
+                field_score=2.0,
+            ),
+        }
+    )
+
+
+def _field_spec(name: str, *, category: str, description: str, field_score: float = 1.0) -> FieldSpec:
     return FieldSpec(
         name=name,
         dataset="catalog",
@@ -436,7 +616,7 @@ def _field_spec(name: str, *, category: str, description: str) -> FieldSpec:
         runtime_available=True,
         description=description,
         category_weight=1.0,
-        field_score=1.0,
+        field_score=field_score,
     )
 
 
