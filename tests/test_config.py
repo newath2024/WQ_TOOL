@@ -156,17 +156,25 @@ def test_recipe_generation_config_defaults_and_validation() -> None:
     assert config.recipe_budget_fraction == 0.20
     assert config.max_recipe_candidates_per_round == 24
     assert config.active_bucket_count == 4
+    assert config.max_field_candidates_per_side == 8
+    assert config.max_pair_candidates_per_bucket == 12
+    assert config.max_drafts_per_bucket == 64
+    assert config.duplicate_retry_multiplier == 4
+    assert config.enable_field_rotation is True
+    assert config.field_rotation_lookback_rounds == 12
     assert config.dynamic_budget_enabled is True
-    assert config.dynamic_budget_min_generated_support == 20
-    assert config.dynamic_budget_min_completed_support == 5
+    assert config.dynamic_budget_min_generated_support == 10
+    assert config.dynamic_budget_min_completed_support == 3
     assert config.source_exploration_floor_fractions == {
         "quality_polish": 0.10,
         "recipe_guided": 0.10,
         "fresh": 0.30,
     }
-    assert config.source_reallocation_strength == 0.50
+    assert config.source_reallocation_strength == 0.65
     assert config.bucket_exploration_floor == 1
-    assert config.bucket_reallocation_strength == 0.60
+    assert config.bucket_reallocation_strength == 0.75
+    assert config.bucket_biases["revision_surprise|fundamental|balanced"] == 1.35
+    assert config.bucket_biases["fundamental_quality|fundamental|quality"] == 0.70
     assert config.enabled_recipe_families == [
         "fundamental_quality",
         "accrual_vs_cashflow",
@@ -181,6 +189,10 @@ def test_recipe_generation_config_defaults_and_validation() -> None:
         RecipeGenerationConfig(active_bucket_count=0)
     with pytest.raises(ValueError):
         RecipeGenerationConfig(source_reallocation_strength=1.5)
+    with pytest.raises(ValueError):
+        RecipeGenerationConfig(max_pair_candidates_per_bucket=0)
+    with pytest.raises(ValueError):
+        RecipeGenerationConfig(bucket_biases={"x": 0.0})
     with pytest.raises(ValueError):
         RecipeGenerationConfig(enabled_recipe_families=[])
 

@@ -174,20 +174,31 @@ adaptive_generation:
     max_recipe_candidates_per_round: 24
     active_bucket_count: 4
     max_candidates_per_bucket: 6
+    max_field_candidates_per_side: 8
+    max_pair_candidates_per_bucket: 12
+    max_drafts_per_bucket: 64
+    duplicate_retry_multiplier: 4
+    enable_field_rotation: true
+    field_rotation_lookback_rounds: 12
     yield_lookback_rounds: 12
     lookback_completed_results: 800
     selection_prior_weight: 0.08
     min_bucket_support_for_penalty: 5
     dynamic_budget_enabled: true
-    dynamic_budget_min_generated_support: 20
-    dynamic_budget_min_completed_support: 5
+    dynamic_budget_min_generated_support: 10
+    dynamic_budget_min_completed_support: 3
     source_exploration_floor_fractions:
       quality_polish: 0.10
       recipe_guided: 0.10
       fresh: 0.30
-    source_reallocation_strength: 0.50
+    source_reallocation_strength: 0.65
     bucket_exploration_floor: 1
-    bucket_reallocation_strength: 0.60
+    bucket_reallocation_strength: 0.75
+    bucket_biases:
+      "revision_surprise|fundamental|balanced": 1.35
+      "revision_surprise|fundamental|quality": 1.25
+      "fundamental_quality|fundamental|balanced": 1.15
+      "fundamental_quality|fundamental|quality": 0.70
     enabled_recipe_families:
       - fundamental_quality
       - accrual_vs_cashflow

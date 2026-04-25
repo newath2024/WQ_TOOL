@@ -104,6 +104,15 @@ class RecipeGuidedStats:
     budget_allocations: dict[str, int] = field(default_factory=dict)
     yield_scores: dict[str, float] = field(default_factory=dict)
     floor_hits: Counter[str] = field(default_factory=Counter)
+    duplicate_retry_count: int = 0
+    duplicate_retry_counts_by_bucket: Counter[str] = field(default_factory=Counter)
+    exhausted_bucket_counts: Counter[str] = field(default_factory=Counter)
+    unique_draft_count: int = 0
+    unique_draft_counts_by_bucket: Counter[str] = field(default_factory=Counter)
+    field_usage_counts: Counter[str] = field(default_factory=Counter)
+    pair_usage_counts: Counter[str] = field(default_factory=Counter)
+    bucket_biases: dict[str, float] = field(default_factory=dict)
+    spilled_to_fresh: int = 0
     generation_total_ms: float = 0.0
 
     def record_failure(self, reason: str | None) -> None:
@@ -127,6 +136,15 @@ class RecipeGuidedStats:
             "recipe_bucket_budget_allocations": dict(self.budget_allocations),
             "recipe_bucket_yield_scores": dict(self.yield_scores),
             "recipe_bucket_floor_hits": dict(self.floor_hits),
+            "recipe_guided_duplicate_retry_count": int(self.duplicate_retry_count),
+            "recipe_guided_duplicate_retry_counts_by_bucket": dict(self.duplicate_retry_counts_by_bucket),
+            "recipe_guided_exhausted_bucket_counts": dict(self.exhausted_bucket_counts),
+            "recipe_guided_unique_draft_count": int(self.unique_draft_count),
+            "recipe_guided_unique_draft_counts_by_bucket": dict(self.unique_draft_counts_by_bucket),
+            "recipe_guided_field_usage_counts": dict(self.field_usage_counts),
+            "recipe_guided_pair_usage_counts": dict(self.pair_usage_counts),
+            "recipe_guided_bucket_biases": dict(self.bucket_biases),
+            "recipe_guided_spilled_to_fresh": int(self.spilled_to_fresh),
             "recipe_guided_generation_total_ms": round(self.generation_total_ms, 3),
         }
 
@@ -156,6 +174,8 @@ class _RecipeParent:
 class _RecipeDraft:
     expression: str
     recipe_variant: str
+    fields: tuple[str, ...] = ()
+    pair_key: str = ""
 
 
 class RecipeGuidedGenerator:
@@ -218,6 +238,11 @@ class RecipeGuidedGenerator:
             config=config,
             active_buckets=active_buckets,
         )
+        recent_usage = self._load_recent_recipe_usage(
+            run_id=run_id,
+            before_round_index=round_index,
+            config=config,
+        )
         existing = set(existing_normalized)
         candidates: list[AlphaCandidate] = []
         planned_targets = self._planned_bucket_targets(
@@ -233,6 +258,10 @@ class RecipeGuidedGenerator:
         }
         stats.yield_scores = {
             bucket.search_bucket_id: float(bucket_yield_scores.get(bucket.search_bucket_id, _neutral_yield_score()))
+            for bucket in active_buckets
+        }
+        stats.bucket_biases = {
+            bucket.search_bucket_id: float(_bucket_bias(config=config, bucket_id=bucket.search_bucket_id))
             for bucket in active_buckets
         }
         if bool(config.dynamic_budget_enabled):
@@ -261,6 +290,8 @@ class RecipeGuidedGenerator:
                 field_registry=field_registry,
                 blocked_fields=blocked_fields,
                 field_penalty_multipliers=field_penalty_multipliers or {},
+                recent_field_usage_counts=recent_usage["field_counts"],
+                recent_pair_usage_counts=recent_usage["pair_counts"],
                 parents=parents,
                 generation_config=generation_config,
                 engine=engine,
@@ -275,6 +306,7 @@ class RecipeGuidedGenerator:
             produced = len(candidates) - before_bucket
             spill = max(0, bucket_target - produced)
 
+        stats.spilled_to_fresh = max(0, target_count - len(candidates))
         stats.generation_total_ms = (time.perf_counter() - started) * 1000.0
         return RecipeGuidedResult(candidates=candidates, stats=stats)
 
@@ -390,6 +422,35 @@ class RecipeGuidedGenerator:
             priors[bucket.search_bucket_id] = float(config.selection_prior_weight) * multiplier
         return priors
 
+    def _load_recent_recipe_usage(
+        self,
+        *,
+        run_id: str,
+        before_round_index: int,
+        config: RecipeGenerationConfig,
+    ) -> dict[str, Counter[str]]:
+        if not bool(config.enable_field_rotation):
+            return {"field_counts": Counter(), "pair_counts": Counter()}
+        rows = self.repository.list_recent_recipe_guided_usage_rows(
+            run_id=run_id,
+            before_round_index=int(before_round_index),
+            lookback_rounds=int(config.field_rotation_lookback_rounds),
+        )
+        field_counts: Counter[str] = Counter()
+        pair_counts: Counter[str] = Counter()
+        for row in rows:
+            metadata = _decode_json_object(row.get("generation_metadata"))
+            metadata_fields = metadata.get("recipe_field_names")
+            if isinstance(metadata_fields, list):
+                fields = [str(field).strip() for field in metadata_fields if str(field).strip()]
+            else:
+                fields = _decode_json_list(row.get("fields_used_json"))
+            field_counts.update(fields)
+            pair_key = str(metadata.get("recipe_pair_key") or "").strip()
+            if pair_key:
+                pair_counts[pair_key] += 1
+        return {"field_counts": field_counts, "pair_counts": pair_counts}
+
     def _load_bucket_yield_scores(
         self,
         *,
@@ -452,7 +513,11 @@ class RecipeGuidedGenerator:
                 generated_support < int(config.dynamic_budget_min_generated_support)
                 or completed_support < int(config.dynamic_budget_min_completed_support)
             ):
-                scores[bucket_id] = _neutral_yield_score()
+                scores[bucket_id] = _apply_bucket_bias(
+                    score=_neutral_yield_score(),
+                    config=config,
+                    bucket_id=bucket_id,
+                )
                 continue
             selected_rate = float(selected_by_bucket.get(bucket_id, 0)) / max(1, generated_support)
             positive_quality_rate = float(positive_quality_counts.get(bucket_id, 0)) / max(1, completed_support)
@@ -465,6 +530,11 @@ class RecipeGuidedGenerator:
             scores[bucket_id] = _adjusted_yield_score(
                 raw_score=raw_score,
                 strength=float(config.bucket_reallocation_strength),
+            )
+            scores[bucket_id] = _apply_bucket_bias(
+                score=scores[bucket_id],
+                config=config,
+                bucket_id=bucket_id,
             )
         return scores
 
@@ -518,6 +588,8 @@ class RecipeGuidedGenerator:
         field_registry: FieldRegistry,
         blocked_fields: set[str],
         field_penalty_multipliers: dict[str, float],
+        recent_field_usage_counts: Counter[str],
+        recent_pair_usage_counts: Counter[str],
         parents: list[_RecipeParent],
         generation_config: GenerationConfig,
         engine: AlphaGenerationEngine,
@@ -542,9 +614,16 @@ class RecipeGuidedGenerator:
             field_pool=field_pool,
             field_penalty_multipliers=field_penalty_multipliers,
             parent_fields=parent_fields,
+            recent_field_usage_counts=recent_field_usage_counts,
+            recent_pair_usage_counts=recent_pair_usage_counts,
+            round_index=round_index,
+            config=config,
             registry=registry,
             generation_config=generation_config,
         )
+        drafts = list(draft_bundle["drafts"])
+        stats.unique_draft_count += len(drafts)
+        stats.unique_draft_counts_by_bucket[bucket.search_bucket_id] += len(drafts)
         parent_used = bool(parent is not None and draft_bundle["parent_used"])
         parent_refs = []
         parent_ids: tuple[str, ...] = ()
@@ -562,7 +641,11 @@ class RecipeGuidedGenerator:
             recipe_parent_alpha_id = parent.candidate.alpha_id
 
         candidates: list[AlphaCandidate] = []
-        for draft in draft_bundle["drafts"]:
+        max_attempts = min(
+            len(drafts),
+            max(int(bucket_target), int(bucket_target) * int(config.duplicate_retry_multiplier)),
+        )
+        for draft in drafts[:max_attempts]:
             if len(candidates) >= bucket_target:
                 break
             stats.attempt_count += 1
@@ -577,6 +660,9 @@ class RecipeGuidedGenerator:
                 "dataset_family": "fundamental",
                 "objective_profile": bucket.objective_profile,
                 "recipe_variant": draft.recipe_variant,
+                "recipe_round_index": int(round_index),
+                "recipe_field_names": list(draft.fields),
+                "recipe_pair_key": draft.pair_key,
                 "recipe_parent_alpha_id": recipe_parent_alpha_id,
                 "recipe_prior": float(bucket_prior),
                 "recipe_bucket_prior": float(bucket_prior),
@@ -598,6 +684,8 @@ class RecipeGuidedGenerator:
                 continue
             if candidate.normalized_expression in existing_normalized:
                 stats.record_failure("duplicate_normalized_expression")
+                stats.duplicate_retry_count += 1
+                stats.duplicate_retry_counts_by_bucket[bucket.search_bucket_id] += 1
                 continue
             existing_normalized.add(candidate.normalized_expression)
             candidates.append(candidate)
@@ -605,10 +693,15 @@ class RecipeGuidedGenerator:
             stats.success_count += 1
             stats.bucket_counts[bucket.search_bucket_id] += 1
             stats.template_counts[bucket.template_name] += 1
+            stats.field_usage_counts.update(draft.fields)
+            if draft.pair_key:
+                stats.pair_usage_counts[draft.pair_key] += 1
             if parent_used:
                 stats.parented_count += 1
             else:
                 stats.parentless_count += 1
+        if len(candidates) < bucket_target:
+            stats.exhausted_bucket_counts[bucket.search_bucket_id] += 1
         return candidates
 
     def _select_parent_for_bucket(
@@ -658,6 +751,10 @@ class RecipeGuidedGenerator:
         field_pool: list[FieldSpec],
         field_penalty_multipliers: dict[str, float],
         parent_fields: set[str],
+        recent_field_usage_counts: Counter[str],
+        recent_pair_usage_counts: Counter[str],
+        round_index: int,
+        config: RecipeGenerationConfig,
         registry: OperatorRegistry,
         generation_config: GenerationConfig,
     ) -> dict[str, Any]:
@@ -667,6 +764,9 @@ class RecipeGuidedGenerator:
                 field_pool=field_pool,
                 field_penalty_multipliers=field_penalty_multipliers,
                 parent_fields=parent_fields,
+                recent_field_usage_counts=recent_field_usage_counts,
+                round_index=round_index,
+                config=config,
                 registry=registry,
                 generation_config=generation_config,
             )
@@ -679,6 +779,10 @@ class RecipeGuidedGenerator:
                 field_pool=field_pool,
                 field_penalty_multipliers=field_penalty_multipliers,
                 parent_fields=parent_fields,
+                recent_field_usage_counts=recent_field_usage_counts,
+                recent_pair_usage_counts=recent_pair_usage_counts,
+                round_index=round_index,
+                config=config,
                 registry=registry,
                 generation_config=generation_config,
             )
@@ -691,6 +795,10 @@ class RecipeGuidedGenerator:
                 field_pool=field_pool,
                 field_penalty_multipliers=field_penalty_multipliers,
                 parent_fields=parent_fields,
+                recent_field_usage_counts=recent_field_usage_counts,
+                recent_pair_usage_counts=recent_pair_usage_counts,
+                round_index=round_index,
+                config=config,
                 registry=registry,
                 generation_config=generation_config,
             )
@@ -699,6 +807,9 @@ class RecipeGuidedGenerator:
             field_pool=field_pool,
             field_penalty_multipliers=field_penalty_multipliers,
             parent_fields=parent_fields,
+            recent_field_usage_counts=recent_field_usage_counts,
+            round_index=round_index,
+            config=config,
             registry=registry,
             generation_config=generation_config,
         )
@@ -710,6 +821,9 @@ class RecipeGuidedGenerator:
         field_pool: list[FieldSpec],
         field_penalty_multipliers: dict[str, float],
         parent_fields: set[str],
+        recent_field_usage_counts: Counter[str],
+        round_index: int,
+        config: RecipeGenerationConfig,
         registry: OperatorRegistry,
         generation_config: GenerationConfig,
     ) -> dict[str, Any]:
@@ -719,17 +833,24 @@ class RecipeGuidedGenerator:
             side="primary",
             field_penalty_multipliers=field_penalty_multipliers,
             parent_fields=parent_fields,
+            recent_field_usage_counts=recent_field_usage_counts,
+        )
+        ordered_fields = _rotated_top_fields(
+            ordered_fields,
+            limit=int(config.max_field_candidates_per_side),
+            round_index=round_index if bool(config.enable_field_rotation) else 0,
         )
         lookbacks = _ordered_lookbacks(generation_config.lookbacks, objective_profile)
         drafts: list[_RecipeDraft] = []
-        parent_used = any(spec.name in parent_fields for spec in ordered_fields[:2])
-        for field in ordered_fields[:2]:
+        parent_used = any(spec.name in parent_fields for spec in ordered_fields)
+        for field in ordered_fields:
             if objective_profile in {"quality", "low_turnover"} and registry.contains("ts_mean"):
                 for lookback in lookbacks[:2]:
                     drafts.append(
                         _RecipeDraft(
                             expression=f"rank(ts_mean({field.name},{lookback}))",
                             recipe_variant="rank_ts_mean",
+                            fields=(field.name,),
                         )
                     )
                     if objective_profile != "low_turnover" and registry.contains("zscore"):
@@ -737,16 +858,24 @@ class RecipeGuidedGenerator:
                             _RecipeDraft(
                                 expression=f"zscore(ts_mean({field.name},{lookback}))",
                                 recipe_variant="zscore_ts_mean",
+                                fields=(field.name,),
                             )
                         )
             if objective_profile != "low_turnover":
-                drafts.append(_RecipeDraft(expression=f"rank({field.name})", recipe_variant="rank_raw"))
+                drafts.append(
+                    _RecipeDraft(
+                        expression=f"rank({field.name})",
+                        recipe_variant="rank_raw",
+                        fields=(field.name,),
+                    )
+                )
                 if objective_profile == "balanced" and registry.contains("ts_mean"):
                     for lookback in lookbacks[:1]:
                         drafts.append(
                             _RecipeDraft(
                                 expression=f"rank(ts_mean({field.name},{lookback}))",
                                 recipe_variant="rank_ts_mean",
+                                fields=(field.name,),
                             )
                         )
                         if registry.contains("zscore"):
@@ -754,9 +883,13 @@ class RecipeGuidedGenerator:
                                 _RecipeDraft(
                                     expression=f"zscore(ts_mean({field.name},{lookback}))",
                                     recipe_variant="zscore_ts_mean",
+                                    fields=(field.name,),
                                 )
                             )
-        return {"drafts": _unique_drafts(drafts), "parent_used": parent_used}
+        return {
+            "drafts": _unique_drafts(drafts)[: int(config.max_drafts_per_bucket)],
+            "parent_used": parent_used,
+        }
 
     def _paired_recipe_drafts(
         self,
@@ -768,6 +901,10 @@ class RecipeGuidedGenerator:
         field_pool: list[FieldSpec],
         field_penalty_multipliers: dict[str, float],
         parent_fields: set[str],
+        recent_field_usage_counts: Counter[str],
+        recent_pair_usage_counts: Counter[str],
+        round_index: int,
+        config: RecipeGenerationConfig,
         registry: OperatorRegistry,
         generation_config: GenerationConfig,
     ) -> dict[str, Any]:
@@ -777,6 +914,7 @@ class RecipeGuidedGenerator:
             side=left_side,
             field_penalty_multipliers=field_penalty_multipliers,
             parent_fields=parent_fields,
+            recent_field_usage_counts=recent_field_usage_counts,
         )
         right_fields = _ordered_fields_for_side(
             field_pool=field_pool,
@@ -784,31 +922,56 @@ class RecipeGuidedGenerator:
             side=right_side,
             field_penalty_multipliers=field_penalty_multipliers,
             parent_fields=parent_fields,
+            recent_field_usage_counts=recent_field_usage_counts,
         )
-        left, right = _pick_distinct_pair(left_fields, right_fields)
-        if left is None or right is None:
+        left_fields = _rotated_top_fields(
+            left_fields,
+            limit=int(config.max_field_candidates_per_side),
+            round_index=round_index if bool(config.enable_field_rotation) else 0,
+        )
+        right_fields = _rotated_top_fields(
+            right_fields,
+            limit=int(config.max_field_candidates_per_side),
+            round_index=round_index + 1 if bool(config.enable_field_rotation) else 0,
+        )
+        pairs = _distinct_pairs(
+            left_fields,
+            right_fields,
+            limit=int(config.max_pair_candidates_per_bucket),
+            pair_usage_counts=recent_pair_usage_counts,
+        )
+        if not pairs:
             return {"drafts": [], "parent_used": False}
         lookbacks = _ordered_lookbacks(generation_config.lookbacks, objective_profile)
         drafts: list[_RecipeDraft] = []
-        parent_used = left.name in parent_fields or right.name in parent_fields
-        if objective_profile != "low_turnover":
-            drafts.append(
-                _RecipeDraft(
-                    expression=f"rank({left.name}) - rank({right.name})",
-                    recipe_variant="rank_diff",
-                )
-            )
-        if registry.contains("ts_mean"):
-            for lookback in lookbacks[:2]:
+        parent_used = any(left.name in parent_fields or right.name in parent_fields for left, right in pairs)
+        for left, right in pairs:
+            pair_key = _pair_key(left, right)
+            if objective_profile != "low_turnover":
                 drafts.append(
                     _RecipeDraft(
-                        expression=(
-                            f"rank(ts_mean({left.name},{lookback})) - rank(ts_mean({right.name},{lookback}))"
-                        ),
-                        recipe_variant="rank_ts_mean_diff",
+                        expression=f"rank({left.name}) - rank({right.name})",
+                        recipe_variant="rank_diff",
+                        fields=(left.name, right.name),
+                        pair_key=pair_key,
                     )
                 )
-        return {"drafts": _unique_drafts(drafts), "parent_used": parent_used}
+            if registry.contains("ts_mean"):
+                for lookback in lookbacks[:2]:
+                    drafts.append(
+                        _RecipeDraft(
+                            expression=(
+                                f"rank(ts_mean({left.name},{lookback})) - rank(ts_mean({right.name},{lookback}))"
+                            ),
+                            recipe_variant="rank_ts_mean_diff",
+                            fields=(left.name, right.name),
+                            pair_key=pair_key,
+                        )
+                    )
+        return {
+            "drafts": _unique_drafts(drafts)[: int(config.max_drafts_per_bucket)],
+            "parent_used": parent_used,
+        }
 
     def _revision_surprise_drafts(
         self,
@@ -817,6 +980,9 @@ class RecipeGuidedGenerator:
         field_pool: list[FieldSpec],
         field_penalty_multipliers: dict[str, float],
         parent_fields: set[str],
+        recent_field_usage_counts: Counter[str],
+        round_index: int,
+        config: RecipeGenerationConfig,
         registry: OperatorRegistry,
         generation_config: GenerationConfig,
     ) -> dict[str, Any]:
@@ -826,27 +992,41 @@ class RecipeGuidedGenerator:
             side="primary",
             field_penalty_multipliers=field_penalty_multipliers,
             parent_fields=parent_fields,
+            recent_field_usage_counts=recent_field_usage_counts,
+        )
+        ordered_fields = _rotated_top_fields(
+            ordered_fields,
+            limit=int(config.max_field_candidates_per_side),
+            round_index=round_index if bool(config.enable_field_rotation) else 0,
         )
         lookbacks = _ordered_lookbacks(generation_config.lookbacks, objective_profile)
         drafts: list[_RecipeDraft] = []
-        parent_used = any(spec.name in parent_fields for spec in ordered_fields[:2])
-        for field in ordered_fields[:2]:
+        parent_used = any(spec.name in parent_fields for spec in ordered_fields)
+        for field in ordered_fields:
             if objective_profile == "quality" and registry.contains("ts_mean"):
                 for lookback in lookbacks[:2]:
                     drafts.append(
                         _RecipeDraft(
                             expression=f"rank(ts_mean({field.name},{lookback}))",
                             recipe_variant="rank_ts_mean",
+                            fields=(field.name,),
                         )
                     )
             if objective_profile != "low_turnover":
-                drafts.append(_RecipeDraft(expression=f"rank({field.name})", recipe_variant="rank_raw"))
+                drafts.append(
+                    _RecipeDraft(
+                        expression=f"rank({field.name})",
+                        recipe_variant="rank_raw",
+                        fields=(field.name,),
+                    )
+                )
                 if registry.contains("ts_delta"):
                     for lookback in lookbacks[:1]:
                         drafts.append(
                             _RecipeDraft(
                                 expression=f"rank(ts_delta({field.name},{lookback}))",
                                 recipe_variant="rank_ts_delta",
+                                fields=(field.name,),
                             )
                         )
             if registry.contains("ts_mean"):
@@ -855,9 +1035,13 @@ class RecipeGuidedGenerator:
                         _RecipeDraft(
                             expression=f"rank(ts_mean({field.name},{lookback}))",
                             recipe_variant="rank_ts_mean",
+                            fields=(field.name,),
                         )
                     )
-        return {"drafts": _unique_drafts(drafts), "parent_used": parent_used}
+        return {
+            "drafts": _unique_drafts(drafts)[: int(config.max_drafts_per_bucket)],
+            "parent_used": parent_used,
+        }
 
 
 def _all_buckets(config: RecipeGenerationConfig) -> list[_RecipeBucket]:
@@ -903,6 +1087,7 @@ def _ordered_fields_for_side(
     side: str,
     field_penalty_multipliers: dict[str, float],
     parent_fields: set[str],
+    recent_field_usage_counts: Counter[str],
 ) -> list[FieldSpec]:
     keywords = _RECIPE_KEYWORDS.get(recipe_family, {}).get(side, ())
     scored: list[tuple[float, FieldSpec]] = []
@@ -918,6 +1103,9 @@ def _ordered_fields_for_side(
         score = _field_priority_score(spec, field_penalty_multipliers=field_penalty_multipliers)
         if spec.name in parent_fields:
             score *= 1.25
+        recent_usage = int(recent_field_usage_counts.get(spec.name, 0))
+        if recent_usage > 0:
+            score /= 1.0 + 0.35 * float(recent_usage)
         if keywords:
             matches = sum(1 for keyword in keywords if keyword in text)
             if matches > 0:
@@ -929,15 +1117,40 @@ def _ordered_fields_for_side(
     return [spec for _, spec in scored]
 
 
-def _pick_distinct_pair(
+def _rotated_top_fields(fields: list[FieldSpec], *, limit: int, round_index: int) -> list[FieldSpec]:
+    selected = list(fields[: max(1, int(limit))])
+    if len(selected) <= 1:
+        return selected
+    offset = int(round_index) % len(selected)
+    return selected[offset:] + selected[:offset]
+
+
+def _distinct_pairs(
     left_fields: list[FieldSpec],
     right_fields: list[FieldSpec],
-) -> tuple[FieldSpec | None, FieldSpec | None]:
-    for left in left_fields[:3]:
-        for right in right_fields[:3]:
-            if left.name != right.name:
-                return left, right
-    return None, None
+    *,
+    limit: int,
+    pair_usage_counts: Counter[str],
+) -> list[tuple[FieldSpec, FieldSpec]]:
+    pairs: list[tuple[int, int, str, FieldSpec, FieldSpec]] = []
+    seen: set[str] = set()
+    rank_index = 0
+    for left in left_fields:
+        for right in right_fields:
+            if left.name == right.name:
+                continue
+            pair_key = _pair_key(left, right)
+            if pair_key in seen:
+                continue
+            seen.add(pair_key)
+            pairs.append((int(pair_usage_counts.get(pair_key, 0)), rank_index, pair_key, left, right))
+            rank_index += 1
+    pairs.sort(key=lambda item: (item[0], item[1], item[2]))
+    return [(left, right) for _, _, _, left, right in pairs[: max(1, int(limit))]]
+
+
+def _pair_key(left: FieldSpec, right: FieldSpec) -> str:
+    return f"{left.name}:{right.name}"
 
 
 def _ordered_lookbacks(lookbacks: list[int], objective_profile: str) -> list[int]:
@@ -980,6 +1193,14 @@ def _field_priority_score(
     return max(1e-6, float(spec.field_score or 0.0) * multiplier)
 
 
+def _bucket_bias(*, config: RecipeGenerationConfig, bucket_id: str) -> float:
+    return max(1e-6, float((config.bucket_biases or {}).get(bucket_id, 1.0) or 1.0))
+
+
+def _apply_bucket_bias(*, score: float, config: RecipeGenerationConfig, bucket_id: str) -> float:
+    return float(score) * _bucket_bias(config=config, bucket_id=bucket_id)
+
+
 def _unique_drafts(drafts: list[_RecipeDraft]) -> list[_RecipeDraft]:
     unique: list[_RecipeDraft] = []
     seen: set[str] = set()
@@ -1002,6 +1223,19 @@ def _decode_json_object(payload: Any) -> dict[str, Any]:
             return {}
         return decoded if isinstance(decoded, dict) else {}
     return {}
+
+
+def _decode_json_list(payload: Any) -> list[str]:
+    if isinstance(payload, list):
+        return [str(item).strip() for item in payload if str(item).strip()]
+    if isinstance(payload, str) and payload.strip():
+        try:
+            decoded = json.loads(payload)
+        except json.JSONDecodeError:
+            return []
+        if isinstance(decoded, list):
+            return [str(item).strip() for item in decoded if str(item).strip()]
+    return []
 
 
 def _to_float(value: Any) -> float:
