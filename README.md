@@ -96,6 +96,10 @@ workflows/   Thin workflow wrappers cho CLI
 docs/        Architecture / pipeline / config / development notes
 ```
 
+Knowledge-playbook cho alpha research:
+
+- `docs/finding_alpha/README.md`: quick lookup tu van de thuc te (`turnover`, `correlation`, `overfitting`, `automated search`, `fundamental recipes`) sang notes paraphrase tu `FindingAlpha.pdf`
+
 ## Workflow local va workflow BRAIN
 
 ### Local workflow cu
