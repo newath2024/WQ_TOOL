@@ -894,6 +894,7 @@ def _build_window_metrics(
     source_yield_scores = _aggregate_generation_average_metric(stage_metrics, "source_yield_scores")
     recipe_bucket_budget_allocations = _aggregate_generation_counter_metric(stage_metrics, "recipe_bucket_budget_allocations")
     recipe_bucket_yield_scores = _aggregate_generation_average_metric(stage_metrics, "recipe_bucket_yield_scores")
+    recipe_guided_spilled_to_fresh = _sum_generation_metric(stage_metrics, "recipe_guided_spilled_to_fresh")
     terminal_statuses = {"completed", "failed", "rejected", "timeout"}
     terminal_submissions = [
         row for row in submissions if str(row.status or "") in terminal_statuses or getattr(row, "completed_at", None)
@@ -938,6 +939,7 @@ def _build_window_metrics(
         "source_yield_scores": dict(source_yield_scores),
         "recipe_bucket_budget_allocations": dict(recipe_bucket_budget_allocations),
         "recipe_bucket_yield_scores": dict(recipe_bucket_yield_scores),
+        "recipe_guided_spilled_to_fresh": recipe_guided_spilled_to_fresh,
         "top_timeout_reasons": dict(timeout_reason_counts.most_common(5)),
         "top_generation_fail_reasons": dict(generation_fail_reasons.most_common(5)),
         "by_generation_mode": _build_generation_mode_window_metrics(
@@ -1030,6 +1032,23 @@ def _build_generation_mode_window_metrics(
         stage_metrics,
         "recipe_guided_selected_by_bucket",
     )
+    recipe_guided_duplicate_retry_count = _sum_generation_metric(
+        stage_metrics,
+        "recipe_guided_duplicate_retry_count",
+    )
+    recipe_guided_exhausted_bucket_counts = _aggregate_generation_counter_metric(
+        stage_metrics,
+        "recipe_guided_exhausted_bucket_counts",
+    )
+    recipe_guided_unique_draft_count = _sum_generation_metric(
+        stage_metrics,
+        "recipe_guided_unique_draft_count",
+    )
+    recipe_guided_bucket_biases = _aggregate_generation_average_metric(
+        stage_metrics,
+        "recipe_guided_bucket_biases",
+    )
+    recipe_guided_spilled_to_fresh = _sum_generation_metric(stage_metrics, "recipe_guided_spilled_to_fresh")
     if recipe_guided_generated or recipe_guided_selected or "recipe_guided" in summary:
         recipe = summary.setdefault("recipe_guided", {})
         recipe["generated_count"] = recipe_guided_generated
@@ -1037,6 +1056,11 @@ def _build_generation_mode_window_metrics(
         recipe["selected_for_simulation_rate"] = _safe_ratio(recipe_guided_selected, recipe_guided_generated)
         recipe["bucket_counts"] = dict(recipe_guided_bucket_counts)
         recipe["selected_by_bucket"] = dict(recipe_guided_selected_by_bucket)
+        recipe["duplicate_retry_count"] = recipe_guided_duplicate_retry_count
+        recipe["exhausted_bucket_counts"] = dict(recipe_guided_exhausted_bucket_counts)
+        recipe["unique_draft_count"] = recipe_guided_unique_draft_count
+        recipe["bucket_biases"] = dict(recipe_guided_bucket_biases)
+        recipe["spilled_to_fresh"] = recipe_guided_spilled_to_fresh
         recipe["budget_allocated"] = int(source_budget_allocations.get("recipe_guided", 0))
     if int(source_budget_allocations.get("fresh", 0)) > 0:
         fresh = summary.setdefault("fresh", {})
@@ -1057,6 +1081,19 @@ def _build_search_bucket_window_metrics(
     selected_by_bucket = _aggregate_generation_counter_metric(stage_metrics, "recipe_guided_selected_by_bucket")
     budget_by_bucket = _aggregate_generation_counter_metric(stage_metrics, "recipe_bucket_budget_allocations")
     yield_scores_by_bucket = _aggregate_generation_average_metric(stage_metrics, "recipe_bucket_yield_scores")
+    duplicate_retry_by_bucket = _aggregate_generation_counter_metric(
+        stage_metrics,
+        "recipe_guided_duplicate_retry_counts_by_bucket",
+    )
+    exhausted_by_bucket = _aggregate_generation_counter_metric(
+        stage_metrics,
+        "recipe_guided_exhausted_bucket_counts",
+    )
+    unique_drafts_by_bucket = _aggregate_generation_counter_metric(
+        stage_metrics,
+        "recipe_guided_unique_draft_counts_by_bucket",
+    )
+    bucket_biases = _aggregate_generation_average_metric(stage_metrics, "recipe_guided_bucket_biases")
     bucket_submissions: dict[str, list[Any]] = {}
     bucket_results: dict[str, list[Any]] = {}
     for row in submissions:
@@ -1075,6 +1112,10 @@ def _build_search_bucket_window_metrics(
         | set(selected_by_bucket)
         | set(budget_by_bucket)
         | set(yield_scores_by_bucket)
+        | set(duplicate_retry_by_bucket)
+        | set(exhausted_by_bucket)
+        | set(unique_drafts_by_bucket)
+        | set(bucket_biases)
         | set(bucket_submissions)
         | set(bucket_results)
     )
@@ -1093,6 +1134,10 @@ def _build_search_bucket_window_metrics(
             "generated_count": int(generated_by_bucket.get(bucket_id, 0)),
             "budget_allocated": int(budget_by_bucket.get(bucket_id, 0)),
             "yield_score": _to_float(yield_scores_by_bucket.get(bucket_id)),
+            "bucket_bias": _to_float(bucket_biases.get(bucket_id)),
+            "duplicate_retry_count": int(duplicate_retry_by_bucket.get(bucket_id, 0)),
+            "exhausted_count": int(exhausted_by_bucket.get(bucket_id, 0)),
+            "unique_draft_count": int(unique_drafts_by_bucket.get(bucket_id, 0)),
             "selected_for_simulation": int(selected_by_bucket.get(bucket_id, 0)),
             "completed_count": len(completed_rows),
             "timeout_count": timeout_count,

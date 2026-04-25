@@ -310,6 +310,21 @@ def test_kpi_report_includes_search_bucket_metrics_and_rankings() -> None:
                             "recipe_guided_selected_by_bucket": {
                                 "fundamental_quality|fundamental|balanced": 1,
                             },
+                            "recipe_guided_duplicate_retry_count": 3,
+                            "recipe_guided_duplicate_retry_counts_by_bucket": {
+                                "fundamental_quality|fundamental|balanced": 3,
+                            },
+                            "recipe_guided_exhausted_bucket_counts": {
+                                "fundamental_quality|fundamental|balanced": 1,
+                            },
+                            "recipe_guided_unique_draft_count": 9,
+                            "recipe_guided_unique_draft_counts_by_bucket": {
+                                "fundamental_quality|fundamental|balanced": 9,
+                            },
+                            "recipe_guided_bucket_biases": {
+                                "fundamental_quality|fundamental|balanced": 1.15,
+                            },
+                            "recipe_guided_spilled_to_fresh": 2,
                             "recipe_bucket_budget_allocations": {
                                 "fundamental_quality|fundamental|balanced": 4,
                             },
@@ -338,6 +353,10 @@ def test_kpi_report_includes_search_bucket_metrics_and_rankings() -> None:
     assert bucket["generated_count"] == 4
     assert bucket["budget_allocated"] == 4
     assert bucket["yield_score"] == pytest.approx(0.75)
+    assert bucket["bucket_bias"] == pytest.approx(1.15)
+    assert bucket["duplicate_retry_count"] == 3
+    assert bucket["exhausted_count"] == 1
+    assert bucket["unique_draft_count"] == 9
     assert bucket["selected_for_simulation"] == 1
     assert bucket["completed_count"] == 1
     assert bucket["support"] == 1
@@ -347,6 +366,9 @@ def test_kpi_report_includes_search_bucket_metrics_and_rankings() -> None:
         "fresh": 6,
     }
     assert payload["recent"]["rounds"]["source_yield_scores"]["recipe_guided"] == pytest.approx(0.75)
+    assert payload["recent"]["rounds"]["recipe_guided_spilled_to_fresh"] == 2
+    assert payload["recent"]["rounds"]["by_generation_mode"]["recipe_guided"]["duplicate_retry_count"] == 3
+    assert payload["recent"]["rounds"]["by_generation_mode"]["recipe_guided"]["spilled_to_fresh"] == 2
     assert payload["top_search_buckets"][0]["search_bucket_id"] == "fundamental_quality|fundamental|balanced"
     assert payload["negative_search_buckets"][0]["search_bucket_id"] == "fundamental_quality|fundamental|balanced"
 
