@@ -12,9 +12,11 @@ from alpha.parser import parse_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig, QualityOptimizationConfig
 from core.quality_score import MultiObjectiveQualityScorer
 from data.field_registry import FieldRegistry
+from domain.candidate import AlphaCandidate
 from features.registry import OperatorRegistry, WINDOWED_OPERATORS
-from generator.engine import AlphaCandidate, AlphaGenerationEngine, GenerationSessionStats
+from generator.engine import AlphaGenerationEngine, GenerationSessionStats
 from generator.guardrails import GenerationGuardrails
+from services.elite_motifs import build_elite_seed_variants
 from memory.pattern_memory import RegionLearningContext
 from services.evaluation_service import alpha_candidate_from_record
 from storage.models import AlphaRecord
@@ -26,6 +28,8 @@ class QualityPolishStats:
     enabled: bool = True
     parent_count: int = 0
     eligible_parent_count: int = 0
+    scanned_parent_count: int = 0
+    saturated_parent_count: int = 0
     generated_count: int = 0
     selected_count: int = 0
     attempt_count: int = 0
@@ -41,6 +45,9 @@ class QualityPolishStats:
     transform_cooldown_counts: Counter[str] = field(default_factory=Counter)
     transform_attempt_counts: Counter[str] = field(default_factory=Counter)
     transform_scores: dict[str, float] = field(default_factory=dict)
+    cooldown_exempt_groups: list[str] = field(default_factory=list)
+    external_elite_seed_count: int = 0
+    external_elite_generated: int = 0
     turnover_repair_generated: int = 0
     turnover_repair_attempt_count: int = 0
     turnover_repair_success_count: int = 0
@@ -72,6 +79,8 @@ class QualityPolishStats:
             "quality_polish_enabled": bool(self.enabled),
             "quality_polish_parent_count": int(self.eligible_parent_count),
             "quality_polish_recent_completed_parent_count": int(self.parent_count),
+            "quality_polish_scanned_parent_count": int(self.scanned_parent_count),
+            "quality_polish_saturated_parent_count": int(self.saturated_parent_count),
             "quality_polish_generated": int(self.generated_count),
             "quality_polish_attempt_count": int(self.attempt_count),
             "quality_polish_success_count": int(self.success_count),
@@ -88,6 +97,9 @@ class QualityPolishStats:
             "quality_polish_transform_attempt_counts": dict(self.transform_attempt_counts),
             "quality_polish_transform_success_rates": transform_success_rates,
             "quality_polish_transform_scores": dict(self.transform_scores),
+            "quality_polish_cooldown_exempt_groups": list(self.cooldown_exempt_groups),
+            "quality_polish_external_elite_seed_count": int(self.external_elite_seed_count),
+            "quality_polish_external_elite_generated": int(self.external_elite_generated),
             "quality_polish_failure_reason_counts": dict(self.failure_counts),
             "turnover_repair_generated": int(self.turnover_repair_generated),
             "turnover_repair_attempt_count": int(self.turnover_repair_attempt_count),
@@ -158,12 +170,22 @@ class QualityPolisher:
             blocked_fields=blocked_fields,
         )
         stats.parent_count = raw_parent_count
-        eligible = parents[: int(config.max_polish_parents_per_round)]
-        stats.eligible_parent_count = len(eligible)
-        stats.top_parent_quality = eligible[0].quality_score if eligible else None
-        if len(eligible) < int(config.min_completed_parent_count):
+        elite_seed_lane_enabled = (
+            bool(adaptive_config.elite_motifs.enabled)
+            and bool(adaptive_config.elite_motifs.seed_expressions)
+            and int(adaptive_config.elite_motifs.max_quality_polish_seeds_per_round) > 0
+        )
+        if len(parents) < int(config.min_completed_parent_count) and not elite_seed_lane_enabled:
             stats.generation_total_ms = (time.perf_counter() - started) * 1000.0
             return QualityPolishResult(candidates=[], stats=stats)
+        scan_limit = max(
+            int(config.max_polish_parents_per_round),
+            int(config.max_polish_parents_per_round) * int(config.parent_scan_multiplier),
+        )
+        eligible = parents[:scan_limit]
+        stats.eligible_parent_count = len(eligible)
+        stats.scanned_parent_count = len(eligible)
+        stats.top_parent_quality = eligible[0].quality_score if eligible else None
 
         target_count = min(int(config.max_polish_candidates_per_round), int(count))
         engine = AlphaGenerationEngine(
@@ -196,11 +218,20 @@ class QualityPolisher:
             round_index=int(round_index),
         )
         stats.transform_scores = dict(transform_profile.scores)
+        stats.cooldown_exempt_groups = list(config.cooldown_exempt_transform_groups or [])
         max_parent_transform_uses = int(config.max_parent_transform_uses_per_recent_window)
 
         for parent in eligible:
             if len(candidates) >= target_count:
                 break
+            parent_candidate_count_before = len(candidates)
+            parent_skip_count_before = (
+                stats.skipped_used_signature
+                + stats.skipped_used_parent_transform
+                + stats.skipped_existing_normalized
+                + sum(stats.transform_cooldown_counts.values())
+                + sum(stats.disabled_transform_counts.values())
+            )
             variants = _unique_expression_variants(
                 [
                     *self._turnover_repair_variants(
@@ -218,6 +249,7 @@ class QualityPolisher:
                         stats=stats,
                         transform_scores=transform_profile.scores,
                         cooldown_groups=transform_profile.cooldown_groups,
+                        existing_normalized=existing,
                     ),
                 ]
             )
@@ -299,10 +331,153 @@ class QualityPolisher:
                     stats.turnover_repair_generated += 1
                     stats.turnover_repair_success_count += 1
                 session.record_success()
+            parent_skip_count_after = (
+                stats.skipped_used_signature
+                + stats.skipped_used_parent_transform
+                + stats.skipped_existing_normalized
+                + sum(stats.transform_cooldown_counts.values())
+                + sum(stats.disabled_transform_counts.values())
+            )
+            if (
+                len(candidates) == parent_candidate_count_before
+                and (variants or parent_skip_count_after > parent_skip_count_before)
+            ):
+                stats.saturated_parent_count += 1
+
+        if len(candidates) < target_count and elite_seed_lane_enabled:
+            candidates.extend(
+                self._generate_elite_seed_candidates(
+                    config=config,
+                    adaptive_config=adaptive_config,
+                    registry=registry,
+                    engine=engine,
+                    validation_ctx=validation_ctx,
+                    session=session,
+                    existing=existing,
+                    run_id=run_id,
+                    round_index=int(round_index),
+                    target_count=target_count - len(candidates),
+                    stats=stats,
+                )
+            )
 
         stats.generated_count = len(candidates)
         stats.generation_total_ms = (time.perf_counter() - started) * 1000.0
         return QualityPolishResult(candidates=candidates, stats=stats)
+
+    def _generate_elite_seed_candidates(
+        self,
+        *,
+        config: QualityOptimizationConfig,
+        adaptive_config: AdaptiveGenerationConfig,
+        registry: OperatorRegistry,
+        engine: AlphaGenerationEngine,
+        validation_ctx,
+        session: GenerationSessionStats,
+        existing: set[str],
+        run_id: str,
+        round_index: int,
+        target_count: int,
+        stats: QualityPolishStats,
+    ) -> list[AlphaCandidate]:
+        variants = build_elite_seed_variants(
+            adaptive_config.elite_motifs,
+            registry=registry,
+            existing_normalized=existing,
+        )
+        stats.external_elite_seed_count = min(
+            len(adaptive_config.elite_motifs.seed_expressions or []),
+            int(adaptive_config.elite_motifs.max_quality_polish_seeds_per_round),
+        )
+        if target_count <= 0 or not variants:
+            return []
+
+        candidates: list[AlphaCandidate] = []
+        for variant in variants:
+            if len(candidates) >= target_count:
+                break
+            normalized_variant = _normalize_variant_expression(variant.expression)
+            if not normalized_variant or normalized_variant in existing:
+                stats.skipped_existing_normalized += 1
+                stats.record_failure("duplicate_normalized_expression")
+                continue
+            polish_signature = _polish_signature(
+                run_id=run_id,
+                parent_alpha_id=variant.seed_id,
+                transform=variant.variant,
+                normalized_expression=normalized_variant,
+            )
+            stats.attempt_count += 1
+            stats.transform_attempt_counts["elite_seed_polish"] += 1
+            session.record_attempt()
+            metadata = {
+                "generation_mode": "quality_polish",
+                "generation_source": "quality_polish",
+                "mutation_mode": "quality_polish",
+                "motif": "elite_seed_polish",
+                "template_name": "elite_seed_polish",
+                "polish_transform": variant.variant,
+                "polish_transform_group": "elite_seed_polish",
+                "polish_signature": polish_signature,
+                "polish_parent_transform_key": f"{variant.seed_id}:{variant.variant}",
+                "polish_round_index": int(round_index),
+                "polish_transform_priority": 8,
+                "quality_polish_prior": float(config.selection_prior_weight),
+                "elite_seed_id": variant.seed_id,
+                "elite_seed_variant": variant.variant,
+                "elite_seed_similarity": round(float(variant.similarity), 6),
+                "elite_seed_similarity_penalty": round(
+                    max(
+                        0.0,
+                        (
+                            float(variant.similarity)
+                            - float(adaptive_config.elite_motifs.clone_similarity_threshold)
+                        )
+                        / max(
+                            1e-9,
+                            1.0 - float(adaptive_config.elite_motifs.clone_similarity_threshold),
+                        ),
+                    ),
+                    6,
+                ),
+                "elite_motif_match_score": round(float(variant.match_score), 6),
+                "elite_motif_ids": [variant.seed_id],
+                "parent_refs": [],
+            }
+            result = engine._build_candidate_result(  # noqa: SLF001
+                expression=variant.expression,
+                mode="quality_polish",
+                parent_ids=(),
+                generation_metadata=metadata,
+                validation_ctx=validation_ctx,
+            )
+            candidate = result.candidate
+            if candidate is None:
+                stats.record_failure(result.failure_reason, fields=result.failure_fields)
+                session.record_failure(
+                    result.failure_reason,
+                    expression=variant.expression,
+                    fields=result.failure_fields,
+                )
+                continue
+            if candidate.normalized_expression in existing:
+                stats.skipped_existing_normalized += 1
+                stats.record_failure("duplicate_normalized_expression")
+                session.record_duplicate(
+                    "duplicate_normalized_expression",
+                    expression=candidate.normalized_expression,
+                    mutation_mode="quality_polish",
+                    motif="elite_seed_polish",
+                    operator_path=tuple(candidate.operators_used),
+                )
+                continue
+            existing.add(candidate.normalized_expression)
+            candidates.append(candidate)
+            stats.transform_counts["elite_seed_polish"] += 1
+            stats.external_elite_generated += 1
+            stats.success_count += 1
+            session.record_success()
+        return candidates
 
     def _load_parents(
         self,
@@ -409,6 +584,11 @@ class QualityPolisher:
             limit=int(config.transform_score_lookback_rounds),
             before_round_index=int(round_index),
         )
+        cooldown_exempt_groups = {
+            str(item).strip()
+            for item in (config.cooldown_exempt_transform_groups or [])
+            if str(item).strip()
+        }
         attempts: Counter[str] = Counter()
         successes: Counter[str] = Counter()
         for row in rows:
@@ -436,7 +616,8 @@ class QualityPolisher:
             score = max(0.0, min(1.0, float(successes[group]) / float(attempt_count)))
             scores[group] = round(score, 6)
             if (
-                attempt_count >= int(config.transform_cooldown_min_attempts)
+                group not in cooldown_exempt_groups
+                and attempt_count >= int(config.transform_cooldown_min_attempts)
                 and score < float(config.transform_cooldown_success_rate_floor)
             ):
                 cooldown_groups.add(group)
@@ -453,6 +634,7 @@ class QualityPolisher:
         stats: QualityPolishStats,
         transform_scores: dict[str, float],
         cooldown_groups: set[str],
+        existing_normalized: set[str],
     ) -> list[_ExpressionVariant]:
         try:
             root = parse_expression(expression)
@@ -484,7 +666,9 @@ class QualityPolisher:
             if (
                 not normalized
                 or normalized == parent_normalized
+                or normalized in existing_normalized
                 or normalized in seen
+                or _is_redundant_cross_sectional_wrapper(expr)
                 or len(variants) >= limit
             ):
                 return
@@ -541,6 +725,13 @@ class QualityPolisher:
                     group="smooth_ts_decay_linear",
                     priority=6,
                 )
+                if registry.contains("zscore"):
+                    add(
+                        f"zscore({inner})",
+                        f"smooth_ts_decay_linear_zscore_{window}",
+                        group="smooth_ts_decay_linear",
+                        priority=6,
+                    )
         if registry.contains("ts_rank") and registry.contains("rank"):
             for window in preferred_windows:
                 inner = f"ts_rank({base_expr},{window})"
@@ -759,6 +950,17 @@ def _unique_expression_variants(variants: list[_ExpressionVariant]) -> list[_Exp
         seen.add(key)
         unique.append(variant)
     return unique
+
+
+def _is_redundant_cross_sectional_wrapper(expression: str) -> bool:
+    try:
+        root = parse_expression(expression)
+    except ValueError:
+        return False
+    if not isinstance(root, FunctionCallNode) or root.name not in {"rank", "zscore"} or len(root.args) != 1:
+        return False
+    child = root.args[0]
+    return isinstance(child, FunctionCallNode) and child.name == root.name and len(child.args) == 1
 
 
 def _unwrap_outer_cross_sectional(node: ExprNode) -> ExprNode:

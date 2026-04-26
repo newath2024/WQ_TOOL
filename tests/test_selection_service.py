@@ -393,6 +393,63 @@ def test_pre_sim_score_applies_brain_robustness_proxy_penalty_from_recent_histor
     assert "brain_robustness_proxy_penalty_applied" in weak_score.reason_codes
 
 
+def test_pre_sim_score_applies_elite_motif_bonus() -> None:
+    service = SelectionService(
+        config=SelectionConfig(pre_sim=PreSimSelectionWeightsConfig(elite_motif_bonus=0.20))
+    )
+    field_registry = _field_registry()
+    snapshot = PatternMemorySnapshot(regime_key="regime")
+    plain = _candidate("alpha-plain", "rank(ts_mean(close, 5))", field_name="close")
+    elite = _candidate(
+        "alpha-elite",
+        "zscore(ts_mean(close, 5))",
+        field_name="close",
+        metadata={"elite_motif_match_score": 1.0, "elite_motif_ids": ["elite_seed_1"]},
+    )
+
+    scored = service.score_pre_sim_candidates(
+        [plain, elite],
+        snapshot=snapshot,
+        field_registry=field_registry,
+        min_pattern_support=1,
+    )
+
+    elite_score = next(item for item in scored if item.candidate.alpha_id == "alpha-elite")
+    assert scored[0].candidate.alpha_id == "alpha-elite"
+    assert elite_score.ranking_rationale["selection_breakdown"]["components"]["elite_motif_bonus"] == 0.20
+    assert "elite_motif_bonus_applied" in elite_score.reason_codes
+
+
+def test_pre_sim_score_applies_elite_seed_similarity_penalty() -> None:
+    service = SelectionService(
+        config=SelectionConfig(pre_sim=PreSimSelectionWeightsConfig(elite_seed_similarity_penalty=0.50))
+    )
+    field_registry = _field_registry()
+    snapshot = PatternMemorySnapshot(regime_key="regime")
+    similar = _candidate(
+        "alpha-similar",
+        "rank(ts_mean(close, 5))",
+        field_name="close",
+        metadata={
+            "elite_seed_similarity": 0.95,
+            "elite_seed_similarity_penalty": 1.0,
+        },
+    )
+    clean = _candidate("alpha-clean", "zscore(ts_mean(close, 5))", field_name="close")
+
+    scored = service.score_pre_sim_candidates(
+        [similar, clean],
+        snapshot=snapshot,
+        field_registry=field_registry,
+        min_pattern_support=1,
+    )
+
+    similar_score = next(item for item in scored if item.candidate.alpha_id == "alpha-similar")
+    assert scored[0].candidate.alpha_id == "alpha-clean"
+    assert similar_score.ranking_rationale["selection_breakdown"]["components"]["elite_seed_similarity_penalty"] == 0.50
+    assert "elite_seed_similarity_penalty_applied" in similar_score.reason_codes
+
+
 def test_post_sim_score_orders_by_quality() -> None:
     service = SelectionService(config=SelectionConfig())
     candidates = {

@@ -37,9 +37,20 @@ BRAIN_DEFAULT_OPERATORS: tuple[str, ...] = (
     "ts_decay_linear",
     "ts_rank",
     "ts_sum",
+    "ts_av_diff",
+    "ts_scale",
+    "ts_arg_max",
+    "ts_arg_min",
+    "ts_count_nans",
     "sign",
     "abs",
     "log",
+    "days_from_last_change",
+    "quantile",
+    "inverse",
+    "reverse",
+    "min",
+    "max",
     "group_rank",
     "group_zscore",
     "group_neutralize",
@@ -68,11 +79,16 @@ WINDOWED_OPERATORS = {
     "ts_decay_linear",
     "ts_rank",
     "ts_sum",
+    "ts_av_diff",
+    "ts_scale",
+    "ts_arg_max",
+    "ts_arg_min",
+    "ts_count_nans",
 }
 
 GROUP_OPERATORS = {"group_rank", "group_zscore", "group_neutralize"}
-NORMALIZATION_OPERATORS = {"rank", "zscore", "sign", "abs"}
-IDEMPOTENT_WRAPPERS = {"rank", "zscore", "sign", "abs"}
+NORMALIZATION_OPERATORS = {"rank", "zscore", "quantile", "sign", "abs"}
+IDEMPOTENT_WRAPPERS = {"rank", "zscore", "quantile", "sign", "abs"}
 
 
 @dataclass(frozen=True, slots=True)
@@ -471,6 +487,121 @@ def _register_brain_canonical_specs(registry: OperatorRegistry) -> None:
         family="time_series",
         parameter_requirements={"window": "positive_int"},
         turnover_hint=-0.18,
+    )
+    registry.register(
+        "days_from_last_change",
+        operators.days_from_last_change,
+        1,
+        description="Days since the input field last changed.",
+        input_type_signatures=(("matrix",),),
+        output_type="matrix",
+        family="time_series",
+        turnover_hint=-0.10,
+    )
+    registry.register(
+        "ts_av_diff",
+        operators.ts_av_diff,
+        2,
+        description="Difference between current value and its rolling average over d days.",
+        input_type_signatures=(("matrix", "scalar"),),
+        output_type="matrix",
+        family="time_series",
+        parameter_requirements={"window": "positive_int"},
+        turnover_hint=-0.05,
+    )
+    registry.register(
+        "ts_scale",
+        operators.ts_scale,
+        2,
+        description="Rolling min/max scaled value over the last d days.",
+        input_type_signatures=(("matrix", "scalar"),),
+        output_type="matrix",
+        family="normalization",
+        parameter_requirements={"window": "positive_int"},
+        turnover_hint=-0.08,
+    )
+    registry.register(
+        "ts_arg_max",
+        operators.ts_arg_max,
+        2,
+        description="Rolling position of the maximum value over the last d days.",
+        input_type_signatures=(("matrix", "scalar"),),
+        output_type="matrix",
+        family="time_series",
+        parameter_requirements={"window": "positive_int"},
+        turnover_hint=-0.02,
+    )
+    registry.register(
+        "ts_arg_min",
+        operators.ts_arg_min,
+        2,
+        description="Rolling position of the minimum value over the last d days.",
+        input_type_signatures=(("matrix", "scalar"),),
+        output_type="matrix",
+        family="time_series",
+        parameter_requirements={"window": "positive_int"},
+        turnover_hint=-0.02,
+    )
+    registry.register(
+        "quantile",
+        operators.quantile,
+        1,
+        description="Cross-sectional quantile transform.",
+        input_type_signatures=(("matrix",),),
+        output_type="matrix",
+        family="normalization",
+        turnover_hint=0.10,
+    )
+    registry.register(
+        "inverse",
+        operators.inverse,
+        1,
+        description="Elementwise reciprocal.",
+        input_type_signatures=(("matrix",),),
+        output_type="matrix",
+        family="transformation",
+        turnover_hint=0.05,
+    )
+    registry.register(
+        "reverse",
+        operators.reverse,
+        1,
+        description="Elementwise sign reversal.",
+        input_type_signatures=(("matrix",),),
+        output_type="matrix",
+        family="transformation",
+        turnover_hint=0.00,
+    )
+    registry.register(
+        "ts_count_nans",
+        operators.ts_count_nans,
+        2,
+        description="Rolling count of missing observations over the last d days.",
+        input_type_signatures=(("matrix", "scalar"),),
+        output_type="matrix",
+        family="time_series",
+        parameter_requirements={"window": "positive_int"},
+        turnover_hint=-0.15,
+    )
+    registry.register(
+        "min",
+        operators.min_value,
+        2,
+        description="Elementwise minimum of two matrix expressions.",
+        input_type_signatures=(("matrix", "matrix"),),
+        output_type="matrix",
+        family="transformation",
+        turnover_hint=0.00,
+    )
+    registry.register(
+        "max",
+        operators.max_value,
+        2,
+        description="Elementwise maximum of two matrix expressions.",
+        input_type_signatures=(("matrix", "matrix"),),
+        output_type="matrix",
+        family="transformation",
+        turnover_hint=0.00,
     )
     registry.register(
         "sign",

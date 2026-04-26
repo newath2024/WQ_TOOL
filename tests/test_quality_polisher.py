@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from core.config import AdaptiveGenerationConfig, QualityOptimizationConfig, load_config
+from core.config import AdaptiveGenerationConfig, EliteMotifConfig, QualityOptimizationConfig, load_config
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import build_registry
 from generator.engine import AlphaCandidate, GenerationSessionStats
@@ -558,10 +558,14 @@ def test_quality_polisher_emits_smooth_variants_when_wrap_transforms_are_exhaust
                             "quality_polish_transform_attempt_counts": {
                                 "wrap_rank": 3,
                                 "wrap_zscore": 3,
+                                "smooth_ts_mean": 3,
+                                "smooth_ts_decay_linear": 3,
                             },
                             "quality_polish_transform_counts": {
                                 "wrap_rank": 0,
                                 "wrap_zscore": 0,
+                                "smooth_ts_mean": 0,
+                                "smooth_ts_decay_linear": 0,
                             },
                         }
                     ),
@@ -583,6 +587,7 @@ def test_quality_polisher_emits_smooth_variants_when_wrap_transforms_are_exhaust
                     "smooth_ts_decay_linear",
                 ],
                 disabled_transforms=["cleanup_redundant_wrapper", "smooth_ts_rank"],
+                cooldown_exempt_transform_groups=["smooth_ts_mean", "smooth_ts_decay_linear"],
                 max_variants_per_parent_by_transform={
                     "wrap_rank": 1,
                     "wrap_zscore": 1,
@@ -616,9 +621,187 @@ def test_quality_polisher_emits_smooth_variants_when_wrap_transforms_are_exhaust
     }
     assert "smooth_ts_mean" in smooth_groups
     assert "smooth_ts_decay_linear" in smooth_groups
+    assert any(
+        str(candidate.generation_metadata["polish_transform"]).startswith("smooth_ts_decay_linear_zscore")
+        for candidate in result.candidates
+    )
     assert result.stats.transform_cooldown_counts["wrap_rank"] >= 1
     assert result.stats.transform_cooldown_counts["wrap_zscore"] >= 1
+    assert result.stats.transform_cooldown_counts["smooth_ts_mean"] == 0
+    assert result.stats.transform_cooldown_counts["smooth_ts_decay_linear"] == 0
+    assert result.stats.cooldown_exempt_groups == ["smooth_ts_mean", "smooth_ts_decay_linear"]
     assert all(candidate.normalized_expression != "close" for candidate in result.candidates)
+    assert "redundant_expression" not in result.stats.failure_counts
+
+
+def test_quality_polisher_scans_past_saturated_top_parent() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, run_id="run-quality")
+        _seed_parent(repository, run_id="run-quality", alpha_id="parent-1", expression="close")
+        _seed_parent(repository, run_id="run-quality", alpha_id="parent-2", expression="volume")
+        _seed_result(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-1",
+            job_id="job-1",
+            fitness=0.60,
+            sharpe=0.70,
+            simulated_at="2026-04-22T01:00:00+00:00",
+        )
+        _seed_result(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-2",
+            job_id="job-2",
+            fitness=0.30,
+            sharpe=0.40,
+            simulated_at="2026-04-22T01:01:00+00:00",
+        )
+        repository.save_alpha_candidates(
+            "run-quality",
+            [
+                AlphaCandidate(
+                    alpha_id="used-rank",
+                    expression="rank(close)",
+                    normalized_expression="rank(close)",
+                    generation_mode="quality_polish",
+                    parent_ids=("parent-1",),
+                    complexity=2,
+                    created_at="2026-04-22T01:30:00+00:00",
+                    fields_used=("close",),
+                    operators_used=("rank",),
+                    depth=2,
+                    generation_metadata={
+                        "polish_parent_alpha_id": "parent-1",
+                        "polish_transform": "wrap_rank",
+                        "polish_round_index": 8,
+                    },
+                ),
+                AlphaCandidate(
+                    alpha_id="used-zscore",
+                    expression="zscore(close)",
+                    normalized_expression="zscore(close)",
+                    generation_mode="quality_polish",
+                    parent_ids=("parent-1",),
+                    complexity=2,
+                    created_at="2026-04-22T01:31:00+00:00",
+                    fields_used=("close",),
+                    operators_used=("zscore",),
+                    depth=2,
+                    generation_metadata={
+                        "polish_parent_alpha_id": "parent-1",
+                        "polish_transform": "wrap_zscore",
+                        "polish_round_index": 8,
+                    },
+                ),
+            ],
+        )
+
+        generation_config = load_config("config/dev.yaml").generation
+        result = QualityPolisher(repository).generate(
+            config=QualityOptimizationConfig(
+                min_completed_parent_count=1,
+                max_polish_candidates_per_round=2,
+                max_polish_parents_per_round=1,
+                parent_scan_multiplier=2,
+                variants_per_parent=2,
+                enabled_transforms=["wrap_rank", "wrap_zscore"],
+                disabled_transforms=[
+                    "cleanup_redundant_wrapper",
+                    "smooth_ts_mean",
+                    "smooth_ts_decay_linear",
+                    "smooth_ts_rank",
+                    "window_perturb",
+                ],
+                max_variants_per_parent_by_transform={"wrap_rank": 1, "wrap_zscore": 1},
+            ),
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-quality",
+            round_index=10,
+            count=2,
+        )
+    finally:
+        repository.close()
+
+    assert result.stats.scanned_parent_count == 2
+    assert result.stats.saturated_parent_count >= 1
+    assert result.candidates
+    assert all("volume" in candidate.expression for candidate in result.candidates)
+
+
+def test_quality_polisher_uses_external_elite_seeds_without_db_parents() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, run_id="run-quality")
+        generation_config = load_config("config/dev.yaml").generation
+        generation_config.allowed_operators = [
+            "rank",
+            "zscore",
+            "quantile",
+            "ts_mean",
+            "ts_scale",
+            "ts_std_dev",
+        ]
+        generation_config.allowed_fields = ["close", "volume"]
+        generation_config.lookbacks = [2, 3]
+        generation_config.max_depth = 8
+        generation_config.complexity_limit = 24
+        seed = "(rank(ts_mean(close,125))+rank(ts_scale(volume,145)))"
+        result = QualityPolisher(repository).generate(
+            config=QualityOptimizationConfig(
+                min_completed_parent_count=5,
+                max_polish_candidates_per_round=6,
+                enabled_transforms=["wrap_rank", "wrap_zscore"],
+            ),
+            adaptive_config=AdaptiveGenerationConfig(
+                elite_motifs=EliteMotifConfig(
+                    enabled=True,
+                    lookbacks=[125, 145, 150],
+                    seed_expressions=[seed],
+                    max_quality_polish_seeds_per_round=1,
+                    max_seed_variants_per_seed=6,
+                )
+            ),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized={seed},
+            run_id="run-quality",
+            round_index=10,
+            count=6,
+        )
+    finally:
+        repository.close()
+
+    assert result.candidates
+    assert result.stats.external_elite_seed_count == 1
+    assert result.stats.external_elite_generated == len(result.candidates)
+    assert all(candidate.generation_metadata["elite_seed_id"] == "elite_seed_1" for candidate in result.candidates)
+    assert all(candidate.generation_metadata["elite_seed_variant"] for candidate in result.candidates)
+    assert all(candidate.normalized_expression != seed for candidate in result.candidates)
+    assert any("150" in candidate.expression or "125" in candidate.expression for candidate in result.candidates)
+    assert any("zscore(" in candidate.expression or "quantile(" in candidate.expression for candidate in result.candidates)
     assert "redundant_expression" not in result.stats.failure_counts
 
 

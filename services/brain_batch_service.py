@@ -9,8 +9,10 @@ from datetime import UTC, datetime
 
 from core.config import AppConfig
 from core.quality_score import MultiObjectiveQualityScorer
+from domain.candidate import AlphaCandidate
+from domain.metrics import CandidateScore
 from features.registry import build_registry
-from generator.engine import AlphaCandidate, AlphaGenerationEngine, GenerationSessionStats
+from generator.engine import AlphaGenerationEngine, GenerationSessionStats
 from generator.guided_generator import GuidedGenerator
 from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
@@ -25,8 +27,9 @@ from services.data_service import (
     resolve_generation_field_registry,
     sanitize_generation_research_context,
 )
+from services.elite_motifs import annotate_elite_motif_candidates
 from services.evaluation_service import alpha_candidate_from_record
-from services.models import BatchPreparationResult, CandidateScore, CommandEnvironment
+from services.models import BatchPreparationResult, CommandEnvironment
 from services.progress_log import append_progress_event
 from services.quality_polisher import QualityPolishStats, QualityPolisher
 from services.recipe_guided_generator import RecipeGuidedGenerator, RecipeGuidedStats
@@ -245,6 +248,10 @@ class BrainBatchService:
         )
         self._tag_generation_source(fresh_candidates, source="fresh")
         candidates = [*mutation_candidates, *quality_polish_candidates, *recipe_guided_candidates, *fresh_candidates]
+        elite_motif_metrics = annotate_elite_motif_candidates(
+            candidates,
+            config.adaptive_generation.elite_motifs,
+        )
         self.repository.save_alpha_candidates(environment.context.run_id, candidates)
         selector = self.selection_service or CandidateSelectionService(
             research_context.memory_service,
@@ -324,6 +331,7 @@ class BrainBatchService:
                 if str(score.candidate.generation_metadata.get("generation_source") or "")
             )
         )
+        generation_metrics.update(elite_motif_metrics)
         generation_metrics.update(
             {
                 "load_research_context_ms": round(cache_result.profile.load_research_context_ms, 3),

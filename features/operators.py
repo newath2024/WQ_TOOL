@@ -117,6 +117,82 @@ def ts_std(values: FrameLike, window: int) -> FrameLike:
     return rolling_std(values, window)
 
 
+def days_from_last_change(values: FrameLike) -> FrameLike:
+    def transform(series: pd.Series) -> pd.Series:
+        result: list[float] = []
+        last_change_index: int | None = None
+        previous = np.nan
+        for index, value in enumerate(series):
+            if pd.isna(value):
+                result.append(np.nan)
+                continue
+            if index == 0 or pd.isna(previous) or value != previous:
+                last_change_index = index
+                result.append(0.0)
+            else:
+                result.append(float(index - (last_change_index if last_change_index is not None else index)))
+            previous = value
+        return pd.Series(result, index=series.index, dtype=float)
+
+    if isinstance(values, pd.Series):
+        return transform(values)
+    return values.apply(transform, axis=0)
+
+
+def ts_av_diff(values: FrameLike, window: int) -> FrameLike:
+    return values - rolling_mean(values, window)
+
+
+def ts_scale(values: FrameLike, window: int) -> FrameLike:
+    normalized = _coerce_window(window)
+    rolling_low = values.rolling(window=normalized, min_periods=normalized).min()
+    rolling_high = values.rolling(window=normalized, min_periods=normalized).max()
+    return safe_divide(values - rolling_low, rolling_high - rolling_low)
+
+
+def ts_arg_max(values: FrameLike, window: int) -> FrameLike:
+    normalized = _coerce_window(window)
+    return values.rolling(window=normalized, min_periods=normalized).apply(
+        lambda row: float(np.nanargmax(row)) if not np.isnan(row).all() else np.nan,
+        raw=True,
+    )
+
+
+def ts_arg_min(values: FrameLike, window: int) -> FrameLike:
+    normalized = _coerce_window(window)
+    return values.rolling(window=normalized, min_periods=normalized).apply(
+        lambda row: float(np.nanargmin(row)) if not np.isnan(row).all() else np.nan,
+        raw=True,
+    )
+
+
+def quantile(values: FrameLike) -> FrameLike:
+    return rank(values)
+
+
+def inverse(values: NumericLike) -> NumericLike:
+    if isinstance(values, (pd.DataFrame, pd.Series)):
+        return safe_divide(1.0, values)
+    return np.nan if abs(float(values)) <= EPSILON else 1.0 / float(values)
+
+
+def reverse(values: NumericLike) -> NumericLike:
+    return -values
+
+
+def ts_count_nans(values: FrameLike, window: int) -> FrameLike:
+    normalized = _coerce_window(window)
+    return values.isna().astype(float).rolling(window=normalized, min_periods=normalized).sum()
+
+
+def min_value(left: NumericLike, right: NumericLike) -> NumericLike:
+    return np.minimum(left, right)
+
+
+def max_value(left: NumericLike, right: NumericLike) -> NumericLike:
+    return np.maximum(left, right)
+
+
 def sign(values: NumericLike) -> NumericLike:
     return np.sign(values)
 

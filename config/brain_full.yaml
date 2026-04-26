@@ -48,6 +48,17 @@ generation:
       "ts_decay_linear",
       "ts_rank",
       "ts_sum",
+      "days_from_last_change",
+      "ts_av_diff",
+      "ts_scale",
+      "ts_arg_max",
+      "ts_arg_min",
+      "quantile",
+      "inverse",
+      "reverse",
+      "ts_count_nans",
+      "min",
+      "max",
       "ts_mean",
       "ts_std_dev",
       "ts_min",
@@ -117,11 +128,13 @@ adaptive_generation:
   selection:
     pre_sim:
       family_correlation_proxy_penalty: 0.10
-      brain_robustness_proxy_penalty: 0.25
+      brain_robustness_proxy_penalty: 0.35
+      elite_motif_bonus: 0.04
+      elite_seed_similarity_penalty: 0.20
     brain_robustness_proxy:
       enabled: true
       lookback_rounds: 12
-      min_support: 5
+      min_support: 3
       sharpe_floor: 0.30
       fitness_floor: 0.10
   repair_policy:
@@ -177,10 +190,10 @@ adaptive_generation:
     sample_limit: 10
   recipe_generation:
     enabled: true
-    recipe_budget_fraction: 0.40
-    max_recipe_candidates_per_round: 48
-    active_bucket_count: 5
-    max_candidates_per_bucket: 8
+    recipe_budget_fraction: 0.32
+    max_recipe_candidates_per_round: 40
+    active_bucket_count: 4
+    max_candidates_per_bucket: 6
     max_field_candidates_per_side: 8
     max_pair_candidates_per_bucket: 12
     max_drafts_per_bucket: 64
@@ -194,10 +207,15 @@ adaptive_generation:
     dynamic_budget_enabled: true
     dynamic_budget_min_generated_support: 10
     dynamic_budget_min_completed_support: 3
+    bucket_suppression_enabled: true
+    bucket_suppression_min_support: 3
+    bucket_suppression_sharpe_floor: 0.30
+    bucket_suppression_fitness_floor: 0.10
+    bucket_suppression_max_candidates: 1
     source_exploration_floor_fractions:
-      quality_polish: 0.08
-      recipe_guided: 0.30
-      fresh: 0.12
+      quality_polish: 0.14
+      recipe_guided: 0.22
+      fresh: 0.14
     source_reallocation_strength: 0.65
     max_fresh_budget_fraction: 0.34
     fresh_spillover_fraction: 0.06
@@ -210,17 +228,33 @@ adaptive_generation:
       "value_vs_growth|fundamental|balanced": 1.35
       "value_vs_growth|fundamental|quality": 1.25
       "value_vs_growth|fundamental|low_turnover": 0.75
-      "revision_surprise|fundamental|balanced": 0.95
+      "revision_surprise|fundamental|balanced": 0.35
       "revision_surprise|fundamental|quality": 0.70
       "revision_surprise|fundamental|low_turnover": 0.90
       "accrual_vs_cashflow|fundamental|balanced": 0.35
       "accrual_vs_cashflow|fundamental|quality": 0.35
       "accrual_vs_cashflow|fundamental|low_turnover": 0.35
+      "analyst_estimate_recency|analyst|balanced": 1.25
+      "analyst_estimate_recency|analyst|quality": 1.10
+      "analyst_estimate_recency|analyst|low_turnover": 0.95
+      "analyst_estimate_stability|analyst|balanced": 1.20
+      "analyst_estimate_stability|analyst|quality": 1.25
+      "analyst_estimate_stability|analyst|low_turnover": 1.05
+      "analyst_profitability_spread|analyst|balanced": 1.30
+      "analyst_profitability_spread|analyst|quality": 1.20
+      "analyst_profitability_spread|analyst|low_turnover": 0.90
+      "returns_term_structure|returns|balanced": 1.05
+      "returns_term_structure|returns|quality": 0.90
+      "returns_term_structure|returns|low_turnover": 0.85
     enabled_recipe_families:
       - fundamental_quality
       - accrual_vs_cashflow
       - value_vs_growth
       - revision_surprise
+      - analyst_estimate_recency
+      - analyst_estimate_stability
+      - analyst_profitability_spread
+      - returns_term_structure
     objective_profiles:
       - balanced
       - quality
@@ -238,6 +272,7 @@ adaptive_generation:
     max_parent_drawdown: 0.75
     min_completed_parent_count: 5
     selection_prior_weight: 0.10
+    parent_scan_multiplier: 4
     enabled_transforms: ["wrap_rank", "wrap_zscore", "window_perturb", "smooth_ts_mean", "smooth_ts_decay_linear"]
     primary_transform: "wrap_rank"
     max_variants_per_parent_by_transform:
@@ -251,10 +286,28 @@ adaptive_generation:
     transform_score_lookback_rounds: 4
     transform_cooldown_min_attempts: 3
     transform_cooldown_success_rate_floor: 0.20
+    cooldown_exempt_transform_groups: ["smooth_ts_mean", "smooth_ts_decay_linear"]
     window_perturb_neighbor_count: 4
     disabled_transforms:
       - cleanup_redundant_wrapper
       - smooth_ts_rank
+  elite_motifs:
+    enabled: true
+    lookbacks: [125, 145, 150]
+    clone_similarity_threshold: 0.70
+    max_quality_polish_seeds_per_round: 6
+    max_seed_variants_per_seed: 4
+    seed_expressions:
+      - "rank(ts_mean(anl69_cpss_best_eeps_nxt_yr,125))"
+      - "zscore(ts_scale(anl69_eps_best_eeps_cur_yr,145))"
+      - "-rank(days_from_last_change(anl69_cps_expected_report_dt))"
+      - "rank(ts_av_diff(anl69_ebit_best_eeps_nxt_yr,150))"
+      - "rank(ts_arg_max(anl69_net_best_eeps_cur_yr,145))"
+      - "-rank(ts_count_nans(anl69_epss_best_eeps_nxt_yr,125))"
+      - "rank(quantile(anl69_pe_best_eeps_nxt_yr))"
+      - "rank(reverse(inverse(anl69_dpss_best_eeps_cur_yr)))"
+      - "rank(max(ts_mean(anl69_cpss_best_eeps_cur_yr,145),zscore(anl69_eps_best_eeps_cur_yr)))"
+      - "rank(ts_std_dev((anl69_ebit_best_eeps_cur_yr-anl69_net_best_eeps_cur_yr),150))"
 
 simulation:
   delay_mode: fast_d1

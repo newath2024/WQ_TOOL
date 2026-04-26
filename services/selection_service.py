@@ -6,20 +6,20 @@ from collections import Counter
 from core.config import DiversityThresholdConfig, SelectionConfig
 from core.quality_score import MultiObjectiveQualityScorer
 from data.field_registry import FieldRegistry
-from generator.engine import AlphaCandidate
-from memory.case_memory import CaseMemorySnapshot, CaseMemoryService, ObjectiveVector
-from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot, StructuralSignature
+from domain.candidate import AlphaCandidate
+from domain.metrics import CandidateScore, ObjectiveVector, StructuralSignature
+from domain.simulation import SimulationResult
+from memory.case_memory import CaseMemorySnapshot, CaseMemoryService
+from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.diversity_manager import DiversityManager
 from services.meta_model_service import MetaModelFeatureInput, MetaModelService
 from services.models import (
-    CandidateScore,
     CrowdingScore,
     DedupBatchResult,
     SelectionBreakdown,
     SelectionDecision,
-    SimulationResult,
 )
-from services.multi_objective_selection import MultiObjectiveSelectionService, RankedItem
+from evaluation.multi_objective_selection import MultiObjectiveSelectionService, RankedItem
 from storage.repository import SQLiteRepository
 
 
@@ -192,6 +192,13 @@ class SelectionService:
                 recent_proxy_stats=brain_robustness_stats,
             )
             weights = self.config.pre_sim
+            elite_motif_match_score = self._elite_motif_match_score(candidate)
+            elite_seed_similarity = self._elite_seed_similarity(candidate)
+            elite_seed_similarity_raw_penalty = self._elite_seed_similarity_penalty(candidate)
+            elite_motif_bonus = float(weights.elite_motif_bonus) * float(elite_motif_match_score)
+            elite_seed_similarity_penalty = (
+                float(weights.elite_seed_similarity_penalty) * float(elite_seed_similarity_raw_penalty)
+            )
             composite_score = (
                 weights.predicted_quality * predicted_quality
                 + weights.novelty * float(item["novelty_score"])
@@ -200,10 +207,12 @@ class SelectionService:
                 + weights.exploration_bonus * float(item["exploration_bonus"])
                 + float(item["quality_polish_prior"])
                 + float(item["recipe_bucket_prior"])
+                + float(elite_motif_bonus)
                 - weights.duplicate_risk * float(item["duplicate_risk"])
                 - weights.crowding_penalty * float(item["crowding_penalty"])
                 - weights.family_correlation_proxy_penalty * float(family_proxy_penalty)
                 - weights.brain_robustness_proxy_penalty * float(brain_robustness_penalty)
+                - float(elite_seed_similarity_penalty)
                 - weights.complexity_cost * float(item["complexity_cost"])
             )
             breakdown = SelectionBreakdown(
@@ -224,6 +233,11 @@ class SelectionService:
                     "exploration_bonus": float(item["exploration_bonus"]),
                     "quality_polish_prior": float(item["quality_polish_prior"]),
                     "recipe_bucket_prior": float(item["recipe_bucket_prior"]),
+                    "elite_motif_match_score": float(elite_motif_match_score),
+                    "elite_motif_bonus": float(elite_motif_bonus),
+                    "elite_seed_similarity": float(elite_seed_similarity),
+                    "elite_seed_similarity_raw_penalty": float(elite_seed_similarity_raw_penalty),
+                    "elite_seed_similarity_penalty": float(elite_seed_similarity_penalty),
                     "duplicate_risk": float(item["duplicate_risk"]),
                     "crowding_penalty": float(item["crowding_penalty"]),
                     "family_correlation_proxy_penalty": float(family_proxy_penalty),
@@ -256,6 +270,8 @@ class SelectionService:
                     exploration_bonus=float(item["exploration_bonus"]),
                     family_proxy_penalty=float(family_proxy_penalty),
                     brain_robustness_penalty=float(brain_robustness_penalty),
+                    elite_motif_bonus=float(elite_motif_bonus),
+                    elite_seed_similarity_penalty=float(elite_seed_similarity_penalty),
                 ),
             )
             memory_context = candidate.generation_metadata.get("memory_context")
@@ -273,6 +289,8 @@ class SelectionService:
             candidate.generation_metadata["heuristic_predicted_quality"] = float(heuristic_predicted_quality)
             candidate.generation_metadata["quality_polish_prior"] = float(item["quality_polish_prior"])
             candidate.generation_metadata["recipe_bucket_prior"] = float(item["recipe_bucket_prior"])
+            candidate.generation_metadata["elite_motif_bonus"] = float(elite_motif_bonus)
+            candidate.generation_metadata["elite_seed_similarity_penalty"] = float(elite_seed_similarity_penalty)
             candidate.generation_metadata["family_correlation_proxy_penalty"] = float(family_proxy_penalty)
             candidate.generation_metadata["family_proxy_components"] = dict(family_proxy_components)
             candidate.generation_metadata["brain_robustness_proxy_penalty"] = float(brain_robustness_penalty)
@@ -818,6 +836,8 @@ class SelectionService:
         exploration_bonus: float,
         family_proxy_penalty: float,
         brain_robustness_penalty: float,
+        elite_motif_bonus: float = 0.0,
+        elite_seed_similarity_penalty: float = 0.0,
     ) -> tuple[str, ...]:
         codes: list[str] = []
         if duplicate_risk >= 0.75:
@@ -834,6 +854,10 @@ class SelectionService:
             codes.append("brain_robustness_proxy_penalty_applied")
         if brain_robustness_penalty >= 0.50:
             codes.append("brain_robustness_proxy_penalty_high")
+        if elite_motif_bonus > 0.0:
+            codes.append("elite_motif_bonus_applied")
+        if elite_seed_similarity_penalty > 0.0:
+            codes.append("elite_seed_similarity_penalty_applied")
         if exploration_bonus > 0:
             codes.append("exploration_candidate")
         if candidate.generation_metadata.get("parent_refs"):
@@ -861,6 +885,30 @@ class SelectionService:
             return max(0.0, float(candidate.generation_metadata.get("recipe_bucket_prior") or 0.0))
         except (TypeError, ValueError):
             return 0.0
+
+    @staticmethod
+    def _elite_motif_match_score(candidate: AlphaCandidate) -> float:
+        try:
+            return max(0.0, min(1.0, float(candidate.generation_metadata.get("elite_motif_match_score") or 0.0)))
+        except (TypeError, ValueError):
+            return 0.0
+
+    @staticmethod
+    def _elite_seed_similarity(candidate: AlphaCandidate) -> float:
+        try:
+            return max(0.0, min(1.0, float(candidate.generation_metadata.get("elite_seed_similarity") or 0.0)))
+        except (TypeError, ValueError):
+            return 0.0
+
+    @staticmethod
+    def _elite_seed_similarity_penalty(candidate: AlphaCandidate) -> float:
+        explicit = candidate.generation_metadata.get("elite_seed_similarity_penalty")
+        if explicit is not None:
+            try:
+                return max(0.0, min(1.0, float(explicit)))
+            except (TypeError, ValueError):
+                return 0.0
+        return 0.0
 
     @staticmethod
     def _post_sim_reason_codes(*, result: SimulationResult, candidate: AlphaCandidate) -> tuple[str, ...]:

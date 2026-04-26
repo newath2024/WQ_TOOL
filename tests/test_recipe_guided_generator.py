@@ -386,6 +386,11 @@ def test_recipe_guided_generator_applies_dynamic_bucket_budget_with_floor() -> N
             dynamic_budget_min_completed_support=1,
             bucket_exploration_floor=1,
             bucket_reallocation_strength=0.60,
+            bucket_suppression_enabled=True,
+            bucket_suppression_min_support=1,
+            bucket_suppression_sharpe_floor=0.30,
+            bucket_suppression_fitness_floor=0.10,
+            bucket_suppression_max_candidates=1,
         )
 
         result = RecipeGuidedGenerator(repository).generate(
@@ -409,7 +414,8 @@ def test_recipe_guided_generator_applies_dynamic_bucket_budget_with_floor() -> N
     hot_budget = result.stats.budget_allocations["fundamental_quality|fundamental|balanced"]
     cold_budget = result.stats.budget_allocations["accrual_vs_cashflow|fundamental|balanced"]
     assert hot_budget >= cold_budget
-    assert cold_budget >= 1
+    assert cold_budget == 1
+    assert result.stats.suppressed_bucket_caps == {"accrual_vs_cashflow|fundamental|balanced": 1}
     assert result.stats.yield_scores["fundamental_quality|fundamental|balanced"] > result.stats.yield_scores["accrual_vs_cashflow|fundamental|balanced"]
 
 
@@ -559,6 +565,85 @@ def test_recipe_guided_field_rotation_changes_first_draft_field() -> None:
     assert round_0.candidates[0].fields_used != round_1.candidates[0].fields_used
 
 
+@pytest.mark.parametrize(
+    ("family", "dataset_family"),
+    [
+        ("analyst_estimate_recency", "analyst"),
+        ("analyst_estimate_stability", "analyst"),
+        ("analyst_profitability_spread", "analyst"),
+        ("returns_term_structure", "returns"),
+    ],
+)
+def test_elite_motif_recipe_families_generate_with_elite_lookbacks(family: str, dataset_family: str) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, "run-recipe")
+        generation_config = replace(
+            load_config("config/dev.yaml").generation,
+            allowed_fields=[
+                "eps_estimate",
+                "ebit_estimate",
+                "netprofit_estimate",
+                "sales_estimate",
+                "dividend_estimate",
+                "return_5d",
+                "return_250d",
+                "sigma_60m",
+            ],
+            allowed_operators=[
+                "rank",
+                "zscore",
+                "ts_mean",
+                "ts_std_dev",
+                "days_from_last_change",
+                "ts_av_diff",
+                "ts_scale",
+                "ts_arg_max",
+                "ts_arg_min",
+                "ts_count_nans",
+                "reverse",
+            ],
+            lookbacks=[2, 3],
+        )
+        recipe_config = RecipeGenerationConfig(
+            enabled_recipe_families=[family],
+            objective_profiles=["balanced"],
+            active_bucket_count=1,
+            max_recipe_candidates_per_round=6,
+            max_candidates_per_bucket=6,
+            max_field_candidates_per_side=4,
+            max_pair_candidates_per_bucket=4,
+        )
+
+        result = RecipeGuidedGenerator(repository).generate(
+            config=recipe_config,
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(region="USA", regime_key="local", global_regime_key="global"),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-recipe",
+            round_index=0,
+            count=6,
+        )
+    finally:
+        repository.close()
+
+    assert result.candidates
+    assert all(candidate.generation_mode == "recipe_guided" for candidate in result.candidates)
+    assert all(candidate.generation_metadata["recipe_family"] == family for candidate in result.candidates)
+    assert all(candidate.generation_metadata["dataset_family"] == dataset_family for candidate in result.candidates)
+    assert all(candidate.generation_metadata["search_bucket_id"] == f"{family}|{dataset_family}|balanced" for candidate in result.candidates)
+    joined = " ".join(candidate.expression for candidate in result.candidates)
+    assert any(f",{lookback})" in joined for lookback in (125, 145, 150))
+    assert ",2)" not in joined
+    assert ",3)" not in joined
+
+
 def _field_registry() -> FieldRegistry:
     return FieldRegistry(
         fields={
@@ -570,6 +655,14 @@ def _field_registry() -> FieldRegistry:
             "book_value_yield": _field_spec("book_value_yield", category="fundamental", description="book value earnings_yield"),
             "sales_growth": _field_spec("sales_growth", category="fundamental", description="growth forecast expected"),
             "eps_revision": _field_spec("eps_revision", category="analyst", description="estimate revision analyst forecast surprise"),
+            "eps_estimate": _field_spec("eps_estimate", category="analyst", description="eps earnings estimate analyst forecast"),
+            "ebit_estimate": _field_spec("ebit_estimate", category="analyst", description="ebit profit estimate analyst"),
+            "netprofit_estimate": _field_spec("netprofit_estimate", category="analyst", description="net profit income estimate"),
+            "sales_estimate": _field_spec("sales_estimate", category="analyst", description="sales revenue estimate forecast"),
+            "dividend_estimate": _field_spec("dividend_estimate", category="analyst", description="dividend dps estimate"),
+            "return_5d": _field_spec("return_5d", category="price", description="short daily return 5d ret"),
+            "return_250d": _field_spec("return_250d", category="price", description="long return 250d ret"),
+            "sigma_60m": _field_spec("sigma_60m", category="model", description="monthly 60m sigma volatility returns"),
         }
     )
 

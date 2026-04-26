@@ -19,6 +19,7 @@ _CROSS_SECTIONAL_NESTING_OPERATORS = frozenset(
     {
         "rank",
         "zscore",
+        "quantile",
         "group_rank",
         "group_zscore",
         "group_neutralize",
@@ -42,6 +43,7 @@ _DIMENSIONLESS_FUNCTIONS = frozenset(
     {
         "rank",
         "zscore",
+        "quantile",
         "group_rank",
         "group_zscore",
         "group_neutralize",
@@ -283,7 +285,20 @@ class ExpressionValidator:
         errors: list[str],
         issues: list[ValidationIssue],
     ) -> None:
-        if node.name in {"group_neutralize", "group_rank", "group_zscore", "ts_mean", "ts_std_dev", "ts_sum", "ts_rank"}:
+        if node.name in {
+            "group_neutralize",
+            "group_rank",
+            "group_zscore",
+            "ts_mean",
+            "ts_std_dev",
+            "ts_sum",
+            "ts_rank",
+            "ts_av_diff",
+            "ts_scale",
+            "ts_arg_max",
+            "ts_arg_min",
+            "ts_count_nans",
+        }:
             for index, arg in enumerate(node.args):
                 if node.name in _STRICT_GROUP_ARGUMENT_OPERATORS and index == 1:
                     continue
@@ -400,6 +415,19 @@ class ExpressionValidator:
                         "redundant_expression",
                         "Redundant normalization chain 'zscore(rank(x))'.",
                     )
+            if (
+                node.name in {"rank", "zscore", "quantile"}
+                and len(node.args) == 1
+                and isinstance(node.args[0], FunctionCallNode)
+                and node.args[0].name in {"rank", "zscore", "quantile"}
+                and node.args[0].name != node.name
+            ):
+                self._add_issue(
+                    errors,
+                    issues,
+                    "redundant_expression",
+                    f"Redundant normalization chain '{node.name}({node.args[0].name}(x))'.",
+                )
         for child in _iter_children(node):
             self._validate_redundancy(child, errors, issues)
 
