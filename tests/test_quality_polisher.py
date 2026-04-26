@@ -533,6 +533,95 @@ def test_quality_polisher_cools_down_failing_transform_from_recent_metrics() -> 
     assert not any(candidate.generation_metadata["polish_transform"] == "wrap_zscore" for candidate in result.candidates)
 
 
+def test_quality_polisher_emits_smooth_variants_when_wrap_transforms_are_exhausted() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, run_id="run-quality")
+        _seed_parent(repository, run_id="run-quality", alpha_id="parent-1", expression="close")
+        _seed_result(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-1",
+            job_id="job-1",
+            fitness=0.30,
+            sharpe=0.40,
+            simulated_at="2026-04-22T01:00:00+00:00",
+        )
+        repository.save_stage_metrics(
+            [
+                StageMetricRecord(
+                    run_id="run-quality",
+                    round_index=9,
+                    stage="generation",
+                    metrics_json=json.dumps(
+                        {
+                            "quality_polish_transform_attempt_counts": {
+                                "wrap_rank": 3,
+                                "wrap_zscore": 3,
+                            },
+                            "quality_polish_transform_counts": {
+                                "wrap_rank": 0,
+                                "wrap_zscore": 0,
+                            },
+                        }
+                    ),
+                    created_at="2026-04-22T01:30:00+00:00",
+                )
+            ]
+        )
+
+        generation_config = load_config("config/dev.yaml").generation
+        generation_config.lookbacks = [2, 5, 10]
+        result = QualityPolisher(repository).generate(
+            config=QualityOptimizationConfig(
+                min_completed_parent_count=1,
+                max_polish_candidates_per_round=6,
+                enabled_transforms=[
+                    "wrap_rank",
+                    "wrap_zscore",
+                    "smooth_ts_mean",
+                    "smooth_ts_decay_linear",
+                ],
+                disabled_transforms=["cleanup_redundant_wrapper", "smooth_ts_rank"],
+                max_variants_per_parent_by_transform={
+                    "wrap_rank": 1,
+                    "wrap_zscore": 1,
+                    "smooth_ts_mean": 2,
+                    "smooth_ts_decay_linear": 2,
+                },
+            ),
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized={"close"},
+            run_id="run-quality",
+            round_index=10,
+            count=6,
+        )
+    finally:
+        repository.close()
+
+    smooth_groups = {
+        candidate.generation_metadata["polish_transform_group"]
+        for candidate in result.candidates
+    }
+    assert "smooth_ts_mean" in smooth_groups
+    assert "smooth_ts_decay_linear" in smooth_groups
+    assert result.stats.transform_cooldown_counts["wrap_rank"] >= 1
+    assert result.stats.transform_cooldown_counts["wrap_zscore"] >= 1
+    assert all(candidate.normalized_expression != "close" for candidate in result.candidates)
+    assert "redundant_expression" not in result.stats.failure_counts
+
+
 def test_quality_polisher_can_emit_four_window_perturb_variants() -> None:
     repository = SQLiteRepository(":memory:")
     try:

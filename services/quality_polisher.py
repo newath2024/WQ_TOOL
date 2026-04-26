@@ -466,6 +466,8 @@ class QualityPolisher:
         enabled_transforms = set(config.enabled_transforms or [])
         disabled_transforms = set(config.disabled_transforms or [])
 
+        parent_normalized = _normalize_variant_expression(expression)
+
         def add(expr: str, transform: str, *, group: str, priority: int) -> None:
             if group in cooldown_groups or transform in cooldown_groups:
                 stats.transform_cooldown_counts[group] += 1
@@ -478,13 +480,18 @@ class QualityPolisher:
                 return
             if transform_counts[group] >= int(max_by_transform.get(group, limit) or limit):
                 return
-            normalized = expr.strip()
-            if not normalized or normalized in seen or len(variants) >= limit:
+            normalized = _normalize_variant_expression(expr)
+            if (
+                not normalized
+                or normalized == parent_normalized
+                or normalized in seen
+                or len(variants) >= limit
+            ):
                 return
             seen.add(normalized)
             variants.append(
                 _ExpressionVariant(
-                    expression=normalized,
+                    expression=expr.strip(),
                     transform=transform,
                     transform_group=group,
                     priority=priority,
@@ -507,18 +514,41 @@ class QualityPolisher:
             )
 
         preferred_windows = _preferred_windows(lookbacks)
-        rank_prefix = "rank({expr})" if registry.contains("rank") else "{expr}"
-        for operator_name in ("ts_mean", "ts_decay_linear", "ts_rank"):
-            group = f"smooth_{operator_name}"
-            if not registry.contains(operator_name):
-                continue
+        base_expr = to_expression(_unwrap_outer_cross_sectional(root))
+        if registry.contains("ts_mean"):
             for window in preferred_windows:
-                inner = f"{operator_name}({root_expr},{window})"
+                inner = f"ts_mean({base_expr},{window})"
+                if registry.contains("rank"):
+                    add(
+                        f"rank({inner})",
+                        f"smooth_ts_mean_rank_{window}",
+                        group="smooth_ts_mean",
+                        priority=5,
+                    )
+                if registry.contains("zscore"):
+                    add(
+                        f"zscore({inner})",
+                        f"smooth_ts_mean_zscore_{window}",
+                        group="smooth_ts_mean",
+                        priority=5,
+                    )
+        if registry.contains("ts_decay_linear") and registry.contains("rank"):
+            for window in preferred_windows:
+                inner = f"ts_decay_linear({base_expr},{window})"
                 add(
-                    rank_prefix.format(expr=inner),
-                    f"{group}_{window}",
-                    group=group,
-                    priority=5,
+                    f"rank({inner})",
+                    f"smooth_ts_decay_linear_rank_{window}",
+                    group="smooth_ts_decay_linear",
+                    priority=6,
+                )
+        if registry.contains("ts_rank") and registry.contains("rank"):
+            for window in preferred_windows:
+                inner = f"ts_rank({base_expr},{window})"
+                add(
+                    f"rank({inner})",
+                    f"smooth_ts_rank_{window}",
+                    group="smooth_ts_rank",
+                    priority=7,
                 )
 
         for variant_node, transform in _window_perturbations(
