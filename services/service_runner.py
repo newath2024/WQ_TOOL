@@ -43,6 +43,7 @@ class ServiceRunner:
         self.brain_service = brain_service or BrainService(repository, config.brain)
         if not isinstance(self.brain_service.adapter, BrainApiAdapter):
             raise ValueError("run-service requires `brain.backend: api` and a BrainApiAdapter backend.")
+        setattr(self.brain_service.adapter, "stop_requested", False)
         self.session_manager = SessionManager(
             self.brain_service.adapter,
             persona_retry_interval_seconds=config.service.persona_retry_interval_seconds,
@@ -324,6 +325,7 @@ class ServiceRunner:
         if not self.stop_requested:
             logger.warning("Shutdown requested for service via signal=%s", signum)
         self.stop_requested = True
+        setattr(self.brain_service.adapter, "stop_requested", True)
 
     def _resolve_service_environment(self) -> CommandEnvironment:
         existing = self.repository.service_runtime.get_state(self.config.service.lock_name)

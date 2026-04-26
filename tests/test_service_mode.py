@@ -2137,6 +2137,27 @@ def test_service_runner_interruptible_sleep_stops_without_waiting_full_interval(
     assert len(sleep_calls) == 1
 
 
+def test_service_runner_shutdown_marks_brain_adapter_stop_requested() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = _service_config()
+        adapter = FakeApiAdapter()
+        runner = ServiceRunner(
+            repository,
+            config=config,
+            environment=_environment("run-adapter-stop"),
+            brain_service=BrainService(repository, config.brain, adapter=adapter),
+            install_signal_handlers=False,
+        )
+
+        runner.request_shutdown(signum=2)
+    finally:
+        repository.close()
+
+    assert runner.stop_requested is True
+    assert adapter.stop_requested is True
+
+
 def test_service_marks_ambiguous_submitting_batch_failed_when_policy_is_fail() -> None:
     repository = SQLiteRepository(":memory:")
     try:
