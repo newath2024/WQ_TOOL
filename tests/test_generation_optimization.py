@@ -1094,6 +1094,121 @@ def test_brain_batch_service_persists_dynamic_source_budget_metrics(tmp_path: Pa
     assert metrics["source_generated_counts"]["fresh"] == 1
 
 
+def test_brain_batch_service_caps_fresh_spillover_when_specialist_sources_underfill(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        config.storage.path = ":memory:"
+        config.runtime.progress_log_dir = str(tmp_path / "progress")
+        config.loop.simulation_batch_size = 10
+        recipe_config = config.adaptive_generation.recipe_generation
+        recipe_config.recipe_budget_fraction = 0.80
+        recipe_config.max_recipe_candidates_per_round = 8
+        recipe_config.max_fresh_budget_fraction = 0.30
+        recipe_config.fresh_spillover_fraction = 0.10
+        polish_config = config.adaptive_generation.quality_optimization
+        polish_config.polish_budget_fraction = 0.40
+        polish_config.max_polish_candidates_per_round = 4
+        environment = _environment("config/dev.yaml", "generation-fresh-cap")
+        init_run(repository, config, environment, status="running")
+
+        service = BrainBatchService(repository)
+        recipe_candidate = AlphaCandidate(
+            alpha_id="recipe-underfill-1",
+            expression="rank(ts_mean(close,5))",
+            normalized_expression="rank(ts_mean(close,5))",
+            generation_mode="recipe_guided",
+            parent_ids=(),
+            complexity=3,
+            created_at="2026-04-23T00:00:00+00:00",
+            template_name="recipe_fundamental_quality",
+            fields_used=("close",),
+            operators_used=("rank", "ts_mean"),
+            depth=3,
+            generation_metadata={"search_bucket_id": "fundamental_quality|fundamental|balanced"},
+        )
+
+        class _PolishStats:
+            selected_count = 0
+            turnover_repair_selected = 0
+
+            def to_metrics(self):
+                return {
+                    "quality_polish_generated": 0,
+                    "quality_polish_attempt_count": 0,
+                    "quality_polish_success_count": 0,
+                    "quality_polish_selected": 0,
+                    "quality_polish_failure_reason_counts": {},
+                    "turnover_repair_generated": 0,
+                    "turnover_repair_attempt_count": 0,
+                    "turnover_repair_success_count": 0,
+                    "turnover_repair_selected": 0,
+                    "turnover_repair_transform_counts": {},
+                    "quality_polish_generation_total_ms": 0.0,
+                }
+
+        captured: dict[str, int] = {}
+
+        def fake_recipe(**kwargs):
+            captured["recipe_count"] = int(kwargs["count"])
+            return [recipe_candidate], RecipeGuidedStats(enabled=True)
+
+        def fake_fresh(**kwargs):
+            captured["fresh_count"] = int(kwargs["count"])
+            candidates = [
+                AlphaCandidate(
+                    alpha_id=f"fresh-cap-{index}",
+                    expression=f"rank(ts_mean(volume,{index + 2}))",
+                    normalized_expression=f"rank(ts_mean(volume,{index + 2}))",
+                    generation_mode="guided_explore",
+                    parent_ids=(),
+                    complexity=3,
+                    created_at="2026-04-23T00:00:00+00:00",
+                    template_name="template",
+                    fields_used=("volume",),
+                    operators_used=("rank", "ts_mean"),
+                    depth=3,
+                    generation_metadata={},
+                )
+                for index in range(int(kwargs["count"]))
+            ]
+            return candidates, GenerationSessionStats()
+
+        monkeypatch.setattr(service, "_generate_mutation_candidates", lambda **kwargs: ([], GenerationSessionStats()))
+        monkeypatch.setattr(service, "_generate_quality_polish_candidates", lambda **kwargs: ([], _PolishStats()))
+        monkeypatch.setattr(service, "_generate_recipe_guided_candidates", fake_recipe)
+        monkeypatch.setattr(service, "_generate_fresh_candidates", fake_fresh)
+        monkeypatch.setattr(
+            service,
+            "_plan_generation_source_budgets",
+            lambda **kwargs: (
+                {"quality_polish": 4, "recipe_guided": 4, "fresh": 1},
+                {"quality_polish": 0.5, "recipe_guided": 0.5, "fresh": 0.5},
+            ),
+        )
+
+        service.prepare_service_batch(
+            config=config,
+            environment=environment,
+            count=10,
+            mutation_parent_ids=None,
+            round_index=1,
+        )
+        stage_metrics = repository.get_stage_metrics(environment.context.run_id)
+    finally:
+        repository.close()
+
+    metrics = json.loads([row for row in stage_metrics if row["stage"] == "generation"][-1]["metrics_json"])
+    assert captured["recipe_count"] == 8
+    assert captured["fresh_count"] == 2
+    assert metrics["source_budget_caps"]["fresh"] == 3
+    assert metrics["fresh_spillover_used"] == 1
+    assert metrics["source_unfilled_budget"] == 7
+
+
 def test_brain_batch_service_persists_redundant_expression_samples(tmp_path: Path, monkeypatch) -> None:
     repository = SQLiteRepository(":memory:")
     try:

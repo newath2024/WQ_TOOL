@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from core.config import SelectionConfig
+from core.config import BrainRobustnessProxyConfig, PreSimSelectionWeightsConfig, SelectionConfig
 from data.field_registry import FieldRegistry, FieldSpec
 from generator.engine import AlphaCandidate
 from memory.pattern_memory import PatternMemorySnapshot
@@ -240,6 +240,157 @@ def test_pre_sim_score_applies_family_proxy_penalty_from_recent_history() -> Non
     }
     assert breakdowns["alpha-hot"]["family_correlation_proxy_penalty"] > breakdowns["alpha-clean"]["family_correlation_proxy_penalty"]
     assert "family_proxy_penalty_applied" in next(item for item in scored if item.candidate.alpha_id == "alpha-hot").reason_codes
+
+
+def test_pre_sim_score_applies_brain_robustness_proxy_penalty_from_recent_history() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        repository.upsert_run(
+            run_id="run-brain-proxy",
+            seed=7,
+            config_path="config/dev.yaml",
+            config_snapshot="{}",
+            status="running",
+            started_at="2026-04-23T00:00:00+00:00",
+        )
+        history_candidate = _candidate(
+            "hist-weak",
+            "rank(ts_mean(close, 5))",
+            field_name="close",
+            metadata={
+                "generation_source": "fresh",
+                "family_signature": "family-weak",
+                "search_bucket_id": "bucket-weak",
+            },
+        )
+        repository.save_alpha_candidates("run-brain-proxy", [history_candidate])
+        repository.submissions.upsert_batch(
+            SubmissionBatchRecord(
+                batch_id="batch-hist",
+                run_id="run-brain-proxy",
+                round_index=1,
+                backend="api",
+                status="completed",
+                candidate_count=5,
+                sim_config_snapshot="{}",
+                export_path=None,
+                notes_json="{}",
+                created_at="2026-04-23T00:00:00+00:00",
+                updated_at="2026-04-23T00:05:00+00:00",
+            )
+        )
+        repository.submissions.upsert_submissions(
+            [
+                SubmissionRecord(
+                    job_id=f"job-hist-{index}",
+                    batch_id="batch-hist",
+                    run_id="run-brain-proxy",
+                    round_index=index + 1,
+                    candidate_id="hist-weak",
+                    expression=history_candidate.expression,
+                    backend="api",
+                    status="completed",
+                    sim_config_snapshot="{}",
+                    submitted_at=f"2026-04-23T00:0{index}:00+00:00",
+                    updated_at=f"2026-04-23T00:0{index}:30+00:00",
+                    completed_at=f"2026-04-23T00:0{index}:30+00:00",
+                    export_path=None,
+                    raw_submission_json="{}",
+                    error_message=None,
+                )
+                for index in range(5)
+            ]
+        )
+        repository.brain_results.save_results(
+            [
+                BrainResultRecord(
+                    job_id=f"job-hist-{index}",
+                    run_id="run-brain-proxy",
+                    round_index=index + 1,
+                    batch_id="batch-hist",
+                    candidate_id="hist-weak",
+                    expression=history_candidate.expression,
+                    status="completed",
+                    region="USA",
+                    universe="TOP3000",
+                    delay=1,
+                    neutralization="SECTOR",
+                    decay=0,
+                    sharpe=0.05,
+                    fitness=0.00,
+                    turnover=0.40,
+                    drawdown=0.20,
+                    returns=0.00,
+                    margin=0.01,
+                    submission_eligible=False,
+                    rejection_reason=None,
+                    raw_result_json="{}",
+                    metric_source="external_brain",
+                    simulated_at=f"2026-04-23T00:0{index}:00+00:00",
+                    created_at=f"2026-04-23T00:0{index}:00+00:00",
+                )
+                for index in range(5)
+            ]
+        )
+
+        service = SelectionService(
+            config=SelectionConfig(
+                pre_sim=PreSimSelectionWeightsConfig(brain_robustness_proxy_penalty=0.50),
+                brain_robustness_proxy=BrainRobustnessProxyConfig(
+                    enabled=True,
+                    lookback_rounds=12,
+                    min_support=5,
+                    sharpe_floor=0.30,
+                    fitness_floor=0.10,
+                ),
+            ),
+            repository=repository,
+            family_proxy_min_support=999,
+        )
+        field_registry = _field_registry()
+        snapshot = PatternMemorySnapshot(regime_key="regime")
+        weak = _candidate(
+            "alpha-weak-family",
+            "rank(ts_mean(close, 6))",
+            field_name="close",
+            metadata={
+                "generation_source": "fresh",
+                "family_signature": "family-weak",
+                "search_bucket_id": "bucket-weak",
+            },
+        )
+        clean = _candidate(
+            "alpha-clean-family",
+            "rank(ts_mean(volume, 6))",
+            field_name="volume",
+            metadata={
+                "generation_source": "recipe_guided",
+                "family_signature": "family-clean",
+                "search_bucket_id": "bucket-clean",
+            },
+        )
+
+        scored = service.score_pre_sim_candidates(
+            [weak, clean],
+            snapshot=snapshot,
+            field_registry=field_registry,
+            min_pattern_support=1,
+            run_id="run-brain-proxy",
+            round_index=10,
+        )
+    finally:
+        repository.close()
+
+    breakdowns = {
+        item.candidate.alpha_id: item.ranking_rationale["selection_breakdown"]["components"]
+        for item in scored
+    }
+    weak_score = next(item for item in scored if item.candidate.alpha_id == "alpha-weak-family")
+    clean_score = next(item for item in scored if item.candidate.alpha_id == "alpha-clean-family")
+    assert breakdowns["alpha-weak-family"]["brain_robustness_proxy_penalty"] > 0.0
+    assert breakdowns["alpha-clean-family"]["brain_robustness_proxy_penalty"] == 0.0
+    assert weak_score.composite_score < clean_score.composite_score
+    assert "brain_robustness_proxy_penalty_applied" in weak_score.reason_codes
 
 
 def test_post_sim_score_orders_by_quality() -> None:

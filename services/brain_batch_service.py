@@ -160,6 +160,11 @@ class BrainBatchService:
             generation_count=generation_count,
             mutation_count=len(mutation_candidates),
         )
+        source_budget_caps = self._source_budget_capacities(
+            config=config,
+            generation_count=generation_count,
+            mutation_count=len(mutation_candidates),
+        )
         quality_polish_budget = min(
             remaining_after_mutation,
             int(source_budget_plan.get("quality_polish", 0)),
@@ -178,8 +183,14 @@ class BrainBatchService:
             field_penalty_multipliers=local_validation_penalty.multipliers,
             count=quality_polish_budget,
         )
+        quality_polish_shortfall = max(0, int(quality_polish_budget) - len(quality_polish_candidates))
         remaining_after_polish = max(0, generation_count - len(mutation_candidates) - len(quality_polish_candidates))
-        recipe_guided_budget = min(remaining_after_polish, int(source_budget_plan.get("recipe_guided", 0)))
+        planned_recipe_budget = int(source_budget_plan.get("recipe_guided", 0))
+        recipe_guided_headroom = max(0, int(source_budget_caps.get("recipe_guided", 0)) - planned_recipe_budget)
+        recipe_guided_budget = min(
+            remaining_after_polish,
+            planned_recipe_budget + min(quality_polish_shortfall, recipe_guided_headroom),
+        )
         recipe_guided_candidates, recipe_guided_stats = self._generate_recipe_guided_candidates(
             config=config,
             registry=registry,
@@ -195,17 +206,23 @@ class BrainBatchService:
             field_penalty_multipliers=local_validation_penalty.multipliers,
             count=recipe_guided_budget,
         )
-        planned_fresh_budget = int(source_budget_plan.get("fresh", 0))
-        fresh_budget = max(
-            planned_fresh_budget,
-            max(
-                0,
-                generation_count
-                - len(mutation_candidates)
-                - len(quality_polish_candidates)
-                - len(recipe_guided_candidates),
-            ),
+        remaining_after_recipe = max(
+            0,
+            generation_count
+            - len(mutation_candidates)
+            - len(quality_polish_candidates)
+            - len(recipe_guided_candidates),
         )
+        planned_fresh_budget = int(source_budget_plan.get("fresh", 0))
+        fresh_spillover_allowed = int(
+            generation_count * float(config.adaptive_generation.recipe_generation.fresh_spillover_fraction)
+        )
+        fresh_budget = min(
+            remaining_after_recipe,
+            int(source_budget_caps.get("fresh", 0)),
+            planned_fresh_budget + max(0, fresh_spillover_allowed),
+        )
+        fresh_spillover_used = max(0, int(fresh_budget) - min(int(planned_fresh_budget), remaining_after_recipe))
         fresh_candidates, fresh_stats = self._generate_fresh_candidates(
             config=config,
             registry=registry,
@@ -288,6 +305,13 @@ class BrainBatchService:
             key: round(float(value), 6)
             for key, value in source_yield_scores.items()
         }
+        generation_metrics["source_budget_caps"] = {
+            key: int(value)
+            for key, value in source_budget_caps.items()
+            if int(value) > 0
+        }
+        generation_metrics["fresh_spillover_used"] = int(fresh_spillover_used)
+        generation_metrics["source_unfilled_budget"] = max(0, int(generation_count) - len(candidates))
         generation_metrics["source_generated_counts"] = {
             "quality_polish": len(quality_polish_candidates),
             "recipe_guided": len(recipe_guided_candidates),
@@ -589,31 +613,17 @@ class BrainBatchService:
             }
 
         recipe_config = config.adaptive_generation.recipe_generation
-        polish_config = config.adaptive_generation.quality_optimization
-        quality_cap = min(
-            available_pool,
-            int(polish_config.max_polish_candidates_per_round) if bool(polish_config.enabled) else 0,
-            max(
-                1 if bool(polish_config.enabled) and float(polish_config.polish_budget_fraction) > 0 else 0,
-                int(generation_count * float(polish_config.polish_budget_fraction)),
-            ),
+        capacities = self._source_budget_capacities(
+            config=config,
+            generation_count=generation_count,
+            mutation_count=mutation_count,
         )
-        recipe_cap = min(
-            available_pool,
-            int(recipe_config.max_recipe_candidates_per_round) if bool(recipe_config.enabled) else 0,
-            max(
-                1 if bool(recipe_config.enabled) and float(recipe_config.recipe_budget_fraction) > 0 else 0,
-                int(generation_count * float(recipe_config.recipe_budget_fraction)),
-            ),
-        )
-        capacities = {
-            "quality_polish": max(0, int(quality_cap)),
-            "recipe_guided": max(0, int(recipe_cap)),
-            "fresh": max(0, int(available_pool)),
-        }
         static_quality = min(available_pool, capacities["quality_polish"])
         static_recipe = min(max(0, available_pool - static_quality), capacities["recipe_guided"])
-        static_fresh = max(0, available_pool - static_quality - static_recipe)
+        static_fresh = min(
+            capacities["fresh"],
+            max(0, available_pool - static_quality - static_recipe),
+        )
         static_plan = {
             "quality_polish": int(static_quality),
             "recipe_guided": int(static_recipe),
@@ -647,6 +657,42 @@ class BrainBatchService:
         for source in ("quality_polish", "recipe_guided", "fresh"):
             dynamic_plan.setdefault(source, 0)
         return dynamic_plan, yield_scores
+
+    @staticmethod
+    def _source_budget_capacities(
+        *,
+        config: AppConfig,
+        generation_count: int,
+        mutation_count: int,
+    ) -> dict[str, int]:
+        available_pool = max(0, int(generation_count) - int(mutation_count))
+        recipe_config = config.adaptive_generation.recipe_generation
+        polish_config = config.adaptive_generation.quality_optimization
+        quality_cap = min(
+            available_pool,
+            int(polish_config.max_polish_candidates_per_round) if bool(polish_config.enabled) else 0,
+            max(
+                1 if bool(polish_config.enabled) and float(polish_config.polish_budget_fraction) > 0 else 0,
+                int(generation_count * float(polish_config.polish_budget_fraction)),
+            ),
+        )
+        recipe_cap = min(
+            available_pool,
+            int(recipe_config.max_recipe_candidates_per_round) if bool(recipe_config.enabled) else 0,
+            max(
+                1 if bool(recipe_config.enabled) and float(recipe_config.recipe_budget_fraction) > 0 else 0,
+                int(generation_count * float(recipe_config.recipe_budget_fraction)),
+            ),
+        )
+        fresh_cap = min(
+            available_pool,
+            max(0, int(generation_count * float(recipe_config.max_fresh_budget_fraction))),
+        )
+        return {
+            "quality_polish": max(0, int(quality_cap)),
+            "recipe_guided": max(0, int(recipe_cap)),
+            "fresh": max(0, int(fresh_cap)),
+        }
 
     def _load_source_yield_scores(
         self,

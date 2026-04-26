@@ -68,6 +68,10 @@ class SelectionService:
             run_id=run_id,
             round_index=round_index,
         )
+        brain_robustness_stats = self._recent_brain_robustness_proxy_stats(
+            run_id=run_id,
+            round_index=round_index,
+        )
         for candidate in candidates:
             family_score, novelty_score, signature, _ = self.memory_service.score_expression(
                 candidate.expression,
@@ -182,6 +186,11 @@ class SelectionService:
                 batch_size=len(prepared_inputs),
                 recent_family_stats=recent_family_stats,
             )
+            brain_robustness_penalty, brain_robustness_components = self._brain_robustness_proxy_penalty(
+                candidate=candidate,
+                family_signature=family_signature,
+                recent_proxy_stats=brain_robustness_stats,
+            )
             weights = self.config.pre_sim
             composite_score = (
                 weights.predicted_quality * predicted_quality
@@ -194,6 +203,7 @@ class SelectionService:
                 - weights.duplicate_risk * float(item["duplicate_risk"])
                 - weights.crowding_penalty * float(item["crowding_penalty"])
                 - weights.family_correlation_proxy_penalty * float(family_proxy_penalty)
+                - weights.brain_robustness_proxy_penalty * float(brain_robustness_penalty)
                 - weights.complexity_cost * float(item["complexity_cost"])
             )
             breakdown = SelectionBreakdown(
@@ -227,6 +237,16 @@ class SelectionService:
                     "family_proxy_negative_family_surcharge": float(
                         family_proxy_components["negative_family_surcharge"]
                     ),
+                    "brain_robustness_proxy_penalty": float(brain_robustness_penalty),
+                    "brain_robustness_proxy_source_penalty": float(
+                        brain_robustness_components["source_penalty"]
+                    ),
+                    "brain_robustness_proxy_family_penalty": float(
+                        brain_robustness_components["family_penalty"]
+                    ),
+                    "brain_robustness_proxy_bucket_penalty": float(
+                        brain_robustness_components["bucket_penalty"]
+                    ),
                     "complexity_cost": float(item["complexity_cost"]),
                 },
                 reason_codes=self._pre_sim_reason_codes(
@@ -235,6 +255,7 @@ class SelectionService:
                     crowding_score=crowding_scores.get(candidate.alpha_id),
                     exploration_bonus=float(item["exploration_bonus"]),
                     family_proxy_penalty=float(family_proxy_penalty),
+                    brain_robustness_penalty=float(brain_robustness_penalty),
                 ),
             )
             memory_context = candidate.generation_metadata.get("memory_context")
@@ -254,6 +275,8 @@ class SelectionService:
             candidate.generation_metadata["recipe_bucket_prior"] = float(item["recipe_bucket_prior"])
             candidate.generation_metadata["family_correlation_proxy_penalty"] = float(family_proxy_penalty)
             candidate.generation_metadata["family_proxy_components"] = dict(family_proxy_components)
+            candidate.generation_metadata["brain_robustness_proxy_penalty"] = float(brain_robustness_penalty)
+            candidate.generation_metadata["brain_robustness_proxy_components"] = dict(brain_robustness_components)
             candidate.generation_metadata["ml_positive_outcome_prob"] = float(
                 meta_prediction.ml_positive_outcome_prob if meta_prediction else 0.0
             )
@@ -794,6 +817,7 @@ class SelectionService:
         crowding_score: CrowdingScore | None,
         exploration_bonus: float,
         family_proxy_penalty: float,
+        brain_robustness_penalty: float,
     ) -> tuple[str, ...]:
         codes: list[str] = []
         if duplicate_risk >= 0.75:
@@ -806,6 +830,10 @@ class SelectionService:
             codes.append("family_proxy_penalty_applied")
         if family_proxy_penalty >= 0.50:
             codes.append("family_proxy_penalty_high")
+        if brain_robustness_penalty > 0.0:
+            codes.append("brain_robustness_proxy_penalty_applied")
+        if brain_robustness_penalty >= 0.50:
+            codes.append("brain_robustness_proxy_penalty_high")
         if exploration_bonus > 0:
             codes.append("exploration_candidate")
         if candidate.generation_metadata.get("parent_refs"):
@@ -935,6 +963,128 @@ class SelectionService:
             for family_signature, support in family_counts.items()
         }
 
+    def _recent_brain_robustness_proxy_stats(
+        self,
+        *,
+        run_id: str,
+        round_index: int,
+    ) -> dict[str, dict[str, float]]:
+        proxy_config = self.config.brain_robustness_proxy
+        if (
+            not bool(proxy_config.enabled)
+            or float(self.config.pre_sim.brain_robustness_proxy_penalty) <= 0.0
+            or not run_id
+            or self.repository is None
+        ):
+            return {}
+        rows = self.repository.list_generation_result_rows(
+            run_id=run_id,
+            before_round_index=int(round_index),
+            lookback_rounds=int(proxy_config.lookback_rounds),
+        )
+        aggregates: dict[str, dict[str, float]] = {}
+        for row in rows:
+            if str(row.get("status") or "") != "completed":
+                continue
+            metadata = self._metadata_from_row(row)
+            structural = self._structural_signature_from_row(row)
+            source = self._generation_source_from_row(row, metadata=metadata)
+            family_signature = str(
+                metadata.get("family_signature")
+                or structural.get("family_signature")
+                or ""
+            ).strip()
+            bucket_id = str(metadata.get("search_bucket_id") or "").strip()
+            for key in (
+                f"source:{source}" if source else "",
+                f"family:{family_signature}" if family_signature else "",
+                f"bucket:{bucket_id}" if bucket_id else "",
+            ):
+                if not key:
+                    continue
+                bucket = aggregates.setdefault(
+                    key,
+                    {
+                        "support": 0.0,
+                        "robust_pass_count": 0.0,
+                        "sharpe_sum": 0.0,
+                        "fitness_sum": 0.0,
+                    },
+                )
+                sharpe = _to_float(row.get("sharpe"))
+                fitness = _to_float(row.get("fitness"))
+                bucket["support"] += 1.0
+                bucket["sharpe_sum"] += sharpe
+                bucket["fitness_sum"] += fitness
+                if sharpe >= float(proxy_config.sharpe_floor) and fitness >= float(proxy_config.fitness_floor):
+                    bucket["robust_pass_count"] += 1.0
+        return {
+            key: {
+                **values,
+                "avg_sharpe": values["sharpe_sum"] / max(1.0, values["support"]),
+                "avg_fitness": values["fitness_sum"] / max(1.0, values["support"]),
+                "penalty": self._brain_robustness_penalty_from_stats(values),
+            }
+            for key, values in aggregates.items()
+        }
+
+    def _brain_robustness_proxy_penalty(
+        self,
+        *,
+        candidate: AlphaCandidate,
+        family_signature: str,
+        recent_proxy_stats: dict[str, dict[str, float]],
+    ) -> tuple[float, dict[str, float]]:
+        proxy_config = self.config.brain_robustness_proxy
+        if not recent_proxy_stats or not bool(proxy_config.enabled):
+            return 0.0, {"source_penalty": 0.0, "family_penalty": 0.0, "bucket_penalty": 0.0}
+        source = self._candidate_generation_source(candidate)
+        bucket_id = str(candidate.generation_metadata.get("search_bucket_id") or "").strip()
+        components = {
+            "source_penalty": self._supported_brain_proxy_penalty(recent_proxy_stats.get(f"source:{source}")),
+            "family_penalty": self._supported_brain_proxy_penalty(
+                recent_proxy_stats.get(f"family:{family_signature}") if family_signature else None
+            ),
+            "bucket_penalty": self._supported_brain_proxy_penalty(
+                recent_proxy_stats.get(f"bucket:{bucket_id}") if bucket_id else None
+            ),
+        }
+        weighted_values = [
+            (0.40, components["source_penalty"]),
+            (0.35, components["family_penalty"]),
+            (0.25, components["bucket_penalty"]),
+        ]
+        used = [(weight, value) for weight, value in weighted_values if value > 0.0]
+        if not used:
+            return 0.0, components
+        total_weight = sum(weight for weight, _ in used)
+        penalty = sum(weight * value for weight, value in used) / max(1e-9, total_weight)
+        return float(max(0.0, min(1.0, penalty))), components
+
+    def _supported_brain_proxy_penalty(self, stats: dict[str, float] | None) -> float:
+        if not stats:
+            return 0.0
+        if float(stats.get("support") or 0.0) < float(self.config.brain_robustness_proxy.min_support):
+            return 0.0
+        return float(max(0.0, min(1.0, stats.get("penalty") or 0.0)))
+
+    def _brain_robustness_penalty_from_stats(self, stats: dict[str, float]) -> float:
+        proxy_config = self.config.brain_robustness_proxy
+        support = max(1.0, float(stats.get("support") or 0.0))
+        pass_rate = float(stats.get("robust_pass_count") or 0.0) / support
+        avg_sharpe = float(stats.get("sharpe_sum") or 0.0) / support
+        avg_fitness = float(stats.get("fitness_sum") or 0.0) / support
+        sharpe_shortfall = max(0.0, float(proxy_config.sharpe_floor) - avg_sharpe) / max(
+            1e-9,
+            abs(float(proxy_config.sharpe_floor)),
+        )
+        fitness_shortfall = max(0.0, float(proxy_config.fitness_floor) - avg_fitness) / max(
+            1e-9,
+            abs(float(proxy_config.fitness_floor)),
+        )
+        shortfall = min(1.0, 0.50 * sharpe_shortfall + 0.50 * fitness_shortfall)
+        return float(max(0.0, min(1.0, 0.70 * (1.0 - pass_rate) + 0.30 * shortfall)))
+
     def _family_correlation_proxy_penalty(
         self,
         *,
@@ -994,23 +1144,60 @@ class SelectionService:
         return tuple(dict.fromkeys(resolved))
 
     @staticmethod
-    def _family_signature_from_row(row: dict[str, object]) -> str:
+    def _candidate_generation_source(candidate: AlphaCandidate) -> str:
+        explicit = str(candidate.generation_metadata.get("generation_source") or "").strip()
+        if explicit:
+            return explicit
+        if candidate.generation_mode in {"quality_polish", "recipe_guided"}:
+            return str(candidate.generation_mode)
+        return "fresh"
+
+    @staticmethod
+    def _metadata_from_row(row: dict[str, object]) -> dict[str, object]:
         metadata = row.get("generation_metadata")
+        try:
+            decoded = metadata if isinstance(metadata, dict) else json.loads(metadata or "{}")
+        except Exception:  # noqa: BLE001
+            decoded = {}
+        return decoded if isinstance(decoded, dict) else {}
+
+    @staticmethod
+    def _structural_signature_from_row(row: dict[str, object]) -> dict[str, object]:
         structural_signature = row.get("structural_signature_json")
         try:
-            metadata_payload = metadata if isinstance(metadata, dict) else json.loads(metadata or "{}")
-        except Exception:  # noqa: BLE001
-            metadata_payload = {}
-        try:
-            structural_payload = (
+            decoded = (
                 structural_signature
                 if isinstance(structural_signature, dict)
                 else json.loads(structural_signature or "{}")
             )
         except Exception:  # noqa: BLE001
-            structural_payload = {}
+            decoded = {}
+        return decoded if isinstance(decoded, dict) else {}
+
+    @staticmethod
+    def _generation_source_from_row(row: dict[str, object], *, metadata: dict[str, object] | None = None) -> str:
+        payload = metadata if metadata is not None else SelectionService._metadata_from_row(row)
+        explicit = str(payload.get("generation_source") or "").strip()
+        if explicit:
+            return explicit
+        generation_mode = str(row.get("generation_mode") or "").strip()
+        if generation_mode in {"quality_polish", "recipe_guided"}:
+            return generation_mode
+        return "fresh"
+
+    @staticmethod
+    def _family_signature_from_row(row: dict[str, object]) -> str:
+        metadata_payload = SelectionService._metadata_from_row(row)
+        structural_payload = SelectionService._structural_signature_from_row(row)
         return str(
             metadata_payload.get("family_signature")
             or structural_payload.get("family_signature")
             or ""
         ).strip()
+
+
+def _to_float(value: object) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return 0.0
