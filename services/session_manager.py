@@ -5,7 +5,8 @@ from datetime import UTC, datetime
 
 import requests
 
-from adapters.brain_api_adapter import BrainApiAdapter, BiometricsThrottled, PersonaVerificationRequired
+from adapters.brain_api_adapter import BrainApiAdapter
+from domain.exceptions import BiometricsThrottled, PersonaVerificationRequired
 from storage.models import ServiceRuntimeRecord
 
 

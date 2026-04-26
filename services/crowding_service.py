@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections import Counter
 
 from core.config import CrowdingConfig, DiversityThresholdConfig
-from generator.engine import AlphaCandidate
+from domain.candidate import AlphaCandidate
 from memory.case_memory import CaseMemorySnapshot
 from services.models import CrowdingScore
 

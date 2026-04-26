@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from memory.pattern_memory import StructuralSignature
+from domain.metrics import StructuralSignature
 
 
 def _jaccard_distance(left: tuple[str, ...], right: tuple[str, ...]) -> float:

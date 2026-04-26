@@ -12,6 +12,7 @@ from alpha.parser import parse_expression
 from alpha.validator import ValidationResult, has_nesting_violation, validate_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
+from domain.candidate import AlphaCandidate
 from features.registry import OperatorRegistry
 from generator.guardrails import GenerationGuardrails
 from generator.diversity_tracker import GenerationDiversityTracker, operator_path_key
@@ -22,22 +23,6 @@ from generator.mutation_policy import MutationPolicy
 from generator.repair_policy import RepairPolicy
 from memory.case_memory import CaseMemorySnapshot
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot, RegionLearningContext
-
-
-@dataclass(frozen=True, slots=True)
-class AlphaCandidate:
-    alpha_id: str
-    expression: str
-    normalized_expression: str
-    generation_mode: str
-    parent_ids: tuple[str, ...]
-    complexity: int
-    created_at: str
-    template_name: str = ""
-    fields_used: tuple[str, ...] = ()
-    operators_used: tuple[str, ...] = ()
-    depth: int = 0
-    generation_metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True, slots=True)

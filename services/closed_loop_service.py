@@ -9,8 +9,9 @@ import yaml
 
 from core.config import AppConfig
 from core.logging import get_logger
+from domain.candidate import AlphaCandidate
 from features.registry import build_registry
-from generator.engine import AlphaCandidate, AlphaGenerationEngine
+from generator.engine import AlphaGenerationEngine
 from generator.guided_generator import GuidedGenerator
 from generator.seed_utils import derive_generation_seed
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
@@ -32,7 +33,6 @@ from services.models import (
     ClosedLoopRoundSummary,
     ClosedLoopRunSummary,
     CommandEnvironment,
-    SimulationResult,
 )
 from services.progress_log import append_progress_event, resolve_progress_log_path
 from services.session_manager import SessionManager

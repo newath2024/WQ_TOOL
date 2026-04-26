@@ -6,22 +6,23 @@ import time
 from datetime import UTC, datetime, timedelta
 from uuid import uuid4
 
-from adapters.brain_api_adapter import ApiEndpointConfig, BrainApiAdapter, BiometricsThrottled, PersonaVerificationRequired
+from adapters.brain_api_adapter import ApiEndpointConfig, BrainApiAdapter
 from adapters.brain_manual_adapter import BrainManualAdapter
 from adapters.simulation_adapter import SimulationAdapter
 from core.brain_rejections import extract_invalid_field_from_rejection
 from core.config import AppConfig, BrainConfig
 from core.logging import get_logger
 from core.quality_score import MultiObjectiveQualityScorer
-from generator.engine import AlphaCandidate
-from services.models import (
+from domain.brain import BrainResultRecord
+from domain.candidate import AlphaCandidate
+from domain.exceptions import BiometricsThrottled, PersonaVerificationRequired
+from domain.simulation import (
     BrainSimulationBatch,
-    CommandEnvironment,
     SimulationJob,
     SimulationResult,
 )
+from services.models import CommandEnvironment
 from storage.models import (
-    BrainResultRecord,
     ManualImportRecord,
     SubmissionBatchRecord,
     SubmissionRecord,

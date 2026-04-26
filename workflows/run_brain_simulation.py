@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from adapters.brain_manual_adapter import BrainManualAdapter
 from core.config import AppConfig
-from generator.engine import AlphaCandidate
+from domain.candidate import AlphaCandidate
+from domain.metrics import CandidateScore
+from domain.simulation import BrainSimulationBatch
 from services.brain_batch_service import BrainBatchService
 from services.brain_service import BrainService
-from services.models import BrainSimulationBatch, CandidateScore, CommandEnvironment
+from services.models import CommandEnvironment
 from storage.repository import SQLiteRepository
 
 

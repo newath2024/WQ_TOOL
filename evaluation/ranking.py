@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from memory.case_memory import ObjectiveVector
-from services.multi_objective_selection import MultiObjectiveSelectionService, RankedItem
+from domain.metrics import ObjectiveVector
+from evaluation.multi_objective_selection import MultiObjectiveSelectionService, RankedItem
 
 
 def rank_evaluations(evaluations):

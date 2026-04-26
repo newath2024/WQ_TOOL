@@ -8,14 +8,14 @@ from io import StringIO
 import pandas as pd
 
 from core.config import RegionLearningConfig
+from domain.metrics import ObjectiveVector, StructuralSignature
 from evaluation.critic import AlphaDiagnosis
-from memory.case_memory import CaseMemoryService, ObjectiveVector
+from memory.case_memory import CaseMemoryService
 from memory.pattern_memory import (
     MemoryParent,
     PatternMemoryService,
     PatternMemorySnapshot,
     PatternScore,
-    StructuralSignature,
 )
 from storage.models import (
     AlphaCaseRecord,

@@ -6,19 +6,19 @@ from datetime import UTC, datetime
 
 from core.config import AdaptiveGenerationConfig, DiversityThresholdConfig
 from data.field_registry import FieldRegistry
-from memory.case_memory import CaseMemoryService, CaseMemorySnapshot, ObjectiveVector
+from domain.metrics import CandidateScore, ObjectiveVector
+from domain.simulation import SimulationResult
+from memory.case_memory import CaseMemoryService, CaseMemorySnapshot
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
 from services.crowding_service import CrowdingService
 from services.duplicate_service import DuplicateService
 from services.meta_model_service import MetaModelService
 from services.models import (
-    CandidateScore,
     CrowdingScore,
     DedupBatchResult,
     DedupDecision,
     PreSimulationSelectionResult,
     SelectionDecision,
-    SimulationResult,
 )
 from services.selection_service import SelectionService
 from storage.models import (

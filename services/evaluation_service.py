@@ -11,18 +11,19 @@ from alpha.evaluator import evaluate_expression
 from alpha.parser import parse_expression
 from alpha.validator import validate_expression
 from backtest.engine import run_backtest
-from backtest.metrics import PerformanceMetrics, compute_performance_metrics
+from backtest.metrics import compute_performance_metrics
 from backtest.simulation import build_subuniverse_masks
 from core.config import AppConfig
 from core.logging import get_logger
 from core.signatures import build_simulation_signature
+from domain.candidate import AlphaCandidate
+from domain.metrics import PerformanceMetrics, TestResult
 from evaluation.critic import AlphaCritic
 from evaluation.dedup import deduplicate_with_diagnostics, returns_correlation, signal_correlation
 from evaluation.filtering import EvaluatedAlpha, apply_quality_filters, build_evaluated_alpha
 from evaluation.ranking import rank_evaluations
-from evaluation.submission import TestResult, build_submission_tests
+from evaluation.submission import build_submission_tests
 from features.registry import build_registry
-from generator.engine import AlphaCandidate
 from services.data_service import combine_series_for_periods, load_research_context, resolve_field_registry, slice_frame_by_period, slice_series_by_period
 from services.export_service import export_evaluated_alphas
 from services.models import CommandEnvironment, EvaluationServiceResult

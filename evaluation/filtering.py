@@ -4,13 +4,12 @@ from dataclasses import dataclass, field
 
 import pandas as pd
 
-from backtest.metrics import PerformanceMetrics
 from core.config import EvaluationConfig
+from domain.candidate import AlphaCandidate
+from domain.metrics import PerformanceMetrics, StructuralSignature, TestResult
 from evaluation.critic import AlphaDiagnosis
 from evaluation.stability import compute_stability_score
-from evaluation.submission import TestResult, submission_pass_count
-from generator.engine import AlphaCandidate
-from memory.pattern_memory import StructuralSignature
+from evaluation.submission import submission_pass_count
 
 
 @dataclass(slots=True)

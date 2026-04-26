@@ -5,9 +5,9 @@ from datetime import UTC, datetime
 from core.brain_rejections import extract_invalid_field_from_rejection
 from core.quality_score import MultiObjectiveQualityScorer
 from evaluation.critic import AlphaDiagnosis, MutationHint
-from generator.engine import AlphaCandidate
+from domain.candidate import AlphaCandidate
+from domain.simulation import SimulationResult
 from memory.pattern_memory import PatternMemoryService, PatternMemorySnapshot
-from services.models import SimulationResult
 from storage.models import MutationOutcomeRecord
 from storage.repository import SQLiteRepository
 

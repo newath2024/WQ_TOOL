@@ -49,7 +49,8 @@ Nguyen tac quan trong:
 - `services/runtime_lock.py`: DB lease lock cho single-instance service
 - `services/heartbeat_reporter.py`: heartbeat, counters, last success/error
 - `services/service_scheduler.py`: quyet dinh sleep interval theo state
-- `services/service_worker.py`: xu ly mot service tick end-to-end
+- `services/service_worker.py`: compatibility facade cho `services.service_runtime.worker.ServiceWorker`
+- `services/service_runtime/`: cac component nho cua service tick: auth, cooldown, queue, submit, poll, recovery, learning, telemetry
 - `services/service_runner.py`: vong doi process + signal handling + restart-safe orchestration
 - `workflows/run_brain_simulation.py`: workflow submit 1 batch
 - `workflows/run_closed_loop.py`: workflow nhieu round
@@ -58,15 +59,32 @@ Nguyen tac quan trong:
 ### Persistence
 
 - `storage/sqlite.py`: schema va additive migration
-- `storage/repository.py`: main repository boundary
+- `storage/repository.py`: compatibility facade va main repository boundary
+- `storage/repositories/`: repository component theo nhom bang/chuc nang; facade delegate ve day
 - `storage/submission_store.py`: submission batches + submission records + manual imports
 - `storage/brain_result_store.py`: normalized BRAIN results + closed-loop summaries
 - `storage/alpha_history.py`: pattern memory/history + case memory cho ca local va external outcomes
+
+### Config
+
+- `config/models/`: dataclass config theo nhom runtime, service, brain, generation, evaluation, adaptive, storage
+- `config/builders.py`: normalize YAML dict thanh dataclass config
+- `config/loader.py`: doc YAML va apply defaults/backward compatibility
+- `core/config.py`: compatibility re-export cho import cu; khong them logic moi vao day
 
 ### CLI
 
 - `cli/app.py`: parse argv, dispatch command
 - `cli/commands/*`: command modules mong, khong chua business logic
+
+## Maintainer refactor notes
+
+- Domain models nam trong `domain/`; `domain.__init__` va cac facade cu can re-export model public de import cu tiep tuc chay.
+- Khi them domain model: tao file domain gan voi concept, export trong `domain/__init__.py`, va chi import nguoc vao service/storage khi can tranh circular import.
+- Khi them `service_runtime` component: de logic trong component moi, inject qua `ServiceWorker.__init__`, va giu method forwarding tren `ServiceWorker` neu test hoac caller cu con goi private helper.
+- Khi them repository: tao component trong `storage/repositories/`, khoi tao trong `SQLiteRepository`, va delegate method public cu thay vi doi call site lon.
+- Khi them config: dat dataclass trong `config/models/`, builder/validator trong `config/builders.py` hoac `config/validators.py`, loader giu YAML cu hoat dong, va re-export public API tu `core.config` neu import cu da ton tai.
+- Technical debt con lai: `ServiceWorker` van co nhieu private forwarding method; `SQLiteRepository` van la facade lon; Ruff import-order/style debt toan repo chua duoc xu ly de tranh doi ngoai pham vi Phase 6.
 
 ## SimulationAdapter boundary
 

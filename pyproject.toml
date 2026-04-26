@@ -35,11 +35,14 @@ include = [
   "alpha*",
   "backtest*",
   "cli*",
+  "config*",
   "core*",
   "data*",
+  "domain*",
   "evaluation*",
   "features*",
   "generator*",
+  "infrastructure*",
   "memory*",
   "registry*",
   "services*",
@@ -71,7 +74,7 @@ warn_unused_ignores = true
 exclude = ["Document/", "examples/"]
 
 [tool.coverage.run]
-source = ["adapters", "alpha", "backtest", "cli", "core", "data", "evaluation", "features", "generator", "memory", "registry", "services", "storage", "workflows"]
+source = ["adapters", "alpha", "backtest", "cli", "config", "core", "data", "domain", "evaluation", "features", "generator", "infrastructure", "memory", "registry", "services", "storage", "workflows"]
 
 [tool.coverage.report]
 show_missing = true

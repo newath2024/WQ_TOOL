@@ -15,7 +15,12 @@ from urllib.parse import urljoin
 import requests
 
 from adapters.simulation_adapter import SimulationAdapter
-from services.email_service import TelegramNotificationConfig, TelegramService
+from domain.exceptions import (
+    BiometricsThrottled,
+    ConcurrentSimulationLimitExceeded,
+    PersonaVerificationRequired,
+)
+from infrastructure.notifications.telegram import TelegramNotificationConfig, TelegramService
 
 
 class SessionProtocol(Protocol):
@@ -34,26 +39,6 @@ class ApiEndpointConfig:
     status_path_template: str = "/simulations/{job_id}"
     alpha_path_template: str = "/alphas/{alpha_id}"
     recordsets_path_template: str = "/alphas/{alpha_id}/recordsets"
-
-
-class PersonaVerificationRequired(RuntimeError):
-    def __init__(self, persona_url: str) -> None:
-        super().__init__("BRAIN Persona verification is required before API work can continue.")
-        self.persona_url = persona_url
-
-
-class BiometricsThrottled(RuntimeError):
-    def __init__(self, detail: str, *, retry_after_seconds: int | None = None) -> None:
-        super().__init__(f"BRAIN biometrics throttled: {detail}")
-        self.detail = detail
-        self.retry_after_seconds = retry_after_seconds
-
-
-class ConcurrentSimulationLimitExceeded(RuntimeError):
-    def __init__(self, detail: str, *, cooldown_seconds: int = 180) -> None:
-        super().__init__(f"BRAIN concurrent simulation limit exceeded: {detail}")
-        self.detail = detail
-        self.cooldown_seconds = cooldown_seconds
 
 
 class BrainApiAdapter(SimulationAdapter):

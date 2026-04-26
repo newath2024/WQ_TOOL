@@ -1,39 +1,12 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict, dataclass, field
+from dataclasses import dataclass, field
 from typing import Any, Iterable
 
+from domain.metrics import ObjectiveVector, StructuralSignature
 from generator.genome import Genome
-from memory.pattern_memory import BlendDiagnostics, StructuralSignature
-
-
-@dataclass(frozen=True, slots=True)
-class ObjectiveVector:
-    fitness: float = 0.0
-    sharpe: float = 0.0
-    eligibility: float = 0.0
-    robustness: float = 0.0
-    novelty: float = 0.0
-    diversity: float = 0.0
-    turnover_cost: float = 0.0
-    complexity_cost: float = 0.0
-
-    def to_dict(self) -> dict[str, float]:
-        return asdict(self)
-
-    @classmethod
-    def from_dict(cls, payload: dict[str, Any]) -> "ObjectiveVector":
-        return cls(
-            fitness=float(payload.get("fitness", 0.0) or 0.0),
-            sharpe=float(payload.get("sharpe", 0.0) or 0.0),
-            eligibility=float(payload.get("eligibility", 0.0) or 0.0),
-            robustness=float(payload.get("robustness", 0.0) or 0.0),
-            novelty=float(payload.get("novelty", 0.0) or 0.0),
-            diversity=float(payload.get("diversity", 0.0) or 0.0),
-            turnover_cost=float(payload.get("turnover_cost", 0.0) or 0.0),
-            complexity_cost=float(payload.get("complexity_cost", 0.0) or 0.0),
-        )
+from memory.pattern_memory import BlendDiagnostics
 
 
 @dataclass(frozen=True, slots=True)

@@ -4,8 +4,9 @@ import json
 from dataclasses import dataclass
 
 from core.config import DuplicateConfig
-from generator.engine import AlphaCandidate
-from memory.pattern_memory import PatternMemoryService, StructuralSignature
+from domain.candidate import AlphaCandidate
+from domain.metrics import StructuralSignature
+from memory.pattern_memory import PatternMemoryService
 from services.models import DedupBatchResult, DedupDecision
 from storage.repository import SQLiteRepository
 

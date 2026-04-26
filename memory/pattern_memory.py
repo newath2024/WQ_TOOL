@@ -21,6 +21,7 @@ from alpha.ast_nodes import (
 from alpha.parser import parse_expression
 from core.config import AppConfig, RegionLearningConfig
 from core.signatures import build_simulation_signature
+from domain.metrics import StructuralSignature
 from features.registry import WINDOWED_OPERATORS
 from features.registry import build_default_registry
 
@@ -43,28 +44,6 @@ class GeneObservation:
     pattern_id: str
     pattern_kind: str
     pattern_value: str
-
-
-@dataclass(frozen=True, slots=True)
-class StructuralSignature:
-    operators: tuple[str, ...]
-    operator_families: tuple[str, ...]
-    operator_path: tuple[str, ...]
-    fields: tuple[str, ...]
-    field_families: tuple[str, ...]
-    lookbacks: tuple[int, ...]
-    wrappers: tuple[str, ...]
-    depth: int
-    complexity: int
-    complexity_bucket: str
-    horizon_bucket: str
-    turnover_bucket: str
-    motif: str
-    family_signature: str
-    subexpressions: tuple[str, ...]
-
-    def to_dict(self) -> dict:
-        return asdict(self)
 
 
 @dataclass(frozen=True, slots=True)

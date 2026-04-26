@@ -1,21 +1,9 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
-
 import numpy as np
 import pandas as pd
 
-
-@dataclass(frozen=True, slots=True)
-class PerformanceMetrics:
-    sharpe: float
-    max_drawdown: float
-    win_rate: float
-    average_return: float
-    turnover: float
-    observation_count: int
-    cumulative_return: float
-    fitness: float
+from domain.metrics import PerformanceMetrics
 
 
 def compute_performance_metrics(

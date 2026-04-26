@@ -8,7 +8,7 @@ from typing import Any
 import numpy as np
 
 from core.config import MetaModelConfig
-from generator.engine import AlphaCandidate
+from domain.candidate import AlphaCandidate
 from storage.repository import SQLiteRepository
 
 try:

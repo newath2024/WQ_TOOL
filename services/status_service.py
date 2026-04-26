@@ -4,8 +4,8 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from typing import Any
 
+from domain.brain import BrainResultRecord
 from storage.models import (
-    BrainResultRecord,
     RunRecord,
     ServiceDispatchQueueRecord,
     ServiceRuntimeRecord,

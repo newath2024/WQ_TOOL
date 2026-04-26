@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Iterable
 
 from evaluation.alpha_distance import structural_distance
-from memory.pattern_memory import StructuralSignature
+from domain.metrics import StructuralSignature
 
 
 @dataclass(frozen=True, slots=True)

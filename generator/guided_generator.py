@@ -6,10 +6,11 @@ import time
 
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry
+from domain.candidate import AlphaCandidate
 from features.registry import OperatorRegistry
 from generator.guardrails import GenerationGuardrails
 from generator.diversity_tracker import GenerationDiversityTracker
-from generator.engine import AlphaCandidate, AlphaGenerationEngine, GenerationSessionStats
+from generator.engine import AlphaGenerationEngine, GenerationSessionStats
 from generator.genome_builder import GenomeBuilder
 from generator.grammar import MotifGrammar
 from generator.mutation_policy import MutationPolicy

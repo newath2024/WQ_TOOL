@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 
-from backtest.metrics import PerformanceMetrics
+from domain.metrics import PerformanceMetrics
 
 
 def compute_stability_score(train: PerformanceMetrics, validation: PerformanceMetrics) -> float:

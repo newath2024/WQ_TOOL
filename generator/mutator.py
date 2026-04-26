@@ -9,7 +9,7 @@ from alpha.parser import parse_expression
 from data.field_registry import FieldRegistry
 
 if TYPE_CHECKING:
-    from generator.engine import AlphaCandidate
+    from domain.candidate import AlphaCandidate
 
 
 def mutate_expressions(

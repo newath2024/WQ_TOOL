@@ -6,11 +6,16 @@ from typing import Any
 from core.run_context import RunContext
 from data.field_registry import FieldRegistry
 from data.schema import MarketDataBundle
+from domain.candidate import AlphaCandidate
+from domain.metrics import CandidateScore as CandidateScore
+from domain.simulation import (
+    BrainSimulationBatch as BrainSimulationBatch,
+    SimulationJob as SimulationJob,
+    SimulationResult as SimulationResult,
+)
 from evaluation.filtering import EvaluatedAlpha
 from features.transforms import ResearchMatrices
-from generator.engine import AlphaCandidate
-from memory.case_memory import ObjectiveVector
-from memory.pattern_memory import BlendDiagnostics, PatternMemoryService, RegionLearningContext, StructuralSignature
+from memory.pattern_memory import BlendDiagnostics, PatternMemoryService, RegionLearningContext
 from storage.models import MetricRecord, RunRecord, SelectionRecord
 
 
@@ -116,8 +121,8 @@ class SelectionDecision:
 
 @dataclass(slots=True, frozen=True)
 class PreSimulationSelectionResult:
-    selected: tuple["CandidateScore", ...]
-    archived: tuple["CandidateScore", ...]
+    selected: tuple[CandidateScore, ...]
+    archived: tuple[CandidateScore, ...]
     dedup_result: DedupBatchResult
     crowding_scores: dict[str, CrowdingScore] = field(default_factory=dict)
     selection_decisions: tuple[SelectionDecision, ...] = ()
@@ -127,7 +132,7 @@ class PreSimulationSelectionResult:
 @dataclass(slots=True, frozen=True)
 class BatchPreparationResult:
     candidates: tuple[AlphaCandidate, ...]
-    selected: tuple["CandidateScore", ...]
+    selected: tuple[CandidateScore, ...]
     regime_key: str
     validated_count: int = 0
     archived_count: int = 0
@@ -223,98 +228,6 @@ class LineageViewRow:
     outcome_score: float | None
     fail_tags: tuple[str, ...]
     expression: str
-
-
-@dataclass(slots=True, frozen=True)
-class SimulationJob:
-    job_id: str
-    candidate_id: str
-    expression: str
-    backend: str
-    status: str
-    submitted_at: str
-    sim_config_snapshot: dict[str, object]
-    run_id: str
-    batch_id: str
-    round_index: int = 0
-    export_path: str | None = None
-    raw_submission: dict[str, object] = field(default_factory=dict)
-    error_message: str | None = None
-
-
-@dataclass(slots=True, frozen=True)
-class SimulationResult:
-    expression: str
-    job_id: str
-    status: str
-    region: str
-    universe: str
-    delay: int
-    neutralization: str
-    decay: int
-    metrics: dict[str, float | None]
-    submission_eligible: bool | None
-    rejection_reason: str | None
-    raw_result: dict[str, object]
-    simulated_at: str
-    candidate_id: str = ""
-    batch_id: str = ""
-    run_id: str = ""
-    round_index: int = 0
-    backend: str = ""
-    metric_source: str = "external_brain"
-
-
-@dataclass(slots=True, frozen=True)
-class BrainSimulationBatch:
-    batch_id: str
-    backend: str
-    status: str
-    jobs: tuple[SimulationJob, ...] = ()
-    results: tuple[SimulationResult, ...] = ()
-    export_path: str | None = None
-
-    @property
-    def submitted_count(self) -> int:
-        return len(self.jobs)
-
-    @property
-    def completed_count(self) -> int:
-        return sum(1 for result in self.results if result.status == "completed")
-
-    @property
-    def pending_count(self) -> int:
-        terminal = {"completed", "failed", "rejected", "timeout"}
-        return sum(1 for job in self.jobs if job.status not in terminal)
-
-
-@dataclass(slots=True, frozen=True)
-class CandidateScore:
-    candidate: AlphaCandidate
-    objective_vector: ObjectiveVector
-    local_heuristic_score: float
-    novelty_score: float
-    family_score: float
-    structural_signature: StructuralSignature
-    diversity_score: float = 0.0
-    duplicate_risk: float = 0.0
-    crowding_penalty: float = 0.0
-    regime_fit: float = 0.0
-    composite_score: float | None = None
-    archive_reason: str | None = None
-    reason_codes: tuple[str, ...] = ()
-    ranking_rationale: dict[str, object] = field(default_factory=dict)
-
-    @property
-    def total_score(self) -> float:
-        if self.composite_score is not None:
-            return float(self.composite_score)
-        return (
-            self.local_heuristic_score
-            + 0.15 * self.novelty_score
-            + 0.20 * self.family_score
-            + 0.20 * self.diversity_score
-        )
 
 
 @dataclass(slots=True, frozen=True)

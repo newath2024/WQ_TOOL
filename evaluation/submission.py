@@ -1,20 +1,13 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
 import pandas as pd
 
-from backtest.metrics import PerformanceMetrics, compute_performance_metrics
+from backtest.metrics import compute_performance_metrics
 from core.config import AppConfig
-
-
-@dataclass(frozen=True, slots=True)
-class TestResult:
-    name: str
-    passed: bool
-    details: dict[str, Any]
+from domain.metrics import PerformanceMetrics, TestResult
 
 
 def build_submission_tests(

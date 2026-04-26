@@ -5,7 +5,7 @@ from collections import Counter
 from typing import Generic, Iterable, TypeVar
 
 from core.config import DiversityThresholdConfig
-from services.multi_objective_selection import RankedItem
+from evaluation.multi_objective_selection import RankedItem
 
 
 T = TypeVar("T")

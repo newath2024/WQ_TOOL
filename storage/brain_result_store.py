@@ -5,7 +5,8 @@ from collections.abc import Iterable
 
 from core.brain_rejections import extract_invalid_field_from_rejection
 from core.quality_score import MultiObjectiveQualityScorer
-from storage.models import BrainResultRecord, ClosedLoopRoundRecord, ClosedLoopRunRecord
+from domain.brain import BrainResultRecord
+from storage.models import ClosedLoopRoundRecord, ClosedLoopRunRecord
 
 
 class BrainResultStore:
