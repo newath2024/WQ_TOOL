@@ -117,6 +117,13 @@ adaptive_generation:
   selection:
     pre_sim:
       family_correlation_proxy_penalty: 0.10
+      brain_robustness_proxy_penalty: 0.25
+    brain_robustness_proxy:
+      enabled: true
+      lookback_rounds: 12
+      min_support: 5
+      sharpe_floor: 0.30
+      fitness_floor: 0.10
   repair_policy:
     enabled: true
     max_attempts: 3
@@ -170,10 +177,10 @@ adaptive_generation:
     sample_limit: 10
   recipe_generation:
     enabled: true
-    recipe_budget_fraction: 0.20
-    max_recipe_candidates_per_round: 24
-    active_bucket_count: 4
-    max_candidates_per_bucket: 6
+    recipe_budget_fraction: 0.40
+    max_recipe_candidates_per_round: 48
+    active_bucket_count: 5
+    max_candidates_per_bucket: 8
     max_field_candidates_per_side: 8
     max_pair_candidates_per_bucket: 12
     max_drafts_per_bucket: 64
@@ -188,17 +195,27 @@ adaptive_generation:
     dynamic_budget_min_generated_support: 10
     dynamic_budget_min_completed_support: 3
     source_exploration_floor_fractions:
-      quality_polish: 0.10
-      recipe_guided: 0.10
-      fresh: 0.30
+      quality_polish: 0.08
+      recipe_guided: 0.30
+      fresh: 0.12
     source_reallocation_strength: 0.65
+    max_fresh_budget_fraction: 0.34
+    fresh_spillover_fraction: 0.06
     bucket_exploration_floor: 1
     bucket_reallocation_strength: 0.75
     bucket_biases:
-      "revision_surprise|fundamental|balanced": 1.35
-      "revision_surprise|fundamental|quality": 1.25
-      "fundamental_quality|fundamental|balanced": 1.15
-      "fundamental_quality|fundamental|quality": 0.70
+      "fundamental_quality|fundamental|balanced": 1.45
+      "fundamental_quality|fundamental|quality": 1.20
+      "fundamental_quality|fundamental|low_turnover": 1.10
+      "value_vs_growth|fundamental|balanced": 1.35
+      "value_vs_growth|fundamental|quality": 1.25
+      "value_vs_growth|fundamental|low_turnover": 0.75
+      "revision_surprise|fundamental|balanced": 0.95
+      "revision_surprise|fundamental|quality": 0.70
+      "revision_surprise|fundamental|low_turnover": 0.90
+      "accrual_vs_cashflow|fundamental|balanced": 0.35
+      "accrual_vs_cashflow|fundamental|quality": 0.35
+      "accrual_vs_cashflow|fundamental|low_turnover": 0.35
     enabled_recipe_families:
       - fundamental_quality
       - accrual_vs_cashflow
@@ -211,8 +228,8 @@ adaptive_generation:
   quality_optimization:
     enabled: true
     lookback_completed_results: 800
-    polish_budget_fraction: 0.35
-    max_polish_candidates_per_round: 64
+    polish_budget_fraction: 0.12
+    max_polish_candidates_per_round: 16
     max_polish_parents_per_round: 8
     variants_per_parent: 8
     min_parent_fitness: 0.02
@@ -221,12 +238,14 @@ adaptive_generation:
     max_parent_drawdown: 0.75
     min_completed_parent_count: 5
     selection_prior_weight: 0.10
-    enabled_transforms: ["wrap_rank", "wrap_zscore", "window_perturb"]
+    enabled_transforms: ["wrap_rank", "wrap_zscore", "window_perturb", "smooth_ts_mean", "smooth_ts_decay_linear"]
     primary_transform: "wrap_rank"
     max_variants_per_parent_by_transform:
       wrap_rank: 1
       wrap_zscore: 1
       window_perturb: 4
+      smooth_ts_mean: 2
+      smooth_ts_decay_linear: 2
     parent_transform_recent_rounds: 2
     max_parent_transform_uses_per_recent_window: 1
     transform_score_lookback_rounds: 4
@@ -235,8 +254,6 @@ adaptive_generation:
     window_perturb_neighbor_count: 4
     disabled_transforms:
       - cleanup_redundant_wrapper
-      - smooth_ts_mean
-      - smooth_ts_decay_linear
       - smooth_ts_rank
 
 simulation:

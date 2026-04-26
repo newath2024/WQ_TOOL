@@ -199,7 +199,23 @@ class PreSimSelectionWeightsConfig:
     duplicate_risk: float = 0.25
     crowding_penalty: float = 0.20
     family_correlation_proxy_penalty: float = 0.10
+    brain_robustness_proxy_penalty: float = 0.0
     complexity_cost: float = 0.10
+
+
+@dataclass(slots=True)
+class BrainRobustnessProxyConfig:
+    enabled: bool = False
+    lookback_rounds: int = 12
+    min_support: int = 5
+    sharpe_floor: float = 0.30
+    fitness_floor: float = 0.10
+
+    def __post_init__(self) -> None:
+        if self.lookback_rounds <= 0:
+            raise ValueError("adaptive_generation.selection.brain_robustness_proxy.lookback_rounds must be > 0")
+        if self.min_support <= 0:
+            raise ValueError("adaptive_generation.selection.brain_robustness_proxy.min_support must be > 0")
 
 
 @dataclass(slots=True)
@@ -228,6 +244,7 @@ class SelectionConfig:
     pre_sim: PreSimSelectionWeightsConfig = field(default_factory=PreSimSelectionWeightsConfig)
     post_sim: PostSimSelectionWeightsConfig = field(default_factory=PostSimSelectionWeightsConfig)
     mutation_parent: MutationParentSelectionWeightsConfig = field(default_factory=MutationParentSelectionWeightsConfig)
+    brain_robustness_proxy: BrainRobustnessProxyConfig = field(default_factory=BrainRobustnessProxyConfig)
 
     def __post_init__(self) -> None:
         self.bias = str(self.bias or "balanced_frontier").strip().lower()
@@ -377,6 +394,8 @@ class RecipeGenerationConfig:
         }
     )
     source_reallocation_strength: float = 0.65
+    max_fresh_budget_fraction: float = 1.0
+    fresh_spillover_fraction: float = 1.0
     bucket_exploration_floor: int = 1
     bucket_reallocation_strength: float = 0.75
     bucket_biases: dict[str, float] = field(
@@ -439,6 +458,14 @@ class RecipeGenerationConfig:
         if not 0.0 <= float(self.source_reallocation_strength) <= 1.0:
             raise ValueError(
                 "adaptive_generation.recipe_generation.source_reallocation_strength must be between 0 and 1"
+            )
+        if not 0.0 <= float(self.max_fresh_budget_fraction) <= 1.0:
+            raise ValueError(
+                "adaptive_generation.recipe_generation.max_fresh_budget_fraction must be between 0 and 1"
+            )
+        if not 0.0 <= float(self.fresh_spillover_fraction) <= 1.0:
+            raise ValueError(
+                "adaptive_generation.recipe_generation.fresh_spillover_fraction must be between 0 and 1"
             )
         if self.bucket_exploration_floor < 0:
             raise ValueError("adaptive_generation.recipe_generation.bucket_exploration_floor must be >= 0")
@@ -1100,17 +1127,21 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     adaptive_payload["region_learning"] = RegionLearningConfig(**adaptive_payload.get("region_learning", {}))
     adaptive_payload["duplicate"] = DuplicateConfig(**adaptive_payload.get("duplicate", {}))
     adaptive_payload["crowding"] = CrowdingConfig(**adaptive_payload.get("crowding", {}))
+    selection_payload = dict(adaptive_payload.get("selection", {}) or {})
     adaptive_payload["selection"] = SelectionConfig(
         **{
-            **adaptive_payload.get("selection", {}),
+            **selection_payload,
             "pre_sim": PreSimSelectionWeightsConfig(
-                **dict((adaptive_payload.get("selection", {}) or {}).get("pre_sim", {}))
+                **dict(selection_payload.get("pre_sim", {}) or {})
             ),
             "post_sim": PostSimSelectionWeightsConfig(
-                **dict((adaptive_payload.get("selection", {}) or {}).get("post_sim", {}))
+                **dict(selection_payload.get("post_sim", {}) or {})
             ),
             "mutation_parent": MutationParentSelectionWeightsConfig(
-                **dict((adaptive_payload.get("selection", {}) or {}).get("mutation_parent", {}))
+                **dict(selection_payload.get("mutation_parent", {}) or {})
+            ),
+            "brain_robustness_proxy": BrainRobustnessProxyConfig(
+                **dict(selection_payload.get("brain_robustness_proxy", {}) or {})
             ),
         }
     )

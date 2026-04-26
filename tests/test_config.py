@@ -171,6 +171,8 @@ def test_recipe_generation_config_defaults_and_validation() -> None:
         "fresh": 0.30,
     }
     assert config.source_reallocation_strength == 0.65
+    assert config.max_fresh_budget_fraction == 1.0
+    assert config.fresh_spillover_fraction == 1.0
     assert config.bucket_exploration_floor == 1
     assert config.bucket_reallocation_strength == 0.75
     assert config.bucket_biases["revision_surprise|fundamental|balanced"] == 1.35
@@ -412,11 +414,33 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert penalty.penalty_strength == 1.0
     assert penalty.min_multiplier == 0.10
     assert penalty.sample_limit == 10
+    recipe = config.adaptive_generation.recipe_generation
+    assert recipe.recipe_budget_fraction == 0.40
+    assert recipe.max_recipe_candidates_per_round == 48
+    assert recipe.active_bucket_count == 5
+    assert recipe.max_candidates_per_bucket == 8
+    assert recipe.source_exploration_floor_fractions == {
+        "quality_polish": 0.08,
+        "recipe_guided": 0.30,
+        "fresh": 0.12,
+    }
+    assert recipe.max_fresh_budget_fraction == 0.34
+    assert recipe.fresh_spillover_fraction == 0.06
+    assert recipe.bucket_biases["fundamental_quality|fundamental|balanced"] == 1.45
+    assert recipe.bucket_biases["value_vs_growth|fundamental|quality"] == 1.25
+    assert recipe.bucket_biases["accrual_vs_cashflow|fundamental|balanced"] == 0.35
+    selection = config.adaptive_generation.selection
+    assert selection.pre_sim.brain_robustness_proxy_penalty == 0.25
+    assert selection.brain_robustness_proxy.enabled is True
+    assert selection.brain_robustness_proxy.lookback_rounds == 12
+    assert selection.brain_robustness_proxy.min_support == 5
+    assert selection.brain_robustness_proxy.sharpe_floor == 0.30
+    assert selection.brain_robustness_proxy.fitness_floor == 0.10
     quality = config.adaptive_generation.quality_optimization
     assert quality.enabled is True
     assert quality.lookback_completed_results == 800
-    assert quality.polish_budget_fraction == 0.35
-    assert quality.max_polish_candidates_per_round == 64
+    assert quality.polish_budget_fraction == 0.12
+    assert quality.max_polish_candidates_per_round == 16
     assert quality.max_polish_parents_per_round == 8
     assert quality.variants_per_parent == 8
     assert quality.min_parent_fitness == 0.02
@@ -425,12 +449,20 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert quality.max_parent_drawdown == 0.75
     assert quality.min_completed_parent_count == 5
     assert quality.selection_prior_weight == 0.10
-    assert quality.enabled_transforms == ["wrap_rank", "wrap_zscore", "window_perturb"]
+    assert quality.enabled_transforms == [
+        "wrap_rank",
+        "wrap_zscore",
+        "window_perturb",
+        "smooth_ts_mean",
+        "smooth_ts_decay_linear",
+    ]
     assert quality.primary_transform == "wrap_rank"
     assert quality.max_variants_per_parent_by_transform == {
         "wrap_rank": 1,
         "wrap_zscore": 1,
         "window_perturb": 4,
+        "smooth_ts_mean": 2,
+        "smooth_ts_decay_linear": 2,
     }
     assert quality.parent_transform_recent_rounds == 2
     assert quality.max_parent_transform_uses_per_recent_window == 1
@@ -438,7 +470,9 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert quality.transform_cooldown_min_attempts == 3
     assert quality.transform_cooldown_success_rate_floor == 0.20
     assert quality.window_perturb_neighbor_count == 4
-    assert "smooth_ts_mean" in quality.disabled_transforms
+    assert "smooth_ts_mean" not in quality.disabled_transforms
+    assert "smooth_ts_decay_linear" not in quality.disabled_transforms
+    assert "smooth_ts_rank" in quality.disabled_transforms
 
 
 def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_path: Path) -> None:
@@ -502,6 +536,10 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.adaptive_generation.quality_optimization.max_variants_per_parent_by_transform["window_perturb"] == 4
     assert config.adaptive_generation.quality_optimization.parent_transform_recent_rounds == 2
     assert config.adaptive_generation.quality_optimization.window_perturb_neighbor_count == 4
+    assert config.adaptive_generation.recipe_generation.max_fresh_budget_fraction == 1.0
+    assert config.adaptive_generation.recipe_generation.fresh_spillover_fraction == 1.0
+    assert config.adaptive_generation.selection.pre_sim.brain_robustness_proxy_penalty == 0.0
+    assert config.adaptive_generation.selection.brain_robustness_proxy.enabled is False
     assert config.service.research_context_cache_enabled is True
     assert config.service.research_context_cache_ttl_seconds == 0
     assert config.runtime.progress_log_enabled is True
