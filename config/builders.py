@@ -25,6 +25,7 @@ from config.models.adaptive import (
     RegionLearningConfig,
     RegimeDetectionConfig,
     RepairPolicyConfig,
+    SearchSpaceFilterConfig,
     SelectionConfig,
     StrategyMixConfig,
 )
@@ -121,6 +122,9 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     )
     adaptive_payload["local_validation_field_penalty"] = LocalValidationFieldPenaltyConfig(
         **adaptive_payload.get("local_validation_field_penalty", {})
+    )
+    adaptive_payload["search_space_filter"] = SearchSpaceFilterConfig(
+        **adaptive_payload.get("search_space_filter", {})
     )
     adaptive_payload["recipe_generation"] = RecipeGenerationConfig(
         **adaptive_payload.get("recipe_generation", {})

@@ -23,6 +23,7 @@ from services.data_service import (
     build_local_validation_field_penalties,
 )
 from services.recipe_guided_generator import RecipeGuidedStats
+from services.search_space_filter import build_search_space_filter_context
 from services.runtime_service import build_command_environment, init_run
 from storage.models import StageMetricRecord
 from storage.repository import SQLiteRepository
@@ -1319,3 +1320,67 @@ def test_brain_batch_service_applies_local_validation_penalty_from_previous_roun
     assert metrics["local_validation_penalty_multipliers"]["close"] == captured["close_multiplier"]
     assert captured["close_score"] > 0
     assert captured["close_multiplier"] < 1.0
+
+
+def test_brain_batch_service_scopes_fresh_generation_with_search_space_filter(monkeypatch) -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        config = load_config("config/dev.yaml")
+        config.storage.path = ":memory:"
+        config.adaptive_generation.enabled = True
+        config.generation.allowed_operators = ["rank", "ts_corr", "ts_mean"]
+        search_filter = config.adaptive_generation.search_space_filter
+        search_filter.enabled = True
+        search_filter.lane_operator_allowlists = {"fresh": ["rank", "ts_mean"]}
+        search_filter.lane_field_caps = {"fresh": 2}
+        field_registry = _build_field_registry()
+        context = build_search_space_filter_context(
+            repository=repository,
+            config=config,
+            field_registry=field_registry,
+            run_id="run-scope",
+            round_index=1,
+            blocked_fields=set(),
+        )
+        service = BrainBatchService(repository)
+
+        class CaptureGuidedGenerator:
+            last_generation_config = None
+            last_field_registry = None
+
+            def __init__(self, *, generation_config, field_registry, **kwargs):
+                del kwargs
+                self.last_generation_stats = GenerationSessionStats()
+                CaptureGuidedGenerator.last_generation_config = generation_config
+                CaptureGuidedGenerator.last_field_registry = field_registry
+
+            def generate(self, **kwargs):
+                del kwargs
+                return []
+
+        monkeypatch.setattr("services.brain_batch_service.GuidedGenerator", CaptureGuidedGenerator)
+
+        service._generate_fresh_candidates(
+            config=config,
+            registry=build_registry(config.generation.allowed_operators),
+            field_registry=field_registry,
+            snapshot=PatternMemorySnapshot(regime_key="regime"),
+            case_snapshot=None,
+            count=1,
+            existing_normalized=set(),
+            memory_service=PatternMemoryService(),
+            region_learning_context=None,
+            run_id="run-scope",
+            round_index=1,
+            generation_guardrails=None,
+            field_penalty_multipliers={},
+            search_space_context=context,
+        )
+    finally:
+        repository.close()
+
+    assert CaptureGuidedGenerator.last_generation_config is not None
+    assert CaptureGuidedGenerator.last_generation_config.allowed_operators == ["rank", "ts_mean"]
+    assert "ts_corr" not in CaptureGuidedGenerator.last_generation_config.allowed_operators
+    assert CaptureGuidedGenerator.last_field_registry is not None
+    assert len(CaptureGuidedGenerator.last_field_registry.generation_numeric_fields([])) == 2

@@ -767,24 +767,46 @@ def build_generation_guardrails(
     )
 
 
-def filter_generation_alpha_records(records, *, blocked_fields: set[str]) -> list:
-    if not blocked_fields:
+def filter_generation_alpha_records(
+    records,
+    *,
+    blocked_fields: set[str],
+    allowed_fields: set[str] | None = None,
+) -> list:
+    if not blocked_fields and allowed_fields is None:
         return list(records)
     filtered = []
     for record in records:
         fields_used = _decode_text_list(getattr(record, "fields_used_json", ""))
-        if blocked_fields.isdisjoint(fields_used):
-            filtered.append(record)
+        field_set = set(fields_used)
+        if blocked_fields and not blocked_fields.isdisjoint(field_set):
+            continue
+        if allowed_fields is not None and field_set and not field_set.issubset(allowed_fields):
+            continue
+        filtered.append(record)
     return filtered
 
 
-def filter_generation_pattern_snapshot(snapshot, *, blocked_fields: set[str]):
-    if not blocked_fields or not getattr(snapshot, "top_parents", ()):
+def filter_generation_pattern_snapshot(
+    snapshot,
+    *,
+    blocked_fields: set[str],
+    allowed_fields: set[str] | None = None,
+):
+    if (not blocked_fields and allowed_fields is None) or not getattr(snapshot, "top_parents", ()):
         return snapshot
     filtered_top_parents = tuple(
         parent
         for parent in snapshot.top_parents
-        if parent.structural_signature is None or blocked_fields.isdisjoint(parent.structural_signature.fields)
+        if parent.structural_signature is None
+        or (
+            blocked_fields.isdisjoint(parent.structural_signature.fields)
+            and (
+                allowed_fields is None
+                or not parent.structural_signature.fields
+                or set(parent.structural_signature.fields).issubset(allowed_fields)
+            )
+        )
     )
     if len(filtered_top_parents) == len(snapshot.top_parents):
         return snapshot
@@ -795,18 +817,29 @@ def filter_generation_case_snapshot(
     case_snapshot: CaseMemorySnapshot | None,
     *,
     blocked_fields: set[str],
+    allowed_fields: set[str] | None = None,
 ) -> CaseMemorySnapshot | None:
-    if case_snapshot is None or not blocked_fields:
+    if case_snapshot is None or (not blocked_fields and allowed_fields is None):
         return case_snapshot
     filtered_cases = tuple(
         case
         for case in case_snapshot.cases
         if blocked_fields.isdisjoint(case.structural_signature.fields)
+        and (
+            allowed_fields is None
+            or not case.structural_signature.fields
+            or set(case.structural_signature.fields).issubset(allowed_fields)
+        )
     )
     filtered_global_cases = tuple(
         case
         for case in case_snapshot.global_cases
         if blocked_fields.isdisjoint(case.structural_signature.fields)
+        and (
+            allowed_fields is None
+            or not case.structural_signature.fields
+            or set(case.structural_signature.fields).issubset(allowed_fields)
+        )
     )
     if (
         len(filtered_cases) == len(case_snapshot.cases)

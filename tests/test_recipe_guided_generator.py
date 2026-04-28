@@ -72,6 +72,49 @@ def test_recipe_guided_generator_uses_parentless_low_turnover_smoothed_variants(
     assert result.stats.parentless_count == len(result.candidates)
 
 
+def test_recipe_guided_generator_obeys_filtered_lane_field_pool() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, "run-recipe")
+        generation_config = replace(
+            load_config("config/dev.yaml").generation,
+            allowed_fields=["eps_estimate"],
+            allowed_operators=["rank", "days_from_last_change", "ts_av_diff", "ts_arg_max"],
+        )
+        recipe_config = RecipeGenerationConfig(
+            enabled_recipe_families=["analyst_estimate_recency"],
+            objective_profiles=["balanced"],
+            active_bucket_count=1,
+            max_recipe_candidates_per_round=4,
+            max_candidates_per_bucket=4,
+        )
+
+        result = RecipeGuidedGenerator(repository).generate(
+            config=recipe_config,
+            adaptive_config=AdaptiveGenerationConfig(
+                elite_motifs=replace(AdaptiveGenerationConfig().elite_motifs, lookbacks=[125, 145, 150])
+            ),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(region="USA", regime_key="local", global_regime_key="global"),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-recipe",
+            round_index=1,
+            count=4,
+        )
+    finally:
+        repository.close()
+
+    assert result.candidates
+    assert all(candidate.fields_used == ("eps_estimate",) for candidate in result.candidates)
+    assert all("eps_estimate" in candidate.expression for candidate in result.candidates)
+    assert all("sales_estimate" not in candidate.expression for candidate in result.candidates)
+
+
 def test_recipe_guided_generator_can_use_recent_completed_parent() -> None:
     repository = SQLiteRepository(":memory:")
     try:

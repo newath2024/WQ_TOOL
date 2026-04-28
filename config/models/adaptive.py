@@ -315,6 +315,112 @@ class LocalValidationFieldPenaltyConfig:
 
 
 @dataclass(slots=True)
+class SearchSpaceFilterConfig:
+    enabled: bool = False
+    profile_mismatch_multiplier: float = 0.25
+    unknown_profile_multiplier: float = 0.75
+    validation_field_multiplier: float = 0.35
+    validation_field_min_count: int = 2
+    completed_lookback_rounds: int = 20
+    min_completed_support: int = 3
+    sharpe_floor: float = 0.30
+    fitness_floor: float = 0.10
+    field_result_multiplier: float = 0.50
+    operator_result_multiplier: float = 0.60
+    winner_prior_enabled: bool = False
+    winner_prior_lookback_rounds: int = 20
+    winner_prior_min_support: int = 2
+    winner_prior_sharpe_floor: float = 0.30
+    winner_prior_fitness_floor: float = 0.10
+    winner_prior_strong_sharpe_floor: float = 0.50
+    winner_prior_strong_fitness_floor: float = 0.30
+    winner_field_multiplier: float = 1.35
+    strong_winner_field_multiplier: float = 1.80
+    weak_field_multiplier: float = 0.65
+    winner_operator_multiplier: float = 1.35
+    strong_winner_operator_multiplier: float = 1.80
+    weak_operator_multiplier: float = 0.65
+    lane_field_caps: dict[str, int] = field(default_factory=dict)
+    lane_field_min_count: int = 0
+    lane_operator_allowlists: dict[str, list[str]] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        for name in (
+            "profile_mismatch_multiplier",
+            "unknown_profile_multiplier",
+            "validation_field_multiplier",
+            "field_result_multiplier",
+            "operator_result_multiplier",
+        ):
+            value = float(getattr(self, name))
+            if not 0.0 <= value <= 1.0:
+                raise ValueError(f"adaptive_generation.search_space_filter.{name} must be between 0 and 1")
+            setattr(self, name, value)
+        self.validation_field_min_count = int(self.validation_field_min_count)
+        self.completed_lookback_rounds = int(self.completed_lookback_rounds)
+        self.min_completed_support = int(self.min_completed_support)
+        self.sharpe_floor = float(self.sharpe_floor)
+        self.fitness_floor = float(self.fitness_floor)
+        self.winner_prior_lookback_rounds = int(self.winner_prior_lookback_rounds)
+        self.winner_prior_min_support = int(self.winner_prior_min_support)
+        self.winner_prior_sharpe_floor = float(self.winner_prior_sharpe_floor)
+        self.winner_prior_fitness_floor = float(self.winner_prior_fitness_floor)
+        self.winner_prior_strong_sharpe_floor = float(self.winner_prior_strong_sharpe_floor)
+        self.winner_prior_strong_fitness_floor = float(self.winner_prior_strong_fitness_floor)
+        self.lane_field_min_count = int(self.lane_field_min_count)
+        if self.validation_field_min_count <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.validation_field_min_count must be > 0"
+            )
+        if self.completed_lookback_rounds <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.completed_lookback_rounds must be > 0"
+            )
+        if self.min_completed_support <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.min_completed_support must be > 0"
+            )
+        if self.winner_prior_lookback_rounds <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_lookback_rounds must be > 0"
+            )
+        if self.winner_prior_min_support <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_min_support must be > 0"
+            )
+        if self.lane_field_min_count < 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.lane_field_min_count must be >= 0"
+            )
+        for name in (
+            "winner_field_multiplier",
+            "strong_winner_field_multiplier",
+            "weak_field_multiplier",
+            "winner_operator_multiplier",
+            "strong_winner_operator_multiplier",
+            "weak_operator_multiplier",
+        ):
+            value = float(getattr(self, name))
+            if value <= 0.0:
+                raise ValueError(f"adaptive_generation.search_space_filter.{name} must be > 0")
+            setattr(self, name, value)
+        self.lane_field_caps = {
+            str(key).strip(): max(0, int(value))
+            for key, value in dict(self.lane_field_caps or {}).items()
+            if str(key).strip()
+        }
+        normalized_allowlists: dict[str, list[str]] = {}
+        for key, values in dict(self.lane_operator_allowlists or {}).items():
+            lane = str(key).strip()
+            if not lane:
+                continue
+            normalized_allowlists[lane] = list(
+                dict.fromkeys(str(item).strip() for item in (values or []) if str(item).strip())
+            )
+        self.lane_operator_allowlists = normalized_allowlists
+
+
+@dataclass(slots=True)
 class RecipeGenerationConfig:
     enabled: bool = True
     recipe_budget_fraction: float = 0.20
@@ -685,6 +791,7 @@ class AdaptiveGenerationConfig:
     local_validation_field_penalty: LocalValidationFieldPenaltyConfig = field(
         default_factory=LocalValidationFieldPenaltyConfig
     )
+    search_space_filter: SearchSpaceFilterConfig = field(default_factory=SearchSpaceFilterConfig)
     recipe_generation: RecipeGenerationConfig = field(default_factory=RecipeGenerationConfig)
     quality_optimization: QualityOptimizationConfig = field(
         default_factory=QualityOptimizationConfig
@@ -720,6 +827,7 @@ __all__ = [
     "LearnedRegimeConfig",
     "MutationLearningConfig",
     "LocalValidationFieldPenaltyConfig",
+    "SearchSpaceFilterConfig",
     "RecipeGenerationConfig",
     "QualityOptimizationConfig",
     "EliteMotifConfig",

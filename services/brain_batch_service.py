@@ -33,6 +33,7 @@ from services.models import BatchPreparationResult, CommandEnvironment
 from services.progress_log import append_progress_event
 from services.quality_polisher import QualityPolishStats, QualityPolisher
 from services.recipe_guided_generator import RecipeGuidedGenerator, RecipeGuidedStats
+from services.search_space_filter import SearchSpaceFilterContext, build_search_space_filter_context
 from storage.models import StageMetricRecord
 from storage.repository import SQLiteRepository
 
@@ -111,6 +112,16 @@ class BrainBatchService:
         )
         resolve_field_registry_ms = (time.perf_counter() - resolve_field_registry_started) * 1000.0
         blocked_field_set = set(blocked_fields)
+        search_space_context = build_search_space_filter_context(
+            repository=self.repository,
+            config=config,
+            field_registry=field_registry,
+            run_id=environment.context.run_id,
+            round_index=round_index,
+            blocked_fields=blocked_field_set,
+        )
+        field_registry = search_space_context.field_registry
+        active_generation_fields = search_space_context.active_field_names if search_space_context.enabled else None
         generation_guardrails = build_generation_guardrails(self.repository, config, field_registry)
         registry = build_registry(
             config.generation.allowed_operators,
@@ -127,6 +138,7 @@ class BrainBatchService:
                 prior_weight=config.adaptive_generation.critic_thresholds.score_prior_weight,
             ),
             blocked_fields=blocked_field_set,
+            allowed_fields=active_generation_fields,
         )
         case_snapshot = filter_generation_case_snapshot(
             self.repository.alpha_history.load_case_snapshot(
@@ -136,6 +148,7 @@ class BrainBatchService:
                 region_learning_config=config.adaptive_generation.region_learning,
             ),
             blocked_fields=blocked_field_set,
+            allowed_fields=active_generation_fields,
         )
         existing_normalized = self.repository.list_existing_normalized_expressions(environment.context.run_id)
         generation_count = count or config.loop.generation_batch_size
@@ -153,6 +166,7 @@ class BrainBatchService:
             generation_guardrails=generation_guardrails,
             blocked_fields=blocked_field_set,
             field_penalty_multipliers=local_validation_penalty.multipliers,
+            search_space_context=search_space_context,
         )
         self._tag_generation_source(mutation_candidates, source="mutation")
         remaining_after_mutation = max(0, generation_count - len(mutation_candidates))
@@ -185,6 +199,7 @@ class BrainBatchService:
             blocked_fields=blocked_field_set,
             field_penalty_multipliers=local_validation_penalty.multipliers,
             count=quality_polish_budget,
+            search_space_context=search_space_context,
         )
         quality_polish_shortfall = max(0, int(quality_polish_budget) - len(quality_polish_candidates))
         remaining_after_polish = max(0, generation_count - len(mutation_candidates) - len(quality_polish_candidates))
@@ -208,6 +223,7 @@ class BrainBatchService:
             blocked_fields=blocked_field_set,
             field_penalty_multipliers=local_validation_penalty.multipliers,
             count=recipe_guided_budget,
+            search_space_context=search_space_context,
         )
         remaining_after_recipe = max(
             0,
@@ -245,6 +261,7 @@ class BrainBatchService:
             round_index=round_index,
             generation_guardrails=generation_guardrails,
             field_penalty_multipliers=local_validation_penalty.multipliers,
+            search_space_context=search_space_context,
         )
         self._tag_generation_source(fresh_candidates, source="fresh")
         candidates = [*mutation_candidates, *quality_polish_candidates, *recipe_guided_candidates, *fresh_candidates]
@@ -332,6 +349,7 @@ class BrainBatchService:
             )
         )
         generation_metrics.update(elite_motif_metrics)
+        generation_metrics.update(search_space_context.to_metrics())
         generation_metrics.update(
             {
                 "load_research_context_ms": round(cache_result.profile.load_research_context_ms, 3),
@@ -399,6 +417,7 @@ class BrainBatchService:
         round_index: int,
         generation_guardrails,
         field_penalty_multipliers: dict[str, float] | None = None,
+        search_space_context: SearchSpaceFilterContext | None = None,
     ) -> tuple[list[AlphaCandidate], GenerationSessionStats]:
         if count <= 0:
             return [], GenerationSessionStats()
@@ -408,6 +427,13 @@ class BrainBatchService:
             round_index=round_index,
             scope="fresh",
         )
+        if search_space_context is not None:
+            scoped_generation = search_space_context.generation_config_for_lane(scoped_generation, "fresh")
+            field_registry = search_space_context.field_registry_for_lane("fresh")
+            registry = build_registry(
+                scoped_generation.allowed_operators,
+                operator_catalog_paths=config.generation.operator_catalog_paths,
+            )
         if config.adaptive_generation.enabled:
             engine = GuidedGenerator(
                 generation_config=scoped_generation,
@@ -452,6 +478,7 @@ class BrainBatchService:
         blocked_fields: set[str],
         field_penalty_multipliers: dict[str, float] | None,
         count: int,
+        search_space_context: SearchSpaceFilterContext | None = None,
     ) -> tuple[list[AlphaCandidate], QualityPolishStats]:
         if count <= 0:
             return [], QualityPolishStats(enabled=bool(config.adaptive_generation.quality_optimization.enabled))
@@ -461,6 +488,17 @@ class BrainBatchService:
             round_index=round_index,
             scope="quality_polish",
         )
+        allowed_fields: set[str] | None = None
+        lane_operator_allowlist: set[str] | None = None
+        if search_space_context is not None:
+            scoped_generation = search_space_context.generation_config_for_lane(scoped_generation, "quality_polish")
+            field_registry = search_space_context.field_registry_for_lane("quality_polish")
+            registry = build_registry(
+                scoped_generation.allowed_operators,
+                operator_catalog_paths=config.generation.operator_catalog_paths,
+            )
+            allowed_fields = search_space_context.active_field_names
+            lane_operator_allowlist = search_space_context.lane_operator_allowlists.get("quality_polish")
         result = QualityPolisher(self.repository).generate(
             config=config.adaptive_generation.quality_optimization,
             adaptive_config=config.adaptive_generation,
@@ -475,6 +513,8 @@ class BrainBatchService:
             run_id=run_id,
             round_index=round_index,
             count=count,
+            allowed_fields=allowed_fields,
+            lane_operator_allowlist=lane_operator_allowlist,
         )
         return result.candidates, result.stats
 
@@ -494,6 +534,7 @@ class BrainBatchService:
         generation_guardrails,
         blocked_fields: set[str],
         field_penalty_multipliers: dict[str, float] | None = None,
+        search_space_context: SearchSpaceFilterContext | None = None,
     ) -> tuple[list[AlphaCandidate], GenerationSessionStats]:
         if not mutation_parent_ids:
             return [], GenerationSessionStats()
@@ -504,6 +545,13 @@ class BrainBatchService:
             round_index=round_index,
             scope="mutation",
         )
+        if search_space_context is not None:
+            scoped_generation = search_space_context.generation_config_for_lane(scoped_generation, "mutation")
+            field_registry = search_space_context.field_registry_for_lane("mutation")
+            registry = build_registry(
+                scoped_generation.allowed_operators,
+                operator_catalog_paths=config.generation.operator_catalog_paths,
+            )
         mutation_budget = max(
             1,
             min(
@@ -541,7 +589,11 @@ class BrainBatchService:
             for record in self.repository.list_alpha_records(run_id)
             if record.alpha_id in mutation_parent_ids
         ]
-        parent_records = filter_generation_alpha_records(parent_records, blocked_fields=blocked_fields)
+        parent_records = filter_generation_alpha_records(
+            parent_records,
+            blocked_fields=blocked_fields,
+            allowed_fields=search_space_context.active_field_names if search_space_context and search_space_context.enabled else None,
+        )
         parents = [alpha_candidate_from_record(record, parent_refs=parent_refs_map.get(record.alpha_id)) for record in parent_records]
         if not parents:
             return [], GenerationSessionStats()
@@ -577,6 +629,7 @@ class BrainBatchService:
         blocked_fields: set[str],
         field_penalty_multipliers: dict[str, float] | None,
         count: int,
+        search_space_context: SearchSpaceFilterContext | None = None,
     ) -> tuple[list[AlphaCandidate], RecipeGuidedStats]:
         if count <= 0:
             return [], RecipeGuidedStats(enabled=bool(config.adaptive_generation.recipe_generation.enabled))
@@ -586,6 +639,13 @@ class BrainBatchService:
             round_index=round_index,
             scope="recipe_guided",
         )
+        if search_space_context is not None:
+            scoped_generation = search_space_context.generation_config_for_lane(scoped_generation, "recipe_guided")
+            field_registry = search_space_context.field_registry_for_lane("recipe_guided")
+            registry = build_registry(
+                scoped_generation.allowed_operators,
+                operator_catalog_paths=config.generation.operator_catalog_paths,
+            )
         result = RecipeGuidedGenerator(self.repository).generate(
             config=config.adaptive_generation.recipe_generation,
             adaptive_config=config.adaptive_generation,
