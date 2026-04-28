@@ -188,12 +188,103 @@ adaptive_generation:
     penalty_strength: 1.0
     min_multiplier: 0.10
     sample_limit: 10
+  search_space_filter:
+    enabled: true
+    profile_mismatch_multiplier: 0.25
+    unknown_profile_multiplier: 0.75
+    validation_field_multiplier: 0.35
+    validation_field_min_count: 2
+    completed_lookback_rounds: 20
+    min_completed_support: 3
+    sharpe_floor: 0.30
+    fitness_floor: 0.10
+    field_result_multiplier: 0.50
+    operator_result_multiplier: 0.60
+    winner_prior_enabled: true
+    winner_prior_lookback_rounds: 20
+    winner_prior_min_support: 2
+    winner_prior_sharpe_floor: 0.30
+    winner_prior_fitness_floor: 0.10
+    winner_prior_strong_sharpe_floor: 0.50
+    winner_prior_strong_fitness_floor: 0.30
+    winner_field_multiplier: 1.35
+    strong_winner_field_multiplier: 1.80
+    weak_field_multiplier: 0.65
+    winner_operator_multiplier: 1.35
+    strong_winner_operator_multiplier: 1.80
+    weak_operator_multiplier: 0.65
+    lane_field_caps:
+      recipe_guided: 60
+      fresh: 60
+    lane_field_min_count: 30
+    lane_operator_allowlists:
+      quality_polish:
+        [
+          "rank",
+          "zscore",
+          "quantile",
+          "ts_mean",
+          "ts_decay_linear",
+          "ts_std_dev",
+          "ts_rank",
+          "ts_sum",
+          "ts_scale",
+          "ts_arg_max",
+          "ts_arg_min",
+          "days_from_last_change",
+          "ts_av_diff",
+          "ts_count_nans",
+          "inverse",
+          "reverse",
+          "sign",
+          "abs",
+          "min",
+          "max",
+          "group_neutralize",
+        ]
+      recipe_guided:
+        [
+          "rank",
+          "zscore",
+          "quantile",
+          "ts_mean",
+          "ts_std_dev",
+          "ts_scale",
+          "ts_av_diff",
+          "ts_arg_max",
+          "ts_arg_min",
+          "ts_count_nans",
+          "min",
+          "max",
+          "inverse",
+          "reverse",
+          "days_from_last_change",
+        ]
+      fresh:
+        [
+          "rank",
+          "zscore",
+          "ts_mean",
+          "ts_decay_linear",
+          "ts_std_dev",
+          "ts_rank",
+          "ts_sum",
+          "ts_scale",
+          "days_from_last_change",
+          "ts_av_diff",
+          "ts_count_nans",
+          "sign",
+          "abs",
+          "min",
+          "max",
+          "group_neutralize",
+        ]
   recipe_generation:
     enabled: true
-    recipe_budget_fraction: 0.32
-    max_recipe_candidates_per_round: 40
-    active_bucket_count: 4
-    max_candidates_per_bucket: 6
+    recipe_budget_fraction: 0.18
+    max_recipe_candidates_per_round: 20
+    active_bucket_count: 2
+    max_candidates_per_bucket: 4
     max_field_candidates_per_side: 8
     max_pair_candidates_per_bucket: 12
     max_drafts_per_bucket: 64
@@ -213,39 +304,39 @@ adaptive_generation:
     bucket_suppression_fitness_floor: 0.10
     bucket_suppression_max_candidates: 1
     source_exploration_floor_fractions:
-      quality_polish: 0.14
-      recipe_guided: 0.22
-      fresh: 0.14
+      quality_polish: 0.24
+      recipe_guided: 0.10
+      fresh: 0.08
     source_reallocation_strength: 0.65
-    max_fresh_budget_fraction: 0.34
-    fresh_spillover_fraction: 0.06
+    max_fresh_budget_fraction: 0.26
+    fresh_spillover_fraction: 0.03
     bucket_exploration_floor: 1
     bucket_reallocation_strength: 0.75
     bucket_biases:
-      "fundamental_quality|fundamental|balanced": 1.45
-      "fundamental_quality|fundamental|quality": 1.20
-      "fundamental_quality|fundamental|low_turnover": 1.10
-      "value_vs_growth|fundamental|balanced": 1.35
-      "value_vs_growth|fundamental|quality": 1.25
-      "value_vs_growth|fundamental|low_turnover": 0.75
-      "revision_surprise|fundamental|balanced": 0.35
-      "revision_surprise|fundamental|quality": 0.70
-      "revision_surprise|fundamental|low_turnover": 0.90
-      "accrual_vs_cashflow|fundamental|balanced": 0.35
-      "accrual_vs_cashflow|fundamental|quality": 0.35
-      "accrual_vs_cashflow|fundamental|low_turnover": 0.35
-      "analyst_estimate_recency|analyst|balanced": 1.25
-      "analyst_estimate_recency|analyst|quality": 1.10
-      "analyst_estimate_recency|analyst|low_turnover": 0.95
-      "analyst_estimate_stability|analyst|balanced": 1.20
-      "analyst_estimate_stability|analyst|quality": 1.25
-      "analyst_estimate_stability|analyst|low_turnover": 1.05
-      "analyst_profitability_spread|analyst|balanced": 1.30
-      "analyst_profitability_spread|analyst|quality": 1.20
-      "analyst_profitability_spread|analyst|low_turnover": 0.90
-      "returns_term_structure|returns|balanced": 1.05
-      "returns_term_structure|returns|quality": 0.90
-      "returns_term_structure|returns|low_turnover": 0.85
+      "fundamental_quality|fundamental|balanced": 1.05
+      "fundamental_quality|fundamental|quality": 1.00
+      "fundamental_quality|fundamental|low_turnover": 0.95
+      "value_vs_growth|fundamental|balanced": 0.85
+      "value_vs_growth|fundamental|quality": 0.80
+      "value_vs_growth|fundamental|low_turnover": 0.65
+      "revision_surprise|fundamental|balanced": 0.25
+      "revision_surprise|fundamental|quality": 0.25
+      "revision_surprise|fundamental|low_turnover": 0.25
+      "accrual_vs_cashflow|fundamental|balanced": 0.25
+      "accrual_vs_cashflow|fundamental|quality": 0.25
+      "accrual_vs_cashflow|fundamental|low_turnover": 0.25
+      "analyst_estimate_recency|analyst|balanced": 1.45
+      "analyst_estimate_recency|analyst|quality": 1.35
+      "analyst_estimate_recency|analyst|low_turnover": 1.10
+      "analyst_estimate_stability|analyst|balanced": 1.55
+      "analyst_estimate_stability|analyst|quality": 1.60
+      "analyst_estimate_stability|analyst|low_turnover": 1.25
+      "analyst_profitability_spread|analyst|balanced": 0.90
+      "analyst_profitability_spread|analyst|quality": 0.85
+      "analyst_profitability_spread|analyst|low_turnover": 0.70
+      "returns_term_structure|returns|balanced": 0.25
+      "returns_term_structure|returns|quality": 0.25
+      "returns_term_structure|returns|low_turnover": 0.25
     enabled_recipe_families:
       - fundamental_quality
       - accrual_vs_cashflow
@@ -262,25 +353,25 @@ adaptive_generation:
   quality_optimization:
     enabled: true
     lookback_completed_results: 800
-    polish_budget_fraction: 0.12
-    max_polish_candidates_per_round: 16
-    max_polish_parents_per_round: 8
-    variants_per_parent: 8
+    polish_budget_fraction: 0.22
+    max_polish_candidates_per_round: 24
+    max_polish_parents_per_round: 12
+    variants_per_parent: 10
     min_parent_fitness: 0.02
     min_parent_sharpe: 0.03
     max_parent_turnover: 1.00
     max_parent_drawdown: 0.75
     min_completed_parent_count: 5
-    selection_prior_weight: 0.10
-    parent_scan_multiplier: 4
+    selection_prior_weight: 0.14
+    parent_scan_multiplier: 6
     enabled_transforms: ["wrap_rank", "wrap_zscore", "window_perturb", "smooth_ts_mean", "smooth_ts_decay_linear"]
     primary_transform: "wrap_rank"
     max_variants_per_parent_by_transform:
       wrap_rank: 1
       wrap_zscore: 1
       window_perturb: 4
-      smooth_ts_mean: 2
-      smooth_ts_decay_linear: 2
+      smooth_ts_mean: 3
+      smooth_ts_decay_linear: 3
     parent_transform_recent_rounds: 2
     max_parent_transform_uses_per_recent_window: 1
     transform_score_lookback_rounds: 4

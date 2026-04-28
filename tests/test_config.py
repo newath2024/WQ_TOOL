@@ -10,6 +10,7 @@ from core.config import (
     EliteMotifConfig,
     PreSimSelectionWeightsConfig,
     RecipeGenerationConfig,
+    SearchSpaceFilterConfig,
     load_config,
 )
 
@@ -212,6 +213,58 @@ def test_recipe_generation_config_defaults_and_validation() -> None:
         RecipeGenerationConfig(bucket_biases={"x": 0.0})
     with pytest.raises(ValueError):
         RecipeGenerationConfig(enabled_recipe_families=[])
+
+
+def test_search_space_filter_config_defaults_and_validation() -> None:
+    config = SearchSpaceFilterConfig()
+
+    assert config.enabled is False
+    assert config.profile_mismatch_multiplier == 0.25
+    assert config.unknown_profile_multiplier == 0.75
+    assert config.validation_field_multiplier == 0.35
+    assert config.validation_field_min_count == 2
+    assert config.completed_lookback_rounds == 20
+    assert config.min_completed_support == 3
+    assert config.sharpe_floor == 0.30
+    assert config.fitness_floor == 0.10
+    assert config.field_result_multiplier == 0.50
+    assert config.operator_result_multiplier == 0.60
+    assert config.winner_prior_enabled is False
+    assert config.winner_prior_lookback_rounds == 20
+    assert config.winner_prior_min_support == 2
+    assert config.winner_prior_sharpe_floor == 0.30
+    assert config.winner_prior_fitness_floor == 0.10
+    assert config.winner_prior_strong_sharpe_floor == 0.50
+    assert config.winner_prior_strong_fitness_floor == 0.30
+    assert config.winner_field_multiplier == 1.35
+    assert config.strong_winner_field_multiplier == 1.80
+    assert config.weak_field_multiplier == 0.65
+    assert config.winner_operator_multiplier == 1.35
+    assert config.strong_winner_operator_multiplier == 1.80
+    assert config.weak_operator_multiplier == 0.65
+    assert config.lane_field_caps == {}
+    assert config.lane_field_min_count == 0
+    assert config.lane_operator_allowlists == {}
+
+    custom = SearchSpaceFilterConfig(
+        lane_field_caps={"fresh": "12"},
+        lane_operator_allowlists={"quality_polish": ["rank", "", "zscore"]},
+    )
+    assert custom.lane_field_caps == {"fresh": 12}
+    assert custom.lane_operator_allowlists == {"quality_polish": ["rank", "zscore"]}
+
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(profile_mismatch_multiplier=1.5)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(validation_field_min_count=0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(completed_lookback_rounds=0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(min_completed_support=0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_lookback_rounds=0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_field_multiplier=0.0)
 
 
 def test_elite_motif_config_defaults_and_validation() -> None:
@@ -449,32 +502,94 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert penalty.penalty_strength == 1.0
     assert penalty.min_multiplier == 0.10
     assert penalty.sample_limit == 10
+    search_filter = config.adaptive_generation.search_space_filter
+    assert search_filter.enabled is True
+    assert search_filter.lane_field_caps == {"recipe_guided": 60, "fresh": 60}
+    assert search_filter.lane_field_min_count == 30
+    assert search_filter.min_completed_support == 3
+    assert search_filter.sharpe_floor == 0.30
+    assert search_filter.fitness_floor == 0.10
+    assert search_filter.winner_prior_enabled is True
+    assert search_filter.winner_prior_lookback_rounds == 20
+    assert search_filter.winner_prior_min_support == 2
+    assert search_filter.winner_field_multiplier == 1.35
+    assert search_filter.strong_winner_field_multiplier == 1.80
+    assert search_filter.weak_field_multiplier == 0.65
+    assert search_filter.winner_operator_multiplier == 1.35
+    assert search_filter.strong_winner_operator_multiplier == 1.80
+    assert search_filter.weak_operator_multiplier == 0.65
+    assert search_filter.lane_operator_allowlists["quality_polish"] == [
+        "rank",
+        "zscore",
+        "quantile",
+        "ts_mean",
+        "ts_decay_linear",
+        "ts_std_dev",
+        "ts_rank",
+        "ts_sum",
+        "ts_scale",
+        "ts_arg_max",
+        "ts_arg_min",
+        "days_from_last_change",
+        "ts_av_diff",
+        "ts_count_nans",
+        "inverse",
+        "reverse",
+        "sign",
+        "abs",
+        "min",
+        "max",
+        "group_neutralize",
+    ]
+    assert "quantile" in search_filter.lane_operator_allowlists["recipe_guided"]
+    assert "ts_arg_max" in search_filter.lane_operator_allowlists["recipe_guided"]
+    assert search_filter.lane_operator_allowlists["fresh"] == [
+        "rank",
+        "zscore",
+        "ts_mean",
+        "ts_decay_linear",
+        "ts_std_dev",
+        "ts_rank",
+        "ts_sum",
+        "ts_scale",
+        "days_from_last_change",
+        "ts_av_diff",
+        "ts_count_nans",
+        "sign",
+        "abs",
+        "min",
+        "max",
+        "group_neutralize",
+    ]
+    assert "ts_corr" not in search_filter.lane_operator_allowlists["fresh"]
     recipe = config.adaptive_generation.recipe_generation
-    assert recipe.recipe_budget_fraction == 0.32
-    assert recipe.max_recipe_candidates_per_round == 40
-    assert recipe.active_bucket_count == 4
-    assert recipe.max_candidates_per_bucket == 6
+    assert recipe.recipe_budget_fraction == 0.18
+    assert recipe.max_recipe_candidates_per_round == 20
+    assert recipe.active_bucket_count == 2
+    assert recipe.max_candidates_per_bucket == 4
     assert recipe.source_exploration_floor_fractions == {
-        "quality_polish": 0.14,
-        "recipe_guided": 0.22,
-        "fresh": 0.14,
+        "quality_polish": 0.24,
+        "recipe_guided": 0.10,
+        "fresh": 0.08,
     }
     assert recipe.bucket_suppression_enabled is True
     assert recipe.bucket_suppression_min_support == 3
     assert recipe.bucket_suppression_sharpe_floor == 0.30
     assert recipe.bucket_suppression_fitness_floor == 0.10
     assert recipe.bucket_suppression_max_candidates == 1
-    assert recipe.max_fresh_budget_fraction == 0.34
-    assert recipe.fresh_spillover_fraction == 0.06
-    assert recipe.bucket_biases["fundamental_quality|fundamental|balanced"] == 1.45
-    assert recipe.bucket_biases["value_vs_growth|fundamental|quality"] == 1.25
-    assert recipe.bucket_biases["accrual_vs_cashflow|fundamental|balanced"] == 0.35
+    assert recipe.max_fresh_budget_fraction == 0.26
+    assert recipe.fresh_spillover_fraction == 0.03
+    assert recipe.bucket_biases["fundamental_quality|fundamental|balanced"] == 1.05
+    assert recipe.bucket_biases["value_vs_growth|fundamental|quality"] == 0.80
+    assert recipe.bucket_biases["accrual_vs_cashflow|fundamental|balanced"] == 0.25
     assert "analyst_estimate_recency" in recipe.enabled_recipe_families
     assert "analyst_estimate_stability" in recipe.enabled_recipe_families
     assert "analyst_profitability_spread" in recipe.enabled_recipe_families
     assert "returns_term_structure" in recipe.enabled_recipe_families
-    assert recipe.bucket_biases["analyst_profitability_spread|analyst|balanced"] == 1.30
-    assert recipe.bucket_biases["returns_term_structure|returns|balanced"] == 1.05
+    assert recipe.bucket_biases["analyst_estimate_recency|analyst|balanced"] == 1.45
+    assert recipe.bucket_biases["analyst_estimate_stability|analyst|quality"] == 1.60
+    assert recipe.bucket_biases["analyst_profitability_spread|analyst|balanced"] == 0.90
+    assert recipe.bucket_biases["returns_term_structure|returns|balanced"] == 0.25
     selection = config.adaptive_generation.selection
     assert selection.pre_sim.brain_robustness_proxy_penalty == 0.35
     assert selection.pre_sim.elite_motif_bonus == 0.04
@@ -487,17 +602,17 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     quality = config.adaptive_generation.quality_optimization
     assert quality.enabled is True
     assert quality.lookback_completed_results == 800
-    assert quality.polish_budget_fraction == 0.12
-    assert quality.max_polish_candidates_per_round == 16
-    assert quality.max_polish_parents_per_round == 8
-    assert quality.variants_per_parent == 8
+    assert quality.polish_budget_fraction == 0.22
+    assert quality.max_polish_candidates_per_round == 24
+    assert quality.max_polish_parents_per_round == 12
+    assert quality.variants_per_parent == 10
     assert quality.min_parent_fitness == 0.02
     assert quality.min_parent_sharpe == 0.03
     assert quality.max_parent_turnover == 1.00
     assert quality.max_parent_drawdown == 0.75
     assert quality.min_completed_parent_count == 5
-    assert quality.selection_prior_weight == 0.10
-    assert quality.parent_scan_multiplier == 4
+    assert quality.selection_prior_weight == 0.14
+    assert quality.parent_scan_multiplier == 6
     assert quality.enabled_transforms == [
         "wrap_rank",
         "wrap_zscore",
@@ -510,8 +625,8 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
         "wrap_rank": 1,
         "wrap_zscore": 1,
         "window_perturb": 4,
-        "smooth_ts_mean": 2,
-        "smooth_ts_decay_linear": 2,
+        "smooth_ts_mean": 3,
+        "smooth_ts_decay_linear": 3,
     }
     assert quality.parent_transform_recent_rounds == 2
     assert quality.max_parent_transform_uses_per_recent_window == 1
@@ -607,6 +722,11 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.adaptive_generation.min_candidates_before_early_exit == 5
     assert config.adaptive_generation.local_validation_field_penalty.enabled is True
     assert config.adaptive_generation.local_validation_field_penalty.lookback_rounds == 20
+    assert config.adaptive_generation.search_space_filter.enabled is False
+    assert config.adaptive_generation.search_space_filter.lane_field_caps == {}
+    assert config.adaptive_generation.search_space_filter.lane_field_min_count == 0
+    assert config.adaptive_generation.search_space_filter.lane_operator_allowlists == {}
+    assert config.adaptive_generation.search_space_filter.winner_prior_enabled is False
     assert config.adaptive_generation.quality_optimization.enabled is True
     assert config.adaptive_generation.quality_optimization.polish_budget_fraction == 0.35
     assert config.adaptive_generation.quality_optimization.enabled_transforms == [

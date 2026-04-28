@@ -7,7 +7,17 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any, Iterable
 
-from alpha.ast_nodes import ExprNode, FunctionCallNode, NumberNode, to_expression
+from alpha.ast_nodes import (
+    BinaryOpNode,
+    ExprNode,
+    FunctionCallNode,
+    IdentifierNode,
+    NumberNode,
+    UnaryOpNode,
+    iter_child_nodes,
+    node_complexity,
+    to_expression,
+)
 from alpha.parser import parse_expression
 from core.config import AdaptiveGenerationConfig, GenerationConfig, QualityOptimizationConfig
 from core.quality_score import MultiObjectiveQualityScorer
@@ -19,6 +29,7 @@ from generator.guardrails import GenerationGuardrails
 from services.elite_motifs import build_elite_seed_variants
 from memory.pattern_memory import RegionLearningContext
 from services.evaluation_service import alpha_candidate_from_record
+from services.search_space_filter import expression_fields_and_operators
 from storage.models import AlphaRecord
 from storage.repository import SQLiteRepository
 
@@ -48,6 +59,7 @@ class QualityPolishStats:
     cooldown_exempt_groups: list[str] = field(default_factory=list)
     external_elite_seed_count: int = 0
     external_elite_generated: int = 0
+    search_space_filter_blocked: int = 0
     turnover_repair_generated: int = 0
     turnover_repair_attempt_count: int = 0
     turnover_repair_success_count: int = 0
@@ -100,6 +112,7 @@ class QualityPolishStats:
             "quality_polish_cooldown_exempt_groups": list(self.cooldown_exempt_groups),
             "quality_polish_external_elite_seed_count": int(self.external_elite_seed_count),
             "quality_polish_external_elite_generated": int(self.external_elite_generated),
+            "quality_polish_search_space_filter_blocked": int(self.search_space_filter_blocked),
             "quality_polish_failure_reason_counts": dict(self.failure_counts),
             "turnover_repair_generated": int(self.turnover_repair_generated),
             "turnover_repair_attempt_count": int(self.turnover_repair_attempt_count),
@@ -158,6 +171,8 @@ class QualityPolisher:
         run_id: str,
         round_index: int,
         count: int,
+        allowed_fields: set[str] | None = None,
+        lane_operator_allowlist: set[str] | None = None,
     ) -> QualityPolishResult:
         stats = QualityPolishStats(enabled=bool(config.enabled))
         if not config.enabled or count <= 0 or config.max_polish_candidates_per_round <= 0:
@@ -168,6 +183,8 @@ class QualityPolisher:
             config=config,
             run_id=run_id,
             blocked_fields=blocked_fields,
+            allowed_fields=allowed_fields,
+            lane_operator_allowlist=lane_operator_allowlist,
         )
         stats.parent_count = raw_parent_count
         elite_seed_lane_enabled = (
@@ -220,6 +237,34 @@ class QualityPolisher:
         stats.transform_scores = dict(transform_profile.scores)
         stats.cooldown_exempt_groups = list(config.cooldown_exempt_transform_groups or [])
         max_parent_transform_uses = int(config.max_parent_transform_uses_per_recent_window)
+
+        if elite_seed_lane_enabled:
+            elite_seed_target_count = _elite_seed_target_count(
+                target_count=target_count,
+                eligible_parent_count=len(eligible),
+                min_completed_parent_count=int(config.min_completed_parent_count),
+                max_quality_polish_seeds_per_round=int(
+                    adaptive_config.elite_motifs.max_quality_polish_seeds_per_round
+                ),
+            )
+            if elite_seed_target_count > 0:
+                candidates.extend(
+                    self._generate_elite_seed_candidates(
+                        config=config,
+                        adaptive_config=adaptive_config,
+                        registry=registry,
+                        engine=engine,
+                        validation_ctx=validation_ctx,
+                        session=session,
+                        existing=existing,
+                        run_id=run_id,
+                        round_index=int(round_index),
+                        target_count=elite_seed_target_count,
+                        stats=stats,
+                        allowed_fields=allowed_fields,
+                        lane_operator_allowlist=lane_operator_allowlist,
+                    )
+                )
 
         for parent in eligible:
             if len(candidates) >= target_count:
@@ -344,7 +389,11 @@ class QualityPolisher:
             ):
                 stats.saturated_parent_count += 1
 
-        if len(candidates) < target_count and elite_seed_lane_enabled:
+        if (
+            len(candidates) < target_count
+            and elite_seed_lane_enabled
+            and stats.external_elite_generated <= 0
+        ):
             candidates.extend(
                 self._generate_elite_seed_candidates(
                     config=config,
@@ -358,6 +407,8 @@ class QualityPolisher:
                     round_index=int(round_index),
                     target_count=target_count - len(candidates),
                     stats=stats,
+                    allowed_fields=allowed_fields,
+                    lane_operator_allowlist=lane_operator_allowlist,
                 )
             )
 
@@ -379,6 +430,8 @@ class QualityPolisher:
         round_index: int,
         target_count: int,
         stats: QualityPolishStats,
+        allowed_fields: set[str] | None,
+        lane_operator_allowlist: set[str] | None,
     ) -> list[AlphaCandidate]:
         variants = build_elite_seed_variants(
             adaptive_config.elite_motifs,
@@ -400,6 +453,14 @@ class QualityPolisher:
             if not normalized_variant or normalized_variant in existing:
                 stats.skipped_existing_normalized += 1
                 stats.record_failure("duplicate_normalized_expression")
+                continue
+            if not _expression_allowed_by_search_space(
+                variant.expression,
+                allowed_fields=allowed_fields,
+                lane_operator_allowlist=lane_operator_allowlist,
+            ):
+                stats.search_space_filter_blocked += 1
+                stats.record_failure("search_space_filter_blocked")
                 continue
             polish_signature = _polish_signature(
                 run_id=run_id,
@@ -485,6 +546,8 @@ class QualityPolisher:
         config: QualityOptimizationConfig,
         run_id: str,
         blocked_fields: set[str],
+        allowed_fields: set[str] | None,
+        lane_operator_allowlist: set[str] | None,
     ) -> tuple[int, list[_PolishParent]]:
         rows = self.repository.list_quality_polish_parent_rows(
             run_id=run_id,
@@ -495,7 +558,19 @@ class QualityPolisher:
             parent = self._row_to_parent(row)
             if parent is None:
                 continue
-            if blocked_fields and not blocked_fields.isdisjoint(parent.candidate.fields_used):
+            parent_fields = _candidate_field_names(parent.candidate)
+            if blocked_fields and not blocked_fields.isdisjoint(parent_fields):
+                continue
+            if (
+                allowed_fields is not None
+                and parent_fields
+                and not parent_fields.issubset(allowed_fields)
+            ):
+                continue
+            if not _candidate_operators_allowed_for_lane(
+                parent.candidate,
+                lane_operator_allowlist=lane_operator_allowlist,
+            ):
                 continue
             if not self._passes_thresholds(parent.metrics, config=config):
                 continue
@@ -698,41 +773,46 @@ class QualityPolisher:
             )
 
         preferred_windows = _preferred_windows(lookbacks)
-        base_expr = to_expression(_unwrap_outer_cross_sectional(root))
+        base_nodes = _smooth_base_nodes(_unwrap_outer_cross_sectional(root))
         if registry.contains("ts_mean"):
-            for window in preferred_windows:
-                inner = f"ts_mean({base_expr},{window})"
-                if registry.contains("rank"):
+            for base_node in base_nodes:
+                base_expr = to_expression(base_node)
+                for window in preferred_windows:
+                    inner = f"ts_mean({base_expr},{window})"
+                    if registry.contains("rank"):
+                        add(
+                            f"rank({inner})",
+                            f"smooth_ts_mean_rank_{window}",
+                            group="smooth_ts_mean",
+                            priority=5,
+                        )
+                    if registry.contains("zscore"):
+                        add(
+                            f"zscore({inner})",
+                            f"smooth_ts_mean_zscore_{window}",
+                            group="smooth_ts_mean",
+                            priority=5,
+                        )
+        if registry.contains("ts_decay_linear") and registry.contains("rank"):
+            for base_node in base_nodes:
+                base_expr = to_expression(base_node)
+                for window in preferred_windows:
+                    inner = f"ts_decay_linear({base_expr},{window})"
                     add(
                         f"rank({inner})",
-                        f"smooth_ts_mean_rank_{window}",
-                        group="smooth_ts_mean",
-                        priority=5,
-                    )
-                if registry.contains("zscore"):
-                    add(
-                        f"zscore({inner})",
-                        f"smooth_ts_mean_zscore_{window}",
-                        group="smooth_ts_mean",
-                        priority=5,
-                    )
-        if registry.contains("ts_decay_linear") and registry.contains("rank"):
-            for window in preferred_windows:
-                inner = f"ts_decay_linear({base_expr},{window})"
-                add(
-                    f"rank({inner})",
-                    f"smooth_ts_decay_linear_rank_{window}",
-                    group="smooth_ts_decay_linear",
-                    priority=6,
-                )
-                if registry.contains("zscore"):
-                    add(
-                        f"zscore({inner})",
-                        f"smooth_ts_decay_linear_zscore_{window}",
+                        f"smooth_ts_decay_linear_rank_{window}",
                         group="smooth_ts_decay_linear",
                         priority=6,
                     )
+                    if registry.contains("zscore"):
+                        add(
+                            f"zscore({inner})",
+                            f"smooth_ts_decay_linear_zscore_{window}",
+                            group="smooth_ts_decay_linear",
+                            priority=6,
+                        )
         if registry.contains("ts_rank") and registry.contains("rank"):
+            base_expr = to_expression(base_nodes[0]) if base_nodes else to_expression(_unwrap_outer_cross_sectional(root))
             for window in preferred_windows:
                 inner = f"ts_rank({base_expr},{window})"
                 add(
@@ -940,6 +1020,21 @@ def _is_turnover_repair_variant(variant: _ExpressionVariant) -> bool:
     return str(variant.transform_group) == "turnover_repair"
 
 
+def _elite_seed_target_count(
+    *,
+    target_count: int,
+    eligible_parent_count: int,
+    min_completed_parent_count: int,
+    max_quality_polish_seeds_per_round: int,
+) -> int:
+    if target_count <= 0 or max_quality_polish_seeds_per_round <= 0:
+        return 0
+    if eligible_parent_count < max(1, min_completed_parent_count):
+        return int(target_count)
+    reserved = max(1, int(target_count) // 4)
+    return min(int(target_count), int(max_quality_polish_seeds_per_round), reserved)
+
+
 def _unique_expression_variants(variants: list[_ExpressionVariant]) -> list[_ExpressionVariant]:
     seen: set[str] = set()
     unique: list[_ExpressionVariant] = []
@@ -963,11 +1058,77 @@ def _is_redundant_cross_sectional_wrapper(expression: str) -> bool:
     return isinstance(child, FunctionCallNode) and child.name == root.name and len(child.args) == 1
 
 
+def _candidate_operators_allowed_for_lane(
+    candidate: AlphaCandidate,
+    *,
+    lane_operator_allowlist: set[str] | None,
+) -> bool:
+    if lane_operator_allowlist is None:
+        return True
+    _, parsed_operators = expression_fields_and_operators(candidate.expression)
+    operators = parsed_operators or _policy_operator_names(candidate.operators_used)
+    return not operators or operators.issubset(lane_operator_allowlist)
+
+
+def _candidate_field_names(candidate: AlphaCandidate) -> set[str]:
+    parsed_fields, _ = expression_fields_and_operators(candidate.expression)
+    return parsed_fields or {str(field).strip() for field in candidate.fields_used if str(field).strip()}
+
+
+def _policy_operator_names(operators: Iterable[str]) -> set[str]:
+    return {
+        str(operator).strip()
+        for operator in operators
+        if str(operator).strip()
+        and not str(operator).strip().startswith(("binary:", "unary:"))
+    }
+
+
 def _unwrap_outer_cross_sectional(node: ExprNode) -> ExprNode:
     current = node
     while isinstance(current, FunctionCallNode) and current.name in {"rank", "zscore"} and len(current.args) == 1:
         current = current.args[0]
     return current
+
+
+_CROSS_SECTIONAL_SMOOTHING_OPERATORS = frozenset(
+    {"rank", "zscore", "quantile", "group_rank", "group_zscore", "group_neutralize", "normalize"}
+)
+
+
+def _smooth_base_nodes(node: ExprNode) -> list[ExprNode]:
+    candidates: list[ExprNode] = []
+
+    def visit(current: ExprNode) -> None:
+        if isinstance(current, NumberNode):
+            return
+        if _contains_field(current) and not _contains_cross_sectional_operator(current):
+            candidates.append(current)
+        for child in iter_child_nodes(current):
+            visit(child)
+
+    visit(node)
+    if not candidates and _contains_field(node):
+        candidates.append(node)
+
+    unique: dict[str, ExprNode] = {}
+    for candidate in sorted(candidates, key=lambda item: (node_complexity(item), to_expression(item))):
+        unique.setdefault(to_expression(candidate), candidate)
+    return list(unique.values())[:4]
+
+
+def _contains_field(node: ExprNode) -> bool:
+    if isinstance(node, IdentifierNode):
+        return True
+    return any(_contains_field(child) for child in iter_child_nodes(node))
+
+
+def _contains_cross_sectional_operator(node: ExprNode) -> bool:
+    if isinstance(node, FunctionCallNode) and node.name in _CROSS_SECTIONAL_SMOOTHING_OPERATORS:
+        return True
+    if isinstance(node, (BinaryOpNode, FunctionCallNode, UnaryOpNode)):
+        return any(_contains_cross_sectional_operator(child) for child in iter_child_nodes(node))
+    return False
 
 
 def _extend_existing_smoothing(node: ExprNode, lookbacks: list[int]) -> str | None:
@@ -994,6 +1155,22 @@ def _cleanup_root_wrapper(root: ExprNode) -> ExprNode | None:
 
 def _is_root_call(root: ExprNode, name: str) -> bool:
     return isinstance(root, FunctionCallNode) and root.name == name
+
+
+def _expression_allowed_by_search_space(
+    expression: str,
+    *,
+    allowed_fields: set[str] | None,
+    lane_operator_allowlist: set[str] | None,
+) -> bool:
+    if allowed_fields is None and lane_operator_allowlist is None:
+        return True
+    fields, operators = expression_fields_and_operators(expression)
+    if allowed_fields is not None and fields and not fields.issubset(allowed_fields):
+        return False
+    if lane_operator_allowlist is not None and operators and not operators.issubset(lane_operator_allowlist):
+        return False
+    return True
 
 
 def _to_float(value: Any) -> float:

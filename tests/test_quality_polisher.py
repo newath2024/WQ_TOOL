@@ -805,6 +805,307 @@ def test_quality_polisher_uses_external_elite_seeds_without_db_parents() -> None
     assert "redundant_expression" not in result.stats.failure_counts
 
 
+def test_quality_polisher_drops_parent_fields_outside_active_registry() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, run_id="run-quality")
+        _seed_parent(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-stale",
+            expression="rank(ts_mean(stale_field,2))",
+            fields_used=("stale_field",),
+        )
+        _seed_result(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-stale",
+            job_id="job-stale",
+            fitness=0.30,
+            sharpe=0.40,
+            simulated_at="2026-04-22T01:00:00+00:00",
+        )
+
+        generation_config = load_config("config/dev.yaml").generation
+        result = QualityPolisher(repository).generate(
+            config=QualityOptimizationConfig(min_completed_parent_count=1, max_polish_candidates_per_round=4),
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-quality",
+            round_index=2,
+            count=4,
+            allowed_fields={"close", "volume"},
+            lane_operator_allowlist=None,
+        )
+    finally:
+        repository.close()
+
+    assert result.candidates == []
+    assert result.stats.parent_count == 1
+    assert result.stats.eligible_parent_count == 0
+
+
+def test_quality_polisher_lane_operator_filter_ignores_structural_and_stale_operators() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, run_id="run-quality")
+        _seed_parent(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-stale-ops",
+            expression="ts_mean(close,2)",
+            operators_used=("ts_mean", "binary:*", "ts_sum"),
+        )
+        _seed_result(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-stale-ops",
+            job_id="job-stale-ops",
+            fitness=0.30,
+            sharpe=0.40,
+            simulated_at="2026-04-22T01:00:00+00:00",
+        )
+
+        generation_config = load_config("config/dev.yaml").generation
+        result = QualityPolisher(repository).generate(
+            config=QualityOptimizationConfig(
+                min_completed_parent_count=1,
+                max_polish_candidates_per_round=2,
+                enabled_transforms=["wrap_rank"],
+                disabled_transforms=[
+                    "cleanup_redundant_wrapper",
+                    "smooth_ts_mean",
+                    "smooth_ts_decay_linear",
+                    "smooth_ts_rank",
+                    "window_perturb",
+                    "wrap_zscore",
+                ],
+            ),
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-quality",
+            round_index=2,
+            count=2,
+            allowed_fields={"close", "volume"},
+            lane_operator_allowlist={"rank", "zscore", "ts_mean"},
+        )
+    finally:
+        repository.close()
+
+    assert result.stats.eligible_parent_count == 1
+    assert result.candidates
+    assert all(candidate.generation_metadata["polish_parent_alpha_id"] == "parent-stale-ops" for candidate in result.candidates)
+
+
+def test_quality_polisher_smooths_safe_subterms_when_parent_contains_cross_sectional_nesting() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, run_id="run-quality")
+        _seed_parent(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-cross-sectional",
+            expression="rank((zscore(close)+ts_mean(volume,2)))",
+            fields_used=("close", "volume"),
+            operators_used=("rank", "zscore", "ts_mean", "binary:+"),
+        )
+        _seed_result(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-cross-sectional",
+            job_id="job-cross-sectional",
+            fitness=0.30,
+            sharpe=0.40,
+            simulated_at="2026-04-22T01:00:00+00:00",
+        )
+
+        generation_config = load_config("config/dev.yaml").generation
+        generation_config.lookbacks = [2, 5, 10]
+        result = QualityPolisher(repository).generate(
+            config=QualityOptimizationConfig(
+                min_completed_parent_count=1,
+                max_polish_candidates_per_round=4,
+                variants_per_parent=4,
+                enabled_transforms=["smooth_ts_mean", "smooth_ts_decay_linear"],
+                disabled_transforms=[
+                    "cleanup_redundant_wrapper",
+                    "smooth_ts_rank",
+                    "window_perturb",
+                    "wrap_rank",
+                    "wrap_zscore",
+                ],
+                cooldown_exempt_transform_groups=["smooth_ts_mean", "smooth_ts_decay_linear"],
+                max_variants_per_parent_by_transform={
+                    "smooth_ts_mean": 2,
+                    "smooth_ts_decay_linear": 2,
+                },
+            ),
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-quality",
+            round_index=2,
+            count=4,
+            lane_operator_allowlist={"rank", "zscore", "ts_mean", "ts_decay_linear"},
+        )
+    finally:
+        repository.close()
+
+    assert result.candidates
+    assert all("zscore(close)+ts_mean(volume,2)" not in candidate.expression for candidate in result.candidates)
+    assert result.stats.failure_counts["validation_invalid_nesting"] == 0
+
+
+def test_quality_polisher_skips_external_elite_seed_outside_lane_operator_profile() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, run_id="run-quality")
+        generation_config = load_config("config/dev.yaml").generation
+        generation_config.allowed_operators = ["rank", "zscore", "quantile", "ts_arg_max"]
+        adaptive_config = AdaptiveGenerationConfig(
+            elite_motifs=EliteMotifConfig(
+                enabled=True,
+                seed_expressions=["rank(ts_arg_max(close,125))"],
+                lookbacks=[125, 145, 150],
+                max_quality_polish_seeds_per_round=1,
+                max_seed_variants_per_seed=4,
+            )
+        )
+
+        result = QualityPolisher(repository).generate(
+            config=QualityOptimizationConfig(min_completed_parent_count=5, max_polish_candidates_per_round=4),
+            adaptive_config=adaptive_config,
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-quality",
+            round_index=2,
+            count=4,
+            allowed_fields={"close", "volume"},
+            lane_operator_allowlist={"rank"},
+        )
+    finally:
+        repository.close()
+
+    assert result.candidates == []
+    assert result.stats.external_elite_seed_count == 1
+    assert result.stats.external_elite_generated == 0
+    assert result.stats.search_space_filter_blocked > 0
+    assert result.stats.failure_counts["search_space_filter_blocked"] > 0
+
+
+def test_quality_polisher_reserves_external_elite_slot_when_parents_fill_quota() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, run_id="run-quality")
+        _seed_parent(repository, run_id="run-quality", alpha_id="parent-1", expression="rank(ts_mean(close,2))")
+        _seed_result(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-1",
+            job_id="job-1",
+            fitness=0.30,
+            sharpe=0.40,
+            simulated_at="2026-04-22T01:00:00+00:00",
+        )
+
+        generation_config = load_config("config/dev.yaml").generation
+        generation_config.allowed_operators = [
+            "rank",
+            "zscore",
+            "quantile",
+            "ts_mean",
+            "ts_scale",
+            "ts_std_dev",
+        ]
+        generation_config.allowed_fields = ["close", "volume"]
+        generation_config.lookbacks = [2, 3]
+        generation_config.max_depth = 8
+        generation_config.complexity_limit = 24
+        seed = "(rank(ts_mean(close,125))+rank(ts_scale(volume,145)))"
+        result = QualityPolisher(repository).generate(
+            config=QualityOptimizationConfig(
+                min_completed_parent_count=1,
+                max_polish_candidates_per_round=4,
+                max_polish_parents_per_round=1,
+                variants_per_parent=8,
+                enabled_transforms=["wrap_rank", "wrap_zscore", "window_perturb"],
+            ),
+            adaptive_config=AdaptiveGenerationConfig(
+                elite_motifs=EliteMotifConfig(
+                    enabled=True,
+                    lookbacks=[125, 145, 150],
+                    seed_expressions=[seed],
+                    max_quality_polish_seeds_per_round=1,
+                    max_seed_variants_per_seed=6,
+                )
+            ),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized={seed},
+            run_id="run-quality",
+            round_index=10,
+            count=4,
+        )
+    finally:
+        repository.close()
+
+    assert result.stats.external_elite_seed_count == 1
+    assert result.stats.external_elite_generated >= 1
+    assert len(result.candidates) <= 4
+    assert any(candidate.generation_metadata.get("elite_seed_id") == "elite_seed_1" for candidate in result.candidates)
+
+
 def test_quality_polisher_can_emit_four_window_perturb_variants() -> None:
     repository = SQLiteRepository(":memory:")
     try:
@@ -922,7 +1223,15 @@ def _seed_run(repository: SQLiteRepository, *, run_id: str) -> None:
     )
 
 
-def _seed_parent(repository: SQLiteRepository, *, run_id: str, alpha_id: str, expression: str) -> None:
+def _seed_parent(
+    repository: SQLiteRepository,
+    *,
+    run_id: str,
+    alpha_id: str,
+    expression: str,
+    fields_used: tuple[str, ...] = ("close",),
+    operators_used: tuple[str, ...] = ("rank", "ts_mean"),
+) -> None:
     repository.save_alpha_candidates(
         run_id,
         [
@@ -935,8 +1244,8 @@ def _seed_parent(repository: SQLiteRepository, *, run_id: str, alpha_id: str, ex
                 complexity=4,
                 created_at="2026-04-22T00:00:00+00:00",
                 template_name="seed",
-                fields_used=("close",),
-                operators_used=("rank", "ts_mean"),
+                fields_used=fields_used,
+                operators_used=operators_used,
                 depth=3,
                 generation_metadata={"family_signature": "seed-family"},
             )
