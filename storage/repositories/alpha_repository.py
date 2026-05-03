@@ -133,6 +133,11 @@ class AlphaRepository:
                 r.submission_eligible AS result_submission_eligible,
                 r.rejection_reason AS result_rejection_reason,
                 r.quality_score AS result_quality_score,
+                r.check_summary_json AS result_check_summary_json,
+                r.hard_fail_checks_json AS result_hard_fail_checks_json,
+                r.warning_checks_json AS result_warning_checks_json,
+                r.blocking_warning_checks_json AS result_blocking_warning_checks_json,
+                r.derived_submit_ready AS result_derived_submit_ready,
                 r.simulated_at AS result_simulated_at
             FROM brain_results r
             JOIN alphas a
@@ -182,6 +187,11 @@ class AlphaRepository:
                 r.submission_eligible,
                 r.rejection_reason,
                 r.quality_score,
+                r.check_summary_json,
+                r.hard_fail_checks_json,
+                r.warning_checks_json,
+                r.blocking_warning_checks_json,
+                r.derived_submit_ready,
                 a.generation_mode,
                 a.generation_metadata,
                 a.structural_signature_json

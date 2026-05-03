@@ -30,3 +30,8 @@ class BrainResultRecord:
     simulated_at: str
     created_at: str
     quality_score: float = 0.0
+    check_summary_json: str = "{}"
+    hard_fail_checks_json: str = "[]"
+    warning_checks_json: str = "[]"
+    blocking_warning_checks_json: str = "[]"
+    derived_submit_ready: bool | None = None

@@ -361,6 +361,11 @@ CREATE TABLE IF NOT EXISTS brain_results (
     raw_result_json TEXT NOT NULL DEFAULT '{}',
     metric_source TEXT NOT NULL DEFAULT 'external_brain',
     quality_score REAL NOT NULL DEFAULT 0.0,
+    check_summary_json TEXT NOT NULL DEFAULT '{}',
+    hard_fail_checks_json TEXT NOT NULL DEFAULT '[]',
+    warning_checks_json TEXT NOT NULL DEFAULT '[]',
+    blocking_warning_checks_json TEXT NOT NULL DEFAULT '[]',
+    derived_submit_ready INTEGER,
     simulated_at TEXT NOT NULL,
     created_at TEXT NOT NULL,
     FOREIGN KEY (run_id) REFERENCES runs(run_id),
@@ -370,6 +375,32 @@ CREATE TABLE IF NOT EXISTS brain_results (
 
 CREATE INDEX IF NOT EXISTS idx_brain_results_run_round
     ON brain_results(run_id, round_index, status);
+
+CREATE TABLE IF NOT EXISTS field_diagnostics (
+    diagnostic_id TEXT PRIMARY KEY,
+    run_id TEXT NOT NULL,
+    field_name TEXT NOT NULL,
+    region TEXT NOT NULL DEFAULT '',
+    universe TEXT NOT NULL DEFAULT '',
+    delay INTEGER NOT NULL DEFAULT 1,
+    neutralization TEXT NOT NULL DEFAULT 'NONE',
+    decay INTEGER NOT NULL DEFAULT 0,
+    diagnostic_name TEXT NOT NULL,
+    params_json TEXT NOT NULL DEFAULT '{}',
+    expression TEXT NOT NULL,
+    job_id TEXT,
+    status TEXT NOT NULL DEFAULT 'planned',
+    long_count INTEGER,
+    short_count INTEGER,
+    coverage_ratio REAL,
+    raw_result_json TEXT NOT NULL DEFAULT '{}',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (run_id) REFERENCES runs(run_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_field_diagnostics_run_field
+    ON field_diagnostics(run_id, field_name, diagnostic_name);
 
 CREATE TABLE IF NOT EXISTS manual_imports (
     import_id TEXT PRIMARY KEY,
@@ -693,6 +724,11 @@ REQUIRED_COLUMNS = {
         "submission_eligible": "INTEGER",
         "metric_source": "TEXT NOT NULL DEFAULT 'external_brain'",
         "quality_score": "REAL NOT NULL DEFAULT 0.0",
+        "check_summary_json": "TEXT NOT NULL DEFAULT '{}'",
+        "hard_fail_checks_json": "TEXT NOT NULL DEFAULT '[]'",
+        "warning_checks_json": "TEXT NOT NULL DEFAULT '[]'",
+        "blocking_warning_checks_json": "TEXT NOT NULL DEFAULT '[]'",
+        "derived_submit_ready": "INTEGER",
     },
     "alpha_selection_scores": {
         "quality_score": "REAL NOT NULL DEFAULT 0.0",

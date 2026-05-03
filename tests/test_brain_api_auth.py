@@ -477,6 +477,36 @@ def test_brain_api_adapter_surfaces_concurrent_simulation_limit(tmp_path: Path, 
     assert exc_info.value.cooldown_seconds == 180
 
 
+def test_brain_api_adapter_parse_result_preserves_checks_and_submission_eligible(tmp_path: Path) -> None:
+    adapter = BrainApiAdapter(
+        base_url="https://api.worldquantbrain.com",
+        session=FakeSession(get_queue=[], post_queue=[]),
+        session_path=str(tmp_path / "brain_session.json"),
+        open_browser_for_persona=False,
+    )
+
+    parsed = adapter.parse_result_response(
+        simulation_payload={"id": "sim-1", "status": "COMPLETE"},
+        alpha_payload={
+            "sharpe": 0.9,
+            "fitness": 0.4,
+            "is": {
+                "submissionEligible": False,
+                "checks": [
+                    {"name": "REVERSION_COMPONENT", "result": "WARNING", "message": "reversion"},
+                ],
+            },
+        },
+        recordsets_payload={},
+        job_id="job-1",
+    )
+
+    assert parsed["submission_eligible"] is False
+    assert parsed["derived_submit_ready"] is False
+    assert parsed["blocking_warning_checks"] == ["REVERSION_COMPONENT"]
+    assert parsed["rejection_reason"] == "reversion"
+
+
 def _success_login_response(session: FakeSession, url: str, kwargs: dict) -> FakeResponse:
     session.cookies.set("t", "jwt-cookie", domain="api.worldquantbrain.com", path="/")
     return FakeResponse(201, json_data={"user": {"id": "user-1"}, "token": {"expiry": 1000}}, url=url)

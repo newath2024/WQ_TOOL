@@ -41,6 +41,11 @@ class SimulationResult:
     round_index: int = 0
     backend: str = ""
     metric_source: str = "external_brain"
+    check_summary: dict[str, object] = field(default_factory=dict)
+    hard_fail_checks: tuple[str, ...] = ()
+    warning_checks: tuple[str, ...] = ()
+    blocking_warning_checks: tuple[str, ...] = ()
+    derived_submit_ready: bool | None = None
 
 
 @dataclass(slots=True, frozen=True)

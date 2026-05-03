@@ -15,6 +15,7 @@ from urllib.parse import urljoin
 import requests
 
 from adapters.simulation_adapter import SimulationAdapter
+from core.brain_checks import first_synthetic_rejection_message, summarize_brain_checks
 from domain.exceptions import (
     BiometricsThrottled,
     ConcurrentSimulationLimitExceeded,
@@ -416,13 +417,29 @@ class BrainApiAdapter(SimulationAdapter):
         }
         metrics = self._extract_metrics(alpha_payload, recordsets_payload)
         rejection_reason = simulation_payload.get("message")
+        check_summary = summarize_brain_checks(raw_result, status=status, rejection_reason=rejection_reason)
+        if not rejection_reason:
+            rejection_reason = first_synthetic_rejection_message(check_summary)
+        is_payload = alpha_payload.get("is") if isinstance(alpha_payload.get("is"), dict) else {}
+        submission_eligible = _optional_bool(
+            _first_present(
+                alpha_payload,
+                is_payload,
+                keys=("submission_eligible", "submissionEligible", "submitReady", "submit_ready"),
+            )
+        )
         return {
             "job_id": job_id,
             "status": status,
             "metrics": metrics,
             "raw_result": raw_result,
             "rejection_reason": rejection_reason,
-            "submission_eligible": None if status != "completed" else None,
+            "submission_eligible": submission_eligible,
+            "check_summary": check_summary.to_dict(),
+            "hard_fail_checks": list(check_summary.hard_fail_checks),
+            "warning_checks": list(check_summary.warning_checks),
+            "blocking_warning_checks": list(check_summary.blocking_warning_checks),
+            "derived_submit_ready": check_summary.derived_submit_ready,
             "alpha_id": simulation_payload.get("alpha"),
         }
 
@@ -821,3 +838,26 @@ def _optional_float(value: object) -> float | None:
         return float(value)
     except (TypeError, ValueError):
         return None
+
+
+def _optional_bool(value: object) -> bool | None:
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, int):
+        return bool(value)
+    normalized = str(value).strip().lower()
+    if normalized in {"1", "true", "yes", "y"}:
+        return True
+    if normalized in {"0", "false", "no", "n"}:
+        return False
+    return None
+
+
+def _first_present(*payloads: dict, keys: tuple[str, ...]) -> object:
+    for payload in payloads:
+        for key in keys:
+            if key in payload:
+                return payload.get(key)
+    return None

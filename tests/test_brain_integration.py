@@ -214,6 +214,53 @@ def test_brain_service_normalizes_missing_metrics_safely(tmp_path: Path) -> None
     assert result.region == "USA"
 
 
+def test_brain_service_normalizes_brain_check_summary_from_raw_payload() -> None:
+    repository = SQLiteRepository(":memory:")
+    try:
+        service = BrainService(repository, load_config("config/dev.yaml").brain, adapter=FakeCompletedAdapter())
+        job = SimulationJob(
+            job_id="job-checks",
+            candidate_id="alpha-checks",
+            expression="rank(close)",
+            backend="api",
+            status="submitted",
+            submitted_at="2026-01-01T00:00:00+00:00",
+            sim_config_snapshot={"region": "USA", "universe": "TOP3000", "delay": 1, "neutralization": "sector", "decay": 0},
+            run_id="run-checks",
+            batch_id="batch-checks",
+        )
+        result = service.normalize_result(
+            job=job,
+            payload={
+                "job_id": "job-checks",
+                "status": "completed",
+                "raw_result": {
+                    "alpha": {
+                        "is": {
+                            "longCount": 1200,
+                            "shortCount": 1300,
+                            "checks": [
+                                {"name": "LOW_2Y_SHARPE", "result": "FAIL", "message": "2Y Sharpe too low"},
+                                {"name": "MATCHES_THEMES", "result": "WARNING"},
+                            ],
+                        }
+                    }
+                },
+            },
+            sim_config=job.sim_config_snapshot,
+        )
+        record = service.to_result_record(result=result, job=job, created_at="2026-01-01T00:05:00+00:00")
+    finally:
+        repository.close()
+
+    assert result.derived_submit_ready is False
+    assert result.hard_fail_checks == ("LOW_2Y_SHARPE",)
+    assert result.warning_checks == ("MATCHES_THEMES",)
+    assert result.rejection_reason is None
+    assert '"long_count": 1200' in record.check_summary_json
+    assert record.hard_fail_checks_json == '["LOW_2Y_SHARPE"]'
+
+
 def test_brain_service_build_simulation_config_selects_weighted_profile(monkeypatch) -> None:
     repository = SQLiteRepository(":memory:")
     try:

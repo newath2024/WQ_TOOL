@@ -20,9 +20,10 @@ class BrainResultStore:
                 INSERT INTO brain_results
                 (job_id, run_id, round_index, batch_id, candidate_id, expression, status, region, universe, delay,
                  neutralization, decay, sharpe, fitness, turnover, drawdown, returns, margin,
-                 submission_eligible, rejection_reason, raw_result_json, metric_source, quality_score, simulated_at,
-                 created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 submission_eligible, rejection_reason, raw_result_json, metric_source, quality_score,
+                 check_summary_json, hard_fail_checks_json, warning_checks_json, blocking_warning_checks_json,
+                 derived_submit_ready, simulated_at, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON CONFLICT(job_id) DO UPDATE SET
                     status = excluded.status,
                     region = excluded.region,
@@ -41,6 +42,11 @@ class BrainResultStore:
                     raw_result_json = excluded.raw_result_json,
                     metric_source = excluded.metric_source,
                     quality_score = excluded.quality_score,
+                    check_summary_json = excluded.check_summary_json,
+                    hard_fail_checks_json = excluded.hard_fail_checks_json,
+                    warning_checks_json = excluded.warning_checks_json,
+                    blocking_warning_checks_json = excluded.blocking_warning_checks_json,
+                    derived_submit_ready = excluded.derived_submit_ready,
                     simulated_at = excluded.simulated_at,
                     created_at = excluded.created_at
                 """,
@@ -68,6 +74,11 @@ class BrainResultStore:
                     record.raw_result_json,
                     record.metric_source,
                     _quality_score_for_record(record),
+                    record.check_summary_json,
+                    record.hard_fail_checks_json,
+                    record.warning_checks_json,
+                    record.blocking_warning_checks_json,
+                    None if record.derived_submit_ready is None else int(record.derived_submit_ready),
                     record.simulated_at,
                     record.created_at,
                 ),
@@ -299,6 +310,8 @@ class BrainResultStore:
         payload = dict(row)
         eligible = payload.get("submission_eligible")
         payload["submission_eligible"] = None if eligible is None else bool(eligible)
+        derived_submit_ready = payload.get("derived_submit_ready")
+        payload["derived_submit_ready"] = None if derived_submit_ready is None else bool(derived_submit_ready)
         return BrainResultRecord(**payload)
 
 

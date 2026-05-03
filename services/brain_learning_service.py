@@ -73,7 +73,10 @@ class BrainLearningService:
                 rejection_reason=result.rejection_reason,
                 fail_tags=diagnosis.fail_tags,
             )
-            quality_score = MultiObjectiveQualityScorer.score_result(result)
+            quality_score = MultiObjectiveQualityScorer.score_result(
+                result,
+                quality_config=getattr(config, "quality_score", None),
+            )
             passed_filters = result.status == "completed" and not result.rejection_reason
             entries.append(
                 {

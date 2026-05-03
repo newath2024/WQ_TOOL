@@ -1000,6 +1000,7 @@ class SelectionService:
                     submission_eligible=row.get("submission_eligible"),
                     rejection_reason=row.get("rejection_reason"),
                     status=str(row.get("status") or ""),
+                    check_summary=row.get("check_summary_json"),
                 )
             quality_sums[family_signature] += float(quality_score)
         return {
