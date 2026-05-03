@@ -4,6 +4,7 @@ from collections import Counter
 from dataclasses import asdict, dataclass
 from typing import Any
 
+from core.brain_checks import parse_names_json
 from domain.brain import BrainResultRecord
 from storage.models import (
     RunRecord,
@@ -33,6 +34,9 @@ class ServiceStatusSnapshot:
     submission_counts: dict[str, int]
     result_counts: dict[str, int]
     active_batch_submission_counts: dict[str, int]
+    derived_submit_ready_counts: dict[str, int]
+    top_hard_fail_checks: dict[str, int]
+    top_blocking_warning_checks: dict[str, int]
     stage_metrics: list[dict]
     duplicate_summary: list[dict]
     avg_crowding_penalty: float
@@ -68,6 +72,9 @@ def build_service_status_snapshot(
             submission_counts={},
             result_counts={},
             active_batch_submission_counts={},
+            derived_submit_ready_counts={},
+            top_hard_fail_checks={},
+            top_blocking_warning_checks={},
             stage_metrics=[],
             duplicate_summary=[],
             avg_crowding_penalty=0.0,
@@ -114,6 +121,9 @@ def build_service_status_snapshot(
         active_batch_submission_counts=_count_statuses(
             submission.status for submission in active_batch_submissions
         ),
+        derived_submit_ready_counts=_derived_submit_ready_counts(results),
+        top_hard_fail_checks=_top_check_counts(results, "hard_fail_checks_json"),
+        top_blocking_warning_checks=_top_check_counts(results, "blocking_warning_checks_json"),
         stage_metrics=repository.get_stage_metrics(resolved_run_id),
         duplicate_summary=repository.get_duplicate_decision_summary(resolved_run_id),
         avg_crowding_penalty=repository.get_average_crowding_penalty(resolved_run_id),
@@ -132,6 +142,9 @@ def service_status_snapshot_to_dict(snapshot: ServiceStatusSnapshot) -> dict[str
             "submission_counts": snapshot.submission_counts,
             "result_counts": snapshot.result_counts,
             "active_batch_submission_counts": snapshot.active_batch_submission_counts,
+            "derived_submit_ready_counts": snapshot.derived_submit_ready_counts,
+            "top_hard_fail_checks": snapshot.top_hard_fail_checks,
+            "top_blocking_warning_checks": snapshot.top_blocking_warning_checks,
             "queue_depth": snapshot.queue_depth,
             "queue_counts": snapshot.queue_counts,
             "avg_crowding_penalty": snapshot.avg_crowding_penalty,
@@ -179,6 +192,31 @@ def _resolve_active_batch(
 def _count_statuses(statuses: list[str] | tuple[str, ...] | Any) -> dict[str, int]:
     counts = Counter(str(status) for status in statuses if status)
     return {key: counts[key] for key in sorted(counts)}
+
+
+def _derived_submit_ready_counts(results: list[BrainResultRecord]) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for result in results:
+        if result.derived_submit_ready is True:
+            counts["yes"] += 1
+        elif result.derived_submit_ready is False:
+            counts["no"] += 1
+        else:
+            counts["unknown"] += 1
+    return {key: counts[key] for key in ("yes", "no", "unknown") if counts[key]}
+
+
+def _top_check_counts(
+    results: list[BrainResultRecord],
+    attribute_name: str,
+    *,
+    limit: int = 10,
+) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for result in results:
+        for name in parse_names_json(getattr(result, attribute_name, "[]")):
+            counts[name] += 1
+    return dict(counts.most_common(limit))
 
 
 def _run_to_dict(run: RunRecord | None) -> dict[str, Any] | None:
@@ -261,6 +299,10 @@ def _result_to_dict(result: BrainResultRecord) -> dict[str, Any]:
         "sharpe": result.sharpe,
         "turnover": result.turnover,
         "submission_eligible": result.submission_eligible,
+        "derived_submit_ready": result.derived_submit_ready,
+        "hard_fail_checks": result.hard_fail_checks_json,
+        "warning_checks": result.warning_checks_json,
+        "blocking_warning_checks": result.blocking_warning_checks_json,
         "rejection_reason": result.rejection_reason,
         "simulated_at": result.simulated_at,
         "created_at": result.created_at,

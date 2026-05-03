@@ -11,6 +11,7 @@ htmlcov/
 *.sqlite3
 outputs/
 progress_logs/
+dist/
 secrets/brain_credentials.json
 tools/*/*.csv
 tools/*/*.json

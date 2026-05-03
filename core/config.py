@@ -36,6 +36,7 @@ from config.models.adaptive import (
     LearnedRegimeConfig,
     MutationLearningConfig,
     LocalValidationFieldPenaltyConfig,
+    OperatorDiversityBoostConfig,
     SearchSpaceFilterConfig,
     RecipeGenerationConfig,
     QualityOptimizationConfig,
@@ -55,6 +56,7 @@ from config.models.evaluation import (
     SubmissionTestConfig,
 )
 from config.models.generation import GenerationConfig
+from config.models.quality import QualityScoreConfig
 from config.models.runtime import (
     AppConfig,
     AuxDataConfig,
@@ -74,6 +76,7 @@ __all__ = [
     "DataConfig",
     "AuxDataConfig",
     "GenerationConfig",
+    "QualityScoreConfig",
     "StrategyMixConfig",
     "MutationModeWeightsConfig",
     "DiversityThresholdConfig",
@@ -93,6 +96,7 @@ __all__ = [
     "LearnedRegimeConfig",
     "MutationLearningConfig",
     "LocalValidationFieldPenaltyConfig",
+    "OperatorDiversityBoostConfig",
     "SearchSpaceFilterConfig",
     "RecipeGenerationConfig",
     "QualityOptimizationConfig",

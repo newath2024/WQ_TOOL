@@ -12,6 +12,7 @@ from config.models.evaluation import (
     SubmissionTestConfig,
 )
 from config.models.generation import GenerationConfig
+from config.models.quality import QualityScoreConfig
 from config.models.service import ServiceConfig
 from config.models.storage import StorageConfig
 
@@ -106,6 +107,7 @@ class AppConfig:
     submission_tests: SubmissionTestConfig
     storage: StorageConfig
     runtime: RuntimeConfig
+    quality_score: QualityScoreConfig = field(default_factory=QualityScoreConfig)
     brain: BrainConfig = field(default_factory=BrainConfig)
     loop: LoopConfig = field(default_factory=LoopConfig)
     service: ServiceConfig = field(default_factory=ServiceConfig)

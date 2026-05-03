@@ -105,6 +105,12 @@ def _print_human(snapshot: ServiceStatusSnapshot) -> None:
     print(f"batch_counts: {_format_counts(snapshot.batch_counts)}")
     print(f"submission_counts: {_format_counts(snapshot.submission_counts)}")
     print(f"result_counts: {_format_counts(snapshot.result_counts)}")
+    print(f"derived_submit_ready_counts: {_format_counts(snapshot.derived_submit_ready_counts)}")
+    print(f"top_hard_fail_checks: {_format_counts_in_order(snapshot.top_hard_fail_checks)}")
+    print(
+        "top_blocking_warning_checks: "
+        f"{_format_counts_in_order(snapshot.top_blocking_warning_checks)}"
+    )
     print(f"dispatch_queue_depth: {snapshot.queue_depth}")
     print(f"dispatch_queue_counts: {_format_counts(snapshot.queue_counts)}")
     print(f"avg_crowding_penalty: {snapshot.avg_crowding_penalty:.4f}")
@@ -152,7 +158,9 @@ def _print_human(snapshot: ServiceStatusSnapshot) -> None:
             print(
                 f"  job_id={row.job_id} batch={row.batch_id} status={row.status} "
                 f"fitness={_format_metric(row.fitness)} sharpe={_format_metric(row.sharpe)} "
-                f"turnover={_format_metric(row.turnover)}"
+                f"turnover={_format_metric(row.turnover)} "
+                f"ready={_format_bool(row.derived_submit_ready)} "
+                f"hard_checks={row.hard_fail_checks_json}"
             )
 
 
@@ -162,5 +170,15 @@ def _format_counts(counts: dict[str, int]) -> str:
     return " ".join(f"{key}={value}" for key, value in sorted(counts.items()))
 
 
+def _format_counts_in_order(counts: dict[str, int]) -> str:
+    if not counts:
+        return "-"
+    return " ".join(f"{key}={value}" for key, value in counts.items())
+
+
 def _format_metric(value: float | None) -> str:
     return "-" if value is None else f"{value:.4f}"
+
+
+def _format_bool(value: bool | None) -> str:
+    return "-" if value is None else "yes" if value else "no"

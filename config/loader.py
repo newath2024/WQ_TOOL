@@ -19,6 +19,7 @@ from config.builders import (
 )
 from config.models.evaluation import BacktestConfig
 from config.models.generation import GenerationConfig
+from config.models.quality import QualityScoreConfig
 from config.models.runtime import AppConfig, AuxDataConfig, DataConfig, SplitConfig
 from config.models.storage import StorageConfig
 
@@ -64,6 +65,7 @@ def load_config(path: str | Path) -> AppConfig:
                 payload.get("submission_tests"), evaluation
             ),
             storage=StorageConfig(**payload["storage"]),
+            quality_score=QualityScoreConfig(**dict(payload.get("quality_score", {}) or {})),
             brain=brain,
             loop=_build_loop_config(payload.get("loop"), brain),
             service=_build_service_config(payload.get("service"), brain),

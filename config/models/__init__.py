@@ -20,6 +20,7 @@ from config.models.adaptive import (
     LearnedRegimeConfig,
     MutationLearningConfig,
     LocalValidationFieldPenaltyConfig,
+    OperatorDiversityBoostConfig,
     RecipeGenerationConfig,
     QualityOptimizationConfig,
     AdaptiveGenerationConfig,
@@ -38,6 +39,7 @@ from config.models.evaluation import (
     SubmissionTestConfig,
 )
 from config.models.generation import GenerationConfig
+from config.models.quality import QualityScoreConfig
 from config.models.runtime import (
     PeriodConfig,
     SplitConfig,
@@ -70,6 +72,7 @@ __all__ = [
     "LearnedRegimeConfig",
     "MutationLearningConfig",
     "LocalValidationFieldPenaltyConfig",
+    "OperatorDiversityBoostConfig",
     "RecipeGenerationConfig",
     "QualityOptimizationConfig",
     "AdaptiveGenerationConfig",
@@ -86,6 +89,7 @@ __all__ = [
     "EvaluationConfig",
     "SubmissionTestConfig",
     "GenerationConfig",
+    "QualityScoreConfig",
     "PeriodConfig",
     "SplitConfig",
     "DataConfig",

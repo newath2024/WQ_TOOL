@@ -125,6 +125,46 @@ adaptive_generation:
     max_operator_path_fraction: 0.30
     exploration_quota_fraction: 0.20
     min_structural_distance: 0.08
+  operator_diversity_boost:
+    enabled: true
+    dominant_decay_rate: 2.0
+    dominant_min_multiplier: 0.30
+    underused_boost: 3.0
+    underused_decay: 0.5
+    seed_corr_pair_probability: 0.20
+    corr_min_lookback: 10
+    invalid_retry_limit: 3
+    dominant_operators:
+      - ts_decay_linear
+      - ts_mean
+      - ts_sum
+      - ts_std_dev
+      - rank
+      - ts_rank
+      - zscore
+    underused_operators:
+      - ts_corr
+      - ts_covariance
+      - days_from_last_change
+      - ts_av_diff
+      - ts_arg_max
+      - ts_arg_min
+      - group_neutralize
+      - inverse
+      - reverse
+    expected_report_date_fields:
+      - anl69_eps_expected_report_dt
+      - anl69_roe_expected_report_dt
+      - anl69_roa_expected_report_dt
+      - anl69_pe_expected_report_dt
+      - anl69_net_expected_report_dt
+      - anl69_ebit_expected_report_dt
+    seed_corr_pairs:
+      - [returns, anl69_eps_best_eeps_nxt_yr]
+      - [returns, anl46_sentiment]
+      - [volume, anl69_eps_best_eeps_nxt_yr]
+      - ["ts_delta(close,5)", anl39_epschngin]
+      - ["ts_std_dev(returns,20)", anl69_roa_best_cur_fiscal_year_period]
   selection:
     pre_sim:
       family_correlation_proxy_penalty: 0.10
@@ -198,15 +238,40 @@ adaptive_generation:
     min_completed_support: 3
     sharpe_floor: 0.30
     fitness_floor: 0.10
-    field_result_multiplier: 0.50
-    operator_result_multiplier: 0.60
+    field_result_multiplier: 1.0
+    operator_result_multiplier: 1.0
+    check_penalty_min_support: 3
+    hard_fail_field_multiplier: 0.35
+    hard_fail_operator_multiplier: 1.0
+    blocking_warning_field_multiplier: 0.55
+    blocking_warning_operator_multiplier: 1.0
+    # Soft-demotion safety net: high-catalog-score fields keep a minimum
+    # sampling score unless they are explicitly hard-blocked.
+    field_floor_ratio: 0.30
+    field_floor_absolute_min: 0.10
+    operator_floor_absolute_min: 0.05
+    # Reserve a small slice of each lane field pool for catalog-score exploration
+    # so promising new fields are not buried by noisy early priors.
+    exploration_budget_pct: 0.15
     winner_prior_enabled: true
-    winner_prior_lookback_rounds: 20
-    winner_prior_min_support: 2
-    winner_prior_sharpe_floor: 0.30
-    winner_prior_fitness_floor: 0.10
-    winner_prior_strong_sharpe_floor: 0.50
-    winner_prior_strong_fitness_floor: 0.30
+    # Recent-windowed, smoothed prior. With 42 completed results in the current
+    # sample, require 15 quality observations before trusting winner history.
+    winner_prior_lookback_rounds: 50
+    winner_prior_min_support: 3
+    winner_prior_min_completed: 15
+    winner_prior_min_winners_for_boost: 3
+    winner_prior_min_losers_for_penalty: 3
+    winner_prior_laplace_k: 1.0
+    winner_prior_multiplier_max: 1.5
+    winner_prior_multiplier_min: 0.5
+    winner_prior_alltime_dampen: 0.5
+    winner_prior_cache_ttl_seconds: 300
+    winner_prior_min_sharpe: 0.50
+    winner_prior_min_fitness: 0.0
+    winner_prior_sharpe_floor: 0.50
+    winner_prior_fitness_floor: 0.0
+    winner_prior_strong_sharpe_floor: 1.00
+    winner_prior_strong_fitness_floor: 0.70
     winner_field_multiplier: 1.35
     strong_winner_field_multiplier: 1.80
     weak_field_multiplier: 0.65
@@ -248,7 +313,10 @@ adaptive_generation:
           "zscore",
           "quantile",
           "ts_mean",
+          "ts_delta",
+          "ts_decay_linear",
           "ts_std_dev",
+          "ts_rank",
           "ts_scale",
           "ts_av_diff",
           "ts_arg_max",
@@ -259,6 +327,9 @@ adaptive_generation:
           "inverse",
           "reverse",
           "days_from_last_change",
+          "group_rank",
+          "group_zscore",
+          "group_neutralize",
         ]
       fresh:
         [
@@ -308,8 +379,8 @@ adaptive_generation:
       recipe_guided: 0.10
       fresh: 0.08
     source_reallocation_strength: 0.65
-    max_fresh_budget_fraction: 0.26
-    fresh_spillover_fraction: 0.03
+    max_fresh_budget_fraction: 0.30
+    fresh_spillover_fraction: 0.20
     bucket_exploration_floor: 1
     bucket_reallocation_strength: 0.75
     bucket_biases:
@@ -357,14 +428,27 @@ adaptive_generation:
     max_polish_candidates_per_round: 24
     max_polish_parents_per_round: 12
     variants_per_parent: 10
-    min_parent_fitness: 0.02
-    min_parent_sharpe: 0.03
-    max_parent_turnover: 1.00
+    min_parent_fitness: 0.20
+    min_parent_sharpe: 0.50
+    min_parent_turnover: 0.01
+    max_parent_turnover: 0.60
     max_parent_drawdown: 0.75
     min_completed_parent_count: 5
     selection_prior_weight: 0.14
     parent_scan_multiplier: 6
-    enabled_transforms: ["wrap_rank", "wrap_zscore", "window_perturb", "smooth_ts_mean", "smooth_ts_decay_linear"]
+    enabled_transforms:
+      [
+        "wrap_rank",
+        "wrap_zscore",
+        "window_perturb",
+        "smooth_ts_mean",
+        "smooth_ts_decay_linear",
+        "operator_substitution",
+        "neutralization",
+        "cross_section",
+        "composite",
+        "field_substitution",
+      ]
     primary_transform: "wrap_rank"
     max_variants_per_parent_by_transform:
       wrap_rank: 1
@@ -379,6 +463,13 @@ adaptive_generation:
     transform_cooldown_success_rate_floor: 0.20
     cooldown_exempt_transform_groups: ["smooth_ts_mean", "smooth_ts_decay_linear"]
     window_perturb_neighbor_count: 4
+    variant_budget_percentages:
+      surface: 0.30
+      operator_substitution: 0.20
+      neutralization: 0.15
+      cross_section: 0.15
+      composite: 0.10
+      field_substitution: 0.10
     disabled_transforms:
       - cleanup_redundant_wrapper
       - smooth_ts_rank
@@ -399,6 +490,16 @@ adaptive_generation:
       - "rank(reverse(inverse(anl69_dpss_best_eeps_cur_yr)))"
       - "rank(max(ts_mean(anl69_cpss_best_eeps_cur_yr,145),zscore(anl69_eps_best_eeps_cur_yr)))"
       - "rank(ts_std_dev((anl69_ebit_best_eeps_cur_yr-anl69_net_best_eeps_cur_yr),150))"
+
+quality_score:
+  # Check-based BRAIN rejects already carry per-check severity; keep them from
+  # also receiving the full generic rejection penalty.
+  check_penalty_weight: 1.0
+  # Completed alphas with check warnings remain useful parents, so warnings are
+  # softer than true check-based rejections.
+  check_warning_weight: 0.5
+  rejection_penalty_weight: 1.0
+  base_rejection_penalty: 0.25
 
 simulation:
   delay_mode: fast_d1
@@ -483,7 +584,7 @@ brain:
       truncation: 0.01
       weight: 1.0
   poll_interval_seconds: 5
-  timeout_seconds: 600
+  timeout_seconds: 1000
   max_retries: 2
   batch_size: 10
   manual_export_dir: outputs/brain_manual

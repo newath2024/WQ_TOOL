@@ -8,7 +8,9 @@ import yaml
 from core.config import (
     BrainConfig,
     EliteMotifConfig,
+    OperatorDiversityBoostConfig,
     PreSimSelectionWeightsConfig,
+    QualityOptimizationConfig,
     RecipeGenerationConfig,
     SearchSpaceFilterConfig,
     load_config,
@@ -229,9 +231,23 @@ def test_search_space_filter_config_defaults_and_validation() -> None:
     assert config.fitness_floor == 0.10
     assert config.field_result_multiplier == 0.50
     assert config.operator_result_multiplier == 0.60
+    assert config.field_floor_ratio == 0.30
+    assert config.field_floor_absolute_min == 0.10
+    assert config.operator_floor_absolute_min == 0.05
+    assert config.exploration_budget_pct == 0.15
     assert config.winner_prior_enabled is False
-    assert config.winner_prior_lookback_rounds == 20
+    assert config.winner_prior_lookback_rounds == 50
     assert config.winner_prior_min_support == 2
+    assert config.winner_prior_min_completed == 15
+    assert config.winner_prior_min_winners_for_boost == 3
+    assert config.winner_prior_min_losers_for_penalty == 3
+    assert config.winner_prior_laplace_k == 1.0
+    assert config.winner_prior_multiplier_max == 1.5
+    assert config.winner_prior_multiplier_min == 0.5
+    assert config.winner_prior_alltime_dampen == 0.5
+    assert config.winner_prior_cache_ttl_seconds == 300
+    assert config.winner_prior_min_sharpe == 0.50
+    assert config.winner_prior_min_fitness == 0.0
     assert config.winner_prior_sharpe_floor == 0.30
     assert config.winner_prior_fitness_floor == 0.10
     assert config.winner_prior_strong_sharpe_floor == 0.50
@@ -264,7 +280,81 @@ def test_search_space_filter_config_defaults_and_validation() -> None:
     with pytest.raises(ValueError):
         SearchSpaceFilterConfig(winner_prior_lookback_rounds=0)
     with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_min_completed=0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_min_winners_for_boost=0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_min_losers_for_penalty=0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_laplace_k=0.0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_multiplier_min=1.5)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_multiplier_max=0.5)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_alltime_dampen=1.5)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(winner_prior_cache_ttl_seconds=-1)
+    with pytest.raises(ValueError):
         SearchSpaceFilterConfig(winner_field_multiplier=0.0)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(field_floor_ratio=1.5)
+    with pytest.raises(ValueError):
+        SearchSpaceFilterConfig(exploration_budget_pct=1.5)
+
+
+def test_operator_diversity_boost_config_defaults_and_validation() -> None:
+    config = OperatorDiversityBoostConfig()
+
+    assert config.enabled is False
+    assert config.dominant_decay_rate == 2.0
+    assert config.dominant_min_multiplier == 0.30
+    assert config.underused_boost == 3.0
+    assert config.underused_decay == 0.5
+    assert config.seed_corr_pair_probability == 0.20
+    assert config.corr_min_lookback == 10
+    assert config.invalid_retry_limit == 3
+    assert "ts_mean" in config.dominant_operators
+    assert "ts_corr" in config.underused_operators
+    assert "days_from_last_change" in config.underused_operators
+    assert "anl69_eps_expected_report_dt" in config.expected_report_date_fields
+    assert ("returns", "anl69_eps_best_eeps_nxt_yr") in config.seed_corr_pairs
+
+    with pytest.raises(ValueError):
+        OperatorDiversityBoostConfig(dominant_min_multiplier=1.5)
+    with pytest.raises(ValueError):
+        OperatorDiversityBoostConfig(underused_boost=0.0)
+    with pytest.raises(ValueError):
+        OperatorDiversityBoostConfig(seed_corr_pair_probability=1.5)
+    with pytest.raises(ValueError):
+        OperatorDiversityBoostConfig(corr_min_lookback=0)
+
+
+def test_quality_optimization_variant_budget_defaults_and_validation() -> None:
+    config = QualityOptimizationConfig()
+
+    assert config.variant_budget_percentages == {
+        "surface": 0.30,
+        "operator_substitution": 0.20,
+        "neutralization": 0.15,
+        "cross_section": 0.15,
+        "composite": 0.10,
+        "field_substitution": 0.10,
+    }
+    assert QualityOptimizationConfig(variant_budget_percentages={}).variant_budget_percentages == config.variant_budget_percentages
+    with pytest.raises(ValueError):
+        QualityOptimizationConfig(variant_budget_percentages={"surface": -0.1})
+    with pytest.raises(ValueError):
+        QualityOptimizationConfig(
+            variant_budget_percentages={
+                "surface": 0.0,
+                "operator_substitution": 0.0,
+                "neutralization": 0.0,
+                "cross_section": 0.0,
+                "composite": 0.0,
+                "field_substitution": 0.0,
+            }
+        )
 
 
 def test_elite_motif_config_defaults_and_validation() -> None:
@@ -494,6 +584,10 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert config.service.ambiguous_submission_policy == "resubmit"
     assert config.generation.sim_neutralization == "SUBINDUSTRY"
     assert config.generation.sim_decay == 5
+    assert config.quality_score.check_penalty_weight == 1.0
+    assert config.quality_score.check_warning_weight == 0.5
+    assert config.quality_score.rejection_penalty_weight == 1.0
+    assert config.quality_score.base_rejection_penalty == 0.25
     penalty = config.adaptive_generation.local_validation_field_penalty
     assert penalty.enabled is True
     assert penalty.lookback_rounds == 20
@@ -509,15 +603,40 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert search_filter.min_completed_support == 3
     assert search_filter.sharpe_floor == 0.30
     assert search_filter.fitness_floor == 0.10
+    assert search_filter.field_result_multiplier == 1.0
+    assert search_filter.operator_result_multiplier == 1.0
     assert search_filter.winner_prior_enabled is True
-    assert search_filter.winner_prior_lookback_rounds == 20
-    assert search_filter.winner_prior_min_support == 2
+    assert search_filter.winner_prior_lookback_rounds == 50
+    assert search_filter.winner_prior_min_support == 3
+    assert search_filter.winner_prior_min_completed == 15
+    assert search_filter.winner_prior_min_winners_for_boost == 3
+    assert search_filter.winner_prior_min_losers_for_penalty == 3
+    assert search_filter.winner_prior_laplace_k == 1.0
+    assert search_filter.winner_prior_multiplier_max == 1.5
+    assert search_filter.winner_prior_multiplier_min == 0.5
+    assert search_filter.winner_prior_alltime_dampen == 0.5
+    assert search_filter.winner_prior_cache_ttl_seconds == 300
+    assert search_filter.winner_prior_min_sharpe == 0.50
+    assert search_filter.winner_prior_min_fitness == 0.0
     assert search_filter.winner_field_multiplier == 1.35
     assert search_filter.strong_winner_field_multiplier == 1.80
     assert search_filter.weak_field_multiplier == 0.65
     assert search_filter.winner_operator_multiplier == 1.35
     assert search_filter.strong_winner_operator_multiplier == 1.80
     assert search_filter.weak_operator_multiplier == 0.65
+    assert search_filter.check_penalty_min_support == 3
+    assert search_filter.hard_fail_field_multiplier == 0.35
+    assert search_filter.hard_fail_operator_multiplier == 1.0
+    assert search_filter.blocking_warning_field_multiplier == 0.55
+    assert search_filter.blocking_warning_operator_multiplier == 1.0
+    assert search_filter.field_floor_ratio == 0.30
+    assert search_filter.field_floor_absolute_min == 0.10
+    assert search_filter.operator_floor_absolute_min == 0.05
+    assert search_filter.exploration_budget_pct == 0.15
+    assert search_filter.winner_prior_sharpe_floor == 0.50
+    assert search_filter.winner_prior_fitness_floor == 0.0
+    assert search_filter.winner_prior_strong_sharpe_floor == 1.00
+    assert search_filter.winner_prior_strong_fitness_floor == 0.70
     assert search_filter.lane_operator_allowlists["quality_polish"] == [
         "rank",
         "zscore",
@@ -543,6 +662,15 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     ]
     assert "quantile" in search_filter.lane_operator_allowlists["recipe_guided"]
     assert "ts_arg_max" in search_filter.lane_operator_allowlists["recipe_guided"]
+    for operator in [
+        "ts_delta",
+        "ts_decay_linear",
+        "ts_rank",
+        "group_rank",
+        "group_zscore",
+        "group_neutralize",
+    ]:
+        assert operator in search_filter.lane_operator_allowlists["recipe_guided"]
     assert search_filter.lane_operator_allowlists["fresh"] == [
         "rank",
         "zscore",
@@ -562,6 +690,29 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
         "group_neutralize",
     ]
     assert "ts_corr" not in search_filter.lane_operator_allowlists["fresh"]
+    operator_boost = config.adaptive_generation.operator_diversity_boost
+    assert operator_boost.enabled is True
+    assert operator_boost.dominant_decay_rate == 2.0
+    assert operator_boost.dominant_min_multiplier == 0.30
+    assert operator_boost.underused_boost == 3.0
+    assert operator_boost.underused_decay == 0.5
+    assert operator_boost.seed_corr_pair_probability == 0.20
+    assert operator_boost.corr_min_lookback == 10
+    assert operator_boost.invalid_retry_limit == 3
+    assert operator_boost.dominant_operators == [
+        "ts_decay_linear",
+        "ts_mean",
+        "ts_sum",
+        "ts_std_dev",
+        "rank",
+        "ts_rank",
+        "zscore",
+    ]
+    assert "ts_corr" in operator_boost.underused_operators
+    assert "ts_covariance" in operator_boost.underused_operators
+    assert "days_from_last_change" in operator_boost.underused_operators
+    assert "anl69_eps_expected_report_dt" in operator_boost.expected_report_date_fields
+    assert ("ts_delta(close,5)", "anl39_epschngin") in operator_boost.seed_corr_pairs
     recipe = config.adaptive_generation.recipe_generation
     assert recipe.recipe_budget_fraction == 0.18
     assert recipe.max_recipe_candidates_per_round == 20
@@ -577,8 +728,8 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert recipe.bucket_suppression_sharpe_floor == 0.30
     assert recipe.bucket_suppression_fitness_floor == 0.10
     assert recipe.bucket_suppression_max_candidates == 1
-    assert recipe.max_fresh_budget_fraction == 0.26
-    assert recipe.fresh_spillover_fraction == 0.03
+    assert recipe.max_fresh_budget_fraction == 0.30
+    assert recipe.fresh_spillover_fraction == 0.20
     assert recipe.bucket_biases["fundamental_quality|fundamental|balanced"] == 1.05
     assert recipe.bucket_biases["value_vs_growth|fundamental|quality"] == 0.80
     assert recipe.bucket_biases["accrual_vs_cashflow|fundamental|balanced"] == 0.25
@@ -606,9 +757,10 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert quality.max_polish_candidates_per_round == 24
     assert quality.max_polish_parents_per_round == 12
     assert quality.variants_per_parent == 10
-    assert quality.min_parent_fitness == 0.02
-    assert quality.min_parent_sharpe == 0.03
-    assert quality.max_parent_turnover == 1.00
+    assert quality.min_parent_fitness == 0.20
+    assert quality.min_parent_sharpe == 0.50
+    assert quality.min_parent_turnover == 0.01
+    assert quality.max_parent_turnover == 0.60
     assert quality.max_parent_drawdown == 0.75
     assert quality.min_completed_parent_count == 5
     assert quality.selection_prior_weight == 0.14
@@ -619,6 +771,11 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
         "window_perturb",
         "smooth_ts_mean",
         "smooth_ts_decay_linear",
+        "operator_substitution",
+        "neutralization",
+        "cross_section",
+        "composite",
+        "field_substitution",
     ]
     assert quality.primary_transform == "wrap_rank"
     assert quality.max_variants_per_parent_by_transform == {
@@ -635,6 +792,14 @@ def test_brain_full_profile_loads_simulation_profiles_and_propagates_generation_
     assert quality.transform_cooldown_success_rate_floor == 0.20
     assert quality.cooldown_exempt_transform_groups == ["smooth_ts_mean", "smooth_ts_decay_linear"]
     assert quality.window_perturb_neighbor_count == 4
+    assert quality.variant_budget_percentages == {
+        "surface": 0.30,
+        "operator_substitution": 0.20,
+        "neutralization": 0.15,
+        "cross_section": 0.15,
+        "composite": 0.10,
+        "field_substitution": 0.10,
+    }
     assert "smooth_ts_mean" not in quality.disabled_transforms
     assert "smooth_ts_decay_linear" not in quality.disabled_transforms
     assert "smooth_ts_rank" in quality.disabled_transforms
@@ -727,6 +892,7 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.adaptive_generation.search_space_filter.lane_field_min_count == 0
     assert config.adaptive_generation.search_space_filter.lane_operator_allowlists == {}
     assert config.adaptive_generation.search_space_filter.winner_prior_enabled is False
+    assert config.adaptive_generation.operator_diversity_boost.enabled is False
     assert config.adaptive_generation.quality_optimization.enabled is True
     assert config.adaptive_generation.quality_optimization.polish_budget_fraction == 0.35
     assert config.adaptive_generation.quality_optimization.enabled_transforms == [
@@ -739,6 +905,8 @@ def test_legacy_yaml_without_generation_optimization_keys_keeps_defaults(tmp_pat
     assert config.adaptive_generation.quality_optimization.cooldown_exempt_transform_groups == []
     assert config.adaptive_generation.quality_optimization.parent_transform_recent_rounds == 2
     assert config.adaptive_generation.quality_optimization.window_perturb_neighbor_count == 4
+    assert config.adaptive_generation.quality_optimization.variant_budget_percentages["surface"] == 0.30
+    assert config.adaptive_generation.quality_optimization.variant_budget_percentages["operator_substitution"] == 0.20
     assert config.adaptive_generation.recipe_generation.max_fresh_budget_fraction == 1.0
     assert config.adaptive_generation.recipe_generation.fresh_spillover_fraction == 1.0
     assert config.adaptive_generation.recipe_generation.bucket_suppression_enabled is False

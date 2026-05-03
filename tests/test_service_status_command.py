@@ -123,6 +123,8 @@ def test_service_status_command_prints_human_summary(tmp_path: Path, capsys) -> 
                     metric_source="external_brain",
                     simulated_at=timestamp,
                     created_at=timestamp,
+                    hard_fail_checks_json=json.dumps(["LOW_SHARPE"]),
+                    derived_submit_ready=False,
                 )
             ]
         )
@@ -144,6 +146,8 @@ def test_service_status_command_prints_human_summary(tmp_path: Path, capsys) -> 
         assert "active_batch_id: batch-1" in output
         assert "active_batch_submission_counts: completed=1 running=1" in output
         assert "result_counts: completed=1" in output
+        assert "derived_submit_ready_counts: no=1" in output
+        assert "top_hard_fail_checks: LOW_SHARPE=1" in output
         assert "dispatch_queue_depth: 1" in output
         assert "dispatch_queue_counts: queued=1" in output
         assert "recent_dispatch_queue:" in output
@@ -193,6 +197,7 @@ def test_service_status_command_prints_json(tmp_path: Path, capsys) -> None:
         assert payload["summary"]["submission_counts"] == {}
         assert payload["summary"]["queue_depth"] == 1
         assert payload["summary"]["queue_counts"] == {"dispatching": 1}
+        assert payload["summary"]["top_hard_fail_checks"] == {}
         assert payload["recent_queue_items"][0]["queue_item_id"] == "queue-json-1"
     finally:
         repository.close()

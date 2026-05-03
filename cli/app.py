@@ -6,8 +6,10 @@ from collections.abc import Iterable
 from pathlib import Path
 
 from cli.commands import (
+    backfill_brain_checks,
     benchmark_generation,
     brain_login,
+    diagnose_fields,
     evaluate,
     evolution_report,
     export_brain_candidates,
@@ -53,6 +55,8 @@ _SUBCOMMANDS = {
     "recover-brain-jobs",
     "brain-login",
     "benchmark-generation",
+    "backfill-brain-checks",
+    "diagnose-fields",
 }
 _GLOBAL_OPTIONS_WITH_VALUES = {"--config", "--run-id", "--seed", "--log-level"}
 _GLOBAL_FLAG_OPTIONS = {"--resume"}
@@ -112,6 +116,8 @@ def build_parser() -> argparse.ArgumentParser:
     recover_brain_jobs.register(subparsers, common)
     brain_login.register(subparsers, common)
     benchmark_generation.register(subparsers, common)
+    backfill_brain_checks.register(subparsers, common)
+    diagnose_fields.register(subparsers, common)
     evolution_report.register(subparsers, common)
     return parser
 

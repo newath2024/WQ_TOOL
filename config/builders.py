@@ -18,6 +18,7 @@ from config.models.adaptive import (
     MutationLearningConfig,
     MutationModeWeightsConfig,
     MutationParentSelectionWeightsConfig,
+    OperatorDiversityBoostConfig,
     PostSimSelectionWeightsConfig,
     PreSimSelectionWeightsConfig,
     QualityOptimizationConfig,
@@ -125,6 +126,9 @@ def _build_adaptive_generation_config(payload: dict[str, Any] | None) -> Adaptiv
     )
     adaptive_payload["search_space_filter"] = SearchSpaceFilterConfig(
         **adaptive_payload.get("search_space_filter", {})
+    )
+    adaptive_payload["operator_diversity_boost"] = OperatorDiversityBoostConfig(
+        **adaptive_payload.get("operator_diversity_boost", {})
     )
     adaptive_payload["recipe_generation"] = RecipeGenerationConfig(
         **adaptive_payload.get("recipe_generation", {})
