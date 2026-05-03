@@ -4,6 +4,9 @@ import json
 
 import pytest
 
+from alpha.ast_nodes import FunctionCallNode, NumberNode, node_depth
+from alpha.parser import parse_expression
+from alpha.validator import validate_expression
 from core.config import AdaptiveGenerationConfig, EliteMotifConfig, QualityOptimizationConfig, load_config
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import build_registry
@@ -12,7 +15,7 @@ from generator.guardrails import GenerationGuardrails
 from memory.pattern_memory import RegionLearningContext
 from services.brain_batch_service import BrainBatchService
 from services.models import CommandEnvironment
-from services.quality_polisher import QualityPolisher, quality_parent_score
+from services.quality_polisher import QualityPolishStats, QualityPolisher, quality_parent_score
 from storage.models import BrainResultRecord, StageMetricRecord, SubmissionBatchRecord, SubmissionRecord
 from storage.repository import SQLiteRepository
 
@@ -26,6 +29,199 @@ def test_quality_parent_score_rewards_quality_and_penalizes_risk() -> None:
     )
 
     assert strong > weak
+
+
+def test_operator_substitution_changes_operator_not_args() -> None:
+    root = parse_expression("ts_mean(anl69_eps_best_eeps_nxt_yr,20)")
+    variants = QualityPolisher(None)._operator_substitution_variants(root, registry=_quality_registry())
+    expressions = {variant.expression for variant in variants}
+
+    assert "ts_rank(anl69_eps_best_eeps_nxt_yr,20)" in expressions
+    assert "ts_decay_linear(anl69_eps_best_eeps_nxt_yr,20)" in expressions
+    assert "ts_mean(anl69_eps_best_eeps_nxt_yr,10)" not in expressions
+    for expression in expressions:
+        parsed = parse_expression(expression)
+        assert isinstance(parsed, FunctionCallNode)
+        assert parsed.name != "ts_mean"
+        assert parsed.args[0].name == "anl69_eps_best_eeps_nxt_yr"
+        assert isinstance(parsed.args[1], NumberNode)
+        assert int(parsed.args[1].value) == 20
+
+
+def test_neutralization_add_wraps_correctly() -> None:
+    root = parse_expression("ts_mean(anl69_eps_best_eeps_nxt_yr,20)")
+    variants = QualityPolisher(None)._neutralization_variants(
+        root,
+        registry=_quality_registry(),
+        field_registry=_field_registry(),
+        generation_config=_quality_generation_config(),
+    )
+
+    assert variants
+    assert variants[0].expression == "rank(group_neutralize(ts_mean(anl69_eps_best_eeps_nxt_yr,20),subindustry))"
+
+
+def test_neutralization_remove_unwraps_correctly() -> None:
+    root = parse_expression("rank(group_neutralize(ts_mean(anl69_eps_best_eeps_nxt_yr,20),subindustry))")
+    variants = QualityPolisher(None)._neutralization_variants(
+        root,
+        registry=_quality_registry(),
+        field_registry=_field_registry(),
+        generation_config=_quality_generation_config(),
+    )
+
+    assert any(
+        variant.transform == "neutralize_remove"
+        and variant.expression == "rank(ts_mean(anl69_eps_best_eeps_nxt_yr,20))"
+        for variant in variants
+    )
+
+
+def test_composite_structure_respects_depth_limit() -> None:
+    root = parse_expression("ts_mean(anl69_eps_best_eeps_nxt_yr,20)")
+    variants = QualityPolisher(None)._composite_structure_variants(
+        root,
+        registry=_quality_registry(),
+        lookbacks=[10, 20, 60],
+        max_depth=4,
+    )
+
+    assert variants
+    assert all(node_depth(parse_expression(variant.expression)) <= 4 for variant in variants)
+
+
+def test_field_substitution_keeps_structure() -> None:
+    root = parse_expression("ts_mean(anl69_eps_best_eeps_nxt_yr,20)")
+    variants = QualityPolisher(None)._field_substitution_variants(
+        root,
+        field_registry=_field_registry(),
+        allowed_fields=set(_field_registry().fields),
+    )
+
+    expressions = {variant.expression for variant in variants}
+    assert "ts_mean(anl69_epss_best_eeps_nxt_yr,20)" in expressions
+    assert all(expression.startswith("ts_mean(") and expression.endswith(",20)") for expression in expressions)
+
+
+def test_structural_variants_pass_validator() -> None:
+    polisher = QualityPolisher(None)
+    root = parse_expression("ts_mean(anl69_eps_best_eeps_nxt_yr,20)")
+    registry = _quality_registry()
+    field_registry = _field_registry()
+    generation_config = _quality_generation_config()
+    structural_variants = [
+        polisher._operator_substitution_variants(root, registry=registry)[0],
+        polisher._neutralization_variants(
+            root,
+            registry=registry,
+            field_registry=field_registry,
+            generation_config=generation_config,
+        )[0],
+        polisher._cross_sectional_wrapper_variants(root, registry=registry)[0],
+        polisher._composite_structure_variants(root, registry=registry, lookbacks=[10, 20, 60], max_depth=7)[0],
+        polisher._field_substitution_variants(
+            root,
+            field_registry=field_registry,
+            allowed_fields=set(field_registry.fields),
+        )[0],
+    ]
+
+    for variant in structural_variants:
+        _assert_valid_expression(variant.expression, registry=registry, field_registry=field_registry, max_depth=7)
+
+
+def test_budget_allocation_respects_percentages() -> None:
+    variants = _structural_variant_batch(limit=20)
+    counts = _budget_group_counts(variants)
+    expected = {
+        "surface": 6,
+        "operator_substitution": 4,
+        "neutralization": 3,
+        "cross_section": 3,
+        "composite": 2,
+        "field_substitution": 2,
+    }
+
+    assert len(variants) == 20
+    for group, target in expected.items():
+        assert abs(counts.get(group, 0) - target) <= 2
+
+
+def test_no_surface_only_variants_dominate() -> None:
+    variants = _structural_variant_batch(limit=20)
+    counts = _budget_group_counts(variants)
+
+    assert counts["surface"] <= 6
+    assert sum(count for group, count in counts.items() if group != "surface") >= 14
+
+
+def test_duplicate_variants_skipped() -> None:
+    repository = SQLiteRepository(":memory:")
+    duplicate_expression = "ts_decay_linear(anl69_eps_best_eeps_nxt_yr,20)"
+    try:
+        _seed_run(repository, run_id="run-quality")
+        _seed_parent(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-1",
+            expression="ts_mean(anl69_eps_best_eeps_nxt_yr,20)",
+            fields_used=("anl69_eps_best_eeps_nxt_yr",),
+            operators_used=("ts_mean",),
+        )
+        _seed_result(
+            repository,
+            run_id="run-quality",
+            alpha_id="parent-1",
+            job_id="job-1",
+            fitness=0.30,
+            sharpe=0.40,
+            simulated_at="2026-04-22T01:00:00+00:00",
+        )
+        repository.save_alpha_candidates(
+            "run-quality",
+            [
+                AlphaCandidate(
+                    alpha_id="existing-duplicate",
+                    expression=duplicate_expression,
+                    normalized_expression=duplicate_expression,
+                    generation_mode="quality_polish",
+                    parent_ids=("parent-1",),
+                    complexity=4,
+                    created_at="2026-04-22T01:30:00+00:00",
+                    fields_used=("anl69_eps_best_eeps_nxt_yr",),
+                    operators_used=("ts_decay_linear",),
+                    depth=3,
+                    generation_metadata={},
+                )
+            ],
+        )
+        generation_config = _quality_generation_config()
+        result = QualityPolisher(repository).generate(
+            config=_structural_quality_config(limit=12),
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=_quality_registry(),
+            field_registry=_field_registry(),
+            region_learning_context=RegionLearningContext(
+                region="USA",
+                regime_key="regime",
+                global_regime_key="global",
+            ),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-quality",
+            round_index=2,
+            count=12,
+            allowed_fields=set(_field_registry().fields),
+            lane_operator_allowlist=set(generation_config.allowed_operators),
+        )
+    finally:
+        repository.close()
+
+    assert duplicate_expression not in {candidate.normalized_expression for candidate in result.candidates}
+    assert result.stats.skipped_existing_normalized >= 1
 
 
 def test_repository_lists_latest_completed_quality_polish_parent() -> None:
@@ -1207,6 +1403,118 @@ def test_brain_batch_service_includes_quality_polish_metrics(tmp_path, monkeypat
     assert "quality_polish_transform_cooldown_counts" in metrics
 
 
+def _quality_generation_config():
+    generation_config = load_config("config/brain_full.yaml").generation
+    generation_config.lookbacks = [10, 20, 60, 100, 250]
+    generation_config.max_depth = 7
+    generation_config.complexity_limit = 30
+    return generation_config
+
+
+def _quality_registry():
+    generation_config = _quality_generation_config()
+    return build_registry(
+        generation_config.allowed_operators,
+        operator_catalog_paths=generation_config.operator_catalog_paths,
+    )
+
+
+def _structural_quality_config(*, limit: int = 20) -> QualityOptimizationConfig:
+    return QualityOptimizationConfig(
+        min_completed_parent_count=1,
+        max_polish_candidates_per_round=limit,
+        variants_per_parent=limit,
+        enabled_transforms=[
+            "wrap_rank",
+            "wrap_zscore",
+            "window_perturb",
+            "smooth_ts_mean",
+            "smooth_ts_decay_linear",
+            "operator_substitution",
+            "neutralization",
+            "cross_section",
+            "composite",
+            "field_substitution",
+        ],
+        disabled_transforms=["cleanup_redundant_wrapper", "smooth_ts_rank"],
+        max_variants_per_parent_by_transform={
+            "wrap_rank": 1,
+            "wrap_zscore": 1,
+            "window_perturb": 4,
+            "smooth_ts_mean": 4,
+            "smooth_ts_decay_linear": 4,
+            "operator_substitution": 4,
+            "neutralization": 4,
+            "cross_section": 4,
+            "composite": 4,
+            "field_substitution": 4,
+        },
+        window_perturb_neighbor_count=4,
+    )
+
+
+def _structural_variant_batch(*, limit: int) -> list:
+    generation_config = _quality_generation_config()
+    field_registry = _field_registry()
+    return QualityPolisher(None)._variant_expressions(
+        "ts_mean(anl69_eps_best_eeps_nxt_yr,20)",
+        registry=_quality_registry(),
+        field_registry=field_registry,
+        generation_config=generation_config,
+        lookbacks=generation_config.lookbacks,
+        limit=limit,
+        config=_structural_quality_config(limit=limit),
+        stats=QualityPolishStats(),
+        transform_scores={},
+        cooldown_groups=set(),
+        existing_normalized=set(),
+        allowed_fields=set(field_registry.fields),
+        lane_operator_allowlist=set(generation_config.allowed_operators),
+    )
+
+
+def _budget_group_counts(variants: list) -> dict[str, int]:
+    counts: dict[str, int] = {
+        "surface": 0,
+        "operator_substitution": 0,
+        "neutralization": 0,
+        "cross_section": 0,
+        "composite": 0,
+        "field_substitution": 0,
+    }
+    for variant in variants:
+        group = variant.transform_group
+        if group in {"window_perturb", "smooth_ts_mean", "smooth_ts_decay_linear", "smooth_ts_rank"}:
+            counts["surface"] += 1
+        elif group in {"wrap_rank", "wrap_zscore", "cross_section"}:
+            counts["cross_section"] += 1
+        else:
+            counts[group] = counts.get(group, 0) + 1
+    return counts
+
+
+def _assert_valid_expression(
+    expression: str,
+    *,
+    registry,
+    field_registry: FieldRegistry,
+    max_depth: int,
+) -> None:
+    allowed_fields = set(field_registry.fields)
+    result = validate_expression(
+        parse_expression(expression),
+        registry=registry,
+        allowed_fields=allowed_fields,
+        max_depth=max_depth,
+        group_fields={"subindustry", "sector"},
+        field_types=field_registry.field_types(allowed=allowed_fields),
+        field_categories={name: spec.category for name, spec in field_registry.fields.items()},
+        complexity_limit=30,
+        exact_field_types=field_registry.exact_field_types(allowed=allowed_fields),
+    )
+    assert result.is_valid, result.errors
+
+
 def _seed_run(repository: SQLiteRepository, *, run_id: str) -> None:
     repository.upsert_run(
         run_id=run_id,
@@ -1334,29 +1642,44 @@ def _seed_result(
 
 
 def _field_registry() -> FieldRegistry:
+    def matrix_field(name: str, *, category: str = "analyst", subcategory: str = "") -> FieldSpec:
+        return FieldSpec(
+            name=name,
+            dataset="test",
+            field_type="matrix",
+            coverage=1.0,
+            alpha_usage_count=0,
+            category=category,
+            runtime_available=True,
+            category_weight=1.0,
+            field_score=1.0,
+            subcategory=subcategory,
+        )
+
+    def group_field(name: str) -> FieldSpec:
+        return FieldSpec(
+            name=name,
+            dataset="test",
+            field_type="vector",
+            coverage=1.0,
+            alpha_usage_count=0,
+            category="group",
+            runtime_available=True,
+            category_weight=1.0,
+            field_score=1.0,
+        )
+
     return FieldRegistry(
         fields={
-            "close": FieldSpec(
-                name="close",
-                dataset="test",
-                field_type="matrix",
-                coverage=1.0,
-                alpha_usage_count=0,
-                category="price",
-                runtime_available=True,
-                category_weight=1.0,
-                field_score=1.0,
+            "close": matrix_field("close", category="price"),
+            "volume": matrix_field("volume", category="volume"),
+            "anl69_eps_best_eeps_nxt_yr": matrix_field("anl69_eps_best_eeps_nxt_yr", subcategory="eps_next_year"),
+            "anl69_epss_best_eeps_nxt_yr": matrix_field("anl69_epss_best_eeps_nxt_yr", subcategory="eps_next_year"),
+            "anl69_eps_best_cur_fiscal_year_period": matrix_field(
+                "anl69_eps_best_cur_fiscal_year_period",
+                subcategory="eps_next_year",
             ),
-            "volume": FieldSpec(
-                name="volume",
-                dataset="test",
-                field_type="matrix",
-                coverage=1.0,
-                alpha_usage_count=0,
-                category="volume",
-                runtime_available=True,
-                category_weight=1.0,
-                field_score=1.0,
-            ),
+            "subindustry": group_field("subindustry"),
+            "sector": group_field("sector"),
         }
     )

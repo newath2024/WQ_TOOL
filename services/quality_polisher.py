@@ -16,9 +16,11 @@ from alpha.ast_nodes import (
     UnaryOpNode,
     iter_child_nodes,
     node_complexity,
+    node_depth,
     to_expression,
 )
 from alpha.parser import parse_expression
+from core.brain_checks import has_structural_risk_blocker, parse_names_json
 from core.config import AdaptiveGenerationConfig, GenerationConfig, QualityOptimizationConfig
 from core.quality_score import MultiObjectiveQualityScorer
 from data.field_registry import FieldRegistry
@@ -32,6 +34,86 @@ from services.evaluation_service import alpha_candidate_from_record
 from services.search_space_filter import expression_fields_and_operators
 from storage.models import AlphaRecord
 from storage.repository import SQLiteRepository
+
+
+QUALITY_POLISH_OPERATOR_ALLOWLIST = frozenset(
+    {
+        "rank",
+        "zscore",
+        "quantile",
+        "ts_mean",
+        "ts_decay_linear",
+        "ts_std_dev",
+        "ts_rank",
+        "ts_sum",
+        "ts_scale",
+        "ts_arg_max",
+        "ts_arg_min",
+        "days_from_last_change",
+        "ts_av_diff",
+        "ts_count_nans",
+        "inverse",
+        "reverse",
+        "sign",
+        "abs",
+        "min",
+        "max",
+        "group_neutralize",
+    }
+)
+DEFAULT_VARIANT_BUDGET_PERCENTAGES = {
+    "surface": 0.30,
+    "operator_substitution": 0.20,
+    "neutralization": 0.15,
+    "cross_section": 0.15,
+    "composite": 0.10,
+    "field_substitution": 0.10,
+}
+STRUCTURAL_BUDGET_GROUPS = tuple(
+    group for group in DEFAULT_VARIANT_BUDGET_PERCENTAGES if group != "surface"
+)
+TIME_SERIES_SUBSTITUTIONS = {
+    "ts_mean": ("ts_decay_linear", "ts_rank", "ts_sum"),
+    "ts_decay_linear": ("ts_mean", "ts_rank"),
+    "ts_rank": ("ts_mean", "ts_decay_linear", "ts_std_dev"),
+    "ts_std_dev": ("ts_rank", "ts_mean"),
+    "ts_sum": ("ts_mean", "ts_decay_linear"),
+}
+CROSS_SECTION_SUBSTITUTIONS = {
+    "rank": ("zscore", "quantile", "ts_scale"),
+    "zscore": ("rank", "quantile"),
+    "quantile": ("rank", "zscore"),
+}
+FIELD_FAMILIES = {
+    "eps_next_year": (
+        "anl69_eps_best_eeps_nxt_yr",
+        "anl69_epss_best_eeps_nxt_yr",
+        "anl69_eps_best_cur_fiscal_year_period",
+    ),
+    "roe_estimates": (
+        "anl69_roe_best_eeps_nxt_yr",
+        "anl69_roe_best_eeps_cur_yr",
+        "anl69_roes_best_eeps_nxt_yr",
+    ),
+    "roa_estimates": (
+        "anl69_roa_best_eeps_nxt_yr",
+        "anl69_roa_best_eeps_cur_yr",
+        "anl69_roa_best_cur_fiscal_year_period",
+    ),
+    "gross_margin": (
+        "anl39_agrosmgn",
+        "anl39_agrosmgn2",
+        "anl39_qgrosmgn",
+        "anl39_ttmgrosmgn",
+    ),
+    "ebit_estimates": (
+        "anl69_ebit_best_eeps_nxt_yr",
+        "anl69_ebit_best_eeps_cur_yr",
+        "anl69_ebit_best_cur_fiscal_year_period",
+    ),
+}
+PREFERRED_GROUP_KEYS = ("subindustry", "sector")
+MAX_PARENT_STRUCTURAL_SIMILARITY = 0.94
 
 
 @dataclass(slots=True)
@@ -221,6 +303,7 @@ class QualityPolisher:
         )
         candidates: list[AlphaCandidate] = []
         existing = set(existing_normalized)
+        existing.update(self.repository.list_existing_normalized_expressions(run_id))
         usage_keys = self.repository.list_quality_polish_usage_keys(run_id)
         used_signatures = set(usage_keys.get("signatures") or set())
         recent_parent_transform_counts = self._recent_parent_transform_counts(
@@ -288,6 +371,8 @@ class QualityPolisher:
                     *self._variant_expressions(
                         parent.candidate.expression,
                         registry=registry,
+                        field_registry=field_registry,
+                        generation_config=generation_config,
                         lookbacks=generation_config.lookbacks,
                         limit=int(config.variants_per_parent),
                         config=config,
@@ -295,6 +380,8 @@ class QualityPolisher:
                         transform_scores=transform_profile.scores,
                         cooldown_groups=transform_profile.cooldown_groups,
                         existing_normalized=existing,
+                        allowed_fields=allowed_fields,
+                        lane_operator_allowlist=lane_operator_allowlist,
                     ),
                 ]
             )
@@ -580,6 +667,10 @@ class QualityPolisher:
     def _row_to_parent(self, row: dict[str, Any]) -> _PolishParent | None:
         if str(row.get("result_rejection_reason") or "").strip():
             return None
+        hard_fail_checks = parse_names_json(row.get("result_hard_fail_checks_json"))
+        blocking_warnings = parse_names_json(row.get("result_blocking_warning_checks_json"))
+        if has_structural_risk_blocker(hard_fail_checks, blocking_warnings):
+            return None
         metrics = {
             "fitness": _to_float(row.get("result_fitness")),
             "sharpe": _to_float(row.get("result_sharpe")),
@@ -621,6 +712,7 @@ class QualityPolisher:
         return (
             metrics["fitness"] >= float(config.min_parent_fitness)
             and metrics["sharpe"] >= float(config.min_parent_sharpe)
+            and metrics["turnover"] >= float(getattr(config, "min_parent_turnover", 0.0))
             and metrics["turnover"] <= float(config.max_parent_turnover)
             and metrics["drawdown"] <= float(config.max_parent_drawdown)
         )
@@ -703,6 +795,8 @@ class QualityPolisher:
         expression: str,
         *,
         registry: OperatorRegistry,
+        field_registry: FieldRegistry | None = None,
+        generation_config: GenerationConfig | None = None,
         lookbacks: list[int],
         limit: int,
         config: QualityOptimizationConfig,
@@ -710,22 +804,35 @@ class QualityPolisher:
         transform_scores: dict[str, float],
         cooldown_groups: set[str],
         existing_normalized: set[str],
+        allowed_fields: set[str] | None = None,
+        lane_operator_allowlist: set[str] | None = None,
     ) -> list[_ExpressionVariant]:
         try:
             root = parse_expression(expression)
         except ValueError:
             return []
 
-        variants: list[_ExpressionVariant] = []
+        buckets: dict[str, list[_ExpressionVariant]] = {
+            "surface": [],
+            "operator_substitution": [],
+            "neutralization": [],
+            "cross_section": [],
+            "composite": [],
+            "field_substitution": [],
+        }
         seen: set[str] = set()
         transform_counts: Counter[str] = Counter()
         max_by_transform = dict(config.max_variants_per_parent_by_transform or {})
         enabled_transforms = set(config.enabled_transforms or [])
         disabled_transforms = set(config.disabled_transforms or [])
+        effective_operator_allowlist = set(lane_operator_allowlist or QUALITY_POLISH_OPERATOR_ALLOWLIST)
+        max_depth = int(getattr(generation_config, "max_depth", 7) or 7)
 
         parent_normalized = _normalize_variant_expression(expression)
 
-        def add(expr: str, transform: str, *, group: str, priority: int) -> None:
+        def add(variant: _ExpressionVariant, *, budget_group: str) -> None:
+            transform = variant.transform
+            group = variant.transform_group
             if group in cooldown_groups or transform in cooldown_groups:
                 stats.transform_cooldown_counts[group] += 1
                 return
@@ -735,91 +842,139 @@ class QualityPolisher:
             if enabled_transforms and group not in enabled_transforms and transform not in enabled_transforms:
                 stats.disabled_transform_counts[group] += 1
                 return
-            if transform_counts[group] >= int(max_by_transform.get(group, limit) or limit):
+            cap_key = group if group in max_by_transform else transform if transform in max_by_transform else group
+            if transform_counts[cap_key] >= int(max_by_transform.get(cap_key, limit) or limit):
                 return
-            normalized = _normalize_variant_expression(expr)
+            normalized = _normalize_variant_expression(variant.expression)
             if (
                 not normalized
                 or normalized == parent_normalized
-                or normalized in existing_normalized
                 or normalized in seen
-                or _is_redundant_cross_sectional_wrapper(expr)
-                or len(variants) >= limit
+                or _is_redundant_cross_sectional_wrapper(variant.expression)
+                or not _expression_allowed_by_search_space(
+                    variant.expression,
+                    allowed_fields=allowed_fields,
+                    lane_operator_allowlist=effective_operator_allowlist,
+                )
+                or _is_too_similar_to_parent(root, variant.expression)
             ):
                 return
             seen.add(normalized)
-            variants.append(
-                _ExpressionVariant(
-                    expression=expr.strip(),
-                    transform=transform,
-                    transform_group=group,
-                    priority=priority,
-                )
-            )
-            transform_counts[group] += 1
+            buckets.setdefault(budget_group, []).append(variant)
+            transform_counts[cap_key] += 1
 
-        root_expr = to_expression(root)
-        if registry.contains("rank") and not _is_root_call(root, "rank"):
-            add(f"rank({root_expr})", "wrap_rank", group="wrap_rank", priority=1)
-        if registry.contains("zscore") and not _is_root_call(root, "zscore"):
-            add(f"zscore({root_expr})", "wrap_zscore", group="wrap_zscore", priority=2)
-        cleaned = _cleanup_root_wrapper(root)
-        if cleaned is not None:
-            add(
-                to_expression(cleaned),
-                "cleanup_redundant_wrapper",
-                group="cleanup_redundant_wrapper",
-                priority=4,
-            )
+        for variant in self._cross_sectional_wrapper_variants(root, registry=registry):
+            add(variant, budget_group="cross_section")
+        for variant in self._operator_substitution_variants(root, registry=registry):
+            add(variant, budget_group="operator_substitution")
+        for variant in self._neutralization_variants(
+            root,
+            registry=registry,
+            field_registry=field_registry,
+            generation_config=generation_config,
+        ):
+            add(variant, budget_group="neutralization")
+        for variant in self._composite_structure_variants(
+            root,
+            registry=registry,
+            lookbacks=lookbacks,
+            max_depth=max_depth,
+        ):
+            add(variant, budget_group="composite")
+        for variant in self._field_substitution_variants(
+            root,
+            field_registry=field_registry,
+            allowed_fields=allowed_fields,
+        ):
+            add(variant, budget_group="field_substitution")
+        for variant in self._surface_variants(root, registry=registry, lookbacks=lookbacks, config=config):
+            add(variant, budget_group="surface")
 
+        allocations = _variant_budget_allocations(
+            limit=int(limit),
+            percentages=dict(getattr(config, "variant_budget_percentages", {}) or {}),
+        )
+        return _select_budgeted_variants(
+            buckets,
+            allocations=allocations,
+            limit=int(limit),
+            transform_scores=transform_scores,
+        )
+
+    def _surface_variants(
+        self,
+        root: ExprNode,
+        *,
+        registry: OperatorRegistry,
+        lookbacks: list[int],
+        config: QualityOptimizationConfig,
+    ) -> list[_ExpressionVariant]:
+        variants: list[_ExpressionVariant] = []
         preferred_windows = _preferred_windows(lookbacks)
         base_nodes = _smooth_base_nodes(_unwrap_outer_cross_sectional(root))
         if registry.contains("ts_mean"):
             for base_node in base_nodes:
-                base_expr = to_expression(base_node)
                 for window in preferred_windows:
-                    inner = f"ts_mean({base_expr},{window})"
+                    inner_node = FunctionCallNode(
+                        name="ts_mean",
+                        args=(base_node, NumberNode(float(window))),
+                    )
                     if registry.contains("rank"):
-                        add(
-                            f"rank({inner})",
-                            f"smooth_ts_mean_rank_{window}",
-                            group="smooth_ts_mean",
-                            priority=5,
+                        variants.append(
+                            _ExpressionVariant(
+                                expression=to_expression(FunctionCallNode(name="rank", args=(inner_node,))),
+                                transform=f"smooth_ts_mean_rank_{window}",
+                                transform_group="smooth_ts_mean",
+                                priority=5,
+                            )
                         )
                     if registry.contains("zscore"):
-                        add(
-                            f"zscore({inner})",
-                            f"smooth_ts_mean_zscore_{window}",
-                            group="smooth_ts_mean",
-                            priority=5,
+                        variants.append(
+                            _ExpressionVariant(
+                                expression=to_expression(FunctionCallNode(name="zscore", args=(inner_node,))),
+                                transform=f"smooth_ts_mean_zscore_{window}",
+                                transform_group="smooth_ts_mean",
+                                priority=5,
+                            )
                         )
         if registry.contains("ts_decay_linear") and registry.contains("rank"):
             for base_node in base_nodes:
-                base_expr = to_expression(base_node)
                 for window in preferred_windows:
-                    inner = f"ts_decay_linear({base_expr},{window})"
-                    add(
-                        f"rank({inner})",
-                        f"smooth_ts_decay_linear_rank_{window}",
-                        group="smooth_ts_decay_linear",
-                        priority=6,
+                    inner_node = FunctionCallNode(
+                        name="ts_decay_linear",
+                        args=(base_node, NumberNode(float(window))),
                     )
-                    if registry.contains("zscore"):
-                        add(
-                            f"zscore({inner})",
-                            f"smooth_ts_decay_linear_zscore_{window}",
-                            group="smooth_ts_decay_linear",
+                    variants.append(
+                        _ExpressionVariant(
+                            expression=to_expression(FunctionCallNode(name="rank", args=(inner_node,))),
+                            transform=f"smooth_ts_decay_linear_rank_{window}",
+                            transform_group="smooth_ts_decay_linear",
                             priority=6,
                         )
+                    )
+                    if registry.contains("zscore"):
+                        variants.append(
+                            _ExpressionVariant(
+                                expression=to_expression(FunctionCallNode(name="zscore", args=(inner_node,))),
+                                transform=f"smooth_ts_decay_linear_zscore_{window}",
+                                transform_group="smooth_ts_decay_linear",
+                                priority=6,
+                            )
+                        )
         if registry.contains("ts_rank") and registry.contains("rank"):
-            base_expr = to_expression(base_nodes[0]) if base_nodes else to_expression(_unwrap_outer_cross_sectional(root))
+            base_node = base_nodes[0] if base_nodes else _unwrap_outer_cross_sectional(root)
             for window in preferred_windows:
-                inner = f"ts_rank({base_expr},{window})"
-                add(
-                    f"rank({inner})",
-                    f"smooth_ts_rank_{window}",
-                    group="smooth_ts_rank",
-                    priority=7,
+                inner_node = FunctionCallNode(
+                    name="ts_rank",
+                    args=(base_node, NumberNode(float(window))),
+                )
+                variants.append(
+                    _ExpressionVariant(
+                        expression=to_expression(FunctionCallNode(name="rank", args=(inner_node,))),
+                        transform=f"smooth_ts_rank_{window}",
+                        transform_group="smooth_ts_rank",
+                        priority=7,
+                    )
                 )
 
         for variant_node, transform in _window_perturbations(
@@ -827,17 +982,272 @@ class QualityPolisher:
             lookbacks=lookbacks,
             neighbor_count=int(config.window_perturb_neighbor_count),
         ):
-            add(to_expression(variant_node), transform, group="window_perturb", priority=3)
+            variants.append(
+                _ExpressionVariant(
+                    expression=to_expression(variant_node),
+                    transform=transform,
+                    transform_group="window_perturb",
+                    priority=3,
+                )
+            )
+        cleaned = _cleanup_root_wrapper(root)
+        if cleaned is not None:
+            variants.append(
+                _ExpressionVariant(
+                    expression=to_expression(cleaned),
+                    transform="cleanup_redundant_wrapper",
+                    transform_group="cleanup_redundant_wrapper",
+                    priority=4,
+                )
+            )
+        return variants
 
-        return sorted(
-            variants,
-            key=lambda item: (
-                item.priority,
-                -float(transform_scores.get(item.transform_group, 0.0)),
-                item.transform,
-                item.expression,
-            ),
-        )[:limit]
+    def _operator_substitution_variants(
+        self,
+        root: ExprNode,
+        *,
+        registry: OperatorRegistry,
+    ) -> list[_ExpressionVariant]:
+        variants: list[_ExpressionVariant] = []
+        substitution_maps = (TIME_SERIES_SUBSTITUTIONS, CROSS_SECTION_SUBSTITUTIONS)
+        for path, node in _primary_function_paths(root):
+            for substitutions in substitution_maps:
+                replacements = substitutions.get(node.name)
+                if not replacements:
+                    continue
+                for replacement_name in replacements:
+                    if not _operator_replacement_supported(
+                        registry,
+                        source=node.name,
+                        replacement=replacement_name,
+                        arg_count=len(node.args),
+                    ):
+                        continue
+                    updated = _replace_node_at_path(
+                        root,
+                        path,
+                        FunctionCallNode(name=replacement_name, args=node.args),
+                    )
+                    variants.append(
+                        _ExpressionVariant(
+                            expression=to_expression(updated),
+                            transform=f"operator_sub_{node.name}_to_{replacement_name}",
+                            transform_group="operator_substitution",
+                            priority=10,
+                        )
+                    )
+        return variants
+
+    def _neutralization_variants(
+        self,
+        root: ExprNode,
+        *,
+        registry: OperatorRegistry,
+        field_registry: FieldRegistry | None,
+        generation_config: GenerationConfig | None,
+    ) -> list[_ExpressionVariant]:
+        if not registry.contains("group_neutralize"):
+            return []
+        variants: list[_ExpressionVariant] = []
+        group_keys = _available_group_keys(field_registry, generation_config=generation_config)
+        neutralize_path = _outer_group_neutralize_path(root)
+        if neutralize_path is None:
+            if not registry.contains("rank"):
+                return []
+            for index, group_key in enumerate(group_keys):
+                neutralized = FunctionCallNode(
+                    name="group_neutralize",
+                    args=(root, IdentifierNode(group_key)),
+                )
+                variants.append(
+                    _ExpressionVariant(
+                        expression=to_expression(FunctionCallNode(name="rank", args=(neutralized,))),
+                        transform=f"neutralize_add_{group_key}",
+                        transform_group="neutralization",
+                        priority=20 + index,
+                    )
+                )
+            return variants
+
+        neutralize_node = _node_at_path(root, neutralize_path)
+        if not isinstance(neutralize_node, FunctionCallNode) or len(neutralize_node.args) != 2:
+            return variants
+        inner_node = neutralize_node.args[0]
+        group_node = neutralize_node.args[1]
+        updated = _replace_node_at_path(root, neutralize_path, inner_node)
+        variants.append(
+            _ExpressionVariant(
+                expression=to_expression(updated),
+                transform="neutralize_remove",
+                transform_group="neutralization",
+                priority=21,
+            )
+        )
+        current_group = group_node.name if isinstance(group_node, IdentifierNode) else ""
+        for group_key in group_keys:
+            if group_key == current_group:
+                continue
+            switched = _replace_node_at_path(
+                root,
+                neutralize_path,
+                FunctionCallNode(
+                    name="group_neutralize",
+                    args=(inner_node, IdentifierNode(group_key)),
+                ),
+            )
+            variants.append(
+                _ExpressionVariant(
+                    expression=to_expression(switched),
+                    transform=f"neutralize_switch_{current_group or 'unknown'}_to_{group_key}",
+                    transform_group="neutralization",
+                    priority=22,
+                )
+            )
+        return variants
+
+    def _cross_sectional_wrapper_variants(
+        self,
+        root: ExprNode,
+        *,
+        registry: OperatorRegistry,
+    ) -> list[_ExpressionVariant]:
+        variants: list[_ExpressionVariant] = []
+        wrappers = ("rank", "zscore", "quantile")
+        if isinstance(root, FunctionCallNode) and root.name in wrappers and len(root.args) == 1:
+            inner = root.args[0]
+            for wrapper in wrappers:
+                if wrapper == root.name or not registry.contains(wrapper):
+                    continue
+                variants.append(
+                    _ExpressionVariant(
+                        expression=to_expression(FunctionCallNode(name=wrapper, args=(inner,))),
+                        transform=f"cross_section_{root.name}_to_{wrapper}",
+                        transform_group="cross_section",
+                        priority=30,
+                    )
+                )
+            return variants
+
+        if registry.contains("rank") and not _is_root_call(root, "rank"):
+            variants.append(
+                _ExpressionVariant(
+                    expression=to_expression(FunctionCallNode(name="rank", args=(root,))),
+                    transform="wrap_rank",
+                    transform_group="wrap_rank",
+                    priority=1,
+                )
+            )
+        if registry.contains("zscore") and not _is_root_call(root, "zscore"):
+            variants.append(
+                _ExpressionVariant(
+                    expression=to_expression(FunctionCallNode(name="zscore", args=(root,))),
+                    transform="wrap_zscore",
+                    transform_group="wrap_zscore",
+                    priority=2,
+                )
+            )
+        if registry.contains("quantile") and not _is_root_call(root, "quantile"):
+            variants.append(
+                _ExpressionVariant(
+                    expression=to_expression(FunctionCallNode(name="quantile", args=(root,))),
+                    transform="wrap_quantile",
+                    transform_group="cross_section",
+                    priority=31,
+                )
+            )
+        return variants
+
+    def _composite_structure_variants(
+        self,
+        root: ExprNode,
+        *,
+        registry: OperatorRegistry,
+        lookbacks: list[int],
+        max_depth: int,
+    ) -> list[_ExpressionVariant]:
+        variants: list[_ExpressionVariant] = []
+        if not lookbacks:
+            lookbacks = [10, 20, 60]
+        base = _unwrap_outer_cross_sectional(root)
+        preferred_windows = _preferred_windows(lookbacks)
+        short_window = preferred_windows[0]
+        long_window = max(int(window) for window in lookbacks if int(window) > 0)
+        if registry.contains("ts_mean"):
+            long_mean = FunctionCallNode(name="ts_mean", args=(base, NumberNode(float(long_window))))
+            variants.append(
+                _depth_checked_variant(
+                    BinaryOpNode(operator="-", left=base, right=long_mean),
+                    transform=f"composite_deviation_ts_mean_{long_window}",
+                    group="composite",
+                    priority=40,
+                    max_depth=max_depth,
+                )
+            )
+            short_mean = FunctionCallNode(name="ts_mean", args=(base, NumberNode(float(short_window))))
+            variants.append(
+                _depth_checked_variant(
+                    BinaryOpNode(operator="-", left=base, right=short_mean),
+                    transform=f"composite_change_ts_mean_{short_window}",
+                    group="composite",
+                    priority=42,
+                    max_depth=max_depth,
+                )
+            )
+            if registry.contains("abs"):
+                abs_base = FunctionCallNode(name="abs", args=(base,))
+                normalizer = FunctionCallNode(name="ts_mean", args=(abs_base, NumberNode(float(short_window))))
+                variants.append(
+                    _depth_checked_variant(
+                        BinaryOpNode(operator="/", left=base, right=normalizer),
+                        transform=f"composite_normalized_abs_mean_{short_window}",
+                        group="composite",
+                        priority=41,
+                        max_depth=max_depth,
+                    )
+                )
+        if registry.contains("sign") and registry.contains("abs"):
+            variants.append(
+                _depth_checked_variant(
+                    BinaryOpNode(
+                        operator="*",
+                        left=FunctionCallNode(name="sign", args=(base,)),
+                        right=FunctionCallNode(name="abs", args=(base,)),
+                    ),
+                    transform="composite_signed_abs",
+                    group="composite",
+                    priority=43,
+                    max_depth=max_depth,
+                )
+            )
+        return [variant for variant in variants if variant is not None]
+
+    def _field_substitution_variants(
+        self,
+        root: ExprNode,
+        *,
+        field_registry: FieldRegistry | None,
+        allowed_fields: set[str] | None,
+    ) -> list[_ExpressionVariant]:
+        variants: list[_ExpressionVariant] = []
+        for path, field_node in _identifier_paths(root):
+            siblings = _field_siblings(field_node.name, field_registry=field_registry)
+            for sibling in siblings:
+                if sibling == field_node.name:
+                    continue
+                if allowed_fields is not None and sibling not in allowed_fields:
+                    continue
+                if field_registry is not None and not field_registry.contains(sibling):
+                    continue
+                updated = _replace_node_at_path(root, path, IdentifierNode(sibling))
+                variants.append(
+                    _ExpressionVariant(
+                        expression=to_expression(updated),
+                        transform=f"field_substitution_{field_node.name}_to_{sibling}",
+                        transform_group="field_substitution",
+                        priority=50,
+                    )
+                )
+        return variants
 
     def _turnover_repair_variants(
         self,
@@ -963,6 +1373,387 @@ def _normalize_variant_expression(expression: str) -> str:
         return to_expression(parse_expression(expression))
     except ValueError:
         return str(expression or "").strip()
+
+
+def _variant_budget_allocations(
+    *,
+    limit: int,
+    percentages: dict[str, float],
+) -> dict[str, int]:
+    if limit <= 0:
+        return {group: 0 for group in DEFAULT_VARIANT_BUDGET_PERCENTAGES}
+    weights = dict(DEFAULT_VARIANT_BUDGET_PERCENTAGES)
+    weights.update(
+        {
+            str(group).strip(): max(0.0, float(weight))
+            for group, weight in (percentages or {}).items()
+            if str(group).strip() in DEFAULT_VARIANT_BUDGET_PERCENTAGES
+        }
+    )
+    total_weight = sum(weights.values())
+    if total_weight <= 0.0:
+        weights = dict(DEFAULT_VARIANT_BUDGET_PERCENTAGES)
+        total_weight = sum(weights.values())
+    raw = {group: (float(limit) * weight / total_weight) for group, weight in weights.items()}
+    allocations = {group: int(value) for group, value in raw.items()}
+    remaining = int(limit) - sum(allocations.values())
+    for group, _ in sorted(
+        ((group, raw[group] - allocations[group]) for group in raw),
+        key=lambda item: (-item[1], item[0]),
+    )[:remaining]:
+        allocations[group] += 1
+    return allocations
+
+
+def _select_budgeted_variants(
+    buckets: dict[str, list[_ExpressionVariant]],
+    *,
+    allocations: dict[str, int],
+    limit: int,
+    transform_scores: dict[str, float],
+) -> list[_ExpressionVariant]:
+    if limit <= 0:
+        return []
+    sorted_buckets = {
+        group: _sort_expression_variants(variants, transform_scores=transform_scores)
+        for group, variants in buckets.items()
+    }
+    selected: list[_ExpressionVariant] = []
+    selected_keys: set[str] = set()
+
+    def take(variant: _ExpressionVariant) -> None:
+        key = str(variant.expression).strip()
+        if not key or key in selected_keys or len(selected) >= limit:
+            return
+        selected.append(variant)
+        selected_keys.add(key)
+
+    for group in DEFAULT_VARIANT_BUDGET_PERCENTAGES:
+        for variant in sorted_buckets.get(group, [])[: max(0, int(allocations.get(group, 0)))]:
+            take(variant)
+
+    structural_leftovers: list[_ExpressionVariant] = []
+    for group in STRUCTURAL_BUDGET_GROUPS:
+        offset = max(0, int(allocations.get(group, 0)))
+        structural_leftovers.extend(sorted_buckets.get(group, [])[offset:])
+    surface_leftovers = sorted_buckets.get("surface", [])[max(0, int(allocations.get("surface", 0))):]
+    for pool in (
+        _sort_expression_variants(structural_leftovers, transform_scores=transform_scores),
+        _sort_expression_variants(surface_leftovers, transform_scores=transform_scores),
+    ):
+        for variant in pool:
+            take(variant)
+            if len(selected) >= limit:
+                break
+        if len(selected) >= limit:
+            break
+    return selected
+
+
+def _sort_expression_variants(
+    variants: list[_ExpressionVariant],
+    *,
+    transform_scores: dict[str, float],
+) -> list[_ExpressionVariant]:
+    return sorted(
+        variants,
+        key=lambda item: (
+            item.priority,
+            -float(transform_scores.get(item.transform_group, 0.0)),
+            item.transform,
+            item.expression,
+        ),
+    )
+
+
+def _operator_replacement_supported(
+    registry: OperatorRegistry,
+    *,
+    source: str,
+    replacement: str,
+    arg_count: int,
+) -> bool:
+    if not registry.contains(source) or not registry.contains(replacement):
+        return False
+    return registry.get(source).supports_arg_count(arg_count) and registry.get(replacement).supports_arg_count(arg_count)
+
+
+def _primary_function_paths(root: ExprNode) -> list[tuple[tuple[int, ...], FunctionCallNode]]:
+    candidates: list[tuple[tuple[int, ...], FunctionCallNode]] = []
+    if isinstance(root, FunctionCallNode):
+        candidates.append(((), root))
+        if root.name in {"rank", "zscore", "quantile"} and len(root.args) == 1:
+            inner = root.args[0]
+            if isinstance(inner, FunctionCallNode):
+                candidates.append(((0,), inner))
+    for path, node in _function_paths(root):
+        if not any(path == existing_path for existing_path, _ in candidates):
+            candidates.append((path, node))
+    return candidates[:4]
+
+
+def _function_paths(node: ExprNode, path: tuple[int, ...] = ()) -> list[tuple[tuple[int, ...], FunctionCallNode]]:
+    matches: list[tuple[tuple[int, ...], FunctionCallNode]] = []
+    if isinstance(node, FunctionCallNode):
+        matches.append((path, node))
+        for index, arg in enumerate(node.args):
+            matches.extend(_function_paths(arg, (*path, index)))
+    elif isinstance(node, BinaryOpNode):
+        matches.extend(_function_paths(node.left, (*path, 0)))
+        matches.extend(_function_paths(node.right, (*path, 1)))
+    elif isinstance(node, UnaryOpNode):
+        matches.extend(_function_paths(node.operand, (*path, 0)))
+    return matches
+
+
+def _identifier_paths(node: ExprNode, path: tuple[int, ...] = ()) -> list[tuple[tuple[int, ...], IdentifierNode]]:
+    matches: list[tuple[tuple[int, ...], IdentifierNode]] = []
+    if isinstance(node, IdentifierNode):
+        return [(path, node)]
+    if isinstance(node, FunctionCallNode):
+        for index, arg in enumerate(node.args):
+            matches.extend(_identifier_paths(arg, (*path, index)))
+    elif isinstance(node, BinaryOpNode):
+        matches.extend(_identifier_paths(node.left, (*path, 0)))
+        matches.extend(_identifier_paths(node.right, (*path, 1)))
+    elif isinstance(node, UnaryOpNode):
+        matches.extend(_identifier_paths(node.operand, (*path, 0)))
+    return matches
+
+
+def _replace_node_at_path(root: ExprNode, path: tuple[int, ...], replacement: ExprNode) -> ExprNode:
+    if not path:
+        return replacement
+    index = path[0]
+    remainder = path[1:]
+    if isinstance(root, FunctionCallNode):
+        args = list(root.args)
+        args[index] = _replace_node_at_path(args[index], remainder, replacement)
+        return FunctionCallNode(name=root.name, args=tuple(args))
+    if isinstance(root, BinaryOpNode):
+        if index == 0:
+            return BinaryOpNode(
+                operator=root.operator,
+                left=_replace_node_at_path(root.left, remainder, replacement),
+                right=root.right,
+            )
+        return BinaryOpNode(
+            operator=root.operator,
+            left=root.left,
+            right=_replace_node_at_path(root.right, remainder, replacement),
+        )
+    if isinstance(root, UnaryOpNode) and index == 0:
+        return UnaryOpNode(operator=root.operator, operand=_replace_node_at_path(root.operand, remainder, replacement))
+    return root
+
+
+def _node_at_path(root: ExprNode, path: tuple[int, ...]) -> ExprNode:
+    current = root
+    for index in path:
+        if isinstance(current, FunctionCallNode):
+            current = current.args[index]
+        elif isinstance(current, BinaryOpNode):
+            current = current.left if index == 0 else current.right
+        elif isinstance(current, UnaryOpNode) and index == 0:
+            current = current.operand
+        else:
+            break
+    return current
+
+
+def _outer_group_neutralize_path(root: ExprNode) -> tuple[int, ...] | None:
+    if isinstance(root, FunctionCallNode) and root.name == "group_neutralize" and len(root.args) == 2:
+        return ()
+    if (
+        isinstance(root, FunctionCallNode)
+        and root.name in {"rank", "zscore", "quantile"}
+        and len(root.args) == 1
+        and isinstance(root.args[0], FunctionCallNode)
+        and root.args[0].name == "group_neutralize"
+        and len(root.args[0].args) == 2
+    ):
+        return (0,)
+    return None
+
+
+def _available_group_keys(
+    field_registry: FieldRegistry | None,
+    *,
+    generation_config: GenerationConfig | None,
+) -> tuple[str, ...]:
+    if field_registry is None:
+        return PREFERRED_GROUP_KEYS
+    include_catalog = bool(getattr(generation_config, "allow_catalog_fields_without_runtime", False))
+    available = {
+        spec.name
+        for spec in field_registry.generation_group_key_fields(include_catalog_fields=include_catalog)
+    }
+    return tuple(group_key for group_key in PREFERRED_GROUP_KEYS if group_key in available)
+
+
+def _depth_checked_variant(
+    node: ExprNode,
+    *,
+    transform: str,
+    group: str,
+    priority: int,
+    max_depth: int,
+) -> _ExpressionVariant | None:
+    if node_depth(node) > max(1, int(max_depth)):
+        return None
+    return _ExpressionVariant(
+        expression=to_expression(node),
+        transform=transform,
+        transform_group=group,
+        priority=priority,
+    )
+
+
+def _field_siblings(field_name: str, *, field_registry: FieldRegistry | None) -> tuple[str, ...]:
+    if field_registry is not None and field_registry.contains(field_name):
+        source = field_registry.get(field_name)
+        if source.subcategory and source.subcategory != "other":
+            siblings = [
+                spec.name
+                for spec in field_registry.fields.values()
+                if spec.name != field_name
+                and spec.operator_type == "matrix"
+                and spec.subcategory == source.subcategory
+            ]
+            if siblings:
+                return tuple(sorted(siblings))
+    for fields in FIELD_FAMILIES.values():
+        if field_name in fields:
+            return tuple(field for field in fields if field != field_name)
+    return ()
+
+
+def _is_too_similar_to_parent(parent_root: ExprNode, variant_expression: str) -> bool:
+    try:
+        variant_root = parse_expression(variant_expression)
+    except ValueError:
+        return True
+    return _structural_similarity(parent_root, variant_root) >= MAX_PARENT_STRUCTURAL_SIMILARITY
+
+
+def _structural_similarity(left: ExprNode, right: ExprNode) -> float:
+    left_signature = _lightweight_signature(left)
+    right_signature = _lightweight_signature(right)
+    score = 0.0
+    score += 0.20 * _jaccard_similarity(left_signature["operators"], right_signature["operators"])
+    score += 0.25 * _prefix_similarity(left_signature["operator_path"], right_signature["operator_path"])
+    score += 0.15 * _jaccard_similarity(left_signature["fields"], right_signature["fields"])
+    score += 0.15 * _jaccard_similarity(left_signature["lookbacks"], right_signature["lookbacks"])
+    score += 0.10 * _jaccard_similarity(left_signature["wrappers"], right_signature["wrappers"])
+    score += 0.10 if left_signature["horizon_bucket"] == right_signature["horizon_bucket"] else 0.0
+    score += 0.05 if left_signature["complexity_bucket"] == right_signature["complexity_bucket"] else 0.0
+    return float(max(0.0, min(1.0, score)))
+
+
+def _lightweight_signature(node: ExprNode) -> dict[str, tuple[str, ...] | str]:
+    lookbacks = tuple(str(value) for value in sorted(set(_collect_lookbacks(node))))
+    return {
+        "operators": tuple(sorted(set(_collect_operator_path(node)))),
+        "operator_path": tuple(_collect_operator_path(node)),
+        "fields": tuple(sorted(set(_collect_fields(node)))),
+        "lookbacks": lookbacks,
+        "wrappers": tuple(_collect_wrappers(node)),
+        "horizon_bucket": _horizon_bucket(tuple(int(value) for value in lookbacks)),
+        "complexity_bucket": _complexity_bucket(node_complexity(node)),
+    }
+
+
+def _collect_operator_path(node: ExprNode) -> list[str]:
+    if isinstance(node, FunctionCallNode):
+        operators = [node.name]
+        for child in node.args:
+            operators.extend(_collect_operator_path(child))
+        return operators
+    if isinstance(node, BinaryOpNode):
+        return [f"binary:{node.operator}", *_collect_operator_path(node.left), *_collect_operator_path(node.right)]
+    if isinstance(node, UnaryOpNode):
+        return [f"unary:{node.operator}", *_collect_operator_path(node.operand)]
+    return []
+
+
+def _collect_fields(node: ExprNode) -> list[str]:
+    if isinstance(node, IdentifierNode):
+        return [node.name]
+    fields: list[str] = []
+    for child in iter_child_nodes(node):
+        fields.extend(_collect_fields(child))
+    return fields
+
+
+def _collect_lookbacks(node: ExprNode) -> list[int]:
+    lookbacks: list[int] = []
+    if isinstance(node, FunctionCallNode):
+        if node.name in WINDOWED_OPERATORS and len(node.args) >= 2 and isinstance(node.args[-1], NumberNode):
+            lookbacks.append(int(node.args[-1].value))
+        for child in node.args:
+            lookbacks.extend(_collect_lookbacks(child))
+    elif isinstance(node, BinaryOpNode):
+        lookbacks.extend(_collect_lookbacks(node.left))
+        lookbacks.extend(_collect_lookbacks(node.right))
+    elif isinstance(node, UnaryOpNode):
+        lookbacks.extend(_collect_lookbacks(node.operand))
+    return lookbacks
+
+
+def _collect_wrappers(node: ExprNode) -> list[str]:
+    wrappers: list[str] = []
+    current = node
+    while isinstance(current, FunctionCallNode) and current.name in {"rank", "zscore", "quantile", "sign", "abs"} and len(current.args) == 1:
+        wrappers.append(current.name)
+        current = current.args[0]
+    return wrappers
+
+
+def _jaccard_similarity(left: tuple[str, ...], right: tuple[str, ...]) -> float:
+    left_set = set(left)
+    right_set = set(right)
+    if not left_set and not right_set:
+        return 1.0
+    union = left_set | right_set
+    if not union:
+        return 1.0
+    return len(left_set & right_set) / len(union)
+
+
+def _prefix_similarity(left: tuple[str, ...], right: tuple[str, ...]) -> float:
+    if not left and not right:
+        return 1.0
+    if not left or not right:
+        return 0.0
+    matches = 0
+    for left_item, right_item in zip(left, right):
+        if left_item != right_item:
+            break
+        matches += 1
+    return matches / max(len(left), len(right))
+
+
+def _horizon_bucket(lookbacks: tuple[int, ...]) -> str:
+    if not lookbacks:
+        return "unknown"
+    max_window = max(lookbacks)
+    if max_window <= 3:
+        return "very_short"
+    if max_window <= 10:
+        return "short"
+    if max_window <= 20:
+        return "medium"
+    return "long"
+
+
+def _complexity_bucket(complexity: int) -> str:
+    if complexity <= 5:
+        return "simple"
+    if complexity <= 10:
+        return "moderate"
+    if complexity <= 16:
+        return "layered"
+    return "complex"
 
 
 def _window_perturbations(
