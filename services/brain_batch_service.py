@@ -312,6 +312,12 @@ class BrainBatchService:
             for score in pre_sim_result.selected
             if getattr(score.candidate, "generation_mode", "") == "recipe_guided"
         )
+        recipe_guided_stats.group_relative_selected_count = sum(
+            1
+            for score in pre_sim_result.selected
+            if getattr(score.candidate, "generation_mode", "") == "recipe_guided"
+            and getattr(score.candidate, "generation_metadata", {}).get("generation_source") == "group_relative"
+        )
         for score in pre_sim_result.selected:
             if getattr(score.candidate, "generation_mode", "") != "recipe_guided":
                 continue
@@ -336,11 +342,16 @@ class BrainBatchService:
         }
         generation_metrics["fresh_spillover_used"] = int(fresh_spillover_used)
         generation_metrics["source_unfilled_budget"] = max(0, int(generation_count) - len(candidates))
-        generation_metrics["source_generated_counts"] = {
-            "quality_polish": len(quality_polish_candidates),
-            "recipe_guided": len(recipe_guided_candidates),
-            "fresh": len(fresh_candidates),
-        }
+        source_generated_counts: Counter[str] = Counter(
+            {"quality_polish": 0, "recipe_guided": 0, "fresh": 0}
+        )
+        for candidate in quality_polish_candidates:
+            source_generated_counts[_candidate_generation_source(candidate, default="quality_polish")] += 1
+        for candidate in recipe_guided_candidates:
+            source_generated_counts[_candidate_generation_source(candidate, default="recipe_guided")] += 1
+        for candidate in fresh_candidates:
+            source_generated_counts[_candidate_generation_source(candidate, default="fresh")] += 1
+        generation_metrics["source_generated_counts"] = dict(source_generated_counts)
         generation_metrics["source_selected_counts"] = dict(
             Counter(
                 str(score.candidate.generation_metadata.get("generation_source") or "")
@@ -444,6 +455,7 @@ class BrainBatchService:
                 region_learning_context=region_learning_context,
                 generation_guardrails=generation_guardrails,
                 field_penalty_multipliers=field_penalty_multipliers,
+                operator_prior_multipliers=search_space_context.operator_multipliers if search_space_context else None,
             )
             candidates = engine.generate(
                 count=count,
@@ -460,6 +472,7 @@ class BrainBatchService:
             region_learning_context=region_learning_context,
             generation_guardrails=generation_guardrails,
             field_penalty_multipliers=field_penalty_multipliers,
+            operator_prior_multipliers=search_space_context.operator_multipliers if search_space_context else None,
         )
         candidates = engine.generate(count=count, existing_normalized=existing_normalized, case_snapshot=case_snapshot)
         return candidates, engine.last_generation_stats or GenerationSessionStats()
@@ -987,6 +1000,8 @@ class BrainBatchService:
             merged.duplicate_by_mutation_mode.update(item.duplicate_by_mutation_mode)
             merged.duplicate_by_motif.update(item.duplicate_by_motif)
             merged.duplicate_by_operator_path.update(item.duplicate_by_operator_path)
+            if item.operator_diversity_metrics:
+                merged.operator_diversity_metrics = dict(item.operator_diversity_metrics)
             for reason, samples in item.failure_samples.items():
                 merged_bucket = merged.failure_samples.setdefault(reason, [])
                 for sample in samples:
@@ -1121,6 +1136,14 @@ def _generation_source_for_row(row: dict[str, object]) -> str:
     return "fresh"
 
 
+def _candidate_generation_source(candidate: AlphaCandidate, *, default: str) -> str:
+    explicit = str(candidate.generation_metadata.get("generation_source") or "").strip()
+    if explicit:
+        return explicit
+    generation_mode = str(candidate.generation_mode or "").strip()
+    return generation_mode or str(default)
+
+
 def _result_quality_score(row: dict[str, object]) -> float:
     stored = row.get("quality_score")
     try:
@@ -1142,5 +1165,6 @@ def _result_quality_score(row: dict[str, object]) -> float:
             submission_eligible=row.get("submission_eligible"),
             rejection_reason=row.get("rejection_reason"),
             status=str(row.get("status") or ""),
+            check_summary=row.get("check_summary_json"),
         )
     )

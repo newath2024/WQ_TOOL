@@ -1,13 +1,16 @@
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import replace
 
 import pytest
 
+from alpha.parser import parse_expression
+from alpha.validator import validate_expression
 from core.config import AdaptiveGenerationConfig, RecipeGenerationConfig, load_config
 from data.field_registry import FieldRegistry, FieldSpec
 from features.registry import build_registry
-from generator.engine import AlphaCandidate
+from generator.engine import AlphaCandidate, AlphaGenerationEngine, CandidateBuildResult
 from generator.guardrails import GenerationGuardrails
 from memory.pattern_memory import RegionLearningContext
 from services.recipe_guided_generator import RecipeGuidedGenerator, _active_buckets
@@ -608,6 +611,98 @@ def test_recipe_guided_field_rotation_changes_first_draft_field() -> None:
     assert round_0.candidates[0].fields_used != round_1.candidates[0].fields_used
 
 
+def test_group_recipes_yield_valid_expressions() -> None:
+    result, generation_config, field_registry = _run_group_recipe_generation(count=40)
+
+    group_candidates = _group_relative_candidates(result.candidates)
+
+    assert group_candidates
+    assert {candidate.generation_metadata["group_recipe_group"] for candidate in group_candidates} >= {
+        "A",
+        "B",
+        "C",
+        "D",
+    }
+    registry = build_registry(generation_config.allowed_operators)
+    for candidate in group_candidates:
+        _assert_expression_valid(
+            candidate.expression,
+            generation_config=generation_config,
+            field_registry=field_registry,
+            registry=registry,
+        )
+
+
+def test_group_key_from_registry_not_hardcoded() -> None:
+    result, _, field_registry = _run_group_recipe_generation(count=24, group_names=("sector",))
+
+    group_candidates = _group_relative_candidates(result.candidates)
+
+    assert group_candidates
+    assert all(candidate.generation_metadata["group_recipe_group_key"] == "sector" for candidate in group_candidates)
+    assert all("subindustry" not in candidate.expression for candidate in group_candidates)
+    assert field_registry.get("sector").operator_type == "group"
+
+
+def test_group_recipe_budget_cap() -> None:
+    result, _, _ = _run_group_recipe_generation(count=100)
+
+    group_count = len(_group_relative_candidates(result.candidates))
+
+    assert group_count <= 25
+
+
+def test_group_field_diversity_cap() -> None:
+    result, _, _ = _run_group_recipe_generation(count=100)
+
+    group_candidates = _group_relative_candidates(result.candidates)
+    primary_field_counts = Counter(
+        candidate.generation_metadata["group_recipe_primary_field"]
+        for candidate in group_candidates
+    )
+
+    assert group_candidates
+    assert max(primary_field_counts.values()) <= 3
+
+
+def test_invalid_group_recipe_skipped_gracefully(monkeypatch: pytest.MonkeyPatch) -> None:
+    original_build = AlphaGenerationEngine._build_candidate_result
+    forced = {"count": 0}
+
+    def flaky_build(
+        self,
+        expression,
+        mode,
+        parent_ids,
+        generation_metadata=None,
+        validation_ctx=None,
+    ):
+        if (
+            generation_metadata
+            and generation_metadata.get("generation_source") == "group_relative"
+            and forced["count"] == 0
+        ):
+            forced["count"] += 1
+            return CandidateBuildResult(candidate=None, failure_reason="validation_forced_group_failure")
+        return original_build(
+            self,
+            expression,
+            mode,
+            parent_ids,
+            generation_metadata=generation_metadata,
+            validation_ctx=validation_ctx,
+        )
+
+    monkeypatch.setattr(AlphaGenerationEngine, "_build_candidate_result", flaky_build)
+
+    result, _, _ = _run_group_recipe_generation(count=40)
+
+    assert forced["count"] == 1
+    assert _group_relative_candidates(result.candidates)
+    assert result.stats.group_relative_skipped_count >= 1
+    assert result.stats.group_relative_skip_reason_counts["validation_forced_group_failure"] == 1
+
+
 @pytest.mark.parametrize(
     ("family", "dataset_family"),
     [
@@ -687,6 +782,181 @@ def test_elite_motif_recipe_families_generate_with_elite_lookbacks(family: str, 
     assert ",3)" not in joined
 
 
+def _run_group_recipe_generation(
+    *,
+    count: int,
+    group_names: tuple[str, ...] = ("subindustry", "sector", "industry"),
+):
+    field_registry = _group_recipe_field_registry(group_names=group_names)
+    generation_config = _group_recipe_generation_config(field_registry)
+    recipe_config = RecipeGenerationConfig(
+        enabled_recipe_families=["fundamental_quality"],
+        objective_profiles=["balanced"],
+        active_bucket_count=1,
+        max_recipe_candidates_per_round=count,
+        max_candidates_per_bucket=count,
+        enable_field_rotation=False,
+        dynamic_budget_enabled=False,
+    )
+    repository = SQLiteRepository(":memory:")
+    try:
+        _seed_run(repository, "run-recipe")
+        result = RecipeGuidedGenerator(repository).generate(
+            config=recipe_config,
+            adaptive_config=AdaptiveGenerationConfig(),
+            generation_config=generation_config,
+            registry=build_registry(generation_config.allowed_operators),
+            field_registry=field_registry,
+            region_learning_context=RegionLearningContext(region="USA", regime_key="local", global_regime_key="global"),
+            generation_guardrails=GenerationGuardrails(),
+            field_penalty_multipliers={},
+            blocked_fields=set(),
+            existing_normalized=set(),
+            run_id="run-recipe",
+            round_index=0,
+            count=count,
+        )
+    finally:
+        repository.close()
+    return result, generation_config, field_registry
+
+
+def _group_relative_candidates(candidates: list[AlphaCandidate]) -> list[AlphaCandidate]:
+    return [
+        candidate
+        for candidate in candidates
+        if candidate.generation_metadata.get("generation_source") == "group_relative"
+    ]
+
+
+def _assert_expression_valid(
+    expression: str,
+    *,
+    generation_config,
+    field_registry: FieldRegistry,
+    registry,
+) -> None:
+    allowed_fields = field_registry.generation_allowed_fields(
+        generation_config.allowed_fields,
+        include_catalog_fields=generation_config.allow_catalog_fields_without_runtime,
+    )
+    validation = validate_expression(
+        node=parse_expression(expression),
+        registry=registry,
+        allowed_fields=allowed_fields,
+        max_depth=generation_config.max_depth,
+        group_fields={
+            spec.name
+            for spec in field_registry.generation_group_key_fields(
+                include_catalog_fields=generation_config.allow_catalog_fields_without_runtime,
+            )
+        },
+        field_types=field_registry.field_types(allowed=allowed_fields),
+        field_categories={name: spec.category for name, spec in field_registry.fields.items()},
+        complexity_limit=generation_config.complexity_limit,
+        exact_field_types=field_registry.exact_field_types() if hasattr(field_registry, "exact_field_types") else None,
+    )
+    assert validation.is_valid, validation.errors
+
+
+def _group_recipe_generation_config(field_registry: FieldRegistry):
+    return replace(
+        load_config("config/dev.yaml").generation,
+        allowed_fields=[
+            name
+            for name, spec in field_registry.fields.items()
+            if spec.operator_type == "matrix"
+        ],
+        allowed_operators=[
+            "rank",
+            "zscore",
+            "quantile",
+            "ts_mean",
+            "ts_delta",
+            "ts_decay_linear",
+            "ts_std_dev",
+            "ts_rank",
+            "ts_scale",
+            "ts_av_diff",
+            "ts_arg_max",
+            "ts_arg_min",
+            "ts_count_nans",
+            "min",
+            "max",
+            "inverse",
+            "reverse",
+            "days_from_last_change",
+            "group_rank",
+            "group_zscore",
+            "group_neutralize",
+        ],
+        lookbacks=[5, 10, 20],
+        max_depth=8,
+        complexity_limit=30,
+    )
+
+
+def _group_recipe_field_registry(
+    *,
+    group_names: tuple[str, ...],
+) -> FieldRegistry:
+    numeric_fields = {
+        "anl39_agrosmgn": _field_spec("anl39_agrosmgn", category="analyst", description="gross margin"),
+        "anl39_agrosmgn2": _field_spec("anl39_agrosmgn2", category="analyst", description="gross margin"),
+        "anl39_epschngin": _field_spec("anl39_epschngin", category="analyst", description="eps change"),
+        "anl39_ttmepsincx": _field_spec("anl39_ttmepsincx", category="analyst", description="trailing eps"),
+        "anl39_qepsinclxo": _field_spec("anl39_qepsinclxo", category="analyst", description="quarterly eps"),
+        "anl39_rasv2_atotd2eq": _field_spec("anl39_rasv2_atotd2eq", category="analyst", description="leverage"),
+        "anl46_sentiment": _field_spec("anl46_sentiment", category="analyst", description="sentiment"),
+        "anl46_performancepercentile": _field_spec(
+            "anl46_performancepercentile",
+            category="analyst",
+            description="performance percentile",
+        ),
+        "anl69_roe_best_cur_fiscal_year_period": _field_spec(
+            "anl69_roe_best_cur_fiscal_year_period",
+            category="analyst",
+            description="roe estimate",
+        ),
+        "anl69_roa_best_cur_fiscal_year_period": _field_spec(
+            "anl69_roa_best_cur_fiscal_year_period",
+            category="analyst",
+            description="roa estimate",
+        ),
+        "anl69_eps_best_eeps_nxt_yr": _field_spec(
+            "anl69_eps_best_eeps_nxt_yr",
+            category="analyst",
+            description="next year eps estimate",
+        ),
+        "anl69_ebit_best_eeps_nxt_yr": _field_spec(
+            "anl69_ebit_best_eeps_nxt_yr",
+            category="analyst",
+            description="next year ebit estimate",
+        ),
+        "anl69_eps_best_eeps_cur_yr": _field_spec(
+            "anl69_eps_best_eeps_cur_yr",
+            category="analyst",
+            description="current year eps estimate",
+        ),
+        "anl69_roe_best_eeps_nxt_yr": _field_spec(
+            "anl69_roe_best_eeps_nxt_yr",
+            category="analyst",
+            description="next year roe estimate",
+        ),
+        "anl69_roa_best_eeps_nxt_yr": _field_spec(
+            "anl69_roa_best_eeps_nxt_yr",
+            category="analyst",
+            description="next year roa estimate",
+        ),
+        "returns": _field_spec("returns", category="price", description="returns"),
+        "close": _field_spec("close", category="price", description="close"),
+        "volume": _field_spec("volume", category="volume", description="volume"),
+    }
+    for name in group_names:
+        numeric_fields[name] = _group_key_spec(name)
+    return FieldRegistry(fields=numeric_fields)
+
+
 def _field_registry() -> FieldRegistry:
     return FieldRegistry(
         fields={
@@ -753,6 +1023,21 @@ def _field_spec(name: str, *, category: str, description: str, field_score: floa
         description=description,
         category_weight=1.0,
         field_score=field_score,
+    )
+
+
+def _group_key_spec(name: str) -> FieldSpec:
+    return FieldSpec(
+        name=name,
+        dataset="runtime",
+        field_type="vector",
+        coverage=1.0,
+        alpha_usage_count=0,
+        category="group",
+        runtime_available=True,
+        description=f"{name} group key",
+        category_weight=1.0,
+        field_score=1.0,
     )
 
 

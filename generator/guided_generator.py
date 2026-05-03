@@ -31,6 +31,7 @@ class GuidedGenerator:
         mutation_learning_records: list[dict] | None = None,
         generation_guardrails: GenerationGuardrails | None = None,
         field_penalty_multipliers: dict[str, float] | None = None,
+        operator_prior_multipliers: dict[str, float] | None = None,
     ) -> None:
         self.generation_config = generation_config
         self.adaptive_config = adaptive_config
@@ -47,6 +48,7 @@ class GuidedGenerator:
             mutation_learning_records=mutation_learning_records,
             generation_guardrails=generation_guardrails,
             field_penalty_multipliers=field_penalty_multipliers,
+            operator_prior_multipliers=operator_prior_multipliers,
         )
         self.random = random.Random(generation_config.random_seed)
         self.genome_builder = GenomeBuilder(
@@ -101,6 +103,7 @@ class GuidedGenerator:
             validation_context_cache_hit=cache_hit,
         )
         diversity_tracker = GenerationDiversityTracker()
+        operator_diversity = self.base_engine._new_operator_diversity_state()  # noqa: SLF001
         generation_started = time.monotonic()
         max_attempts = self.base_engine._resolve_max_attempts(count, legacy_multiplier=25, minimum=80)  # noqa: SLF001
         max_generation_seconds = float(getattr(self.adaptive_config, "max_generation_seconds", 0.0) or 0.0)
@@ -125,10 +128,32 @@ class GuidedGenerator:
                 ):
                     break
                 session.record_attempt("exploit")
+                memory_context = self.base_engine._memory_context_metadata(  # noqa: SLF001
+                    pattern_snapshot=snapshot,
+                    case_snapshot=case_snapshot,
+                )
+                targeted_candidate = self.base_engine._try_operator_diversity_candidate(  # noqa: SLF001
+                    session=session,
+                    operator_diversity=operator_diversity,
+                    existing_normalized=existing,
+                    validation_ctx=validation_ctx,
+                    mode="guided_exploit",
+                    mutation_mode="exploit_local",
+                    memory_context=memory_context,
+                )
+                if targeted_candidate is not None:
+                    existing.add(targeted_candidate.normalized_expression)
+                    candidates.append(targeted_candidate)
+                    session.record_success("exploit")
+                    self.base_engine._record_diversity_success(diversity_tracker, targeted_candidate)  # noqa: SLF001
+                    self.base_engine._record_operator_diversity_success(operator_diversity, targeted_candidate)  # noqa: SLF001
+                    exploit_consecutive_failures = 0
+                    continue
                 genome = self.genome_builder.build_guided_genome(
                     case_snapshot=case_snapshot,
                     explore=False,
                     diversity_tracker=diversity_tracker,
+                    operator_diversity=operator_diversity,
                 )
                 repaired, repair_actions = self.repair_policy.repair(genome)
                 render = self.grammar.render(repaired)
@@ -140,10 +165,7 @@ class GuidedGenerator:
                     render,
                     mutation_mode="exploit_local",
                     repair_actions=repair_actions,
-                    memory_context=self.base_engine._memory_context_metadata(  # noqa: SLF001
-                        pattern_snapshot=snapshot,
-                        case_snapshot=case_snapshot,
-                    ),
+                    memory_context=memory_context,
                 )
                 if self.base_engine._reject_pre_dedup_candidate(  # noqa: SLF001
                     session=session,
@@ -191,6 +213,7 @@ class GuidedGenerator:
                 candidates.append(candidate)
                 session.record_success("exploit")
                 self.base_engine._record_diversity_success(diversity_tracker, candidate)  # noqa: SLF001
+                self.base_engine._record_operator_diversity_success(operator_diversity, candidate)  # noqa: SLF001
                 exploit_consecutive_failures = 0
         session.exploit_phase_ms = (time.monotonic() - exploit_started) * 1000.0
 
@@ -224,10 +247,32 @@ class GuidedGenerator:
                 ):
                     break
                 session.record_attempt("explore")
+                memory_context = self.base_engine._memory_context_metadata(  # noqa: SLF001
+                    pattern_snapshot=snapshot,
+                    case_snapshot=case_snapshot,
+                )
+                targeted_candidate = self.base_engine._try_operator_diversity_candidate(  # noqa: SLF001
+                    session=session,
+                    operator_diversity=operator_diversity,
+                    existing_normalized=existing,
+                    validation_ctx=validation_ctx,
+                    mode="guided_explore",
+                    mutation_mode="novelty",
+                    memory_context=memory_context,
+                )
+                if targeted_candidate is not None:
+                    existing.add(targeted_candidate.normalized_expression)
+                    candidates.append(targeted_candidate)
+                    session.record_success("explore")
+                    self.base_engine._record_diversity_success(diversity_tracker, targeted_candidate)  # noqa: SLF001
+                    self.base_engine._record_operator_diversity_success(operator_diversity, targeted_candidate)  # noqa: SLF001
+                    explore_consecutive_failures = 0
+                    continue
                 genome = self.genome_builder.build_guided_genome(
                     case_snapshot=case_snapshot,
                     explore=True,
                     diversity_tracker=diversity_tracker,
+                    operator_diversity=operator_diversity,
                 )
                 repaired, repair_actions = self.repair_policy.repair(genome)
                 render = self.grammar.render(repaired)
@@ -239,10 +284,7 @@ class GuidedGenerator:
                     render,
                     mutation_mode="novelty",
                     repair_actions=repair_actions,
-                    memory_context=self.base_engine._memory_context_metadata(  # noqa: SLF001
-                        pattern_snapshot=snapshot,
-                        case_snapshot=case_snapshot,
-                    ),
+                    memory_context=memory_context,
                 )
                 if self.base_engine._reject_pre_dedup_candidate(  # noqa: SLF001
                     session=session,
@@ -290,10 +332,12 @@ class GuidedGenerator:
                 candidates.append(candidate)
                 session.record_success("explore")
                 self.base_engine._record_diversity_success(diversity_tracker, candidate)  # noqa: SLF001
+                self.base_engine._record_operator_diversity_success(operator_diversity, candidate)  # noqa: SLF001
                 explore_consecutive_failures = 0
             session.explore_phase_ms = (time.monotonic() - explore_started) * 1000.0
 
         session.generation_total_ms = (time.monotonic() - generation_started) * 1000.0
+        self.base_engine._finalize_operator_diversity_session(session, operator_diversity)  # noqa: SLF001
         self.last_generation_stats = session
         self.base_engine.last_generation_stats = session
         return candidates[:count]

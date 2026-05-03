@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from types import SimpleNamespace
 from typing import Any
 
+from core.brain_checks import has_structural_risk_blocker, parse_names_json
 from core.config import AdaptiveGenerationConfig, GenerationConfig, RecipeGenerationConfig
 from core.quality_score import MultiObjectiveQualityScorer
 from data.field_registry import FieldRegistry, FieldSpec
@@ -169,6 +170,50 @@ _RECIPE_KEYWORDS = {
     },
 }
 
+GROUP_RELATIVE_SOURCE = "group_relative"
+GROUP_RELATIVE_MAX_FRACTION = 0.25
+GROUP_RELATIVE_PRIMARY_FIELD_CAP = 3
+GROUP_RECIPE_RETRY_LIMIT = 3
+_GROUP_RELATIVE_TEMPLATE_NAME = "recipe_group_relative"
+_GROUP_RELATIVE_SEARCH_BUCKET_PREFIX = "group_relative"
+_GROUP_RELATIVE_FUNDAMENTAL_FIELDS = (
+    "anl39_agrosmgn",
+    "anl39_agrosmgn2",
+    "anl39_epschngin",
+    "anl39_ttmepsincx",
+    "anl39_qepsinclxo",
+    "anl39_rasv2_atotd2eq",
+    "anl46_sentiment",
+    "anl46_performancepercentile",
+    "anl69_roe_best_cur_fiscal_year_period",
+    "anl69_roa_best_cur_fiscal_year_period",
+    "anl69_eps_best_eeps_nxt_yr",
+    "anl69_ebit_best_eeps_nxt_yr",
+)
+_GROUP_RELATIVE_EPS_FIELDS = (
+    "anl69_eps_best_eeps_nxt_yr",
+    "anl69_eps_best_eeps_cur_yr",
+    "anl69_roe_best_eeps_nxt_yr",
+    "anl69_roa_best_eeps_nxt_yr",
+    "anl39_epschngin",
+)
+_GROUP_RELATIVE_PRIMARY_GROUP_KEYS = ("subindustry", "sector")
+_GROUP_RELATIVE_FALLBACK_GROUP_KEYS = ("industry", "country")
+_GROUP_RELATIVE_WEIGHTED_PRIMARY_KEYS = (
+    "subindustry",
+    "subindustry",
+    "subindustry",
+    "subindustry",
+    "subindustry",
+    "subindustry",
+    "subindustry",
+    "sector",
+    "sector",
+    "sector",
+)
+_GROUP_RELATIVE_LOOKBACKS = (5, 10, 20)
+_GROUP_RELATIVE_SHORT_WINDOWS = (5, 10)
+
 
 @dataclass(slots=True)
 class RecipeGuidedStats:
@@ -197,6 +242,14 @@ class RecipeGuidedStats:
     suppressed_bucket_caps: dict[str, int] = field(default_factory=dict)
     spilled_to_fresh: int = 0
     generation_total_ms: float = 0.0
+    group_relative_generated_count: int = 0
+    group_relative_selected_count: int = 0
+    group_relative_attempt_count: int = 0
+    group_relative_skipped_count: int = 0
+    group_relative_group_counts: Counter[str] = field(default_factory=Counter)
+    group_relative_skipped_by_group: Counter[str] = field(default_factory=Counter)
+    group_relative_skip_reason_counts: Counter[str] = field(default_factory=Counter)
+    group_relative_field_usage_counts: Counter[str] = field(default_factory=Counter)
 
     def record_failure(self, reason: str | None) -> None:
         normalized = str(reason or "unknown_failure").strip() or "unknown_failure"
@@ -230,6 +283,14 @@ class RecipeGuidedStats:
             "recipe_guided_suppressed_bucket_caps": dict(self.suppressed_bucket_caps),
             "recipe_guided_spilled_to_fresh": int(self.spilled_to_fresh),
             "recipe_guided_generation_total_ms": round(self.generation_total_ms, 3),
+            "group_relative_generated": int(self.group_relative_generated_count),
+            "group_relative_attempt_count": int(self.group_relative_attempt_count),
+            "group_relative_skipped": int(self.group_relative_skipped_count),
+            "group_relative_selected": int(self.group_relative_selected_count),
+            "group_relative_group_counts": dict(self.group_relative_group_counts),
+            "group_relative_skipped_by_group": dict(self.group_relative_skipped_by_group),
+            "group_relative_skip_reason_counts": dict(self.group_relative_skip_reason_counts),
+            "group_relative_field_usage_counts": dict(self.group_relative_field_usage_counts),
         }
 
 
@@ -261,6 +322,10 @@ class _RecipeDraft:
     recipe_variant: str
     fields: tuple[str, ...] = ()
     pair_key: str = ""
+    source: str = "recipe_guided"
+    group_recipe_group: str = ""
+    primary_field: str = ""
+    group_key: str = ""
 
 
 class RecipeGuidedGenerator:
@@ -336,9 +401,32 @@ class RecipeGuidedGenerator:
         )
         existing = set(existing_normalized)
         candidates: list[AlphaCandidate] = []
+        group_target = min(
+            target_count,
+            int(float(target_count) * GROUP_RELATIVE_MAX_FRACTION),
+        )
+        if group_target > 0:
+            group_candidates = self._generate_group_relative_candidates(
+                group_target=group_target,
+                config=config,
+                registry=registry,
+                field_registry=field_registry,
+                blocked_fields=blocked_fields,
+                field_penalty_multipliers=field_penalty_multipliers or {},
+                generation_config=generation_config,
+                engine=engine,
+                validation_ctx=validation_ctx,
+                existing_normalized=existing,
+                run_id=run_id,
+                round_index=round_index,
+                stats=stats,
+            )
+            candidates.extend(group_candidates)
+
+        bucket_target_total = max(0, target_count - len(candidates))
         planned_targets = self._planned_bucket_targets(
             config=config,
-            target_count=target_count,
+            target_count=bucket_target_total,
             active_buckets=active_buckets,
             bucket_yield_scores=bucket_yield_scores,
             suppressed_bucket_caps=suppressed_bucket_caps,
@@ -442,6 +530,9 @@ class RecipeGuidedGenerator:
                 "submission_eligible": row.get("result_submission_eligible"),
                 "rejection_reason": row.get("result_rejection_reason"),
                 "status": row.get("result_status"),
+                "hard_fail_checks": parse_names_json(row.get("result_hard_fail_checks_json")),
+                "blocking_warning_checks": parse_names_json(row.get("result_blocking_warning_checks_json")),
+                "check_summary_json": row.get("result_check_summary_json"),
             }
             quality_score = _to_float(row.get("result_quality_score"))
             if quality_score is None or abs(float(quality_score)) <= 1e-12:
@@ -456,6 +547,7 @@ class RecipeGuidedGenerator:
                         submission_eligible=metrics["submission_eligible"],
                         rejection_reason=metrics["rejection_reason"],
                         status=metrics["status"],
+                        check_summary_json=metrics["check_summary_json"],
                     )
                 )
             parents.append(
@@ -500,6 +592,7 @@ class RecipeGuidedGenerator:
                         submission_eligible=row.get("submission_eligible"),
                         rejection_reason=row.get("rejection_reason"),
                         status=row.get("status"),
+                        check_summary_json=row.get("check_summary_json"),
                     )
                 )
             bucket_scores.setdefault(bucket_id, []).append(float(quality_score))
@@ -723,6 +816,240 @@ class RecipeGuidedGenerator:
             },
         )
         return {bucket_id: int(value) for bucket_id, value in allocations.items() if int(value) > 0}
+
+    def _generate_group_relative_candidates(
+        self,
+        *,
+        group_target: int,
+        config: RecipeGenerationConfig,
+        registry: OperatorRegistry,
+        field_registry: FieldRegistry,
+        blocked_fields: set[str],
+        field_penalty_multipliers: dict[str, float],
+        generation_config: GenerationConfig,
+        engine: AlphaGenerationEngine,
+        validation_ctx,
+        existing_normalized: set[str],
+        run_id: str,
+        round_index: int,
+        stats: RecipeGuidedStats,
+    ) -> list[AlphaCandidate]:
+        if group_target <= 0:
+            return []
+        drafts = self._build_group_recipes(
+            registry=registry,
+            field_registry=field_registry,
+            blocked_fields=blocked_fields,
+            field_penalty_multipliers=field_penalty_multipliers,
+            generation_config=generation_config,
+            round_index=round_index,
+        )
+        stats.unique_draft_count += len(drafts)
+        stats.unique_draft_counts_by_bucket[GROUP_RELATIVE_SOURCE] += len(drafts)
+        if not drafts:
+            stats.group_relative_skipped_count += int(group_target)
+            stats.group_relative_skip_reason_counts["group_relative_no_eligible_drafts"] += int(group_target)
+            return []
+
+        candidates: list[AlphaCandidate] = []
+        primary_field_counts: Counter[str] = Counter()
+        draft_index = 0
+        while len(candidates) < group_target and draft_index < len(drafts):
+            slot_succeeded = False
+            for _ in range(GROUP_RECIPE_RETRY_LIMIT):
+                if draft_index >= len(drafts):
+                    break
+                draft = drafts[draft_index]
+                draft_index += 1
+                group_name = draft.group_recipe_group or "unknown"
+                primary_field = draft.primary_field or (draft.fields[0] if draft.fields else "")
+                if (
+                    primary_field
+                    and int(primary_field_counts.get(primary_field, 0)) >= GROUP_RELATIVE_PRIMARY_FIELD_CAP
+                ):
+                    self._record_group_relative_skip(
+                        stats=stats,
+                        reason="group_relative_primary_field_cap",
+                        group_name=group_name,
+                    )
+                    continue
+
+                stats.attempt_count += 1
+                stats.group_relative_attempt_count += 1
+                search_bucket_id = f"{_GROUP_RELATIVE_SEARCH_BUCKET_PREFIX}|{group_name.lower()}"
+                metadata = {
+                    "generation_mode": "recipe_guided",
+                    "generation_source": GROUP_RELATIVE_SOURCE,
+                    "mutation_mode": GROUP_RELATIVE_SOURCE,
+                    "template_name": _GROUP_RELATIVE_TEMPLATE_NAME,
+                    "motif": "group_relative_signal",
+                    "search_bucket_id": search_bucket_id,
+                    "recipe_family": GROUP_RELATIVE_SOURCE,
+                    "dataset_family": "group",
+                    "objective_profile": GROUP_RELATIVE_SOURCE,
+                    "recipe_variant": draft.recipe_variant,
+                    "recipe_round_index": int(round_index),
+                    "recipe_field_names": list(draft.fields),
+                    "recipe_pair_key": draft.pair_key,
+                    "recipe_parent_alpha_id": "",
+                    "recipe_prior": float(config.selection_prior_weight),
+                    "recipe_bucket_prior": float(config.selection_prior_weight),
+                    "recipe_bucket_prior_multiplier": 1.0,
+                    "group_recipe_group": group_name,
+                    "group_recipe_primary_field": primary_field,
+                    "group_recipe_group_key": draft.group_key,
+                    "parent_refs": [],
+                    "run_id": run_id,
+                }
+                result = engine._build_candidate_result(  # noqa: SLF001
+                    expression=draft.expression,
+                    mode="recipe_guided",
+                    parent_ids=(),
+                    generation_metadata=metadata,
+                    validation_ctx=validation_ctx,
+                )
+                candidate = result.candidate
+                if candidate is None:
+                    reason = result.failure_reason or "group_relative_candidate_build_failed"
+                    stats.record_failure(reason)
+                    self._record_group_relative_skip(
+                        stats=stats,
+                        reason=reason,
+                        group_name=group_name,
+                    )
+                    continue
+                if candidate.normalized_expression in existing_normalized:
+                    stats.record_failure("duplicate_normalized_expression")
+                    stats.duplicate_retry_count += 1
+                    stats.duplicate_retry_counts_by_bucket[search_bucket_id] += 1
+                    self._record_group_relative_skip(
+                        stats=stats,
+                        reason="duplicate_normalized_expression",
+                        group_name=group_name,
+                    )
+                    continue
+
+                existing_normalized.add(candidate.normalized_expression)
+                candidates.append(candidate)
+                primary_field_counts[primary_field] += 1
+                stats.generated_count += 1
+                stats.success_count += 1
+                stats.group_relative_generated_count += 1
+                stats.group_relative_group_counts[group_name] += 1
+                stats.group_relative_field_usage_counts[primary_field] += 1
+                stats.bucket_counts[search_bucket_id] += 1
+                stats.template_counts[_GROUP_RELATIVE_TEMPLATE_NAME] += 1
+                stats.field_usage_counts.update(draft.fields)
+                stats.parentless_count += 1
+                slot_succeeded = True
+                break
+            if not slot_succeeded and draft_index >= len(drafts):
+                break
+        return candidates
+
+    def _record_group_relative_skip(
+        self,
+        *,
+        stats: RecipeGuidedStats,
+        reason: str,
+        group_name: str,
+    ) -> None:
+        normalized = str(reason or "unknown_failure").strip() or "unknown_failure"
+        stats.group_relative_skipped_count += 1
+        stats.group_relative_skip_reason_counts[normalized] += 1
+        stats.group_relative_skipped_by_group[str(group_name or "unknown")] += 1
+
+    def _build_group_recipes(
+        self,
+        *,
+        registry: OperatorRegistry,
+        field_registry: FieldRegistry,
+        blocked_fields: set[str],
+        field_penalty_multipliers: dict[str, float],
+        generation_config: GenerationConfig,
+        round_index: int,
+    ) -> list[_RecipeDraft]:
+        group_keys = _resolved_group_key_names(
+            field_registry=field_registry,
+            generation_config=generation_config,
+        )
+        if not group_keys:
+            return []
+        weighted_group_keys = _weighted_group_key_cycle(group_keys)
+        subindustry_key = "subindustry" if "subindustry" in group_keys else ""
+        fundamental_fields = _resolved_group_matrix_field_names(
+            candidate_names=_GROUP_RELATIVE_FUNDAMENTAL_FIELDS,
+            field_registry=field_registry,
+            generation_config=generation_config,
+            blocked_fields=blocked_fields,
+            field_penalty_multipliers=field_penalty_multipliers,
+            round_index=round_index,
+        )
+        eps_fields = _resolved_group_matrix_field_names(
+            candidate_names=_GROUP_RELATIVE_EPS_FIELDS,
+            field_registry=field_registry,
+            generation_config=generation_config,
+            blocked_fields=blocked_fields,
+            field_penalty_multipliers=field_penalty_multipliers,
+            round_index=round_index + 1,
+        )
+        returns_field = _resolved_single_group_matrix_field(
+            "returns",
+            field_registry=field_registry,
+            generation_config=generation_config,
+            blocked_fields=blocked_fields,
+        )
+        close_field = _resolved_single_group_matrix_field(
+            "close",
+            field_registry=field_registry,
+            generation_config=generation_config,
+            blocked_fields=blocked_fields,
+        )
+        volume_field = _resolved_single_group_matrix_field(
+            "volume",
+            field_registry=field_registry,
+            generation_config=generation_config,
+            blocked_fields=blocked_fields,
+        )
+
+        drafts_by_group: dict[str, list[_RecipeDraft]] = {
+            "A": [],
+            "B": [],
+            "C": [],
+            "D": [],
+        }
+        drafts_by_group["A"].extend(
+            _group_a_relative_fundamental_drafts(
+                fields=fundamental_fields,
+                group_keys=weighted_group_keys,
+                registry=registry,
+            )
+        )
+        drafts_by_group["B"].extend(
+            _group_b_momentum_drafts(
+                returns_field=returns_field,
+                close_field=close_field,
+                group_keys=weighted_group_keys,
+                registry=registry,
+            )
+        )
+        drafts_by_group["C"].extend(
+            _group_c_earnings_drafts(
+                fields=eps_fields,
+                group_keys=weighted_group_keys,
+                subindustry_key=subindustry_key,
+                registry=registry,
+            )
+        )
+        drafts_by_group["D"].extend(
+            _group_d_liquidity_drafts(
+                volume_field=volume_field,
+                group_keys=weighted_group_keys,
+                subindustry_key=subindustry_key,
+                registry=registry,
+            )
+        )
+        return _interleave_group_drafts(drafts_by_group)
 
     def _generate_bucket_candidates(
         self,
@@ -1533,6 +1860,316 @@ def _active_buckets(config: RecipeGenerationConfig, round_index: int) -> list[_R
     return [buckets[(offset + index) % len(buckets)] for index in range(active_count)]
 
 
+def _resolved_group_key_names(
+    *,
+    field_registry: FieldRegistry,
+    generation_config: GenerationConfig,
+) -> list[str]:
+    include_catalog = bool(getattr(generation_config, "allow_catalog_fields_without_runtime", False))
+    group_specs = field_registry.generation_group_key_fields(include_catalog_fields=include_catalog)
+    by_name = {
+        spec.name: spec
+        for spec in group_specs
+        if spec.operator_type == "group"
+        and spec.name in {*_GROUP_RELATIVE_PRIMARY_GROUP_KEYS, *_GROUP_RELATIVE_FALLBACK_GROUP_KEYS}
+    }
+    return [
+        name
+        for name in (*_GROUP_RELATIVE_PRIMARY_GROUP_KEYS, *_GROUP_RELATIVE_FALLBACK_GROUP_KEYS)
+        if name in by_name
+    ]
+
+
+def _weighted_group_key_cycle(group_keys: list[str]) -> list[str]:
+    available = set(group_keys)
+    weighted = [name for name in _GROUP_RELATIVE_WEIGHTED_PRIMARY_KEYS if name in available]
+    if weighted:
+        return weighted
+    return [
+        name
+        for name in (*_GROUP_RELATIVE_PRIMARY_GROUP_KEYS, *_GROUP_RELATIVE_FALLBACK_GROUP_KEYS)
+        if name in available
+    ]
+
+
+def _resolved_group_matrix_field_names(
+    *,
+    candidate_names: tuple[str, ...],
+    field_registry: FieldRegistry,
+    generation_config: GenerationConfig,
+    blocked_fields: set[str],
+    field_penalty_multipliers: dict[str, float],
+    round_index: int,
+) -> list[str]:
+    configured_allowed_fields = set(generation_config.allowed_fields or [])
+    ranked: list[tuple[float, int, str]] = []
+    for index, name in enumerate(candidate_names):
+        spec = field_registry.fields.get(name)
+        if spec is None:
+            continue
+        if spec.operator_type != "matrix":
+            continue
+        if name in blocked_fields:
+            continue
+        if configured_allowed_fields and name not in configured_allowed_fields:
+            continue
+        ranked.append(
+            (
+                _field_priority_score(spec, field_penalty_multipliers=field_penalty_multipliers),
+                index,
+                name,
+            )
+        )
+    ranked.sort(key=lambda item: (-item[0], item[1]))
+    return _rotated_names([name for _, _, name in ranked], round_index=round_index)
+
+
+def _resolved_single_group_matrix_field(
+    name: str,
+    *,
+    field_registry: FieldRegistry,
+    generation_config: GenerationConfig,
+    blocked_fields: set[str],
+) -> str:
+    spec = field_registry.fields.get(name)
+    configured_allowed_fields = set(generation_config.allowed_fields or [])
+    if spec is None or spec.operator_type != "matrix":
+        return ""
+    if name in blocked_fields:
+        return ""
+    if configured_allowed_fields and name not in configured_allowed_fields:
+        return ""
+    return name
+
+
+def _rotated_names(names: list[str], *, round_index: int) -> list[str]:
+    if len(names) <= 1:
+        return names
+    offset = int(round_index) % len(names)
+    return names[offset:] + names[:offset]
+
+
+def _group_a_relative_fundamental_drafts(
+    *,
+    fields: list[str],
+    group_keys: list[str],
+    registry: OperatorRegistry,
+) -> list[_RecipeDraft]:
+    if not fields or not group_keys:
+        return []
+    drafts: list[_RecipeDraft] = []
+    for index, field in enumerate(fields):
+        group_key = group_keys[index % len(group_keys)]
+        if _registry_contains_all(registry, ("rank", "group_zscore")):
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"rank(group_zscore({field},{group_key}))",
+                    recipe_variant="group_a_rank_group_zscore_fundamental",
+                    group_name="A",
+                    primary_field=field,
+                    group_key=group_key,
+                )
+            )
+        if _registry_contains_all(registry, ("group_rank",)):
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"group_rank({field},{group_key})",
+                    recipe_variant="group_a_group_rank_fundamental",
+                    group_name="A",
+                    primary_field=field,
+                    group_key=group_key,
+                )
+            )
+        if _registry_contains_all(registry, ("zscore", "group_rank")):
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"zscore(group_rank({field},{group_key}))",
+                    recipe_variant="group_a_zscore_group_rank_fundamental",
+                    group_name="A",
+                    primary_field=field,
+                    group_key=group_key,
+                )
+            )
+    return drafts
+
+
+def _group_b_momentum_drafts(
+    *,
+    returns_field: str,
+    close_field: str,
+    group_keys: list[str],
+    registry: OperatorRegistry,
+) -> list[_RecipeDraft]:
+    if not group_keys:
+        return []
+    drafts: list[_RecipeDraft] = []
+    if returns_field and _registry_contains_all(registry, ("rank", "group_neutralize", "ts_mean")):
+        for index, lookback in enumerate(_GROUP_RELATIVE_LOOKBACKS):
+            group_key = group_keys[index % len(group_keys)]
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"rank(group_neutralize(ts_mean({returns_field},{lookback}),{group_key}))",
+                    recipe_variant="group_b_rank_group_neutralize_ts_mean_returns",
+                    group_name="B",
+                    primary_field=returns_field,
+                    group_key=group_key,
+                )
+            )
+    if returns_field and _registry_contains_all(registry, ("rank", "group_neutralize", "ts_decay_linear")):
+        for index, lookback in enumerate(_GROUP_RELATIVE_LOOKBACKS):
+            group_key = group_keys[(index + 1) % len(group_keys)]
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"rank(group_neutralize(ts_decay_linear({returns_field},{lookback}),{group_key}))",
+                    recipe_variant="group_b_rank_group_neutralize_ts_decay_returns",
+                    group_name="B",
+                    primary_field=returns_field,
+                    group_key=group_key,
+                )
+            )
+    if close_field and _registry_contains_all(registry, ("group_neutralize", "ts_rank")):
+        for index, lookback in enumerate(_GROUP_RELATIVE_LOOKBACKS):
+            group_key = group_keys[(index + 2) % len(group_keys)]
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"group_neutralize(ts_rank({close_field},{lookback}),{group_key})",
+                    recipe_variant="group_b_group_neutralize_ts_rank_close",
+                    group_name="B",
+                    primary_field=close_field,
+                    group_key=group_key,
+                )
+            )
+    return drafts
+
+
+def _group_c_earnings_drafts(
+    *,
+    fields: list[str],
+    group_keys: list[str],
+    subindustry_key: str,
+    registry: OperatorRegistry,
+) -> list[_RecipeDraft]:
+    if not fields or not group_keys:
+        return []
+    drafts: list[_RecipeDraft] = []
+    for field_index, field in enumerate(fields):
+        for window_index, short_window in enumerate(_GROUP_RELATIVE_SHORT_WINDOWS):
+            group_key = group_keys[(field_index + window_index) % len(group_keys)]
+            if _registry_contains_all(registry, ("group_zscore", "ts_delta")):
+                drafts.append(
+                    _group_relative_draft(
+                        expression=f"group_zscore(ts_delta({field},{short_window}),{group_key})",
+                        recipe_variant="group_c_group_zscore_ts_delta_eps",
+                        group_name="C",
+                        primary_field=field,
+                        group_key=group_key,
+                    )
+                )
+            if _registry_contains_all(registry, ("rank", "group_neutralize", "ts_delta")):
+                drafts.append(
+                    _group_relative_draft(
+                        expression=f"rank(group_neutralize(ts_delta({field},{short_window}),{group_key}))",
+                        recipe_variant="group_c_rank_group_neutralize_ts_delta_eps",
+                        group_name="C",
+                        primary_field=field,
+                        group_key=group_key,
+                    )
+                )
+        if subindustry_key and _registry_contains_all(registry, ("group_rank", "ts_mean")):
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"group_rank(ts_mean({field},20),{subindustry_key})",
+                    recipe_variant="group_c_group_rank_ts_mean_eps_subindustry",
+                    group_name="C",
+                    primary_field=field,
+                    group_key=subindustry_key,
+                )
+            )
+    return drafts
+
+
+def _group_d_liquidity_drafts(
+    *,
+    volume_field: str,
+    group_keys: list[str],
+    subindustry_key: str,
+    registry: OperatorRegistry,
+) -> list[_RecipeDraft]:
+    if not volume_field or not group_keys:
+        return []
+    drafts: list[_RecipeDraft] = []
+    if _registry_contains_all(registry, ("group_zscore", "ts_mean")):
+        for index, lookback in enumerate(_GROUP_RELATIVE_LOOKBACKS):
+            group_key = group_keys[index % len(group_keys)]
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"group_zscore(ts_mean({volume_field},{lookback}),{group_key})",
+                    recipe_variant="group_d_group_zscore_ts_mean_volume",
+                    group_name="D",
+                    primary_field=volume_field,
+                    group_key=group_key,
+                )
+            )
+    if _registry_contains_all(registry, ("rank", "group_neutralize", "ts_rank")):
+        for index, lookback in enumerate(_GROUP_RELATIVE_LOOKBACKS):
+            group_key = group_keys[(index + 1) % len(group_keys)]
+            drafts.append(
+                _group_relative_draft(
+                    expression=f"rank(group_neutralize(ts_rank({volume_field},{lookback}),{group_key}))",
+                    recipe_variant="group_d_rank_group_neutralize_ts_rank_volume",
+                    group_name="D",
+                    primary_field=volume_field,
+                    group_key=group_key,
+                )
+            )
+    if subindustry_key and _registry_contains_all(registry, ("group_rank",)):
+        drafts.append(
+            _group_relative_draft(
+                expression=f"group_rank({volume_field},{subindustry_key})",
+                recipe_variant="group_d_group_rank_volume_subindustry",
+                group_name="D",
+                primary_field=volume_field,
+                group_key=subindustry_key,
+            )
+        )
+    return drafts
+
+
+def _group_relative_draft(
+    *,
+    expression: str,
+    recipe_variant: str,
+    group_name: str,
+    primary_field: str,
+    group_key: str,
+) -> _RecipeDraft:
+    return _RecipeDraft(
+        expression=expression,
+        recipe_variant=recipe_variant,
+        fields=(primary_field, group_key),
+        source=GROUP_RELATIVE_SOURCE,
+        group_recipe_group=group_name,
+        primary_field=primary_field,
+        group_key=group_key,
+    )
+
+
+def _interleave_group_drafts(drafts_by_group: dict[str, list[_RecipeDraft]]) -> list[_RecipeDraft]:
+    ordered_groups = ("A", "B", "C", "D")
+    max_len = max((len(drafts_by_group.get(group, [])) for group in ordered_groups), default=0)
+    interleaved: list[_RecipeDraft] = []
+    for index in range(max_len):
+        for group in ordered_groups:
+            drafts = drafts_by_group.get(group, [])
+            if index < len(drafts):
+                interleaved.append(drafts[index])
+    return _unique_drafts(interleaved)
+
+
+def _registry_contains_all(registry: OperatorRegistry, names: tuple[str, ...]) -> bool:
+    return all(registry.contains(name) for name in names)
+
+
 def _planned_bucket_targets(*, bucket_count: int, target_count: int, max_candidates_per_bucket: int) -> list[int]:
     if bucket_count <= 0 or target_count <= 0:
         return []
@@ -1641,6 +2278,10 @@ def _parent_meets_base_thresholds(metrics: dict[str, Any]) -> bool:
         and _to_float(metrics.get("sharpe")) >= 0.03
         and _to_float(metrics.get("drawdown")) <= 0.75
         and not str(metrics.get("rejection_reason") or "").strip()
+        and not has_structural_risk_blocker(
+            tuple(metrics.get("hard_fail_checks") or ()),
+            tuple(metrics.get("blocking_warning_checks") or ()),
+        )
         and str(metrics.get("status") or "") == "completed"
     )
 

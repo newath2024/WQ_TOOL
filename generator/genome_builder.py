@@ -4,6 +4,7 @@ import logging
 import random
 from dataclasses import replace
 from collections import defaultdict
+from typing import Any
 
 from core.config import AdaptiveGenerationConfig, GenerationConfig
 from data.field_registry import FieldRegistry, FieldSpec
@@ -86,8 +87,19 @@ class GenomeBuilder:
                 or (self.registry.contains(name) and not self.registry.get(name).has_tag("requires_positive_input"))
             )
         ] or ["rank"]
+        if self._operator_diversity_enabled():
+            for name in ("inverse", "reverse"):
+                if (
+                    self.registry.contains(name)
+                    and name not in self.wrapper_choices
+                    and not self.registry.get(name).has_tag("requires_positive_input")
+                ):
+                    self.wrapper_choices.append(name)
+        primitive_candidates = ["ts_delta", "ts_mean", "ts_std_dev", "ts_decay_linear", "ts_rank", "ts_sum"]
+        if self._operator_diversity_enabled():
+            primitive_candidates.extend(["ts_av_diff", "ts_arg_max", "ts_arg_min"])
         self.primitive_ops = [
-            name for name in ("ts_delta", "ts_mean", "ts_std_dev", "ts_decay_linear", "ts_rank", "ts_sum")
+            name for name in primitive_candidates
             if self.registry.contains(name)
         ]
         self.pair_ops = [name for name in ("ts_corr", "ts_covariance") if self.registry.contains(name)]
@@ -101,6 +113,55 @@ class GenomeBuilder:
         if not self.smoothing_ops:
             self.smoothing_ops = [name for name in ("ts_mean", "ts_decay_linear") if self.registry.contains(name)]
 
+    def _operator_diversity_enabled(self) -> bool:
+        config = getattr(self.adaptive_config, "operator_diversity_boost", None)
+        return bool(getattr(config, "enabled", False))
+
+    def _operator_sampling_weight(
+        self,
+        operator: str,
+        base_weight: float,
+        *,
+        operator_diversity: Any | None,
+    ) -> float:
+        if operator_diversity is None:
+            return float(base_weight)
+        adjusted = getattr(operator_diversity, "adjusted_weight", None)
+        if adjusted is None:
+            return float(base_weight)
+        return float(adjusted(operator, float(base_weight)))
+
+    def _weighted_operator_choice(
+        self,
+        operators: list[str],
+        *,
+        operator_diversity: Any | None,
+        base_weight: float = 1.0,
+    ) -> str:
+        labels = [operator for operator in operators if operator]
+        if not labels:
+            return ""
+        weights = [
+            max(1e-6, self._operator_sampling_weight(operator, base_weight, operator_diversity=operator_diversity))
+            for operator in labels
+        ]
+        return self.random.choices(labels, weights=weights, k=1)[0]
+
+    def _conditioning_weights(
+        self,
+        labels: list[str],
+        weights: list[float],
+        *,
+        operator_diversity: Any | None,
+    ) -> list[float]:
+        adjusted: list[float] = []
+        for label, weight in zip(labels, weights, strict=True):
+            operator = "group_neutralize" if label == "group_neutralize" else ""
+            if operator:
+                weight = self._operator_sampling_weight(operator, weight, operator_diversity=operator_diversity)
+            adjusted.append(max(1e-6, float(weight)))
+        return adjusted
+
     def build_random_genome(
         self,
         *,
@@ -108,6 +169,7 @@ class GenomeBuilder:
         novelty_bias: bool = False,
         case_snapshot: CaseMemorySnapshot | None = None,
         diversity_tracker: GenerationDiversityTracker | None = None,
+        operator_diversity: Any | None = None,
     ) -> Genome:
         motif = self._pick_motif(
             novelty_bias=novelty_bias,
@@ -120,6 +182,7 @@ class GenomeBuilder:
             novelty_bias=novelty_bias,
             case_snapshot=case_snapshot,
             diversity_tracker=diversity_tracker,
+            operator_diversity=operator_diversity,
         )
 
     def build_guided_genome(
@@ -128,6 +191,7 @@ class GenomeBuilder:
         case_snapshot: CaseMemorySnapshot | None,
         explore: bool,
         diversity_tracker: GenerationDiversityTracker | None = None,
+        operator_diversity: Any | None = None,
     ) -> Genome:
         novelty_bias = explore
         source_mode = "guided_explore" if explore else "guided_exploit"
@@ -143,6 +207,7 @@ class GenomeBuilder:
             novelty_bias=novelty_bias,
             case_snapshot=case_snapshot,
             diversity_tracker=diversity_tracker,
+            operator_diversity=operator_diversity,
         )
 
     def build_parent_seeded_genome(
@@ -153,6 +218,7 @@ class GenomeBuilder:
         source_mode: str,
         case_snapshot: CaseMemorySnapshot | None = None,
         diversity_tracker: GenerationDiversityTracker | None = None,
+        operator_diversity: Any | None = None,
     ) -> Genome:
         return self._build_genome(
             motif=motif,
@@ -161,6 +227,7 @@ class GenomeBuilder:
             preferred_primary_family=primary_family,
             case_snapshot=case_snapshot,
             diversity_tracker=diversity_tracker,
+            operator_diversity=operator_diversity,
         )
 
     def _build_genome(
@@ -172,6 +239,7 @@ class GenomeBuilder:
         preferred_primary_family: str = "",
         case_snapshot: CaseMemorySnapshot | None = None,
         diversity_tracker: GenerationDiversityTracker | None = None,
+        operator_diversity: Any | None = None,
     ) -> Genome:
         primary = self._pick_numeric_field(
             motif=motif,
@@ -200,15 +268,29 @@ class GenomeBuilder:
             novelty_bias=novelty_bias,
             case_snapshot=case_snapshot,
             diversity_tracker=diversity_tracker,
+            operator_diversity=operator_diversity,
         )
         secondary_transform = self._pick_secondary_transform(
             motif,
             primitive,
             diversity_tracker=diversity_tracker,
+            operator_diversity=operator_diversity,
         )
-        pair_operator = self.random.choice(self.pair_ops or ["ts_corr"]) if motif not in MOTIF_LIBRARY else ""
-        conditioning_mode = self._pick_conditioning_mode(motif)
-        smoothing_op = self._pick_smoothing_operator(motif=motif, case_snapshot=case_snapshot) if self.smoothing_ops else ""
+        pair_operator = (
+            self._weighted_operator_choice(self.pair_ops or ["ts_corr"], operator_diversity=operator_diversity)
+            if motif not in MOTIF_LIBRARY
+            else ""
+        )
+        conditioning_mode = self._pick_conditioning_mode(motif, operator_diversity=operator_diversity)
+        smoothing_op = (
+            self._pick_smoothing_operator(
+                motif=motif,
+                case_snapshot=case_snapshot,
+                operator_diversity=operator_diversity,
+            )
+            if self.smoothing_ops
+            else ""
+        )
         # Calculate depth headroom BEFORE picking wrappers so we stay within max_depth.
         # Keep one conservative layer of headroom for deferred post-smoothing ops.
         depth_used = self._base_render_depth(motif) + 1
@@ -224,6 +306,7 @@ class GenomeBuilder:
             case_snapshot=case_snapshot,
             novelty_bias=novelty_bias,
             diversity_tracker=diversity_tracker,
+            operator_diversity=operator_diversity,
             depth_headroom=wrapper_headroom,
         )
         turnover_hint = self._estimate_turnover_hint(primitive, secondary_transform, wrappers)
@@ -461,11 +544,14 @@ class GenomeBuilder:
         novelty_bias: bool = False,
         case_snapshot: CaseMemorySnapshot | None = None,
         diversity_tracker: GenerationDiversityTracker | None,
+        operator_diversity: Any | None = None,
     ) -> str:
         if motif == "quality_score":
             return ""
-        if motif == "price_volume_divergence" and self.registry.contains("ts_corr"):
-            return "ts_corr"
+        if motif == "price_volume_divergence" and self.pair_ops:
+            if not bool(getattr(operator_diversity, "enabled", False)) and self.registry.contains("ts_corr"):
+                return "ts_corr"
+            return self._weighted_operator_choice(self.pair_ops, operator_diversity=operator_diversity)
         if motif == "conditional_momentum" and self.registry.contains("ts_delta"):
             return "ts_delta"
         candidates = self.primitive_ops or ["ts_mean"]
@@ -489,6 +575,7 @@ class GenomeBuilder:
                 )
             if diversity_tracker is not None:
                 weight *= diversity_tracker.operator_weight(name)
+            weight = self._operator_sampling_weight(name, weight, operator_diversity=operator_diversity)
             weights.append(max(weight, 1e-6))
         return self.random.choices(candidates, weights=weights, k=1)[0]
 
@@ -498,6 +585,7 @@ class GenomeBuilder:
         primitive: str,
         *,
         diversity_tracker: GenerationDiversityTracker | None,
+        operator_diversity: Any | None = None,
     ) -> str:
         if motif in {"quality_score", "price_volume_divergence"}:
             return ""
@@ -526,6 +614,7 @@ class GenomeBuilder:
                 weight *= 1.25
             if diversity_tracker is not None:
                 weight *= diversity_tracker.operator_weight(name)
+            weight = self._operator_sampling_weight(name, weight, operator_diversity=operator_diversity)
             weights.append(max(weight, 1e-6))
         return self.random.choices(options, weights=weights, k=1)[0]
 
@@ -536,6 +625,7 @@ class GenomeBuilder:
         case_snapshot: CaseMemorySnapshot | None = None,
         novelty_bias: bool,
         diversity_tracker: GenerationDiversityTracker | None,
+        operator_diversity: Any | None = None,
         depth_headroom: int = 2,
     ) -> tuple[str, ...]:
         if not self.wrapper_choices or depth_headroom <= 0:
@@ -559,6 +649,7 @@ class GenomeBuilder:
                 )
             if diversity_tracker is not None:
                 weight *= diversity_tracker.operator_weight(wrapper)
+            weight = self._operator_sampling_weight(wrapper, weight, operator_diversity=operator_diversity)
             weighted.append((wrapper, max(1e-6, weight)))
         selected: list[str] = []
         choices = list(weighted)
@@ -570,15 +661,17 @@ class GenomeBuilder:
             selected.append(self.random.choices(labels, weights=weights, k=1)[0])
         return tuple(selected)
 
-    def _pick_conditioning_mode(self, motif: str) -> str:
+    def _pick_conditioning_mode(self, motif: str, *, operator_diversity: Any | None = None) -> str:
         if motif == "group_relative_signal":
             if not self.sim_neutralization_active:
                 return "group_neutralize"
             labels, weights = self._conditioning_mode_options(motif)
+            weights = self._conditioning_weights(labels, weights, operator_diversity=operator_diversity)
             return self.random.choices(labels, weights=weights, k=1)[0]
         if motif == "liquidity_conditioned_signal":
             return "liquidity_gate"
         labels, weights = self._conditioning_mode_options(motif)
+        weights = self._conditioning_weights(labels, weights, operator_diversity=operator_diversity)
         return self.random.choices(labels, weights=weights, k=1)[0]
 
     def _conditioning_mode_options(self, motif: str) -> tuple[list[str], list[float]]:
@@ -609,6 +702,7 @@ class GenomeBuilder:
         self,
         motif: str = "",
         case_snapshot: CaseMemorySnapshot | None = None,
+        operator_diversity: Any | None = None,
     ) -> str:
         if not self.smoothing_ops:
             return "ts_mean"
@@ -622,6 +716,7 @@ class GenomeBuilder:
                 weight *= 1.5
             if spec.turnover_hint < 0:
                 weight *= 1.0 + abs(spec.turnover_hint)
+            weight = self._operator_sampling_weight(name, weight, operator_diversity=operator_diversity)
             weights.append(max(weight, 1e-6))
         return self.random.choices(self.smoothing_ops, weights=weights, k=1)[0]
 
