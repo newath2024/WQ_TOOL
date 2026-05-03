@@ -9,6 +9,11 @@ from uuid import uuid4
 from adapters.brain_api_adapter import ApiEndpointConfig, BrainApiAdapter
 from adapters.brain_manual_adapter import BrainManualAdapter
 from adapters.simulation_adapter import SimulationAdapter
+from core.brain_checks import (
+    first_synthetic_rejection_message,
+    names_json,
+    summarize_brain_checks,
+)
 from core.brain_rejections import extract_invalid_field_from_rejection
 from core.config import AppConfig, BrainConfig
 from core.logging import get_logger
@@ -22,6 +27,7 @@ from domain.simulation import (
     SimulationResult,
 )
 from services.models import CommandEnvironment
+from services.search_space_filter import invalidate_winner_prior_cache
 from storage.models import (
     ManualImportRecord,
     SubmissionBatchRecord,
@@ -47,6 +53,11 @@ class BrainService:
             self.repository.submissions.backfill_timeout_deadlines(
                 timeout_seconds=float(self.brain_config.timeout_seconds),
             )
+
+    def _save_brain_results(self, records: list[BrainResultRecord]) -> None:
+        self.repository.brain_results.save_results(records)
+        for run_id in {record.run_id for record in records}:
+            invalidate_winner_prior_cache(run_id)
 
     def simulate_candidates(
         self,
@@ -405,6 +416,7 @@ class BrainService:
                             now=now,
                             config=config,
                         ),
+                        quality_config=config.quality_score,
                     )
                 )
                 continue
@@ -433,7 +445,14 @@ class BrainService:
                 retry_count = submission.retry_count + 1
                 if retry_count > self.brain_config.max_retries:
                     logger.warning("Job %s exceeded retry budget; marking failed", job.job_id)
-                    results.append(self._failed_job(job, updated_at=now, error_message=str(exc)))
+                    results.append(
+                        self._failed_job(
+                            job,
+                            updated_at=now,
+                            error_message=str(exc),
+                            quality_config=config.quality_score,
+                        )
+                    )
                     continue
                 next_poll_after = _shift_iso(now, _backoff_seconds(retry_count))
                 self.repository.submissions.update_submission_runtime(
@@ -459,7 +478,15 @@ class BrainService:
                 logger.warning("Detected stuck job %s after %.1fs", job.job_id, elapsed_seconds)
 
             if status in TERMINAL_STATUSES:
-                results.append(self._finalize_terminal_job(job, status=status, status_payload=status_payload, updated_at=now))
+                results.append(
+                    self._finalize_terminal_job(
+                        job,
+                        status=status,
+                        status_payload=status_payload,
+                        updated_at=now,
+                        quality_config=config.quality_score,
+                    )
+                )
                 continue
 
             next_poll_after = _shift_iso(
@@ -626,7 +653,7 @@ class BrainService:
             seen_batch_ids.add(job.batch_id)
 
         if records:
-            self.repository.brain_results.save_results(records)
+            self._save_brain_results(records)
         for batch_id in seen_batch_ids:
             self.repository.submissions.update_batch_status(batch_id, status="completed", updated_at=timestamp)
             self.repository.submissions.save_manual_import(
@@ -733,10 +760,22 @@ class BrainService:
         submission_eligible = payload.get("submission_eligible")
         if submission_eligible is None and isinstance(raw_result, dict):
             submission_eligible = raw_result.get("submission_eligible")
+        status = self.normalize_status(payload.get("status"))
+        rejection_reason = str(
+            payload.get("rejection_reason")
+            or raw_result.get("rejection_reason")
+            or payload.get("error_message")
+            or ""
+        ) or None
+        check_summary = summarize_brain_checks(raw_result, status=status, rejection_reason=rejection_reason)
+        if rejection_reason is None:
+            rejection_reason = first_synthetic_rejection_message(check_summary)
+            if rejection_reason:
+                check_summary = summarize_brain_checks(raw_result, status=status, rejection_reason=rejection_reason)
         return SimulationResult(
             expression=str(payload.get("expression") or job.expression),
             job_id=job.job_id,
-            status=self.normalize_status(payload.get("status")),
+            status=status,
             region=str(payload.get("region") or raw_result.get("region") or sim_config.get("region") or ""),
             universe=str(payload.get("universe") or raw_result.get("universe") or sim_config.get("universe") or ""),
             delay=int(payload.get("delay") or raw_result.get("delay") or sim_config.get("delay") or 1),
@@ -749,13 +788,7 @@ class BrainService:
             decay=int(payload.get("decay") or raw_result.get("decay") or sim_config.get("decay") or 0),
             metrics=metrics,
             submission_eligible=_optional_bool(submission_eligible),
-            rejection_reason=str(
-                payload.get("rejection_reason")
-                or raw_result.get("rejection_reason")
-                or payload.get("error_message")
-                or ""
-            )
-            or None,
+            rejection_reason=rejection_reason,
             raw_result=dict(raw_result),
             simulated_at=str(payload.get("simulated_at") or raw_result.get("simulated_at") or datetime.now(UTC).isoformat()),
             candidate_id=job.candidate_id,
@@ -764,6 +797,11 @@ class BrainService:
             round_index=job.round_index,
             backend=job.backend,
             metric_source="external_brain",
+            check_summary=check_summary.to_dict(),
+            hard_fail_checks=check_summary.hard_fail_checks,
+            warning_checks=check_summary.warning_checks,
+            blocking_warning_checks=check_summary.blocking_warning_checks,
+            derived_submit_ready=check_summary.derived_submit_ready,
         )
 
     def to_result_record(
@@ -772,6 +810,7 @@ class BrainService:
         result: SimulationResult,
         job: SimulationJob,
         created_at: str,
+        quality_config: object | None = None,
     ) -> BrainResultRecord:
         return BrainResultRecord(
             job_id=result.job_id,
@@ -798,7 +837,12 @@ class BrainService:
             metric_source=result.metric_source,
             simulated_at=result.simulated_at,
             created_at=created_at,
-            quality_score=MultiObjectiveQualityScorer.score_result(result),
+            quality_score=MultiObjectiveQualityScorer.score_result(result, quality_config=quality_config),
+            check_summary_json=json.dumps(result.check_summary, sort_keys=True),
+            hard_fail_checks_json=names_json(result.hard_fail_checks),
+            warning_checks_json=names_json(result.warning_checks),
+            blocking_warning_checks_json=names_json(result.blocking_warning_checks),
+            derived_submit_ready=result.derived_submit_ready,
         )
 
     @staticmethod
@@ -876,6 +920,7 @@ class BrainService:
         status: str,
         status_payload: dict,
         updated_at: str,
+        quality_config: object | None = None,
     ) -> SimulationResult:
         if status in {"completed", "rejected"}:
             try:
@@ -905,12 +950,21 @@ class BrainService:
             next_poll_after=None,
             timeout_deadline_at=None,
             service_failure_reason=None,
+            )
+        self._save_brain_results(
+            [self.to_result_record(result=result, job=job, created_at=updated_at, quality_config=quality_config)]
         )
-        self.repository.brain_results.save_results([self.to_result_record(result=result, job=job, created_at=updated_at)])
         self._prune_invalid_field_metadata(result.rejection_reason, run_id=job.run_id)
         return result
 
-    def _failed_job(self, job: SimulationJob, *, updated_at: str, error_message: str) -> SimulationResult:
+    def _failed_job(
+        self,
+        job: SimulationJob,
+        *,
+        updated_at: str,
+        error_message: str,
+        quality_config: object | None = None,
+    ) -> SimulationResult:
         result = self.normalize_result(
             job=job,
             payload={
@@ -934,11 +988,20 @@ class BrainService:
             timeout_deadline_at=None,
             service_failure_reason=error_message,
         )
-        self.repository.brain_results.save_results([self.to_result_record(result=result, job=job, created_at=updated_at)])
+        self._save_brain_results(
+            [self.to_result_record(result=result, job=job, created_at=updated_at, quality_config=quality_config)]
+        )
         self._prune_invalid_field_metadata(result.rejection_reason, run_id=job.run_id)
         return result
 
-    def _timeout_job(self, job: SimulationJob, *, updated_at: str, reason: str) -> SimulationResult:
+    def _timeout_job(
+        self,
+        job: SimulationJob,
+        *,
+        updated_at: str,
+        reason: str,
+        quality_config: object | None = None,
+    ) -> SimulationResult:
         result = SimulationResult(
             expression=job.expression,
             job_id=job.job_id,
@@ -970,7 +1033,9 @@ class BrainService:
             timeout_deadline_at=None,
             service_failure_reason=reason,
         )
-        self.repository.brain_results.save_results([self.to_result_record(result=result, job=job, created_at=updated_at)])
+        self._save_brain_results(
+            [self.to_result_record(result=result, job=job, created_at=updated_at, quality_config=quality_config)]
+        )
         return result
 
     def _refresh_batch_status(

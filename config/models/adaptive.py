@@ -3,6 +3,125 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 
+DEFAULT_DOMINANT_OPERATORS = [
+    "ts_decay_linear",
+    "ts_mean",
+    "ts_sum",
+    "ts_std_dev",
+    "rank",
+    "ts_rank",
+    "zscore",
+]
+DEFAULT_UNDERUSED_OPERATORS = [
+    "ts_corr",
+    "ts_covariance",
+    "days_from_last_change",
+    "ts_av_diff",
+    "ts_arg_max",
+    "ts_arg_min",
+    "group_neutralize",
+    "inverse",
+    "reverse",
+]
+DEFAULT_EXPECTED_REPORT_DATE_FIELDS = [
+    "anl69_eps_expected_report_dt",
+    "anl69_roe_expected_report_dt",
+    "anl69_roa_expected_report_dt",
+    "anl69_pe_expected_report_dt",
+    "anl69_net_expected_report_dt",
+    "anl69_ebit_expected_report_dt",
+]
+DEFAULT_SEED_CORR_PAIRS = [
+    ("returns", "anl69_eps_best_eeps_nxt_yr"),
+    ("returns", "anl46_sentiment"),
+    ("volume", "anl69_eps_best_eeps_nxt_yr"),
+    ("ts_delta(close,5)", "anl39_epschngin"),
+    ("ts_std_dev(returns,20)", "anl69_roa_best_cur_fiscal_year_period"),
+]
+DEFAULT_QUALITY_POLISH_VARIANT_BUDGET_PERCENTAGES = {
+    "surface": 0.30,
+    "operator_substitution": 0.20,
+    "neutralization": 0.15,
+    "cross_section": 0.15,
+    "composite": 0.10,
+    "field_substitution": 0.10,
+}
+
+
+def _normalized_string_list(values) -> list[str]:
+    return list(dict.fromkeys(str(item).strip() for item in (values or []) if str(item).strip()))
+
+
+def _normalized_pair_list(values) -> list[tuple[str, str]]:
+    pairs: list[tuple[str, str]] = []
+    for item in values or []:
+        if not isinstance(item, (list, tuple)) or len(item) != 2:
+            continue
+        left = str(item[0]).strip()
+        right = str(item[1]).strip()
+        if left and right:
+            pairs.append((left, right))
+    return list(dict.fromkeys(pairs))
+
+
+@dataclass(slots=True)
+class OperatorDiversityBoostConfig:
+    enabled: bool = False
+    dominant_operators: list[str] = field(default_factory=lambda: list(DEFAULT_DOMINANT_OPERATORS))
+    underused_operators: list[str] = field(default_factory=lambda: list(DEFAULT_UNDERUSED_OPERATORS))
+    dominant_decay_rate: float = 2.0
+    dominant_min_multiplier: float = 0.30
+    underused_boost: float = 3.0
+    underused_decay: float = 0.5
+    seed_corr_pair_probability: float = 0.20
+    corr_min_lookback: int = 10
+    invalid_retry_limit: int = 3
+    expected_report_date_fields: list[str] = field(
+        default_factory=lambda: list(DEFAULT_EXPECTED_REPORT_DATE_FIELDS)
+    )
+    seed_corr_pairs: list[tuple[str, str]] = field(default_factory=lambda: list(DEFAULT_SEED_CORR_PAIRS))
+
+    def __post_init__(self) -> None:
+        self.enabled = bool(self.enabled)
+        self.dominant_operators = _normalized_string_list(self.dominant_operators)
+        self.underused_operators = _normalized_string_list(self.underused_operators)
+        self.expected_report_date_fields = _normalized_string_list(self.expected_report_date_fields)
+        self.seed_corr_pairs = _normalized_pair_list(self.seed_corr_pairs)
+        if not self.dominant_operators:
+            self.dominant_operators = list(DEFAULT_DOMINANT_OPERATORS)
+        if not self.underused_operators:
+            self.underused_operators = list(DEFAULT_UNDERUSED_OPERATORS)
+        if not self.expected_report_date_fields:
+            self.expected_report_date_fields = list(DEFAULT_EXPECTED_REPORT_DATE_FIELDS)
+        if not self.seed_corr_pairs:
+            self.seed_corr_pairs = list(DEFAULT_SEED_CORR_PAIRS)
+        self.dominant_decay_rate = float(self.dominant_decay_rate)
+        self.dominant_min_multiplier = float(self.dominant_min_multiplier)
+        self.underused_boost = float(self.underused_boost)
+        self.underused_decay = float(self.underused_decay)
+        self.seed_corr_pair_probability = float(self.seed_corr_pair_probability)
+        self.corr_min_lookback = int(self.corr_min_lookback)
+        self.invalid_retry_limit = int(self.invalid_retry_limit)
+        if self.dominant_decay_rate < 0.0:
+            raise ValueError("adaptive_generation.operator_diversity_boost.dominant_decay_rate must be >= 0")
+        if not 0.0 <= self.dominant_min_multiplier <= 1.0:
+            raise ValueError(
+                "adaptive_generation.operator_diversity_boost.dominant_min_multiplier must be between 0 and 1"
+            )
+        if self.underused_boost <= 0.0:
+            raise ValueError("adaptive_generation.operator_diversity_boost.underused_boost must be > 0")
+        if self.underused_decay < 0.0:
+            raise ValueError("adaptive_generation.operator_diversity_boost.underused_decay must be >= 0")
+        if not 0.0 <= self.seed_corr_pair_probability <= 1.0:
+            raise ValueError(
+                "adaptive_generation.operator_diversity_boost.seed_corr_pair_probability must be between 0 and 1"
+            )
+        if self.corr_min_lookback <= 0:
+            raise ValueError("adaptive_generation.operator_diversity_boost.corr_min_lookback must be > 0")
+        if self.invalid_retry_limit <= 0:
+            raise ValueError("adaptive_generation.operator_diversity_boost.invalid_retry_limit must be > 0")
+
+
 @dataclass(slots=True)
 class StrategyMixConfig:
     guided_mutation: float = 0.40
@@ -327,9 +446,30 @@ class SearchSpaceFilterConfig:
     fitness_floor: float = 0.10
     field_result_multiplier: float = 0.50
     operator_result_multiplier: float = 0.60
+    check_penalty_min_support: int = 3
+    hard_fail_field_multiplier: float = 0.35
+    hard_fail_operator_multiplier: float = 0.45
+    blocking_warning_field_multiplier: float = 0.55
+    blocking_warning_operator_multiplier: float = 0.60
+    field_floor_ratio: float = 0.30
+    field_floor_absolute_min: float = 0.10
+    operator_floor_absolute_min: float = 0.05
+    exploration_budget_pct: float = 0.15
     winner_prior_enabled: bool = False
-    winner_prior_lookback_rounds: int = 20
+    winner_prior_lookback_rounds: int = 50
     winner_prior_min_support: int = 2
+    # With the current sample size around 42 completed results, 15 keeps the
+    # prior neutral until there is enough evidence to avoid one-off noise.
+    winner_prior_min_completed: int = 15
+    winner_prior_min_winners_for_boost: int = 3
+    winner_prior_min_losers_for_penalty: int = 3
+    winner_prior_laplace_k: float = 1.0
+    winner_prior_multiplier_max: float = 1.5
+    winner_prior_multiplier_min: float = 0.5
+    winner_prior_alltime_dampen: float = 0.5
+    winner_prior_cache_ttl_seconds: int = 300
+    winner_prior_min_sharpe: float = 0.50
+    winner_prior_min_fitness: float = 0.0
     winner_prior_sharpe_floor: float = 0.30
     winner_prior_fitness_floor: float = 0.10
     winner_prior_strong_sharpe_floor: float = 0.50
@@ -351,6 +491,14 @@ class SearchSpaceFilterConfig:
             "validation_field_multiplier",
             "field_result_multiplier",
             "operator_result_multiplier",
+            "hard_fail_field_multiplier",
+            "hard_fail_operator_multiplier",
+            "blocking_warning_field_multiplier",
+            "blocking_warning_operator_multiplier",
+            "field_floor_ratio",
+            "field_floor_absolute_min",
+            "operator_floor_absolute_min",
+            "exploration_budget_pct",
         ):
             value = float(getattr(self, name))
             if not 0.0 <= value <= 1.0:
@@ -359,10 +507,21 @@ class SearchSpaceFilterConfig:
         self.validation_field_min_count = int(self.validation_field_min_count)
         self.completed_lookback_rounds = int(self.completed_lookback_rounds)
         self.min_completed_support = int(self.min_completed_support)
+        self.check_penalty_min_support = int(self.check_penalty_min_support)
         self.sharpe_floor = float(self.sharpe_floor)
         self.fitness_floor = float(self.fitness_floor)
         self.winner_prior_lookback_rounds = int(self.winner_prior_lookback_rounds)
         self.winner_prior_min_support = int(self.winner_prior_min_support)
+        self.winner_prior_min_completed = int(self.winner_prior_min_completed)
+        self.winner_prior_min_winners_for_boost = int(self.winner_prior_min_winners_for_boost)
+        self.winner_prior_min_losers_for_penalty = int(self.winner_prior_min_losers_for_penalty)
+        self.winner_prior_laplace_k = float(self.winner_prior_laplace_k)
+        self.winner_prior_multiplier_max = float(self.winner_prior_multiplier_max)
+        self.winner_prior_multiplier_min = float(self.winner_prior_multiplier_min)
+        self.winner_prior_alltime_dampen = float(self.winner_prior_alltime_dampen)
+        self.winner_prior_cache_ttl_seconds = int(self.winner_prior_cache_ttl_seconds)
+        self.winner_prior_min_sharpe = float(self.winner_prior_min_sharpe)
+        self.winner_prior_min_fitness = float(self.winner_prior_min_fitness)
         self.winner_prior_sharpe_floor = float(self.winner_prior_sharpe_floor)
         self.winner_prior_fitness_floor = float(self.winner_prior_fitness_floor)
         self.winner_prior_strong_sharpe_floor = float(self.winner_prior_strong_sharpe_floor)
@@ -380,6 +539,10 @@ class SearchSpaceFilterConfig:
             raise ValueError(
                 "adaptive_generation.search_space_filter.min_completed_support must be > 0"
             )
+        if self.check_penalty_min_support <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.check_penalty_min_support must be > 0"
+            )
         if self.winner_prior_lookback_rounds <= 0:
             raise ValueError(
                 "adaptive_generation.search_space_filter.winner_prior_lookback_rounds must be > 0"
@@ -387,6 +550,42 @@ class SearchSpaceFilterConfig:
         if self.winner_prior_min_support <= 0:
             raise ValueError(
                 "adaptive_generation.search_space_filter.winner_prior_min_support must be > 0"
+            )
+        if self.winner_prior_min_completed <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_min_completed must be > 0"
+            )
+        if self.winner_prior_min_winners_for_boost <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_min_winners_for_boost must be > 0"
+            )
+        if self.winner_prior_min_losers_for_penalty <= 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_min_losers_for_penalty must be > 0"
+            )
+        if self.winner_prior_laplace_k <= 0.0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_laplace_k must be > 0"
+            )
+        if self.winner_prior_multiplier_min <= 0.0 or self.winner_prior_multiplier_min > 1.0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_multiplier_min must be between 0 and 1"
+            )
+        if self.winner_prior_multiplier_max < 1.0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_multiplier_max must be >= 1"
+            )
+        if self.winner_prior_multiplier_min > self.winner_prior_multiplier_max:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_multiplier_min must be <= winner_prior_multiplier_max"
+            )
+        if not 0.0 <= self.winner_prior_alltime_dampen <= 1.0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_alltime_dampen must be between 0 and 1"
+            )
+        if self.winner_prior_cache_ttl_seconds < 0:
+            raise ValueError(
+                "adaptive_generation.search_space_filter.winner_prior_cache_ttl_seconds must be >= 0"
             )
         if self.lane_field_min_count < 0:
             raise ValueError(
@@ -616,6 +815,7 @@ class QualityOptimizationConfig:
     variants_per_parent: int = 8
     min_parent_fitness: float = 0.02
     min_parent_sharpe: float = 0.03
+    min_parent_turnover: float = 0.0
     max_parent_turnover: float = 1.00
     max_parent_drawdown: float = 0.75
     min_completed_parent_count: int = 5
@@ -643,6 +843,9 @@ class QualityOptimizationConfig:
     transform_cooldown_success_rate_floor: float = 0.20
     cooldown_exempt_transform_groups: list[str] = field(default_factory=list)
     window_perturb_neighbor_count: int = 4
+    variant_budget_percentages: dict[str, float] = field(
+        default_factory=lambda: dict(DEFAULT_QUALITY_POLISH_VARIANT_BUDGET_PERCENTAGES)
+    )
 
     def __post_init__(self) -> None:
         if self.lookback_completed_results <= 0:
@@ -669,9 +872,17 @@ class QualityOptimizationConfig:
             raise ValueError(
                 "adaptive_generation.quality_optimization.min_completed_parent_count must be >= 0"
             )
+        if self.min_parent_turnover < 0:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.min_parent_turnover must be >= 0"
+            )
         if self.max_parent_turnover < 0:
             raise ValueError(
                 "adaptive_generation.quality_optimization.max_parent_turnover must be >= 0"
+            )
+        if self.max_parent_turnover < self.min_parent_turnover:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.max_parent_turnover must be >= min_parent_turnover"
             )
         if self.max_parent_drawdown < 0:
             raise ValueError(
@@ -709,6 +920,24 @@ class QualityOptimizationConfig:
             raise ValueError(
                 "adaptive_generation.quality_optimization.window_perturb_neighbor_count must be > 0"
             )
+        budget_percentages = {
+            str(key).strip(): float(value)
+            for key, value in dict(self.variant_budget_percentages or {}).items()
+            if str(key).strip()
+        }
+        if not budget_percentages:
+            budget_percentages = dict(DEFAULT_QUALITY_POLISH_VARIANT_BUDGET_PERCENTAGES)
+        for key, value in budget_percentages.items():
+            if value < 0.0:
+                raise ValueError(
+                    "adaptive_generation.quality_optimization.variant_budget_percentages values must be >= 0"
+                )
+        total_budget = sum(budget_percentages.values())
+        if total_budget <= 0.0:
+            raise ValueError(
+                "adaptive_generation.quality_optimization.variant_budget_percentages must sum to > 0"
+            )
+        self.variant_budget_percentages = budget_percentages
         self.enabled_transforms = [
             str(item).strip() for item in (self.enabled_transforms or []) if str(item).strip()
         ]
@@ -792,6 +1021,7 @@ class AdaptiveGenerationConfig:
         default_factory=LocalValidationFieldPenaltyConfig
     )
     search_space_filter: SearchSpaceFilterConfig = field(default_factory=SearchSpaceFilterConfig)
+    operator_diversity_boost: OperatorDiversityBoostConfig = field(default_factory=OperatorDiversityBoostConfig)
     recipe_generation: RecipeGenerationConfig = field(default_factory=RecipeGenerationConfig)
     quality_optimization: QualityOptimizationConfig = field(
         default_factory=QualityOptimizationConfig
@@ -809,6 +1039,7 @@ class AdaptiveGenerationConfig:
 
 
 __all__ = [
+    "OperatorDiversityBoostConfig",
     "StrategyMixConfig",
     "MutationModeWeightsConfig",
     "DiversityThresholdConfig",
